@@ -3,7 +3,7 @@
 <resources>
     <string name="app_tagline" formatted="false">"فيديوهاتك، من هاتفك إلى تلفازك"</string>
     <string name="legal_disclaimer" formatted="false">"يشغّل Cablegram الفيديوهات التي تملكها أو يُسمح لك بمشاهدتها، ولا يوفّر محتوى خاصًا به. لا تُحفظ فيديوهات هاتفك أو قناتك في Telegram على خوادمه مطلقًا؛ تُحفظ فقط فيديوهات الويب التي تختار حفظها في مساحة Cablegram، حتى تحذف حسابك."</string>
-    <string name="ui_a_phone_in_your_household_asked_this_tv_to_sign_it_in__568faf" formatted="false">"هاتف في مجموعة منزلك طلب من هذا التلفاز تسجيل دخوله إلى حسابك في Telegram. لا توافق إلا إذا كنت قد "</string>
+    <string name="ui_a_phone_in_your_household_asked_this_tv_to_sign_it_in__568faf" formatted="false">"هاتف على حسابك طلب من هذا التلفاز تسجيل دخوله إلى حسابك في Telegram. لا توافق إلا إذا كنت قد "</string>
     <string name="ui_about_cablegram_8eeae9" formatted="false">"حول Cablegram"</string>
     <string name="ui_add_profile_f964be" formatted="false">"إضافة ملف شخصي"</string>
     <string name="ui_added_to_my_list_c528ea" formatted="false">"تمت الإضافة إلى قائمتي"</string>
@@ -208,9 +208,9 @@
     <string name="ui_switching_back_to_your_phone_56a1f2" formatted="false">"جارٍ الرجوع إلى التشغيل من هاتفك"</string>
     <string name="ui_switching_source_1ede8f" formatted="false">"جارٍ تبديل المصدر"</string>
     <string name="ui_switching_to_the_cablegram_relay_79ead3" formatted="false">"جارٍ التبديل إلى خادم Cablegram الوسيط"</string>
-    <string name="ui_telegram_is_already_connected_for_this_household_ask_t_2ca07e" formatted="false">"Telegram متصل بالفعل لهذه العائلة. اطلب من المالك استخدام التطبيق الذي ربطه من خلاله."</string>
+    <string name="ui_telegram_is_already_connected_for_this_household_ask_t_2ca07e" formatted="false">"Telegram متصل بالفعل لهذا الحساب. اطلب من المالك استخدام التطبيق الذي ربطه من خلاله."</string>
     <string name="ui_telegram_is_checking_your_password_this_tv_continues_a_8aca24" formatted="false">"يتحقق Telegram من كلمة المرور. ستتابع العملية على هذا التلفاز فور انتهاء التحقق."</string>
-    <string name="ui_telegram_isn_t_connected_for_this_household_yet_you_ca_634c79" formatted="false">"لم يتم ربط Telegram لهذه العائلة بعد. يمكنك ربطه من هذا التلفاز بمسح الرمز باستخدام تطبيق Telegram على هاتفك."</string>
+    <string name="ui_telegram_isn_t_connected_for_this_household_yet_you_ca_634c79" formatted="false">"لم يتم ربط Telegram لهذا الحساب بعد. يمكنك ربطه من هذا التلفاز بمسح الرمز باستخدام تطبيق Telegram على هاتفك."</string>
     <string name="ui_telegram_login_qr_code_b413de" formatted="false">"رمز QR لتسجيل الدخول إلى Telegram"</string>
     <string name="ui_telegram_needs_your_two_step_verification_password_onc_fe96c0" formatted="false">"لتسجيل الدخول إلى Telegram على هذا التلفاز، أدخل كلمة مرور التحقق بخطوتين مرة واحدة. لن يبدأ تسجيل الدخول حتى تدخلها."</string>
     <string name="ui_telegram_needs_your_two_step_verification_password_to__2f2be0" formatted="false">"يحتاج Telegram إلى كلمة مرور التحقق بخطوتين لإكمال تسجيل الدخول على هذا التلفاز."</string>
@@ -229,7 +229,7 @@
     <string name="ui_this_tv_3e2400" formatted="false">"هذا التلفاز"</string>
     <string name="ui_this_tv_gets_its_own_session_end_it_any_time_in_telegr_ad0e0a" formatted="false">"سيحصل هذا التلفاز على جلسة مستقلة. يمكنك إنهاؤها في أي وقت من Telegram ← الإعدادات ← الأجهزة."</string>
     <string name="ui_this_tv_is_connected_c944e9" formatted="false">"هذا التلفاز متصل"</string>
-    <string name="ui_this_tv_was_signed_in_to_a_different_telegram_account__f97fa9" formatted="false">"تم تسجيل الدخول على هذا التلفاز إلى حساب Telegram مختلف عن حساب عائلتك، لذا تم تسجيل الخروج منه."</string>
+    <string name="ui_this_tv_was_signed_in_to_a_different_telegram_account__f97fa9" formatted="false">"تم تسجيل الدخول على هذا التلفاز إلى حساب Telegram مختلف عن الحساب المتصل بحسابك، لذا تم تسجيل الخروج منه."</string>
     <string name="ui_this_tv_wasn_t_used_for_a_while_choose_who_s_watching__9bb395" formatted="false">"لم يُستخدم هذا التلفاز منذ فترة. اختر من يشاهد؛ يجب الموافقة مجددًا من الهاتف المرتبط بالحساب."</string>
     <string name="ui_this_tv_will_be_signed_out_of_cablegram_to_use_it_agai_40c00b" formatted="false">"سيتم تسجيل الخروج من Cablegram على هذا التلفاز. لاستخدامه مجددًا، ستحتاج إلى إقرانه بهاتفك مرة أخرى."</string>
     <string name="ui_this_usually_takes_a_minute_playback_starts_when_it_s__fb7bed" formatted="false">"يستغرق ذلك عادةً دقيقة واحدة. يبدأ التشغيل عندما يصبح الفيديو جاهزًا."</string>
@@ -267,7 +267,7 @@
     <string name="ui_wrong_pin_try_again_c5ce26" formatted="false">"رمز PIN غير صحيح. حاول مرة أخرى."</string>
     <string name="ui_x_db967f">"%1$s  %2$sx"</string>
     <string name="ui_you_can_leave_this_screen_with_back_and_return_to_the__848751" formatted="false">"يمكنك مغادرة هذه الشاشة بزر الرجوع والعودة إلى هذا العنوان لاحقًا."</string>
-    <string name="ui_your_household_s_telegram_is_connected_but_this_tv_isn_90d748" formatted="false">"حساب Telegram الخاص بعائلتك متصل، لكن لم يتم تسجيل الدخول إليه على هذا التلفاز. سجّل الدخول لتشغيل الفيديوهات مباشرة من Telegram دون الحاجة إلى هاتفك."</string>
+    <string name="ui_your_household_s_telegram_is_connected_but_this_tv_isn_90d748" formatted="false">"حساب Telegram متصل بحسابك، لكن لم يتم تسجيل الدخول إليه على هذا التلفاز. سجّل الدخول لتشغيل الفيديوهات مباشرة من Telegram دون الحاجة إلى هاتفك."</string>
     <string name="ui_your_library_1ad842" formatted="false">"مكتبتك"</string>
     <string name="ui_your_list_is_empty_6a2cf9" formatted="false">"قائمتك فارغة"</string>
     <string name="ui_your_paired_phone_7e4f9a" formatted="false">"هاتفك المقترن"</string>

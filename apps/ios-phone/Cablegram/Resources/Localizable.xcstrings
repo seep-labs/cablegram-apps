@@ -289,43 +289,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "سيتم الآن حذف حسابك ومجموعتك العائلية ومكتبتك وكل ما ذُكر أعلاه. لا يمكن التراجع عن هذا الإجراء."
+            "value": "سيتم الآن حذف حسابك ومكتبتك وكل ما ذُكر أعلاه. لا يمكن التراجع عن هذا الإجراء."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dein Konto, dein Haushalt, deine Mediathek und alles oben Aufgeführte werden jetzt gelöscht. Das kann nicht rückgängig gemacht werden."
+            "value": "Dein Konto, deine Mediathek und alles oben Aufgeführte werden jetzt gelöscht. Das kann nicht rückgängig gemacht werden."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Your account, household, library and everything listed above will be deleted now. This cannot be undone."
+            "value": "Your account, library and everything listed above will be deleted now. This cannot be undone."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tu cuenta, tu hogar, tu biblioteca y todo lo indicado arriba se eliminarán ahora. Esta acción no se puede deshacer."
+            "value": "Tu cuenta, tu biblioteca y todo lo indicado arriba se eliminarán ahora. Esta acción no se puede deshacer."
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "حساب شما، گروه خانوادگی، کتابخانه و همه موارد بالا اکنون حذف می‌شوند. این کار قابل بازگشت نیست."
+            "value": "حساب شما، کتابخانه و همه موارد بالا اکنون حذف می‌شوند. این کار قابل بازگشت نیست."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Il tuo account, il gruppo familiare, la libreria e tutto quanto elencato sopra verranno eliminati ora. Questa operazione è irreversibile."
+            "value": "Il tuo account, la libreria e tutto quanto elencato sopra verranno eliminati ora. Questa operazione è irreversibile."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ваш аккаунт, семейная группа, медиатека и все перечисленные выше данные будут удалены сейчас. Это действие нельзя отменить."
+            "value": "Ваш аккаунт, медиатека и все перечисленные выше данные будут удалены сейчас. Это действие нельзя отменить."
           }
         }
       }
@@ -14264,43 +14264,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "أُزيل الملصق من مجموعتك العائلية"
+            "value": "أُزيل الملصق من حسابك"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Poster aus deinem Haushalt entfernt"
+            "value": "Poster aus deinem Konto entfernt"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cover removed from your household"
+            "value": "Cover removed from your account"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Póster eliminado de tu hogar"
+            "value": "Póster eliminado de tu cuenta"
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "پوستر از گروه خانوادگی حذف شد"
+            "value": "پوستر از حساب شما حذف شد"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Locandina rimossa dal gruppo familiare"
+            "value": "Locandina rimossa dal tuo account"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Постер удалён из семейной группы"
+            "value": "Постер удалён из вашего аккаунта"
           }
         }
       }
@@ -14311,43 +14311,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "حُفظ الملصق في مجموعتك العائلية"
+            "value": "حُفظ الملصق في حسابك"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Poster in deinem Haushalt gespeichert"
+            "value": "Poster in deinem Konto gespeichert"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cover saved to your household"
+            "value": "Cover saved to your account"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Póster guardado en tu hogar"
+            "value": "Póster guardado en tu cuenta"
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "پوستر در گروه خانوادگی ذخیره شد"
+            "value": "پوستر در حساب شما ذخیره شد"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Locandina salvata nel gruppo familiare"
+            "value": "Locandina salvata nel tuo account"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Постер сохранён в семейной группе"
+            "value": "Постер сохранён в вашем аккаунте"
           }
         }
       }
@@ -20165,43 +20165,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "اسم المجموعة العائلية"
+            "value": "اسم الحساب"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Name des Haushalts"
+            "value": "Name des Kontos"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Household name"
+            "value": "Account name"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nombre del hogar"
+            "value": "Nombre de la cuenta"
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "نام گروه خانوادگی"
+            "value": "نام حساب"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nome del gruppo familiare"
+            "value": "Nome dell’account"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Название семейной группы"
+            "value": "Название аккаунта"
           }
         }
       }
@@ -20682,43 +20682,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "في مكتبة المنزل · الملف غير موجود على هذا الهاتف"
+            "value": "في مكتبتك · الملف غير موجود على هذا الهاتف"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "In Ihrer privaten Bibliothek · Datei nicht auf diesem Handy"
+            "value": "In Ihrer Bibliothek · Datei nicht auf diesem Handy"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "In your household library · File not on this phone"
+            "value": "In your library · File not on this phone"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "En su biblioteca de la casa · Archivo no en este teléfono"
+            "value": "En su biblioteca · Archivo no en este teléfono"
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "در کتابخانهٔ گروه خانوادگی · فایل روی این گوشی نیست"
+            "value": "در کتابخانهٔ شما · فایل روی این گوشی نیست"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nella tua biblioteca domestica · File non su questo telefono"
+            "value": "Nella tua biblioteca · File non su questo telefono"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "В вашей домашней библиотеке • Файл не на этом телефоне"
+            "value": "В вашей библиотеке • Файл не на этом телефоне"
           }
         }
       }
@@ -24771,43 +24771,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "اختر اسمًا للمجموعة العائلية"
+            "value": "اختر اسمًا لحسابك"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Haushalt benennen"
+            "value": "Konto benennen"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Name this household"
+            "value": "Name your account"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pon nombre a este hogar"
+            "value": "Pon nombre a tu cuenta"
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "نامی برای گروه خانوادگی انتخاب کنید"
+            "value": "نامی برای حساب خود انتخاب کنید"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dai un nome al gruppo familiare"
+            "value": "Dai un nome al tuo account"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Назовите семейную группу"
+            "value": "Назовите свой аккаунт"
           }
         }
       }
@@ -26839,19 +26839,19 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "تُحفظ فقط الترجمة التي تختارها ولغتها ومرجعها لدى الخدمة وتوقيتها ضمن مجموعتك العائلية للتلفزيونات المقترنة. يمكنك حذفها من أدوات الترجمة في صفحة الفيديو؛ حذف مصدرها أو حسابك يحذفها أيضًا. إزالة حساب الخدمة هنا توقف البحث، لكنها تُبقي الترجمات المختارة سابقًا."
+            "value": "تُحفظ فقط الترجمة التي تختارها ولغتها ومرجعها لدى الخدمة وتوقيتها ضمن حسابك للتلفزيونات المقترنة. يمكنك حذفها من أدوات الترجمة في صفحة الفيديو؛ حذف مصدرها أو حسابك يحذفها أيضًا. إزالة حساب الخدمة هنا توقف البحث، لكنها تُبقي الترجمات المختارة سابقًا."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nur der gewählte Untertitel samt Sprache, Anbieterreferenz und Timing wird für die gekoppelten Fernseher deines Haushalts gespeichert. Entferne ihn über die Untertitelsteuerung des Videos; beim Löschen seiner Quelle oder deines Kontos wird er ebenfalls gelöscht. Das Entfernen eines Dienstkontos hier stoppt die Suche, behält aber bereits gewählte Untertitel."
+            "value": "Nur der gewählte Untertitel samt Sprache, Anbieterreferenz und Timing wird für die gekoppelten Fernseher deines Kontos gespeichert. Entferne ihn über die Untertitelsteuerung des Videos; beim Löschen seiner Quelle oder deines Kontos wird er ebenfalls gelöscht. Das Entfernen eines Dienstkontos hier stoppt die Suche, behält aber bereits gewählte Untertitel."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Only the subtitle you choose, its language, provider reference and timing are stored with your household for paired TVs. Remove a saved track from the title's subtitle controls; deleting its source or your account also deletes it. Removing an account here stops searching but keeps tracks you already chose."
+            "value": "Only the subtitle you choose, its language, provider reference and timing are stored with your account for paired TVs. Remove a saved track from the title's subtitle controls; deleting its source or your account also deletes it. Removing an account here stops searching but keeps tracks you already chose."
           }
         },
         "es": {
@@ -26863,19 +26863,19 @@
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "فقط زیرنویسی که انتخاب می‌کنید، همراه زبان، شناسهٔ آن در سرویس زیرنویس و زمان‌بندی، برای تلویزیون‌های متصل در گروه خانوادگی شما ذخیره می‌شود. زیرنویس ذخیره‌شده را می‌توانید از کنترل‌های زیرنویس همان ویدیو حذف کنید؛ حذف منبع آن یا حساب شما نیز آن را حذف می‌کند. حذف حساب سرویس در اینجا، جست‌وجو را متوقف می‌کند اما زیرنویس‌های قبلی را نگه می‌دارد."
+            "value": "فقط زیرنویسی که انتخاب می‌کنید، همراه زبان، شناسهٔ آن در سرویس زیرنویس و زمان‌بندی، برای تلویزیون‌های متصل در حساب شما ذخیره می‌شود. زیرنویس ذخیره‌شده را می‌توانید از کنترل‌های زیرنویس همان ویدیو حذف کنید؛ حذف منبع آن یا حساب شما نیز آن را حذف می‌کند. حذف حساب سرویس در اینجا، جست‌وجو را متوقف می‌کند اما زیرنویس‌های قبلی را نگه می‌دارد."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Per le TV associate vengono salvati nel gruppo familiare solo il sottotitolo scelto, la lingua, il riferimento del servizio e la sincronizzazione. Puoi rimuoverlo dai controlli dei sottotitoli del video; viene eliminato anche cancellando la sorgente o il tuo account. Rimuovere un account del servizio interrompe le ricerche ma conserva i sottotitoli già scelti."
+            "value": "Per le TV associate vengono salvati nel tuo account solo il sottotitolo scelto, la lingua, il riferimento del servizio e la sincronizzazione. Puoi rimuoverlo dai controlli dei sottotitoli del video; viene eliminato anche cancellando la sorgente o il tuo account. Rimuovere un account del servizio interrompe le ricerche ma conserva i sottotitoli già scelti."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Для подключённых телевизоров семейной группы сохраняются только выбранные субтитры, язык, ссылка на сервис и синхронизация. Удалить их можно через управление субтитрами видео; удаление источника или аккаунта также удаляет их. Отключение аккаунта сервиса здесь останавливает поиск, но сохраняет уже выбранные субтитры."
+            "value": "Для подключённых телевизоров вашего аккаунта сохраняются только выбранные субтитры, язык, ссылка на сервис и синхронизация. Удалить их можно через управление субтитрами видео; удаление источника или аккаунта также удаляет их. Отключение аккаунта сервиса здесь останавливает поиск, но сохраняет уже выбранные субтитры."
           }
         }
       }
@@ -28625,43 +28625,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "اقرن تلفزيونًا أولًا ليتمكن Cablegram من ربط التخزين بهذه المجموعة العائلية."
+            "value": "اقرن تلفزيونًا أولًا ليتمكن Cablegram من ربط التخزين بحسابك."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kopple zuerst einen Fernseher, damit Cablegram den Speicher mit diesem Haushalt verknüpfen kann."
+            "value": "Kopple zuerst einen Fernseher, damit Cablegram den Speicher mit deinem Konto verknüpfen kann."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pair a TV first so Cablegram can attach storage to this household."
+            "value": "Pair a TV first so Cablegram can attach storage to your account."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Vincula primero un televisor para que Cablegram pueda asociar el almacenamiento a este hogar."
+            "value": "Vincula primero un televisor para que Cablegram pueda asociar el almacenamiento a tu cuenta."
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "ابتدا تلویزیونی متصل کنید تا Cablegram بتواند فضای ذخیره‌سازی را به این گروه خانوادگی متصل کند."
+            "value": "ابتدا تلویزیونی متصل کنید تا Cablegram بتواند فضای ذخیره‌سازی را به حساب شما متصل کند."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Associa prima una TV, così Cablegram potrà collegare lo spazio di archiviazione al gruppo familiare."
+            "value": "Associa prima una TV, così Cablegram potrà collegare lo spazio di archiviazione al tuo account."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Сначала подключите телевизор, чтобы Cablegram мог связать хранилище с семейной группой."
+            "value": "Сначала подключите телевизор, чтобы Cablegram мог связать хранилище с вашим аккаунтом."
           }
         }
       }
@@ -29189,43 +29189,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "المفاتيح الشخصية لا تمنح إذنًا بحقوق النشر. استخدم فقط الترجمات التي يحق لك قانونًا تخزينها ومشاركتها مع مجموعتك العائلية. تنطبق شروط الخدمات: subdl.com/terms وopensubtitles.com. لطلب الحذف بسبب انتهاك حقوق النشر، أرسل اسم العمل وتفاصيل الترجمة إلى copyright@cablegram.app."
+            "value": "المفاتيح الشخصية لا تمنح إذنًا بحقوق النشر. استخدم فقط الترجمات التي يحق لك قانونًا تخزينها واستخدامها على أجهزتك. تنطبق شروط الخدمات: subdl.com/terms وopensubtitles.com. لطلب الحذف بسبب انتهاك حقوق النشر، أرسل اسم العمل وتفاصيل الترجمة إلى copyright@cablegram.app."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Persönliche Schlüssel gewähren keine Nutzungsrechte an geschützten Inhalten. Verwende nur Untertitel, die du rechtmäßig speichern und mit deinem Haushalt teilen darfst. Es gelten die Anbieterbedingungen unter subdl.com/terms und opensubtitles.com. Für eine Entfernung wegen Urheberrechtsverletzung sende Titel und Untertiteldetails an copyright@cablegram.app."
+            "value": "Persönliche Schlüssel gewähren keine Nutzungsrechte an geschützten Inhalten. Verwende nur Untertitel, die du rechtmäßig speichern und auf deinen eigenen Geräten verwenden darfst. Es gelten die Anbieterbedingungen unter subdl.com/terms und opensubtitles.com. Für eine Entfernung wegen Urheberrechtsverletzung sende Titel und Untertiteldetails an copyright@cablegram.app."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Personal keys do not grant copyright permission. Use tracks you have a lawful right to store and share with your household. Provider terms apply: subdl.com/terms and opensubtitles.com. For copyright complaints contact copyright@cablegram.app with the title and track details for removal."
+            "value": "Personal keys do not grant copyright permission. Use tracks you have a lawful right to store and use on your own devices. Provider terms apply: subdl.com/terms and opensubtitles.com. For copyright complaints contact copyright@cablegram.app with the title and track details for removal."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Las claves personales no conceden derechos de autor. Usa solo subtítulos que tengas derecho a guardar y compartir con tu hogar. Se aplican las condiciones de subdl.com/terms y opensubtitles.com. Para solicitar una retirada por infracción, envía el título y los detalles del subtítulo a copyright@cablegram.app."
+            "value": "Las claves personales no conceden derechos de autor. Usa solo subtítulos que tengas derecho a guardar y usar en tus propios dispositivos. Se aplican las condiciones de subdl.com/terms y opensubtitles.com. Para solicitar una retirada por infracción, envía el título y los detalles del subtítulo a copyright@cablegram.app."
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "کلیدهای شخصی، مجوز استفاده از آثار دارای حق نشر نیستند. فقط زیرنویس‌هایی را ذخیره و با گروه خانوادگی به اشتراک بگذارید که حق قانونی استفاده از آن‌ها را دارید. شرایط سرویس‌ها در subdl.com/terms و opensubtitles.com اعمال می‌شود. برای درخواست حذف به‌دلیل نقض حق نشر، نام اثر و جزئیات زیرنویس را به copyright@cablegram.app بفرستید."
+            "value": "کلیدهای شخصی، مجوز استفاده از آثار دارای حق نشر نیستند. فقط زیرنویس‌هایی را ذخیره و روی دستگاه‌های خودتان استفاده کنید که حق قانونی استفاده از آن‌ها را دارید. شرایط سرویس‌ها در subdl.com/terms و opensubtitles.com اعمال می‌شود. برای درخواست حذف به‌دلیل نقض حق نشر، نام اثر و جزئیات زیرنویس را به copyright@cablegram.app بفرستید."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Le chiavi personali non concedono diritti sui contenuti protetti. Usa solo sottotitoli che hai il diritto di conservare e condividere con il gruppo familiare. Si applicano le condizioni di subdl.com/terms e opensubtitles.com. Per richiederne la rimozione per violazione del copyright, invia titolo e dettagli dei sottotitoli a copyright@cablegram.app."
+            "value": "Le chiavi personali non concedono diritti sui contenuti protetti. Usa solo sottotitoli che hai il diritto di conservare e usare sui tuoi dispositivi. Si applicano le condizioni di subdl.com/terms e opensubtitles.com. Per richiederne la rimozione per violazione del copyright, invia titolo e dettagli dei sottotitoli a copyright@cablegram.app."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Личные ключи не дают прав на защищённые материалы. Используйте только субтитры, которые вы вправе хранить и распространять в семейной группе. Действуют условия subdl.com/terms и opensubtitles.com. Для удаления из-за нарушения авторских прав отправьте название произведения и данные субтитров на copyright@cablegram.app."
+            "value": "Личные ключи не дают прав на защищённые материалы. Используйте только субтитры, которые вы вправе хранить и использовать на своих устройствах. Действуют условия subdl.com/terms и opensubtitles.com. Для удаления из-за нарушения авторских прав отправьте название произведения и данные субтитров на copyright@cablegram.app."
           }
         }
       }
@@ -33419,43 +33419,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "حفظ الصورة للمجموعة العائلية"
+            "value": "حفظ الصورة في حسابك"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bild im Haushalt speichern"
+            "value": "Bild in deinem Konto speichern"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Save artwork to household"
+            "value": "Save artwork to your account"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Guardar imagen en el hogar"
+            "value": "Guardar imagen en tu cuenta"
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "ذخیرهٔ تصویر در گروه خانوادگی"
+            "value": "ذخیرهٔ تصویر در حساب شما"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Salva immagine nel gruppo familiare"
+            "value": "Salva immagine nel tuo account"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Сохранить изображение в семейной группе"
+            "value": "Сохранить изображение в вашем аккаунте"
           }
         }
       }
@@ -33466,43 +33466,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "حفظ الصورة للمجموعة العائلية؟"
+            "value": "حفظ الصورة في حسابك؟"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bild im Haushalt speichern?"
+            "value": "Bild in deinem Konto speichern?"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Save artwork to household?"
+            "value": "Save artwork to your account?"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "¿Guardar imagen en el hogar?"
+            "value": "¿Guardar imagen en tu cuenta?"
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "تصویر در گروه خانوادگی ذخیره شود؟"
+            "value": "تصویر در حساب شما ذخیره شود؟"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Salvare l’immagine nel gruppo familiare?"
+            "value": "Salvare l’immagine nel tuo account?"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Сохранить изображение в семейной группе?"
+            "value": "Сохранить изображение в вашем аккаунте?"
           }
         }
       }
@@ -33842,43 +33842,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "حفظ للمجموعة العائلية"
+            "value": "حفظ في حسابك"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Im Haushalt speichern"
+            "value": "In deinem Konto speichern"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Save to household"
+            "value": "Save to your account"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Guardar en el hogar"
+            "value": "Guardar en tu cuenta"
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "ذخیره در گروه خانوادگی"
+            "value": "ذخیره در حساب شما"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Salva nel gruppo familiare"
+            "value": "Salva nel tuo account"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Сохранить в семейной группе"
+            "value": "Сохранить в вашем аккаунте"
           }
         }
       }
@@ -36453,43 +36453,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "شاركي كتالوجك مع منزلكِ ملفات الفيديو الخاصة بك تبقى في مخزن الخاص بك."
+            "value": "زامن كتالوجك مع حسابك. ملفات الفيديو الخاصة بك تبقى في مخزن الخاص بك."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Teilen Sie Ihren Katalog mit Ihrem Haushalt. Ihre Videodateien bleiben in Ihrem eigenen Speicher."
+            "value": "Synchronisieren Sie Ihren Katalog mit Ihrem Konto. Ihre Videodateien bleiben in Ihrem eigenen Speicher."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Share your catalog with your household. Your video files stay in your own storage."
+            "value": "Sync your catalog to your account. Your video files stay in your own storage."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Comparte tu catálogo con tu hogar. Sus archivos de vídeo permanecen en su propio almacenamiento."
+            "value": "Sincroniza tu catálogo con tu cuenta. Sus archivos de vídeo permanecen en su propio almacenamiento."
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "فهرست ویدیوها را با گروه خانوادگی خود به اشتراک بگذارید. فایل‌های ویدیویی در فضای ذخیره‌سازی شخصی شما می‌مانند."
+            "value": "فهرست ویدیوها را با حساب خود همگام کنید. فایل‌های ویدیویی در فضای ذخیره‌سازی شخصی شما می‌مانند."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Condividi il tuo catalogo con la tua famiglia. I tuoi file video rimangono nella tua memoria."
+            "value": "Sincronizza il tuo catalogo con il tuo account. I tuoi file video rimangono nella tua memoria."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Поделитесь своим каталогом со своей семьей. Ваши видеофайлы хранятся в вашем собственном хранилище."
+            "value": "Синхронизируйте свой каталог со своим аккаунтом. Ваши видеофайлы хранятся в вашем собственном хранилище."
           }
         }
       }
@@ -37158,43 +37158,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "سجّل الدخول أولًا ثم سمّ المجموعة العائلية."
+            "value": "سجّل الدخول أولًا ثم سمّ حسابك."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Melde dich zuerst an und benenne dann den Haushalt."
+            "value": "Melde dich zuerst an und benenne dann dein Konto."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sign in first, then name the household."
+            "value": "Sign in first, then name your account."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Inicia sesión y luego pon nombre al hogar."
+            "value": "Inicia sesión y luego pon nombre a tu cuenta."
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "ابتدا وارد حساب شوید، سپس برای گروه خانوادگی نام انتخاب کنید."
+            "value": "ابتدا وارد حساب شوید، سپس برای حساب خود نام انتخاب کنید."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Accedi, poi dai un nome al gruppo familiare."
+            "value": "Accedi, poi dai un nome al tuo account."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Сначала войдите, затем назовите семейную группу."
+            "value": "Сначала войдите, затем назовите свой аккаунт."
           }
         }
       }
@@ -41858,43 +41858,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "سيُحذف الملصق من مجموعة المنزل عند المزامنة التالية"
+            "value": "سيُحذف الملصق من حسابك عند المزامنة التالية"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Das Poster wird bei der nächsten Synchronisierung aus deinem Haushalt entfernt"
+            "value": "Das Poster wird bei der nächsten Synchronisierung aus deinem Konto entfernt"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "The cover will be removed from your household on the next sync"
+            "value": "The cover will be removed from your account on the next sync"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "El póster se eliminará de tu hogar en la próxima sincronización"
+            "value": "El póster se eliminará de tu cuenta en la próxima sincronización"
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "پوستر در همگام‌سازی بعدی از گروه خانوادگی حذف می‌شود"
+            "value": "پوستر در همگام‌سازی بعدی از حساب شما حذف می‌شود"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "La locandina verrà rimossa dal tuo gruppo domestico alla prossima sincronizzazione"
+            "value": "La locandina verrà rimossa dal tuo account alla prossima sincronizzazione"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Постер будет удалён из вашей домашней группы при следующей синхронизации"
+            "value": "Постер будет удалён из вашего аккаунта при следующей синхронизации"
           }
         }
       }
@@ -41905,43 +41905,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "سيُحفظ الملصق في مجموعة المنزل عند المزامنة التالية"
+            "value": "سيُحفظ الملصق في حسابك عند المزامنة التالية"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Das Poster wird bei der nächsten Synchronisierung in deinem Haushalt gespeichert"
+            "value": "Das Poster wird bei der nächsten Synchronisierung in deinem Konto gespeichert"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "The cover will be saved to your household on the next sync"
+            "value": "The cover will be saved to your account on the next sync"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "El póster se guardará en tu hogar en la próxima sincronización"
+            "value": "El póster se guardará en tu cuenta en la próxima sincronización"
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "پوستر در همگام‌سازی بعدی در گروه خانوادگی ذخیره می‌شود"
+            "value": "پوستر در همگام‌سازی بعدی در حساب شما ذخیره می‌شود"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "La locandina verrà salvata nel tuo gruppo domestico alla prossima sincronizzazione"
+            "value": "La locandina verrà salvata nel tuo account alla prossima sincronizzazione"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Постер будет сохранён в вашей домашней группе при следующей синхронизации"
+            "value": "Постер будет сохранён в вашем аккаунте при следующей синхронизации"
           }
         }
       }
@@ -43174,43 +43174,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "تستخدم هذه الأسرة بالفعل حساب Telegram الخاص بـ %1$@. "
+            "value": "يستخدم حساب Cablegram الخاص بك بالفعل حساب Telegram الخاص بـ %1$@. "
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dieser Haushalt verwendet bereits das Telegram-Konto von %1$@. "
+            "value": "Dein Cablegram-Konto verwendet bereits das Telegram-Konto von %1$@. "
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "This household already uses the Telegram account of %1$@. "
+            "value": "Your Cablegram account already uses the Telegram account of %1$@. "
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Esta casa ya utiliza la cuenta Telegram de %1$@. "
+            "value": "Tu cuenta de Cablegram ya utiliza la cuenta Telegram de %1$@. "
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "این گروه خانوادگی از قبل به حساب تلگرام %1$@ متصل است. "
+            "value": "حساب Cablegram شما از قبل به حساب تلگرام %1$@ متصل است. "
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Questa famiglia utilizza già il conto Telegram di %1$@. "
+            "value": "Il tuo account Cablegram utilizza già il conto Telegram di %1$@. "
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Эта домашняя группа уже использует аккаунт Telegram пользователя %1$@. "
+            "value": "Ваш аккаунт Cablegram уже использует аккаунт Telegram пользователя %1$@. "
           }
         }
       }
@@ -43362,43 +43362,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "هذا الهاتف ليس مسجلاً مع منزلك بعد اتصل برقم هاتفك بدلاً من ذلك"
+            "value": "هذا الهاتف ليس مسجلاً مع حسابك بعد اتصل برقم هاتفك بدلاً من ذلك"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dieses Telefon ist noch nicht bei Ihrem Haushalt registriert. Verbinden Sie stattdessen mit Ihrer Telefonnummer."
+            "value": "Dieses Telefon ist noch nicht bei Ihrem Konto registriert. Verbinden Sie stattdessen mit Ihrer Telefonnummer."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "This phone isn't registered with your household yet. Connect with your phone number instead."
+            "value": "This phone isn't registered with your account yet. Connect with your phone number instead."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Este teléfono todavía no está registrado en su casa. Conéctese con su número de teléfono en su lugar."
+            "value": "Este teléfono todavía no está registrado en su cuenta. Conéctese con su número de teléfono en su lugar."
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "این گوشی هنوز در گروه خانوادگی شما ثبت نشده است. به‌جای آن، با شمارهٔ تلفن متصل شوید."
+            "value": "این گوشی هنوز در حساب شما ثبت نشده است. به‌جای آن، با شمارهٔ تلفن متصل شوید."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Questo telefono non e' ancora registrato con la tua famiglia. Connettiti con il tuo numero di telefono."
+            "value": "Questo telefono non e' ancora registrato con il tuo account. Connettiti con il tuo numero di telefono."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Этот телефон еще не зарегистрирован в вашей семье. Вместо этого свяжитесь с вашим номером телефона."
+            "value": "Этот телефон еще не зарегистрирован в вашем аккаунте. Вместо этого свяжитесь с вашим номером телефона."
           }
         }
       }
@@ -43644,43 +43644,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "هذا العنوان موجود في مكتبة المنزل، لكن ملفه ليس على الهاتف. استورد الملف نفسه هنا لتشغيله من هذا الهاتف."
+            "value": "هذا العنوان موجود في مكتبتك، لكن ملفه ليس على الهاتف. استورد الملف نفسه هنا لتشغيله من هذا الهاتف."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dieser Titel ist in Ihrer privaten Bibliothek, aber seine Datei ist nicht auf diesem Telefon. Importieren Sie die gleiche Datei hier, um sie von diesem Telefon zu spielen."
+            "value": "Dieser Titel ist in Ihrer Bibliothek, aber seine Datei ist nicht auf diesem Telefon. Importieren Sie die gleiche Datei hier, um sie von diesem Telefon zu spielen."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "This title is in your household library, but its file isn't on this phone. Import the same file here to play it from this phone."
+            "value": "This title is in your library, but its file isn't on this phone. Import the same file here to play it from this phone."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Este título está en su biblioteca familiar, pero su archivo no está en este teléfono. Importar el mismo archivo aquí para reproducirlo desde este teléfono."
+            "value": "Este título está en su biblioteca, pero su archivo no está en este teléfono. Importar el mismo archivo aquí para reproducirlo desde este teléfono."
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "این عنوان در کتابخانهٔ گروه خانوادگی شماست، اما فایل آن روی این گوشی نیست. برای پخش از این گوشی، همان فایل را اینجا وارد کنید."
+            "value": "این عنوان در کتابخانهٔ شماست، اما فایل آن روی این گوشی نیست. برای پخش از این گوشی، همان فایل را اینجا وارد کنید."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Questo titolo è nella tua biblioteca di famiglia, ma il suo file non è su questo telefono. Importare lo stesso file qui per riprodurlo da questo telefono."
+            "value": "Questo titolo è nella tua biblioteca, ma il suo file non è su questo telefono. Importare lo stesso file qui per riprodurlo da questo telefono."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Этот заголовок в вашей домашней библиотеке, но его файл не на этом телефоне. Импортируйте тот же файл, чтобы воспроизвести его с этого телефона."
+            "value": "Этот заголовок в вашей библиотеке, но его файл не на этом телефоне. Импортируйте тот же файл, чтобы воспроизвести его с этого телефона."
           }
         }
       }
@@ -47545,43 +47545,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "مع مكتبة منزلك كل من في بيتك يستطيع رؤيته على تلفازاتهم وهواتفهم وجهاز التحكم بالشبكة "
+            "value": "مع مكتبتك ثم تعرضه كل تلفازاتك وهواتفك وجهاز التحكم عبر الويب "
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "mit Ihrer privaten Bibliothek. Jeder in Ihrem Haushalt kann es dann auf ihren Fernsehern, Telefonen und dem Internet remote sehen, "
+            "value": "mit Ihrer Bibliothek. Alle Ihre Fernseher, Telefone und die Web-Fernbedienung können es dann anzeigen, "
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "with your household library. Everyone in your household can then see it on their TVs, phones and the web remote, "
+            "value": "with your library. All your TVs, phones and the web remote can then show it, "
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "con tu biblioteca familiar. Todo el mundo en su casa puede verlo en sus televisores, teléfonos y la web remota, "
+            "value": "con tu biblioteca. Todos tus televisores, teléfonos y el mando web podrán mostrarlo, "
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "همراه کتابخانهٔ گروه خانوادگی ذخیره می‌شود. همهٔ اعضای گروه می‌توانند آن را در تلویزیون، گوشی و کنترل تحت وب ببینند، "
+            "value": "همراه کتابخانهٔ شما ذخیره می‌شود. سپس همهٔ تلویزیون‌ها، گوشی‌ها و کنترل تحت وب شما می‌توانند آن را نشان دهند، "
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "con la tua biblioteca. Tutti nella vostra famiglia possono poi vedere sul loro TV, telefoni e il telecomando web, "
+            "value": "con la tua biblioteca. Tutte le tue TV, i tuoi telefoni e il telecomando web potranno poi mostrarla, "
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "С вашей домашней библиотекой. Каждый в вашей семье может увидеть это на своих телевизорах, телефонах и удаленном веб-сайте. "
+            "value": "С вашей библиотекой. Затем все ваши телевизоры, телефоны и веб-пульт смогут её показать. "
           }
         }
       }

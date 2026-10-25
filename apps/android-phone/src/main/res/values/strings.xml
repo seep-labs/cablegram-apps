@@ -28,7 +28,7 @@
     <string name="delete_account_deleting">Deleting…</string>
     <string name="delete_account_cancel">Cancel</string>
     <string name="delete_account_confirm_title">Delete your account for good?</string>
-    <string name="delete_account_confirm_text">Your account, household, library and everything listed above will be deleted now. This cannot be undone.</string>
+    <string name="delete_account_confirm_text">Your account, library and everything listed above will be deleted now. This cannot be undone.</string>
     <string name="delete_account_confirm_button">Delete forever</string>
     <string name="delete_account_error_wrong_code">That code is not right, or it expired. Nothing was deleted. Try again, or send a new code.</string>
     <string name="delete_account_error_rate_limited">Too many attempts. Nothing was deleted. Wait 15 minutes and try again.</string>

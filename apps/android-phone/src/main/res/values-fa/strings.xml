@@ -7,7 +7,7 @@
     <string name="delete_account_code_hint">"کد را به %1$s فرستادیم. این کد تا ۱۵ دقیقه معتبر است."</string>
     <string name="delete_account_code_label" formatted="false">"کد دریافتی در ایمیل"</string>
     <string name="delete_account_confirm_button" formatted="false">"حذف برای همیشه"</string>
-    <string name="delete_account_confirm_text" formatted="false">"حساب شما، گروه خانوادگی، کتابخانه و همه موارد بالا اکنون حذف می‌شوند. این کار قابل بازگشت نیست."</string>
+    <string name="delete_account_confirm_text" formatted="false">"حساب شما، کتابخانه و همه موارد بالا اکنون حذف می‌شوند. این کار قابل بازگشت نیست."</string>
     <string name="delete_account_confirm_title" formatted="false">"حساب شما برای همیشه حذف شود؟"</string>
     <string name="delete_account_continue" formatted="false">"حذف حساب من"</string>
     <string name="delete_account_deleting" formatted="false">"در حال حذف…"</string>
@@ -264,8 +264,8 @@
     <string name="ui_cover_fa8d84" formatted="false">"پوستر"</string>
     <string name="ui_cover_kept_on_this_phone_tvs_show_it_while_this_phone__7b244e" formatted="false">"پوستر روی این گوشی ذخیره شد. تلویزیون‌ها زمانی آن را نمایش می‌دهند که این گوشی به همان شبکهٔ وای‌فای متصل باشد."</string>
     <string name="ui_cover_preview_9cc1b7" formatted="false">"پیش‌نمایش پوستر"</string>
-    <string name="ui_cover_removed_from_your_household_a7304d" formatted="false">"پوستر از گروه خانوادگی حذف شد"</string>
-    <string name="ui_cover_saved_to_your_household_762369" formatted="false">"پوستر در گروه خانوادگی ذخیره شد"</string>
+    <string name="ui_cover_removed_from_your_household_a7304d" formatted="false">"پوستر از حساب شما حذف شد"</string>
+    <string name="ui_cover_saved_to_your_household_762369" formatted="false">"پوستر در حساب شما ذخیره شد"</string>
     <string name="ui_create_a_free_account_at_opensubtitles_com_c1e6ef" formatted="false">"در opensubtitles.com یک حساب رایگان بسازید."</string>
     <string name="ui_create_a_free_cloudflare_account_9d8fd1" formatted="false">"ایجاد یک حساب رایگان Cloudflare"</string>
     <string name="ui_create_a_new_cb63aa">"ایجاد یک \"%1$s\" جدید"</string>
@@ -386,7 +386,7 @@
     <string name="ui_hide_privacy_and_terms_942d73" formatted="false">"پنهان کردن حریم خصوصی و شرایط"</string>
     <string name="ui_hide_subtitle_preferences_245035" formatted="false">"پنهان کردن تنظیمات زیرنویس"</string>
     <string name="ui_hint_3033f3">"راهنما: %1$s"</string>
-    <string name="ui_household_name_e4d50a" formatted="false">"نام گروه خانوادگی"</string>
+    <string name="ui_household_name_e4d50a" formatted="false">"نام حساب"</string>
     <string name="ui_how_cablegram_uses_your_data_89560e" formatted="false">"نحوهٔ استفادهٔ Cablegram از داده‌های شما: "</string>
     <string name="ui_how_this_works_bdbd77" formatted="false">"روش کار"</string>
     <string name="ui_i_accept_the_5ce6ca" formatted="false">"من می‌پذیرم: "</string>
@@ -397,7 +397,7 @@
     <string name="ui_import_connected_storage_telegram_f2fb3f" formatted="false">"وارد کردن ← فضای ذخیره‌سازی متصل ← تلگرام"</string>
     <string name="ui_import_videos_fec728" formatted="false">"وارد کردن ویدیوها"</string>
     <string name="ui_in_telegram_share_or_forward_videos_into_the_private_c_ab9acc">"در تلگرام، ویدیوها را به کانال خصوصی «%1$s» بفرستید یا فوروارد کنید. "</string>
-    <string name="ui_in_your_household_library_file_not_on_this_phone_698618" formatted="false">"در کتابخانهٔ گروه خانوادگی · فایل روی این گوشی نیست"</string>
+    <string name="ui_in_your_household_library_file_not_on_this_phone_698618" formatted="false">"در کتابخانهٔ شما · فایل روی این گوشی نیست"</string>
     <string name="ui_in_your_own_storage_e2575f" formatted="false">"در فضای ذخیره‌سازی شخصی شما"</string>
     <string name="ui_include_forced_subtitles_5c1992" formatted="false">"شامل زیرنویس‌های اجباری"</string>
     <string name="ui_install_cablegram_on_your_android_tv_or_google_tv_and__d27b55" formatted="false">"Cablegram TV را روی Android TV یا Google TV نصب و باز کنید. سپس کد شش‌رقمی نمایش‌داده‌شده را وارد کنید."</string>
@@ -484,7 +484,7 @@
     <string name="ui_movie_941de4" formatted="false">"فیلم"</string>
     <string name="ui_movies_dff924" formatted="false">"فیلم‌ها"</string>
     <string name="ui_my_tv_home_4a4daa" formatted="false">"تلویزیون من (خانه)"</string>
-    <string name="ui_name_this_household_a2930a" formatted="false">"نامی برای گروه خانوادگی انتخاب کنید"</string>
+    <string name="ui_name_this_household_a2930a" formatted="false">"نامی برای حساب خود انتخاب کنید"</string>
     <string name="ui_navigate_down_b9d466" formatted="false">"حرکت به پایین"</string>
     <string name="ui_navigate_left_ceb18f" formatted="false">"حرکت به چپ"</string>
     <string name="ui_navigate_right_668ca1" formatted="false">"حرکت به راست"</string>
@@ -528,7 +528,7 @@
     <string name="ui_one_box_to_tick_0f7e37" formatted="false">"فقط یک گزینه را تیک بزنید"</string>
     <string name="ui_one_more_big_screen_3514a4" formatted="false">"یک صفحهٔ بزرگ دیگر."</string>
     <string name="ui_only_attach_subtitles_you_have_permission_to_use_22c046" formatted="false">"فقط زیرنویس‌هایی را پیوست کنید که اجازهٔ استفاده از آن‌ها را دارید."</string>
-    <string name="ui_only_the_subtitle_you_choose_its_language_provider_ref_abd48f" formatted="false">"فقط زیرنویسی که انتخاب می‌کنید، همراه زبان، شناسهٔ آن در سرویس زیرنویس و زمان‌بندی، برای تلویزیون‌های متصل در گروه خانوادگی شما ذخیره می‌شود. زیرنویس ذخیره‌شده را می‌توانید از کنترل‌های زیرنویس همان ویدیو حذف کنید؛ حذف منبع آن یا حساب شما نیز آن را حذف می‌کند. حذف حساب سرویس در اینجا، جست‌وجو را متوقف می‌کند اما زیرنویس‌های قبلی را نگه می‌دارد."</string>
+    <string name="ui_only_the_subtitle_you_choose_its_language_provider_ref_abd48f" formatted="false">"فقط زیرنویسی که انتخاب می‌کنید، همراه زبان، شناسهٔ آن در سرویس زیرنویس و زمان‌بندی، برای تلویزیون‌های متصل در حساب شما ذخیره می‌شود. زیرنویس ذخیره‌شده را می‌توانید از کنترل‌های زیرنویس همان ویدیو حذف کنید؛ حذف منبع آن یا حساب شما نیز آن را حذف می‌کند. حذف حساب سرویس در اینجا، جست‌وجو را متوقف می‌کند اما زیرنویس‌های قبلی را نگه می‌دارد."</string>
     <string name="ui_only_the_subtitle_you_pick_is_saved_for_your_tvs_ab5d20" formatted="false">"فقط زیرنویسی که انتخاب می‌کنید برای تلویزیون‌هایتان ذخیره می‌شود."</string>
     <string name="ui_open_a_title_and_tap_find_subtitles_cablegram_finds_su_892bc5" formatted="false">"صفحهٔ ویدیو را باز کنید و «یافتن زیرنویس» را بزنید. Cablegram زیرنویس‌های مناسب فایل شما را پیدا می‌کند و مورد انتخابی را به تلویزیون می‌فرستد."</string>
     <string name="pairing_setup_steps" formatted="false">"۱. Cablegram TV را روی Android TV یا Google TV خود نصب کنید.\n\n۲. Cablegram TV را روی تلویزیون باز کنید تا کد QR و پین شش‌رقمی را ببینید.\n\n۳. کد QR را با این گوشی اسکن کنید یا پین را در پایین وارد کنید."</string>
@@ -567,7 +567,7 @@
     <string name="ui_otherwise_it_plays_your_telegram_videos_through_this_p_72fc1d" formatted="false">"در غیر این صورت، ویدیوهای تلگرام را از طریق این گوشی پخش می‌کند و نشست تلگرامی روی تلویزیون ایجاد نمی‌شود."</string>
     <string name="ui_our_terms_changed_edc5de" formatted="false">"شرایط استفاده تغییر کرده است"</string>
     <string name="ui_page_of_8b9ffa">"صفحهٔ %1$s از %2$s"</string>
-    <string name="ui_pair_a_tv_first_so_cablegram_can_attach_storage_to_thi_cf1a07" formatted="false">"ابتدا تلویزیونی متصل کنید تا Cablegram بتواند فضای ذخیره‌سازی را به این گروه خانوادگی متصل کند."</string>
+    <string name="ui_pair_a_tv_first_so_cablegram_can_attach_storage_to_thi_cf1a07" formatted="false">"ابتدا تلویزیونی متصل کنید تا Cablegram بتواند فضای ذخیره‌سازی را به حساب شما متصل کند."</string>
     <string name="ui_paired_but_this_phone_has_no_wi_fi_address_yet_5134d1" formatted="false">"تلویزیون متصل شد، اما این گوشی هنوز نشانی وای‌فای ندارد."</string>
     <string name="ui_paired_tv_68fdc7" formatted="false">"تلویزیون متصل"</string>
     <string name="ui_password_e7cf3e" formatted="false">"رمز عبور"</string>
@@ -579,7 +579,7 @@
     <string name="ui_pause_playback_65a4a8" formatted="false">"مکث پخش"</string>
     <string name="ui_paused_on_a7fb4a" formatted="false">"پخش متوقف شده روی "</string>
     <string name="ui_permission_object_read_write_apply_it_to_a_specific_bu_ac52d4" formatted="false">"دسترسی Object Read &amp; Write را انتخاب کنید. آن را به یک باکت مشخص محدود کنید و باکت مرحلهٔ ۲ را انتخاب کنید. سپس Create را بزنید."</string>
-    <string name="ui_personal_keys_do_not_grant_copyright_permission_use_tr_003d6d" formatted="false">"کلیدهای شخصی، مجوز استفاده از آثار دارای حق نشر نیستند. فقط زیرنویس‌هایی را ذخیره و با گروه خانوادگی به اشتراک بگذارید که حق قانونی استفاده از آن‌ها را دارید. شرایط سرویس‌ها در subdl.com/terms و opensubtitles.com اعمال می‌شود. برای درخواست حذف به‌دلیل نقض حق نشر، نام اثر و جزئیات زیرنویس را به copyright@cablegram.app بفرستید."</string>
+    <string name="ui_personal_keys_do_not_grant_copyright_permission_use_tr_003d6d" formatted="false">"کلیدهای شخصی، مجوز استفاده از آثار دارای حق نشر نیستند. فقط زیرنویس‌هایی را ذخیره و روی دستگاه‌های خودتان استفاده کنید که حق قانونی استفاده از آن‌ها را دارید. شرایط سرویس‌ها در subdl.com/terms و opensubtitles.com اعمال می‌شود. برای درخواست حذف به‌دلیل نقض حق نشر، نام اثر و جزئیات زیرنویس را به copyright@cablegram.app بفرستید."</string>
     <string name="ui_phone_approval_required_112e8c" formatted="false">"تأیید از طریق گوشی لازم است"</string>
     <string name="ui_phone_number_306f1b" formatted="false">"شمارهٔ تلفن"</string>
     <string name="ui_phone_space_cloud_copies_transfers_f4925b" formatted="false">"فضای گوشی، نسخه‌های ابری و انتقال‌ها"</string>
@@ -669,8 +669,8 @@
     <string name="ui_save_a_cloud_copy_dbaf92" formatted="false">"ذخیرهٔ یک نسخه در فضای ابری"</string>
     <string name="ui_save_a_cloud_copy_of_any_title_to_your_own_google_driv_3aac39" formatted="false">"از هر ویدیو یک نسخه در Google Drive خود ذخیره کنید. وقتی گوشی در دسترس نیست، تلویزیون می‌تواند آن را پخش کند و می‌توانید فضای گوشی را آزاد کنید."</string>
     <string name="ui_save_account_name_7c6744" formatted="false">"ذخیرهٔ نام حساب"</string>
-    <string name="ui_save_artwork_to_household_2be5ad" formatted="false">"ذخیرهٔ تصویر در گروه خانوادگی"</string>
-    <string name="ui_save_artwork_to_household_e25fd0" formatted="false">"تصویر در گروه خانوادگی ذخیره شود؟"</string>
+    <string name="ui_save_artwork_to_household_2be5ad" formatted="false">"ذخیرهٔ تصویر در حساب شما"</string>
+    <string name="ui_save_artwork_to_household_e25fd0" formatted="false">"تصویر در حساب شما ذخیره شود؟"</string>
     <string name="ui_save_changes_dd0ae7" formatted="false">"ذخیرهٔ تغییرات"</string>
     <string name="ui_save_connection_df24ef" formatted="false">"ذخیرهٔ تنظیمات اتصال"</string>
     <string name="ui_save_new_details_7ddcbe" formatted="false">"ذخیرهٔ جزئیات جدید"</string>
@@ -678,7 +678,7 @@
     <string name="ui_save_titles_to_the_cloud_first_then_you_can_remove_the_a6c5d3" formatted="false">"ابتدا ویدیوها را در فضای ابری ذخیره کنید. سپس می‌توانید نسخه‌های روی گوشی را حذف کنید."</string>
     <string name="ui_save_to_48c64f">"ذخیره در %1$s"</string>
     <string name="ui_save_to_cloud_0fd280" formatted="false">"ذخیره در فضای ابری"</string>
-    <string name="ui_save_to_household_f31fbf" formatted="false">"ذخیره در گروه خانوادگی"</string>
+    <string name="ui_save_to_household_f31fbf" formatted="false">"ذخیره در حساب شما"</string>
     <string name="ui_save_to_telegram_f6c595" formatted="false">"ذخیره در تلگرام"</string>
     <string name="ui_saved_in_the_cloud_dc46d5" formatted="false">"ذخیره‌شده در فضای ابری"</string>
     <string name="ui_saved_it_will_be_used_on_your_tv_96182e" formatted="false">"ذخیره شد و روی تلویزیون شما استفاده خواهد شد."</string>
@@ -729,7 +729,7 @@
     <string name="ui_settings_subtitle_accounts_then_a_title_find_subtitles_60e1db" formatted="false">"تنظیمات ← حساب‌های زیرنویس؛ سپس صفحهٔ ویدیو ← یافتن زیرنویس"</string>
     <string name="ui_settings_your_tvs_connect_a_tv_231c90" formatted="false">"تنظیمات ← تلویزیون‌های شما ← اتصال تلویزیون"</string>
     <string name="ui_share_or_forward_a_video_into_the_private_channel_and__97bd0c" formatted="false">"ویدیویی را به کانال خصوصی بفرستید یا فوروارد کنید تا در کتابخانهٔ شما نمایش داده شود."</string>
-    <string name="ui_share_your_catalog_with_your_household_your_video_file_fc6c1f" formatted="false">"فهرست ویدیوها را با گروه خانوادگی خود به اشتراک بگذارید. فایل‌های ویدیویی در فضای ذخیره‌سازی شخصی شما می‌مانند."</string>
+    <string name="ui_share_your_catalog_with_your_household_your_video_file_fc6c1f" formatted="false">"فهرست ویدیوها را با حساب خود همگام کنید. فایل‌های ویدیویی در فضای ذخیره‌سازی شخصی شما می‌مانند."</string>
     <string name="ui_should_this_require_phone_approval_92bae5" formatted="false">"تأیید از طریق گوشی لازم باشد؟"</string>
     <string name="ui_show_me_around_80afe5" formatted="false">"آشنایی با برنامه"</string>
     <string name="ui_show_password_6aeaa6" formatted="false">"نمایش رمز عبور"</string>
@@ -744,7 +744,7 @@
     <string name="ui_sign_in_again_to_keep_using_it_3abfd0" formatted="false">"برای ادامهٔ استفاده، دوباره وارد شوید"</string>
     <string name="ui_sign_in_before_attaching_a_subtitle_cdbcab" formatted="false">"پیش از پیوست کردن زیرنویس، وارد حساب شوید."</string>
     <string name="ui_sign_in_bfd402" formatted="false">"ورود"</string>
-    <string name="ui_sign_in_first_then_name_the_household_57a8fb" formatted="false">"ابتدا وارد حساب شوید، سپس برای گروه خانوادگی نام انتخاب کنید."</string>
+    <string name="ui_sign_in_first_then_name_the_household_57a8fb" formatted="false">"ابتدا وارد حساب شوید، سپس برای حساب خود نام انتخاب کنید."</string>
     <string name="ui_sign_in_on_this_phone_1bc154" formatted="false">"ورود به حساب در این گوشی"</string>
     <string name="ui_sign_in_or_create_a_free_account_at_subdl_112b2c" formatted="false">"در SubDL وارد شوید یا یک حساب رایگان بسازید."</string>
     <string name="ui_sign_in_or_create_an_account_to_bring_your_own_videos__e9e560" formatted="false">"وارد شوید یا حساب بسازید تا ویدیوهایتان را یک‌جا جمع کنید و روی تلویزیون تماشا کنید."</string>
@@ -844,8 +844,8 @@
     <string name="ui_the_biggest_catalogue_often_better_for_older_titles_it_9d2b9e" formatted="false">"بزرگ‌ترین مجموعهٔ زیرنویس؛ معمولاً برای آثار قدیمی مناسب‌تر است و زیرنویس مخصوص نسخهٔ فایل شما را پیدا می‌کند."</string>
     <string name="ui_the_bot_will_be_added_to_your_cablegram_library_channe_1d4a14" formatted="false">"این ربات به‌عنوان مدیر و با اجازهٔ ارسال پیام به کانال کتابخانهٔ Cablegram شما اضافه می‌شود. تلگرام به مدیران دسترسی به فعالیت‌ها، آمار و اطلاعات اعضای کانال را هم می‌دهد. ربات می‌تواند پست‌های جدید کتابخانه، از جمله ویدیوها و توضیحات آن‌ها را دریافت کند. سایر دسترسی‌های اختیاری غیرفعال‌اند. اگر ربات از قبل مدیر باشد، دسترسی‌های فعلی آن حفظ می‌شوند. بعضی ربات‌ها به تنظیمات بیشتری در تلگرام نیاز دارند."</string>
     <string name="ui_the_cablegram_apps_are_open_source_anyone_can_check_wh_3a0623" formatted="false">"برنامه‌های Cablegram متن‌باز هستند. هر کسی می‌تواند بررسی کند که با حساب تلگرام شما چه می‌کنند. سرورهای Cablegram شامل این موضوع نمی‌شوند."</string>
-    <string name="ui_the_cover_will_be_removed_from_your_household_on_the_n_135e1a" formatted="false">"پوستر در همگام‌سازی بعدی از گروه خانوادگی حذف می‌شود"</string>
-    <string name="ui_the_cover_will_be_saved_to_your_household_on_the_next__87cda3" formatted="false">"پوستر در همگام‌سازی بعدی در گروه خانوادگی ذخیره می‌شود"</string>
+    <string name="ui_the_cover_will_be_removed_from_your_household_on_the_n_135e1a" formatted="false">"پوستر در همگام‌سازی بعدی از حساب شما حذف می‌شود"</string>
+    <string name="ui_the_cover_will_be_saved_to_your_household_on_the_next__87cda3" formatted="false">"پوستر در همگام‌سازی بعدی در حساب شما ذخیره می‌شود"</string>
     <string name="ui_the_name_you_gave_the_bucket_2ae9c0" formatted="false">"نامی که برای باکت انتخاب کرده‌اید."</string>
     <string name="ui_the_profile_31580c" formatted="false">"پروفایل"</string>
     <string name="ui_the_relay_is_used_when_your_tv_can_t_reach_this_phone__b14902">"وقتی تلویزیون نتواند از طریق وای‌فای به این گوشی دسترسی پیدا کند، از سرور واسط استفاده می‌شود%1$s."</string>
@@ -872,16 +872,16 @@
     <string name="ui_this_file_changed_so_the_saved_subtitle_no_longer_appl_af0270" formatted="false">"فایل تغییر کرده است و زیرنویس ذخیره‌شده دیگر با آن مطابقت ندارد. دوباره جست‌وجو کنید."</string>
     <string name="ui_this_file_has_no_usable_subtitle_cues_or_has_invalid_t_f01576" formatted="false">"این فایل متن زیرنویس قابل استفاده ندارد یا زمان‌بندی آن نامعتبر است. فایل SRT/VTT دیگری انتخاب کنید."</string>
     <string name="ui_this_file_is_larger_than_your_available_storage_e6fe5f" formatted="false">"حجم این فایل بیشتر از فضای خالی شماست."</string>
-    <string name="ui_this_household_already_uses_the_telegram_account_of_7d8c2e">"این گروه خانوادگی از قبل به حساب تلگرام %1$s متصل است. "</string>
+    <string name="ui_this_household_already_uses_the_telegram_account_of_7d8c2e">"حساب Cablegram شما از قبل به حساب تلگرام %1$s متصل است. "</string>
     <string name="ui_this_month_s_free_relay_traffic_is_used_up_same_wi_fi__ef740a">"سهمیهٔ رایگان انتقال از سرور واسط این ماه تمام شده است%1$s. پخش در شبکهٔ وای‌فای مشترک همچنان کار می‌کند."</string>
     <string name="ui_this_name_is_saved_on_the_server_every_paired_tv_and_p_0a385b" formatted="false">"این نام روی سرور ذخیره می‌شود. تمام تلویزیون‌ها و گوشی‌های متصل، کتابخانهٔ یکسانی می‌بینند."</string>
     <string name="ui_this_phone_is_on_the_same_wi_fi_as_the_tv_4eb203">"نشانی این گوشی در شبکهٔ وای‌فای مشترک با تلویزیون: %1$s."</string>
-    <string name="ui_this_phone_isn_t_registered_with_your_household_yet_co_bd64f3" formatted="false">"این گوشی هنوز در گروه خانوادگی شما ثبت نشده است. به‌جای آن، با شمارهٔ تلفن متصل شوید."</string>
+    <string name="ui_this_phone_isn_t_registered_with_your_household_yet_co_bd64f3" formatted="false">"این گوشی هنوز در حساب شما ثبت نشده است. به‌جای آن، با شمارهٔ تلفن متصل شوید."</string>
     <string name="ui_this_phone_isn_t_signed_in_to_telegram_yet_so_it_can_t_a21b4f" formatted="false">"هنوز در این گوشی وارد تلگرام نشده‌اید؛ بنابراین گوشی نمی‌تواند ورود تلویزیون‌ها را تأیید کند یا ویدیوها را در تلگرام ذخیره کند."</string>
     <string name="ui_this_phone_stops_sharing_and_controlling_your_tvs_your_960038" formatted="false">"این گوشی دیگر ویدیوها را به اشتراک نمی‌گذارد و تلویزیون‌ها را کنترل نمی‌کند. ویدیوها روی گوشی می‌مانند و با ورود دوباره به حساب، کتابخانه برمی‌گردد."</string>
     <string name="ui_this_recommendation_is_shared_for_informational_purpos_02f61b" formatted="false">"این پیشنهاد فقط برای اطلاع‌رسانی است. استفاده از ربات کاملاً اختیاری است و تصمیم‌گیری و مسئولیت آن بر عهدهٔ کاربر است.\n\nCablegram مسئول عملکرد، محتوا، شیوه‌های حفظ حریم خصوصی ربات یا پیامدهای استفاده از آن نیست. پیش از افزودن ربات به کانال، دسترسی‌های آن را بررسی کنید."</string>
     <string name="ui_this_subtitle_is_too_large_choose_a_file_smaller_than__3cd02a" formatted="false">"حجم این زیرنویس بیش از حد مجاز است. فایلی کوچک‌تر از ۲ مگابایت انتخاب کنید."</string>
-    <string name="ui_this_title_is_in_your_household_library_but_its_file_i_7fef21" formatted="false">"این عنوان در کتابخانهٔ گروه خانوادگی شماست، اما فایل آن روی این گوشی نیست. برای پخش از این گوشی، همان فایل را اینجا وارد کنید."</string>
+    <string name="ui_this_title_is_in_your_household_library_but_its_file_i_7fef21" formatted="false">"این عنوان در کتابخانهٔ شماست، اما فایل آن روی این گوشی نیست. برای پخش از این گوشی، همان فایل را اینجا وارد کنید."</string>
     <string name="ui_this_title_s_file_isn_t_available_right_now_b15ec6" formatted="false">"فایل این عنوان در حال حاضر در دسترس نیست."</string>
     <string name="ui_this_video_can_t_be_opened_right_now_so_it_can_t_be_pr_395068" formatted="false">"این ویدیو اکنون باز نمی‌شود؛ بنابراین پیش‌نمایش آن در دسترس نیست."</string>
     <string name="ui_this_video_file_can_t_jump_to_different_points_quickly_99ad99" formatted="false">"جابه‌جایی سریع بین بخش‌های این فایل ویدیویی ممکن نیست؛ بنابراین نمی‌توان هماهنگی زیرنویس‌ها را با صدای آن بررسی کرد. با پیش‌نمایش، زمان‌بندی را تنظیم کنید."</string>
@@ -963,7 +963,7 @@
     <string name="ui_where_your_details_go_c282bf" formatted="false">"اطلاعات شما کجا ارسال می‌شود"</string>
     <string name="ui_wi_fi_only_ca99bb" formatted="false">"فقط وای‌فای"</string>
     <string name="ui_with_country_code_e_g_31_6_1234_5678_f10939" formatted="false">"همراه کد کشور؛ مثلاً ‎+31 6 1234 5678"</string>
-    <string name="ui_with_your_household_library_everyone_in_your_household_90c154" formatted="false">"همراه کتابخانهٔ گروه خانوادگی ذخیره می‌شود. همهٔ اعضای گروه می‌توانند آن را در تلویزیون، گوشی و کنترل تحت وب ببینند، "</string>
+    <string name="ui_with_your_household_library_everyone_in_your_household_90c154" formatted="false">"همراه کتابخانهٔ شما ذخیره می‌شود. سپس همهٔ تلویزیون‌ها، گوشی‌ها و کنترل تحت وب شما می‌توانند آن را نشان دهند، "</string>
     <string name="ui_without_use_the_tv_then_goes_back_to_who_s_watching_an_cef3ab" formatted="false">"عدم استفاده. سپس تلویزیون به صفحهٔ «چه کسی تماشا می‌کند؟» برمی‌گردد و دوباره به اجازهٔ گوشی نیاز دارد."</string>
     <string name="ui_won_t_open_b1de63">"%1$s، %2$s را باز نمی‌کند."</string>
     <string name="ui_year_89f683" formatted="false">"سال"</string>

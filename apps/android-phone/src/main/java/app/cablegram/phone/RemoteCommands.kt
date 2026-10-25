@@ -50,7 +50,7 @@ sealed interface TargetResult {
  * several on, nothing is guessed.
  */
 fun resolveTarget(selected: PairedTv?, household: List<MeDevice>?): TargetResult {
-    val none = TargetResult.Failed("No TV is paired with this household. Pair a TV to use the remote.")
+    val none = TargetResult.Failed("No TV is paired with your account. Pair a TV to use the remote.")
     fun MeDevice.label() = displayName?.takeIf(String::isNotBlank) ?: "TV"
     return when {
         household == null -> selected?.deviceId?.let { TargetResult.Target(it, selected.name) }
