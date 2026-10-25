@@ -80,6 +80,17 @@ private func videoMessage(id: Int64 = 5, chat: Int64 = -1001, caption: String = 
         #expect(TdlibTelegramApi.authState(TdObject(["@type": "authorizationStateClosing"])) == .closed)
     }
 
+    @Test func protectedMessagesOfferNoVideo() async throws {
+        var protected = videoMessage(id: 6)
+        protected["can_be_saved"] = false
+        var allowed = videoMessage()
+        allowed["can_be_saved"] = true
+        td.handlers["getChatHistory"] = { _ in ["@type": "messages", "messages": [protected, allowed]] }
+        let page = try await api.videos(chatId: -1001, fromMessageId: 0, limit: 100)
+        #expect(page.videos.map(\.messageId) == [5])
+        #expect(page.notes.map(\.messageId) == [6], "the caption is still read for hints")
+    }
+
     @Test func videosAreReadFromVideoMessagesAndVideoDocumentsAndNotesFromTheRest() async throws {
         let doc: [String: Any] = ["@type": "message", "id": 4, "chat_id": -1001, "date": 5, "content": ["@type": "messageDocument", "document": ["file_name": "b.mp4", "mime_type": "video/mp4", "document": file(8, unique: "d")], "caption": ["text": "doc caption"]]]
         let pdf: [String: Any] = ["@type": "message", "id": 3, "chat_id": -1001, "date": 5, "content": ["@type": "messageDocument", "document": ["file_name": "c.pdf", "mime_type": "application/pdf", "document": file(9)], "caption": ["text": "a pdf"]]]

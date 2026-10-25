@@ -363,7 +363,10 @@ class TdlibTelegramApi(private val client: TdlClient = TdlClient.create()) : Tel
 
     override suspend fun terminateSession(sessionId: Long) { client.terminateSession(sessionId).ok() }
 
+    // A channel or message that forbids saving its content ("Restrict saving content") never offers a video: Cablegram
+    // doesn't get around that restriction. Edits only carry hint text (TelegramLibrarySync), so they need no check.
     private fun toMessage(message: Message): TgMessage = toMessage(message.chatId, message.id, message.date.toLong(), message.content)
+        .let { if (message.canBeSaved) it else it.copy(video = null) }
 
     private fun toMessage(chatId: Long, messageId: Long, date: Long, content: MessageContent): TgMessage {
         val video = when (content) {
