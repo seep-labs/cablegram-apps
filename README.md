@@ -146,6 +146,10 @@ release fails with "The caller does not have permission". It needs no production
 Cablegram is an unofficial app and is not made or endorsed by Telegram. A fork must use its own Telegram
 `api_id` and `api_hash`, and must not call itself "Telegram". Third-party licences are in [NOTICE](NOTICE).
 
+## Support the project
+
+Cablegram is free and open source. If it makes your movie nights easier, you can help cover server costs and keep development going on [Ko-fi](https://ko-fi.com/cablegram).
+
 ## Contributing and security
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Report vulnerabilities as described in [SECURITY.md](SECURITY.md).
