@@ -145,6 +145,8 @@ release fails with "The caller does not have permission". It needs no production
 
 Cablegram is an unofficial app and is not made or endorsed by Telegram. A fork must use its own Telegram
 `api_id` and `api_hash`, and must not call itself "Telegram". Third-party licences are in [NOTICE](NOTICE).
+Cablegram is GPL-3.0 with an additional permission for linking OpenSSL, see
+[LICENSE-OPENSSL-EXCEPTION.md](LICENSE-OPENSSL-EXCEPTION.md).
 
 ## Support the project
 
