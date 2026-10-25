@@ -1,0 +1,26 @@
+Cablegram TV puts the videos you already have on your Android TV or Google TV. Browse them as big, clear tiles with your TV remote and play them in a VLC-based player built for the big screen.
+
+WHERE YOUR VIDEOS COME FROM
+• Your Android phone. Choose files or folders in the Cablegram phone app; they stay where they are. On the same Wi-Fi the TV streams straight from the phone. Away from home, playback can go through Cablegram's relay, which forwards the video without storing it.
+• Your own private Telegram channel (optional).
+
+PROFILES AND PRIVACY
+• Profiles, each with its own watch progress, and an optional PIN.
+• Private videos need a one-time approval on the phone before a TV plays them.
+• Sharing the TV? Each person adds their own account. Someone else's profile opens only after its owner approves it on their phone.
+• Your library, artwork and progress stay browsable even when the phone is offline. Playback depends on the source.
+
+SUBTITLES
+• Add your own .srt or .vtt files from the phone, and adjust timing.
+• Optional: search OpenSubtitles or SubDL with your own account on those services.
+
+GETTING STARTED
+Install the Cablegram phone app on your Android phone, sign in with Google or an emailed code and pair the TV with the code it shows. No Android phone? Pair from the web remote at app.cablegram.app in any browser.
+
+Cablegram does not provide films, series or channels. It plays videos you already have or are allowed to watch.
+
+Cablegram is an unofficial app. It is not made or endorsed by Telegram. It uses your own Telegram account through Telegram's public API, with Cablegram's own API id.
+
+The phone and TV apps are open source (GPL-3.0): github.com/seep-labs/cablegram-apps
+Privacy policy: cablegram.app/privacy.html
+Copyright complaints: copyright@cablegram.app
