@@ -1,1 +1,0 @@
-Release notes for each version are on GitHub: github.com/seep-labs/cablegram-apps/releases

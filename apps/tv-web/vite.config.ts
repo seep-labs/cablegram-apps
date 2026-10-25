@@ -1,15 +1,26 @@
 import legacy from "@vitejs/plugin-legacy";
+import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { defineConfig, loadEnv } from "vite";
+import { defineConfig, loadEnv, type Plugin } from "vite";
 
 // Old TV browsers (Tizen 5 ~ Chromium 69, webOS 4 ~ Chromium 53) lack <script type="module">, so the build ships a
 // legacy (nomodule, polyfilled) bundle and relative asset paths.
+/** Ships the repository's LICENSE and NOTICE as legal/ in the build, so the app and every package carry them (the Android apps pack the same two files). */
+const legalFiles = (): Plugin => ({
+  name: "cablegram-legal-files",
+  generateBundle() {
+    for (const name of ["LICENSE", "NOTICE"]) {
+      this.emitFile({ type: "asset", fileName: `legal/${name}`, source: readFileSync(fileURLToPath(new URL(`../../${name}`, import.meta.url))) });
+    }
+  },
+});
+
 export default defineConfig(({ mode }) => ({
   base: "./",
   // plugin-legacy's inline module detector checks up to Chrome 64 features (import.meta.url, dynamic import, async
   // generator), so modernTargets must be chrome >= 64 (otherwise webOS 5 / Chromium 68 and webOS 6 / Chromium 79 pass
   // the detector and then fail with SyntaxError on Chrome 80's `??` / `?.`).
-  plugins: [legacy({ targets: ["chrome >= 53"], modernTargets: ["chrome >= 64"] })],
+  plugins: [legacy({ targets: ["chrome >= 53"], modernTargets: ["chrome >= 64"] }), legalFiles()],
   // GramJS (loaded only in VITE_TG_DIRECT builds) refers to Node's `global`.
   // An explicit constant, so builds without VITE_TG_DIRECT=1 drop the Telegram chunk instead of shipping it unused.
   define: {

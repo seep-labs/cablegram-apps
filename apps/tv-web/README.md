@@ -106,6 +106,10 @@ Run apps from a shell with `env -u ELECTRON_RUN_AS_NODE` (VS Code's shell sets i
   It lists the app in its launcher, but the app's page is not exposed over `--remote-debugging-port`, so it was not driven
   automatically; Chromium 120 behaves like the desktop Chrome that `npm run e2e` uses.
 
+## Licence and notices
+
+The build copies the repository's `LICENSE` and `NOTICE` to `legal/` (`vite.config.ts`; `scripts/package.mjs` and the webOS wrapper step in `.github/workflows/tv-web.yml` add them to the packages). Settings → Licence and notices shows `legal/NOTICE`: Up and Down scroll it, Back closes it. `#legal` opens the same screen in a desktop browser.
+
 ## Diagnostics and testing on a real TV
 
 Settings → Diagnostics (and **Check this TV** on the pairing screen, or `#diag` in a desktop browser) checks the TV's
