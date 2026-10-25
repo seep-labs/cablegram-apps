@@ -17,7 +17,7 @@ store your videos. This repository holds the open-source phone and TV apps.
 ## Get the apps
 
 - **Android phone and Android TV / Google TV:** APKs on [GitHub Releases](https://github.com/seep-labs/cablegram-apps/releases)
-  (check them with [VERIFY.md](VERIFY.md)).
+  (install steps in [INSTALL.md](INSTALL.md), checks in [VERIFY.md](VERIFY.md)).
 - **LG and Samsung TVs (preview):** open [tv.cablegram.app](https://tv.cablegram.app) in the TV browser, or follow the
   [LG install guide](https://cablegram.app/lg/). Source in [`apps/tv-web`](apps/tv-web/).
 - **iPhone:** the [web remote](https://app.cablegram.app/) controls the TV from Safari (**Share → Add to Home Screen**).

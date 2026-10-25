@@ -42,3 +42,5 @@ Direct Telegram playback in that app is built only with VITE_TG_DIRECT=1.
 
 All of these licences are compatible with GPL-3.0 for the way Cablegram uses them. Check again before
 adding a dependency that is not listed here.
+
+The full list with exact versions, licences and upstream links is in THIRD_PARTY_NOTICES.md.

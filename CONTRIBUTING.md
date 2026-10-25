@@ -5,6 +5,8 @@ open source in [cablegram-server](https://github.com/seep-labs/cablegram-server)
 are not. Changes that need a server change are discussed in an issue first, and the server side goes to
 cablegram-server.
 
+Be kind. This project follows the [Code of Conduct](CODE_OF_CONDUCT.md).
+
 ## Before you open a pull request
 
 - Open an issue for anything larger than a small fix.
