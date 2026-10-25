@@ -16,6 +16,7 @@ import { focusEl, focusFirst, keyFromEvent, moveFocus, registerPlatformKeys } fr
 import type { Key } from "./nav";
 import { pairLink, qrCanvas } from "./pairlink";
 import * as diag from "./diagnostics";
+import { loadNotice, nextScrollTop, readText } from "./legal";
 import { engineFailureMessage, EMBEDDED, lazySource, openEngine, silentVideoNotice } from "./engine-adapter";
 import { SourceError } from "tv-media";
 import type { ByteSource } from "tv-media";
@@ -922,16 +923,40 @@ function settingsPanel(): HTMLElement {
       : "Telegram playback isn't available on this TV yet. Titles stored in Telegram play on the Android TV app."),
     h("div", "settings-heading", "Help"),
     button("Diagnostics", () => diagnosticsScreen(), "panel"),
+    h("div", "settings-heading", "Legal"),
+    button("Licence and notices", () => legalScreen(), "panel"),
   );
   return h("div", "settings", undefined, [
     h("div", "settings-col wide", undefined, [
       h("div", "settings-title", "About Cablegram"),
       h("div", "settings-tagline", "Your own videos, streamed from your phone to your TV"),
-      h("div", "settings-text", "Cablegram plays videos you own or are allowed to watch. It provides no media of its own. Videos from your phone or your Telegram channel are never stored on its servers; only a web video you choose to save to Cablegram storage is, until you delete your account."),
+      h("div", "settings-text", "Cablegram plays videos you own or are allowed to watch. It provides no media of its own and never stores your videos on its servers."),
       h("div", "settings-text small", "Privacy policy: https://cablegram.app/privacy.html"),
     ]),
     h("div", "settings-col", undefined, connNodes),
   ]);
+}
+
+// ---- Licence and notices -----------------------------------------------------------------------------------------
+
+/** The repository's NOTICE (legal/NOTICE in the build). The text has focus: Up and Down scroll it, Down at its end reaches Back, Back closes. */
+function legalScreen(back: () => void = () => libraryScreen()) {
+  const text = focusable("div", "legal-text", () => {}, [], "Loading…");
+  text.setAttribute("data-autofocus", "");
+  show([h("div", "legal-screen", undefined, [
+    h("div", "legal-title", "Licence and notices"),
+    text,
+    button("Back", back, "panel"),
+  ])], back);
+  screenKeys = (key) => {
+    if ((key !== "up" && key !== "down") || document.activeElement !== text) return false;
+    const top = text.scrollTop;
+    const next = nextScrollTop(top, key, text.clientHeight, text.scrollHeight);
+    if (next === top) return false; // at an end: let focus move on to Back
+    text.scrollTop = next;
+    return true;
+  };
+  void loadNotice(readText).then((notice) => { text.textContent = notice; });
 }
 
 // ---- Diagnostics -------------------------------------------------------------------------------------------------
@@ -1774,6 +1799,7 @@ async function start() {
     history.replaceState(null, "", `${location.pathname}${rest ? `?${rest}` : ""}${location.hash}`);
   }
   if (location.hash === "#diag") { diagnosticsScreen(); return; }
+  if (location.hash === "#legal") { legalScreen(() => { location.hash = ""; void start(); }); return; }
   if (!store.accounts().length) { void pair(false); return; }
   await loadProfiles();
   // Reopen the profile this TV was on, unless it needs a PIN or a phone's approval.

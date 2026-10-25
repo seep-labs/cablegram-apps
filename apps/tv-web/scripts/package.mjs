@@ -15,6 +15,13 @@ rmSync(out, { recursive: true, force: true });
 mkdirSync(out, { recursive: true });
 cpSync(join(root, "dist"), out, { recursive: true });
 cpSync(join(root, "platforms", platform, manifest), join(out, manifest));
+// The licence and notices travel inside every package, as in the Android apps (build.gradle.kts `copyLegalAssets`).
+mkdirSync(join(out, "legal"), { recursive: true });
+for (const name of ["LICENSE", "NOTICE"]) {
+  const file = join(root, "../..", name);
+  if (!existsSync(file)) { console.error(`${file} is missing; the package must carry the licence and notices`); process.exit(1); }
+  cpSync(file, join(out, "legal", name));
+}
 const icon = join(root, "platforms/icon.png");
 if (existsSync(icon)) cpSync(icon, join(out, "icon.png"));
 else writeFileSync(join(out, "icon.png"), Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==", "base64"));

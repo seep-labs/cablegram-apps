@@ -85,7 +85,7 @@ No third-party runtime dependencies. `package.json` lists none, and the page is 
 
 ## TV media library (`libs/tv-media`)
 
-Apache-2.0, copyright Seep Labs: [libs/tv-media/LICENSE](libs/tv-media/LICENSE) and
+Version 0.0.0 (`libs/tv-media/package.json`), Apache-2.0, copyright Seep Labs: [libs/tv-media/LICENSE](libs/tv-media/LICENSE) and
 [libs/tv-media/NOTICE](libs/tv-media/NOTICE). It has no runtime dependencies, so other projects can use it without
 GPL obligations. Its Telegram byte source takes any object that implements its small `TelegramFileApi`; the TV web
 app implements it with GramJS, which is not part of the library. Its development tools (esbuild, Playwright,
