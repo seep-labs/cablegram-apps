@@ -49,6 +49,7 @@ import app.cablegram.diagnostics.DiagnosticsPreferences
 import app.cablegram.diagnostics.TvDiagnostics
 import app.cablegram.isSigningIn
 import app.cablegram.data.PRIVACY_POLICY_URL
+import app.cablegram.data.SOURCE_CODE_URL
 
 @Composable
 internal fun AboutSettingsPanel(
@@ -197,6 +198,17 @@ internal fun AboutSettingsPanel(
                     Text(it, color = Cyan, fontSize = 12.sp)
                 }
             }
+            Button(
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(SOURCE_CODE_URL))
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    runCatching { context.startActivity(intent) }
+                },
+                colors = ButtonDefaults.colors(containerColor = PanelRaised),
+            ) {
+                Text(ui.getString(R.string.ui_source_code_on_github_6de0bf))
+            }
+            Text(SOURCE_CODE_URL, color = Slate, fontSize = 12.sp)
             var showLegal by remember { mutableStateOf(false) }
             Button(
                 onClick = { showLegal = !showLegal },

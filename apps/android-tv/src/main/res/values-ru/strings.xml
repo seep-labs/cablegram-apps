@@ -98,6 +98,7 @@
     <string name="ui_left_right_to_adjust_42fa43" formatted="false">"Настройка кнопками «Влево» и «Вправо»"</string>
     <string name="ui_library_unavailable_357219" formatted="false">"Библиотека недоступна"</string>
     <string name="ui_licence_and_notices_ded184" formatted="false">"Лицензия и уведомления"</string>
+    <string name="ui_source_code_on_github_6de0bf" formatted="false">"Исходный код на GitHub"</string>
     <string name="ui_live_b64ac0" formatted="false">"Прямой эфир"</string>
     <string name="ui_local_lan_3cd048" formatted="false">"Локальная сеть"</string>
     <string name="ui_looking_for_your_phone_d386a9" formatted="false">"Поиск телефона"</string>

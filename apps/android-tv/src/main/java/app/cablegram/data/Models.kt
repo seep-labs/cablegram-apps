@@ -309,6 +309,7 @@ fun getRandomLoadingVideoUrl(): String = if (SignatureClips.enabled) SignatureCl
 const val TELEGRAM_PASSWORD_VIDEO_URL = "$SIGNATURE_CLIP_BASE/custom/pass.mp4"
 
 const val PRIVACY_POLICY_URL = "https://cablegram.app/privacy.html"
+const val SOURCE_CODE_URL = "https://github.com/seep-labs/cablegram-apps"
 const val DEMO_REVIEWER_PIN = "9999"
 const val DEMO_SELECT_CLICKS = 5
 const val DEMO_ID_PREFIX = "demo:"
