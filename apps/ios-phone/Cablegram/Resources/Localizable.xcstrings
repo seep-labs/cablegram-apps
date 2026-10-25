@@ -38327,6 +38327,53 @@
         }
       }
     },
+    "ui_source_code_on_github_6de0bf": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الشيفرة المصدرية على GitHub"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quellcode auf GitHub"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Source code on GitHub"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Código fuente en GitHub"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کد منبع در GitHub"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codice sorgente su GitHub"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Исходный код на GitHub"
+          }
+        }
+      }
+    },
     "ui_source_unavailable_a3feb8": {
       "extractionState": "manual",
       "localizations": {

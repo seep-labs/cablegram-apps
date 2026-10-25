@@ -1,6 +1,9 @@
 import CablegramCore
 import SwiftUI
 
+/// The apps' public repository, linked from the settings footer next to the licence.
+private let sourceCodeURL = URL(string: "https://github.com/seep-labs/cablegram-apps")!
+
 private enum SettingsPage: String { case account, tvs, profiles, collections, transfers, connection }
 
 /// Port of `SettingsScreen`: the overview, then one page at a time with "Back to Settings". Pages whose content
@@ -321,6 +324,8 @@ struct SettingsScreen: View {
             Button { viewModel.replayWelcomeTour() } label: { Text(key: "ui_show_the_welcome_tour_140eac") }
                 .buttonStyle(AccentTextButtonStyle()).accessibilityIdentifier(MaestroIds.settingsWelcomeTour)
             Button { showLegal = true } label: { Text(key: "ui_licence_and_third_party_notices_0dcfa5") }
+                .buttonStyle(AccentTextButtonStyle())
+            Link(destination: sourceCodeURL) { Text(key: "ui_source_code_on_github_6de0bf") }
                 .buttonStyle(AccentTextButtonStyle())
             Text(L("ui_cablegram_your_videos_your_screen_your_space_b83cca",
                    Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""))

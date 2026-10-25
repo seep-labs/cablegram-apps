@@ -1164,6 +1164,8 @@ private fun SettingsScreen(viewModel: PhoneViewModel) {
                 TextButton(onClick = { reportProblemOpen = true }, modifier = Modifier.maestro("settings_report_problem")) { Text(ui.getString(R.string.diagnostics_report_problem_button)) }
             }
             TextButton(onClick = { showLegal = true }) { Text(ui.getString(R.string.ui_licence_and_third_party_notices_0dcfa5)) }
+            val sourceUriHandler = androidx.compose.ui.platform.LocalUriHandler.current
+            TextButton(onClick = { sourceUriHandler.openUri(SOURCE_CODE_URL) }) { Text(ui.getString(R.string.ui_source_code_on_github_6de0bf)) }
             Text(ui.getString(R.string.ui_cablegram_your_videos_your_screen_your_space_b83cca, BuildConfig.VERSION_NAME), color = VlcMuted, style = MaterialTheme.typography.bodySmall)
         }
         if (page == "account" && viewModel.accountDeletionAvailable) {

@@ -932,6 +932,7 @@ function settingsPanel(): HTMLElement {
       h("div", "settings-tagline", "Your own videos, streamed from your phone to your TV"),
       h("div", "settings-text", "Cablegram plays videos you own or are allowed to watch. It provides no media of its own and never stores your videos on its servers."),
       h("div", "settings-text small", "Privacy policy: https://cablegram.app/privacy.html"),
+      h("div", "settings-text small", "Source code: https://github.com/seep-labs/cablegram-apps (GPL-3.0)"),
     ]),
     h("div", "settings-col", undefined, connNodes),
   ]);

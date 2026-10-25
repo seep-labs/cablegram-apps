@@ -443,6 +443,7 @@
     <string name="ui_library_on_tv_11874a" formatted="false">"المكتبة على شاشة التلفزيون"</string>
     <string name="ui_library_synced_704162" formatted="false">"المكتبة متزامنة"</string>
     <string name="ui_licence_and_notices_ded184" formatted="false">"الرخصة والإخطارات"</string>
+    <string name="ui_source_code_on_github_6de0bf" formatted="false">"الشيفرة المصدرية على GitHub"</string>
     <string name="ui_licence_and_third_party_notices_0dcfa5" formatted="false">"الإشعارات المتعلقة بالرخصة وأطراف ثالثة"</string>
     <string name="ui_like_any_telegram_app_telegram_desktop_for_example_cab_22d711" formatted="false">"مثل أي تطبيق Telegram، كـ Telegram Desktop، يسجّل Cablegram الدخول كجهاز في حسابك."</string>
     <string name="ui_likely_match_not_verified_3f4c43" formatted="false">"توافق محتمل · لم يُتحقّق منه"</string>
