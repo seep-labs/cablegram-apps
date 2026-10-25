@@ -930,7 +930,7 @@ function settingsPanel(): HTMLElement {
     h("div", "settings-col wide", undefined, [
       h("div", "settings-title", "About Cablegram"),
       h("div", "settings-tagline", "Your own videos, streamed from your phone to your TV"),
-      h("div", "settings-text", "Cablegram plays videos you own or are allowed to watch. It provides no media of its own. Videos from your phone or your Telegram channel are never stored on its servers; only a web video you choose to save to Cablegram storage is, until you delete your account."),
+      h("div", "settings-text", "Cablegram plays videos you own or are allowed to watch. It provides no media of its own and never stores your videos on its servers."),
       h("div", "settings-text small", "Privacy policy: https://cablegram.app/privacy.html"),
     ]),
     h("div", "settings-col", undefined, connNodes),
