@@ -132,8 +132,8 @@ combined with it; see [LICENSE-OPENSSL-EXCEPTION.md](LICENSE-OPENSSL-EXCEPTION.m
   licence versions: [docs/screenshots/CREDITS.md](docs/screenshots/CREDITS.md).
 - **Title search, metadata and artwork** shown in the apps come from The Movie Database (TMDB) through the
   Cablegram service. This product uses the TMDB API but is not endorsed or certified by TMDB.
-- **App icons** in the repository are Cablegram's own artwork. TODO(founder): confirm who made them and under
-  which licence they are published.
+- **App icons** in the repository were made with AI tools (Gemini, ChatGPT and Claude) at the direction of the
+  Cablegram authors, and are published under the licence of this repository.
 
 ## Licence texts
 

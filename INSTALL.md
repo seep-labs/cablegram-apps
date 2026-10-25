@@ -86,14 +86,14 @@ Home Screen).
 
 ## Check the signing certificate of an APK
 
-Every Android release is signed with the Cablegram release key. To see the certificate of a file you downloaded:
+Every Android APK on GitHub Releases is signed with the same Cablegram release key. To see the certificate of a file you downloaded:
 
 ```sh
 apksigner verify --print-certs cablegram-phone-arm64-v8a-<tag>.apk
 ```
 
 `apksigner` ships with the Android SDK build tools (`<sdk>/build-tools/<version>/apksigner`). Look at the line
-`certificate SHA-256 digest`. Read from the signed v0.2.0 release APK (`cablegram-phone-v0.2.0.apk`), it is:
+`certificate SHA-256 digest`. The release APKs of both apps carry the same certificate; checked on v0.2.0, v0.3.0-rc2 and v0.3.0-rc6, it is:
 
 ```
 02d4f66d77fd08ad94adafa7b2b2f5c2e23a485b5d666323f354cf8d6ce2f913
@@ -101,4 +101,4 @@ apksigner verify --print-certs cablegram-phone-arm64-v8a-<tag>.apk
 
 If the digest on a file you have is different, don't install it. VERIFY.md also covers the file hash
 (`SHA256SUMS`), the build attestation (`gh attestation verify`) and checking an app that is already installed.
-The Google Play build is signed differently; see "If you installed from Google Play" in VERIFY.md.
+Google Play re-signs its build with Google's app-signing key, so a Play install and a GitHub APK have different certificates and can't update each other; see "If you installed from Google Play" in VERIFY.md.
