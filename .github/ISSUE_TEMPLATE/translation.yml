@@ -1,0 +1,51 @@
+name: Translation fix
+description: A wrong, missing or awkward translation in an app
+labels: [translation]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The apps ship in English plus Arabic, German, Spanish, Persian (Farsi), Italian and Russian.
+        Where the strings live:
+        - Android phone: `apps/android-phone/src/main/res/values*/strings.xml` (and `plurals.xml`)
+        - Android TV: `apps/android-tv/src/main/res/values*/strings.xml`
+        - iPhone: `apps/ios-phone/Cablegram/Resources/*.xcstrings`
+        - TV web app (LG and Samsung): English only for now
+        - Web remote: English only for now
+
+        The string key is the `name` in the Android XML, or the key in the `.xcstrings` file. If you
+        can't find it, describe the screen instead.
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      options: [Arabic, German, Spanish, Persian (Farsi), Italian, Russian, Other]
+    validations:
+      required: true
+  - type: dropdown
+    id: app
+    attributes:
+      label: Which app?
+      options: [Android phone, Android TV, iPhone, TV web app (LG / Samsung), Web remote]
+    validations:
+      required: true
+  - type: input
+    id: where
+    attributes:
+      label: Screen or string key
+      description: For example "Settings > Subtitles" or `delete_account_entry`.
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current text
+    validations:
+      required: true
+  - type: textarea
+    id: suggested
+    attributes:
+      label: Suggested text
+      description: If you are a native speaker, say so. A short note on why the new wording is better helps.
+    validations:
+      required: true
