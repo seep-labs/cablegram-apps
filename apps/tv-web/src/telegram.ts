@@ -28,7 +28,7 @@ function within<T>(step: string, ms: number, work: Promise<T>): Promise<T> {
 }
 
 export class TelegramUnavailable extends Error {
-  constructor(readonly reason: "no_session" | "no_video" | "not_found") {
+  constructor(readonly reason: "no_session" | "no_video" | "not_found" | "protected") {
     super(reason);
   }
 }
@@ -231,6 +231,8 @@ export async function openTelegramSource(
   const fetchDocument = async (): Promise<Api.Document> => {
     const [message] = await within("message", 30_000, client.getMessages(inputPeer, { ids: [ref.messageId] }));
     if (!message) throw new TelegramUnavailable("not_found");
+    // "Restrict saving content" on the message or its channel: Cablegram doesn't get around it.
+    if (message.noforwards || (message.chat as { noforwards?: boolean } | undefined)?.noforwards) throw new TelegramUnavailable("protected");
     const media = message.media;
     if (!(media instanceof Api.MessageMediaDocument) || !(media.document instanceof Api.Document)) throw new TelegramUnavailable("no_video");
     return media.document;

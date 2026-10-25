@@ -1054,7 +1054,7 @@ async function telegramSource(ref: TelegramRef): Promise<ByteSource> {
     if (e instanceof ApiError) throw new SourceError(e.status === 403 ? "telegram_auth" : "telegram_error", e.code, e.status, e.code);
     const reason = (e as { reason?: string }).reason;
     if (reason === "no_session") throw new SourceError("telegram_auth", reason, undefined, reason);
-    if (reason === "no_video" || reason === "not_found") throw new SourceError("telegram_file", reason, undefined, reason);
+    if (reason === "no_video" || reason === "not_found" || reason === "protected") throw new SourceError("telegram_file", reason, undefined, reason);
     throw new SourceError("telegram_error", e instanceof Error ? e.message : "telegram failed", undefined, "connect_failed");
   }
 }

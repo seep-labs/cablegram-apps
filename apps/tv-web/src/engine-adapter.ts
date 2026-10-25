@@ -108,7 +108,9 @@ export function engineFailureMessage(e: PlayerError): string | null {
       if (e.code === "telegram_direct_not_allowed") return "Direct Telegram playback isn't turned on for this TV.";
       if (e.code === "no_session") return "Telegram isn't set up on this TV yet.";
       return "This TV isn't signed in to Telegram any more.";
-    case "telegram_file": return "This video is no longer available in Telegram.";
+    case "telegram_file":
+      if (e.code === "protected") return "This Telegram channel doesn't allow saving its videos, so Cablegram can't play them.";
+      return "This video is no longer available in Telegram.";
     case "telegram_error": return "Telegram couldn't deliver this video.";
     default: return null; // unsupported_*, decode, malformed, buffer: fall back to the plain player
   }

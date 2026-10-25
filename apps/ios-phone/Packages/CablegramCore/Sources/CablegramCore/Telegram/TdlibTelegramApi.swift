@@ -486,8 +486,12 @@ public final class TdlibTelegramApi: TelegramApi, @unchecked Sendable {
         }
     }
 
+    /// A channel or message that forbids saving its content ("Restrict saving content") never offers a video: Cablegram doesn't get around
+    /// that restriction. TDLib always sends `can_be_saved`. Edits only carry hint text (TelegramLibrarySync), so they need no check.
     static func message(_ message: TdObject) -> TgMessage {
-        self.message(chatId: message.int64("chat_id"), messageId: message.int64("id"), date: message.int64("date"), content: message.object("content") ?? TdObject([:]))
+        var mapped = self.message(chatId: message.int64("chat_id"), messageId: message.int64("id"), date: message.int64("date"), content: message.object("content") ?? TdObject([:]))
+        if message.fields["can_be_saved"] != nil && !message.bool("can_be_saved") { mapped.video = nil }
+        return mapped
     }
 
     static func message(chatId: Int64, messageId: Int64, date: Int64, content: TdObject) -> TgMessage {

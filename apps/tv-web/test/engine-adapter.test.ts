@@ -27,6 +27,8 @@ describe("engineFailureMessage", () => {
     expect(engineFailureMessage(err("source_http", 429, "relay_streams_exceeded"))).toContain("Too many relay streams");
     expect(engineFailureMessage(err("source_network"))).toContain("Can't reach Cablegram");
     expect(engineFailureMessage(err("telegram_flood"))).toContain("Telegram");
+    expect(engineFailureMessage(err("telegram_file", undefined, "protected"))).toContain("doesn't allow saving");
+    expect(engineFailureMessage(err("telegram_file", undefined, "not_found"))).toContain("no longer available");
     expect(engineFailureMessage(err("unsupported_codec"))).toBeNull();
     expect(engineFailureMessage(err("decode"))).toBeNull();
   });
