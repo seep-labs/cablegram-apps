@@ -14,6 +14,10 @@ Cablegram is a personal media player for videos you own. Pick files on your Andr
 Telegram channel, then play them on your TV with the phone as the remote. Cablegram provides no content and does not
 store your videos. This repository holds the open-source phone and TV apps.
 
+<p align="center">
+  <img src="docs/screenshots/demo.gif" width="800" alt="Demo: on the phone, a title gets its cover from the catalog, then plays on the TV and is paused and resumed from the phone remote">
+</p>
+
 ## Get the apps
 
 - **Android phone and Android TV / Google TV:** APKs on [GitHub Releases](https://github.com/seep-labs/cablegram-apps/releases)

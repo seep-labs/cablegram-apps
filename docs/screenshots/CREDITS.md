@@ -1,6 +1,6 @@
 # Screenshot credits
 
-The videos, stills and subtitles shown in these screenshots come from Blender Foundation open movies. They are
+The videos, stills and subtitles shown in these screenshots and in `demo.gif` come from Blender Foundation open movies. They are
 used under Creative Commons Attribution licences. Cablegram is not affiliated with or endorsed by the Blender
 Foundation.
 
