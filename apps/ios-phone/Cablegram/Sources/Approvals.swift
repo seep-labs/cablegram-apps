@@ -43,7 +43,7 @@ enum Approvals {
         case .phoneJoin:
             let dev = approval.title ?? "Phone"
             content.title = "Allow \(dev) to join?"
-            content.body = "\(dev) wants to join your Cablegram household."
+            content.body = "\(dev) wants to connect to your Cablegram account."
             content.categoryIdentifier = profileCategory
         }
         content.userInfo = ["attempt_id": approval.attemptId, "kind": approval.kind.rawValue]

@@ -7,7 +7,7 @@
     <string name="delete_account_code_hint">"Enviamos el código a %1$s. Caduca en 15 minutos."</string>
     <string name="delete_account_code_label" formatted="false">"Código del correo electrónico"</string>
     <string name="delete_account_confirm_button" formatted="false">"Eliminar definitivamente"</string>
-    <string name="delete_account_confirm_text" formatted="false">"Tu cuenta, tu hogar, tu biblioteca y todo lo indicado arriba se eliminarán ahora. Esta acción no se puede deshacer."</string>
+    <string name="delete_account_confirm_text" formatted="false">"Tu cuenta, tu biblioteca y todo lo indicado arriba se eliminarán ahora. Esta acción no se puede deshacer."</string>
     <string name="delete_account_confirm_title" formatted="false">"¿Eliminar tu cuenta definitivamente?"</string>
     <string name="delete_account_continue" formatted="false">"Eliminar mi cuenta"</string>
     <string name="delete_account_deleting" formatted="false">"Eliminando…"</string>
@@ -264,8 +264,8 @@
     <string name="ui_cover_fa8d84" formatted="false">"Póster"</string>
     <string name="ui_cover_kept_on_this_phone_tvs_show_it_while_this_phone__7b244e" formatted="false">"Cubierta guardada en este teléfono. Los televisores lo muestran mientras este teléfono está en el mismo Wi-Fi."</string>
     <string name="ui_cover_preview_9cc1b7" formatted="false">"Vista previa del póster"</string>
-    <string name="ui_cover_removed_from_your_household_a7304d" formatted="false">"Póster eliminado de tu hogar"</string>
-    <string name="ui_cover_saved_to_your_household_762369" formatted="false">"Póster guardado en tu hogar"</string>
+    <string name="ui_cover_removed_from_your_household_a7304d" formatted="false">"Póster eliminado de tu cuenta"</string>
+    <string name="ui_cover_saved_to_your_household_762369" formatted="false">"Póster guardado en tu cuenta"</string>
     <string name="ui_create_a_free_account_at_opensubtitles_com_c1e6ef" formatted="false">"Crea una cuenta gratuita en opensubtitles.com."</string>
     <string name="ui_create_a_free_cloudflare_account_9d8fd1" formatted="false">"Crear una cuenta gratuita Cloudflare"</string>
     <string name="ui_create_a_new_cb63aa">"Crear un nuevo \"%1$s\""</string>
@@ -386,7 +386,7 @@
     <string name="ui_hide_privacy_and_terms_942d73" formatted="false">"Ocultar privacidad y condiciones"</string>
     <string name="ui_hide_subtitle_preferences_245035" formatted="false">"Ocultar preferencias de subtítulos"</string>
     <string name="ui_hint_3033f3">"Pista: %1$s"</string>
-    <string name="ui_household_name_e4d50a" formatted="false">"Nombre del hogar"</string>
+    <string name="ui_household_name_e4d50a" formatted="false">"Nombre de la cuenta"</string>
     <string name="ui_how_cablegram_uses_your_data_89560e" formatted="false">"Cómo Cablegram utiliza sus datos: "</string>
     <string name="ui_how_this_works_bdbd77" formatted="false">"Cómo funciona esto"</string>
     <string name="ui_i_accept_the_5ce6ca" formatted="false">"Acepto los "</string>
@@ -397,7 +397,7 @@
     <string name="ui_import_connected_storage_telegram_f2fb3f" formatted="false">"Importar → Almacenamiento conectado → Telegram"</string>
     <string name="ui_import_videos_fec728" formatted="false">"Importar vídeos"</string>
     <string name="ui_in_telegram_share_or_forward_videos_into_the_private_c_ab9acc">"En Telegram, compartir o enviar vídeos al canal privado \"%1$s\". "</string>
-    <string name="ui_in_your_household_library_file_not_on_this_phone_698618" formatted="false">"En su biblioteca de la casa · Archivo no en este teléfono"</string>
+    <string name="ui_in_your_household_library_file_not_on_this_phone_698618" formatted="false">"En su biblioteca · Archivo no en este teléfono"</string>
     <string name="ui_in_your_own_storage_e2575f" formatted="false">"En su propio almacenamiento"</string>
     <string name="ui_include_forced_subtitles_5c1992" formatted="false">"Incluir subtítulos forzados"</string>
     <string name="ui_install_cablegram_on_your_android_tv_or_google_tv_and__d27b55" formatted="false">"Instala Cablegram TV en tu TV Android o Google TV y ábrela. A continuación, introduzca el código de seis dígitos que muestra."</string>
@@ -484,7 +484,7 @@
     <string name="ui_movie_941de4" formatted="false">"Película"</string>
     <string name="ui_movies_dff924" formatted="false">"Películas"</string>
     <string name="ui_my_tv_home_4a4daa" formatted="false">"Mi TV (casa)"</string>
-    <string name="ui_name_this_household_a2930a" formatted="false">"Pon nombre a este hogar"</string>
+    <string name="ui_name_this_household_a2930a" formatted="false">"Pon nombre a tu cuenta"</string>
     <string name="ui_navigate_down_b9d466" formatted="false">"Ir abajo"</string>
     <string name="ui_navigate_left_ceb18f" formatted="false">"Ir a la izquierda"</string>
     <string name="ui_navigate_right_668ca1" formatted="false">"Ir a la derecha"</string>
@@ -567,7 +567,7 @@
     <string name="ui_otherwise_it_plays_your_telegram_videos_through_this_p_72fc1d" formatted="false">"De lo contrario toca tus Telegram vídeos a través de este teléfono, y no tiene Telegram sesiones."</string>
     <string name="ui_our_terms_changed_edc5de" formatted="false">"Nuestros Términos cambiaron"</string>
     <string name="ui_page_of_8b9ffa">"Página %1$s de %2$s"</string>
-    <string name="ui_pair_a_tv_first_so_cablegram_can_attach_storage_to_thi_cf1a07" formatted="false">"Vincula primero un televisor para que Cablegram pueda asociar el almacenamiento a este hogar."</string>
+    <string name="ui_pair_a_tv_first_so_cablegram_can_attach_storage_to_thi_cf1a07" formatted="false">"Vincula primero un televisor para que Cablegram pueda asociar el almacenamiento a tu cuenta."</string>
     <string name="ui_paired_but_this_phone_has_no_wi_fi_address_yet_5134d1" formatted="false">"Vinculado, pero el teléfono aún no tiene dirección Wi-Fi."</string>
     <string name="ui_paired_tv_68fdc7" formatted="false">"Televisor vinculado"</string>
     <string name="ui_password_e7cf3e" formatted="false">"Contraseña"</string>
@@ -579,7 +579,7 @@
     <string name="ui_pause_playback_65a4a8" formatted="false">"Pausar reproducción"</string>
     <string name="ui_paused_on_a7fb4a" formatted="false">"En pausa en "</string>
     <string name="ui_permission_object_read_write_apply_it_to_a_specific_bu_ac52d4" formatted="false">"Permiso: «Object Read &amp; Write». Limítalo al bucket del paso 2 y pulsa «Create»."</string>
-    <string name="ui_personal_keys_do_not_grant_copyright_permission_use_tr_003d6d" formatted="false">"Las claves personales no conceden derechos de autor. Usa solo subtítulos que tengas derecho a guardar y compartir con tu hogar. Se aplican las condiciones de subdl.com/terms y opensubtitles.com. Para solicitar una retirada por infracción, envía el título y los detalles del subtítulo a copyright@cablegram.app."</string>
+    <string name="ui_personal_keys_do_not_grant_copyright_permission_use_tr_003d6d" formatted="false">"Las claves personales no conceden derechos de autor. Usa solo subtítulos que tengas derecho a guardar y usar en tus propios dispositivos. Se aplican las condiciones de subdl.com/terms y opensubtitles.com. Para solicitar una retirada por infracción, envía el título y los detalles del subtítulo a copyright@cablegram.app."</string>
     <string name="ui_phone_approval_required_112e8c" formatted="false">"Se requiere autorización desde el teléfono"</string>
     <string name="ui_phone_number_306f1b" formatted="false">"Número de teléfono"</string>
     <string name="ui_phone_space_cloud_copies_transfers_f4925b" formatted="false">"Espacio del teléfono, copias en la nube y transferencias"</string>
@@ -669,8 +669,8 @@
     <string name="ui_save_a_cloud_copy_dbaf92" formatted="false">"Guarda una copia de la nube"</string>
     <string name="ui_save_a_cloud_copy_of_any_title_to_your_own_google_driv_3aac39" formatted="false">"Guarda una copia en la nube de cualquier título en tu Google Drive. La TV podrá reproducirla aunque no tengas el teléfono cerca, y podrás liberar espacio en él."</string>
     <string name="ui_save_account_name_7c6744" formatted="false">"Guardar nombre de cuenta"</string>
-    <string name="ui_save_artwork_to_household_2be5ad" formatted="false">"Guardar imagen en el hogar"</string>
-    <string name="ui_save_artwork_to_household_e25fd0" formatted="false">"¿Guardar imagen en el hogar?"</string>
+    <string name="ui_save_artwork_to_household_2be5ad" formatted="false">"Guardar imagen en tu cuenta"</string>
+    <string name="ui_save_artwork_to_household_e25fd0" formatted="false">"¿Guardar imagen en tu cuenta?"</string>
     <string name="ui_save_changes_dd0ae7" formatted="false">"Guardar cambios"</string>
     <string name="ui_save_connection_df24ef" formatted="false">"Guardar conexión"</string>
     <string name="ui_save_new_details_7ddcbe" formatted="false">"Guardar nuevos detalles"</string>
@@ -678,7 +678,7 @@
     <string name="ui_save_titles_to_the_cloud_first_then_you_can_remove_the_a6c5d3" formatted="false">"Guardar los títulos a la nube primero. Entonces puede quitar las copias del teléfono."</string>
     <string name="ui_save_to_48c64f">"Guardar en %1$s"</string>
     <string name="ui_save_to_cloud_0fd280" formatted="false">"Guardar en la nube"</string>
-    <string name="ui_save_to_household_f31fbf" formatted="false">"Guardar en el hogar"</string>
+    <string name="ui_save_to_household_f31fbf" formatted="false">"Guardar en tu cuenta"</string>
     <string name="ui_save_to_telegram_f6c595" formatted="false">"Guardar en Telegram"</string>
     <string name="ui_saved_in_the_cloud_dc46d5" formatted="false">"Guardado en la nube"</string>
     <string name="ui_saved_it_will_be_used_on_your_tv_96182e" formatted="false">"Guardado. Se usará en tu televisor."</string>
@@ -729,7 +729,7 @@
     <string name="ui_settings_subtitle_accounts_then_a_title_find_subtitles_60e1db" formatted="false">"Ajustes → Cuentas de subtítulos; después, vídeo → Buscar subtítulos"</string>
     <string name="ui_settings_your_tvs_connect_a_tv_231c90" formatted="false">"Ajustes → Tus televisores → Conectar un TV"</string>
     <string name="ui_share_or_forward_a_video_into_the_private_channel_and__97bd0c" formatted="false">"Compartir o enviar un vídeo al canal privado y aparece en su biblioteca."</string>
-    <string name="ui_share_your_catalog_with_your_household_your_video_file_fc6c1f" formatted="false">"Comparte tu catálogo con tu hogar. Sus archivos de vídeo permanecen en su propio almacenamiento."</string>
+    <string name="ui_share_your_catalog_with_your_household_your_video_file_fc6c1f" formatted="false">"Sincroniza tu catálogo con tu cuenta. Sus archivos de vídeo permanecen en su propio almacenamiento."</string>
     <string name="ui_should_this_require_phone_approval_92bae5" formatted="false">"¿Debería esto requerir la aprobación del teléfono?"</string>
     <string name="ui_show_me_around_80afe5" formatted="false">"Enséñame."</string>
     <string name="ui_show_password_6aeaa6" formatted="false">"Mostrar contraseña"</string>
@@ -744,7 +744,7 @@
     <string name="ui_sign_in_again_to_keep_using_it_3abfd0" formatted="false">"Vuelve a iniciar sesión para continuar"</string>
     <string name="ui_sign_in_before_attaching_a_subtitle_cdbcab" formatted="false">"Inicia sesión antes de adjuntar subtítulos."</string>
     <string name="ui_sign_in_bfd402" formatted="false">"Iniciar sesión"</string>
-    <string name="ui_sign_in_first_then_name_the_household_57a8fb" formatted="false">"Inicia sesión y luego pon nombre al hogar."</string>
+    <string name="ui_sign_in_first_then_name_the_household_57a8fb" formatted="false">"Inicia sesión y luego pon nombre a tu cuenta."</string>
     <string name="ui_sign_in_on_this_phone_1bc154" formatted="false">"Iniciar sesión en este teléfono"</string>
     <string name="ui_sign_in_or_create_a_free_account_at_subdl_112b2c" formatted="false">"Inicia sesión o crea una cuenta gratuita en SubDL."</string>
     <string name="ui_sign_in_or_create_an_account_to_bring_your_own_videos__e9e560" formatted="false">"Inicie sesión o cree una cuenta para reunir sus propios vídeos, listos para su TV."</string>
@@ -844,8 +844,8 @@
     <string name="ui_the_biggest_catalogue_often_better_for_older_titles_it_9d2b9e" formatted="false">"El catálogo más grande, a menudo mejor para los títulos más antiguos. Encontrará subtítulos hechos para su archivo exacto."</string>
     <string name="ui_the_bot_will_be_added_to_your_cablegram_library_channe_1d4a14" formatted="false">"El bot se añadirá al canal de tu biblioteca de Cablegram como administrador con permiso para publicar mensajes. Telegram también permite a los administradores acceder a la actividad del canal, las estadísticas y la información de los miembros. El bot podrá recibir nuevas publicaciones de la biblioteca, incluidos vídeos y sus textos adjuntos. Los demás permisos opcionales están desactivados. Si ya es administrador, conservará sus permisos actuales. Algunos bots requieren configuración adicional en Telegram."</string>
     <string name="ui_the_cablegram_apps_are_open_source_anyone_can_check_wh_3a0623" formatted="false">"Las aplicaciones de Cablegram son de código abierto. Cualquiera puede comprobar qué hacen con tu cuenta de Telegram. Esto no incluye los servidores de Cablegram."</string>
-    <string name="ui_the_cover_will_be_removed_from_your_household_on_the_n_135e1a" formatted="false">"El póster se eliminará de tu hogar en la próxima sincronización"</string>
-    <string name="ui_the_cover_will_be_saved_to_your_household_on_the_next__87cda3" formatted="false">"El póster se guardará en tu hogar en la próxima sincronización"</string>
+    <string name="ui_the_cover_will_be_removed_from_your_household_on_the_n_135e1a" formatted="false">"El póster se eliminará de tu cuenta en la próxima sincronización"</string>
+    <string name="ui_the_cover_will_be_saved_to_your_household_on_the_next__87cda3" formatted="false">"El póster se guardará en tu cuenta en la próxima sincronización"</string>
     <string name="ui_the_name_you_gave_the_bucket_2ae9c0" formatted="false">"El nombre que le has dado al bucket."</string>
     <string name="ui_the_profile_31580c" formatted="false">"el perfil"</string>
     <string name="ui_the_relay_is_used_when_your_tv_can_t_reach_this_phone__b14902">"Se usa la retransmisión cuando tu TV no puede conectarse a este teléfono por Wi-Fi%1$s."</string>
@@ -872,16 +872,16 @@
     <string name="ui_this_file_changed_so_the_saved_subtitle_no_longer_appl_af0270" formatted="false">"Este archivo ha cambiado y los subtítulos guardados ya no corresponden. Busca de nuevo."</string>
     <string name="ui_this_file_has_no_usable_subtitle_cues_or_has_invalid_t_f01576" formatted="false">"Este archivo no contiene entradas de subtítulos válidas o tiene tiempos incorrectos. Elige otro archivo SRT/VTT."</string>
     <string name="ui_this_file_is_larger_than_your_available_storage_e6fe5f" formatted="false">"Este archivo es más grande que su almacenamiento disponible."</string>
-    <string name="ui_this_household_already_uses_the_telegram_account_of_7d8c2e">"Esta casa ya utiliza la cuenta Telegram de %1$s. "</string>
+    <string name="ui_this_household_already_uses_the_telegram_account_of_7d8c2e">"Tu cuenta de Cablegram ya utiliza la cuenta Telegram de %1$s. "</string>
     <string name="ui_this_month_s_free_relay_traffic_is_used_up_same_wi_fi__ef740a">"Se ha agotado el tráfico gratuito de retransmisión de este mes%1$s. La reproducción en la misma red Wi-Fi sigue funcionando."</string>
     <string name="ui_this_name_is_saved_on_the_server_every_paired_tv_and_p_0a385b" formatted="false">"Este nombre se guarda en el servidor. Cada par de televisión y teléfono verá la misma biblioteca."</string>
     <string name="ui_this_phone_is_on_the_same_wi_fi_as_the_tv_4eb203">"Este teléfono es de %1$s en el mismo Wi‑Fi que el televisor."</string>
-    <string name="ui_this_phone_isn_t_registered_with_your_household_yet_co_bd64f3" formatted="false">"Este teléfono todavía no está registrado en su casa. Conéctese con su número de teléfono en su lugar."</string>
+    <string name="ui_this_phone_isn_t_registered_with_your_household_yet_co_bd64f3" formatted="false">"Este teléfono todavía no está registrado en su cuenta. Conéctese con su número de teléfono en su lugar."</string>
     <string name="ui_this_phone_isn_t_signed_in_to_telegram_yet_so_it_can_t_a21b4f" formatted="false">"Este teléfono aún no ha iniciado sesión en Telegram, por lo que no puede autorizar tus televisores ni guardar vídeos en Telegram."</string>
     <string name="ui_this_phone_stops_sharing_and_controlling_your_tvs_your_960038" formatted="false">"Este teléfono deja de compartir y controlar sus televisores. Sus vídeos permanecen en este teléfono, y su biblioteca vuelve cuando se inscribe de nuevo."</string>
     <string name="ui_this_recommendation_is_shared_for_informational_purpos_02f61b" formatted="false">"Esta recomendación se comparte únicamente con fines informativos. Utilizar el bot es totalmente opcional y a su propia discreción y responsabilidad.\n\nCablegram no es responsable de la operación del bot, el contenido, las prácticas de privacidad o cualquier consecuencia derivada de su uso. Por favor revise sus permisos antes de añadirlo a su canal."</string>
     <string name="ui_this_subtitle_is_too_large_choose_a_file_smaller_than__3cd02a" formatted="false">"Este subtítulo es demasiado grande. Elija un archivo más pequeño que 2 MB."</string>
-    <string name="ui_this_title_is_in_your_household_library_but_its_file_i_7fef21" formatted="false">"Este título está en su biblioteca familiar, pero su archivo no está en este teléfono. Importar el mismo archivo aquí para reproducirlo desde este teléfono."</string>
+    <string name="ui_this_title_is_in_your_household_library_but_its_file_i_7fef21" formatted="false">"Este título está en su biblioteca, pero su archivo no está en este teléfono. Importar el mismo archivo aquí para reproducirlo desde este teléfono."</string>
     <string name="ui_this_title_s_file_isn_t_available_right_now_b15ec6" formatted="false">"El archivo de este título no está disponible ahora mismo."</string>
     <string name="ui_this_video_can_t_be_opened_right_now_so_it_can_t_be_pr_395068" formatted="false">"No se puede abrir este vídeo ahora, por lo que no hay vista previa disponible."</string>
     <string name="ui_this_video_file_can_t_jump_to_different_points_quickly_99ad99" formatted="false">"Este archivo de vídeo no permite saltar rápidamente entre posiciones, por lo que no se pueden comprobar los subtítulos con su audio. Usa la vista previa para sincronizarlos."</string>
@@ -963,7 +963,7 @@
     <string name="ui_where_your_details_go_c282bf" formatted="false">"Donde van tus detalles"</string>
     <string name="ui_wi_fi_only_ca99bb" formatted="false">"Wi-Fi sólo"</string>
     <string name="ui_with_country_code_e_g_31_6_1234_5678_f10939" formatted="false">"Con código de país, por ejemplo +31 6 1234 5678"</string>
-    <string name="ui_with_your_household_library_everyone_in_your_household_90c154" formatted="false">"con tu biblioteca familiar. Todo el mundo en su casa puede verlo en sus televisores, teléfonos y la web remota, "</string>
+    <string name="ui_with_your_household_library_everyone_in_your_household_90c154" formatted="false">"con tu biblioteca. Todos tus televisores, teléfonos y el mando web podrán mostrarlo, "</string>
     <string name="ui_without_use_the_tv_then_goes_back_to_who_s_watching_an_cef3ab" formatted="false">"sin uso. La TV entonces vuelve a Quien está mirando, y tu teléfono tiene que permitirlo de nuevo."</string>
     <string name="ui_won_t_open_b1de63">"%1$s no abrirá %2$s."</string>
     <string name="ui_year_89f683" formatted="false">"Año"</string>

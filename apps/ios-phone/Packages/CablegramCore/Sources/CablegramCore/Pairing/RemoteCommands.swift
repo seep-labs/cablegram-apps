@@ -32,7 +32,7 @@ public enum TargetResult: Sendable, Equatable {
 /// The one exception to "never a different TV": the selected TV isn't on (it could not take the command anyway) and exactly one TV
 /// of the account is. That TV is the one in use, so the command goes there and says so. With none or several on, nothing is guessed.
 public func resolveTarget(selected: PairedTv?, household: [MeDevice]?) -> TargetResult {
-    let none = TargetResult.failed("No TV is paired with this household. Pair a TV to use the remote.")
+    let none = TargetResult.failed("No TV is paired with your account. Pair a TV to use the remote.")
     func label(_ d: MeDevice) -> String { d.displayName.flatMap { $0.trimmingCharacters(in: .whitespaces).isEmpty ? nil : $0 } ?? "TV" }
     guard let household else {
         if let selected {

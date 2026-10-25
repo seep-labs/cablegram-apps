@@ -230,8 +230,8 @@
     <string name="ui_cover_fa8d84" formatted="false">"Cover"</string>
     <string name="ui_cover_kept_on_this_phone_tvs_show_it_while_this_phone__7b244e" formatted="false">"Cover kept on this phone. TVs show it while this phone is on the same Wi-Fi."</string>
     <string name="ui_cover_preview_9cc1b7" formatted="false">"Cover preview"</string>
-    <string name="ui_cover_removed_from_your_household_a7304d" formatted="false">"Cover removed from your household"</string>
-    <string name="ui_cover_saved_to_your_household_762369" formatted="false">"Cover saved to your household"</string>
+    <string name="ui_cover_removed_from_your_household_a7304d" formatted="false">"Cover removed from your account"</string>
+    <string name="ui_cover_saved_to_your_household_762369" formatted="false">"Cover saved to your account"</string>
     <string name="ui_create_a_free_account_at_opensubtitles_com_c1e6ef" formatted="false">"Create a free account at opensubtitles.com."</string>
     <string name="ui_create_a_free_cloudflare_account_9d8fd1" formatted="false">"Create a free Cloudflare account"</string>
     <string name="ui_create_a_new_cb63aa">"Create a new \"%1$s\""</string>
@@ -352,7 +352,7 @@
     <string name="ui_hide_privacy_and_terms_942d73" formatted="false">"Hide privacy and terms"</string>
     <string name="ui_hide_subtitle_preferences_245035" formatted="false">"Hide subtitle preferences"</string>
     <string name="ui_hint_3033f3">"Hint: %1$s"</string>
-    <string name="ui_household_name_e4d50a" formatted="false">"Household name"</string>
+    <string name="ui_household_name_e4d50a" formatted="false">"Account name"</string>
     <string name="ui_how_cablegram_uses_your_data_89560e" formatted="false">"How Cablegram uses your data: "</string>
     <string name="ui_how_this_works_bdbd77" formatted="false">"How this works"</string>
     <string name="ui_i_accept_the_5ce6ca" formatted="false">"I accept the "</string>
@@ -363,7 +363,7 @@
     <string name="ui_import_connected_storage_telegram_f2fb3f" formatted="false">"Import › Connected storage › Telegram"</string>
     <string name="ui_import_videos_fec728" formatted="false">"Import videos"</string>
     <string name="ui_in_telegram_share_or_forward_videos_into_the_private_c_ab9acc">"In Telegram, share or forward videos into the private channel \"%1$s\". "</string>
-    <string name="ui_in_your_household_library_file_not_on_this_phone_698618" formatted="false">"In your household library · File not on this phone"</string>
+    <string name="ui_in_your_household_library_file_not_on_this_phone_698618" formatted="false">"In your library · File not on this phone"</string>
     <string name="ui_in_your_own_storage_e2575f" formatted="false">"In your own storage"</string>
     <string name="ui_include_forced_subtitles_5c1992" formatted="false">"Include forced subtitles"</string>
     <string name="ui_install_cablegram_on_your_android_tv_or_google_tv_and__d27b55" formatted="false">"Install Cablegram TV on your Android TV or Google TV and open it. Then enter the six-digit code it shows."</string>
@@ -450,7 +450,7 @@
     <string name="ui_movie_941de4" formatted="false">"Movie"</string>
     <string name="ui_movies_dff924" formatted="false">"Movies"</string>
     <string name="ui_my_tv_home_4a4daa" formatted="false">"My TV (home)"</string>
-    <string name="ui_name_this_household_a2930a" formatted="false">"Name this household"</string>
+    <string name="ui_name_this_household_a2930a" formatted="false">"Name your account"</string>
     <string name="ui_navigate_down_b9d466" formatted="false">"Navigate down"</string>
     <string name="ui_navigate_left_ceb18f" formatted="false">"Navigate left"</string>
     <string name="ui_navigate_right_668ca1" formatted="false">"Navigate right"</string>
@@ -494,7 +494,7 @@
     <string name="ui_one_box_to_tick_0f7e37" formatted="false">"One box to tick"</string>
     <string name="ui_one_more_big_screen_3514a4" formatted="false">"One more big screen."</string>
     <string name="ui_only_attach_subtitles_you_have_permission_to_use_22c046" formatted="false">"Only attach subtitles you have permission to use."</string>
-    <string name="ui_only_the_subtitle_you_choose_its_language_provider_ref_abd48f" formatted="false">"Only the subtitle you choose, its language, provider reference and timing are stored with your household for paired TVs. Remove a saved track from the title\'s subtitle controls; deleting its source or your account also deletes it. Removing an account here stops searching but keeps tracks you already chose."</string>
+    <string name="ui_only_the_subtitle_you_choose_its_language_provider_ref_abd48f" formatted="false">"Only the subtitle you choose, its language, provider reference and timing are stored with your account for paired TVs. Remove a saved track from the title\'s subtitle controls; deleting its source or your account also deletes it. Removing an account here stops searching but keeps tracks you already chose."</string>
     <string name="ui_only_the_subtitle_you_pick_is_saved_for_your_tvs_ab5d20" formatted="false">"Only the subtitle you pick is saved for your TVs."</string>
     <string name="ui_open_a_title_and_tap_find_subtitles_cablegram_finds_su_892bc5" formatted="false">"Open a title and tap Find subtitles. Cablegram finds subtitles that match your file and sends the one you choose to your TV."</string>
     <string name="pairing_setup_steps" formatted="false">"1. Install Cablegram TV on your Android TV or Google TV.\n\n2. Open Cablegram TV to see its QR code and six-digit PIN.\n\n3. Scan the QR code with this phone, or enter the PIN below."</string>
@@ -533,7 +533,7 @@
     <string name="ui_otherwise_it_plays_your_telegram_videos_through_this_p_72fc1d" formatted="false">"Otherwise it plays your Telegram videos through this phone, and holds no Telegram session."</string>
     <string name="ui_our_terms_changed_edc5de" formatted="false">"Our Terms changed"</string>
     <string name="ui_page_of_8b9ffa">"Page %1$s of %2$s"</string>
-    <string name="ui_pair_a_tv_first_so_cablegram_can_attach_storage_to_thi_cf1a07" formatted="false">"Pair a TV first so Cablegram can attach storage to this household."</string>
+    <string name="ui_pair_a_tv_first_so_cablegram_can_attach_storage_to_thi_cf1a07" formatted="false">"Pair a TV first so Cablegram can attach storage to your account."</string>
     <string name="ui_paired_but_this_phone_has_no_wi_fi_address_yet_5134d1" formatted="false">"Paired, but this phone has no Wi‑Fi address yet."</string>
     <string name="ui_paired_tv_68fdc7" formatted="false">"Paired TV"</string>
     <string name="ui_password_e7cf3e" formatted="false">"Password"</string>
@@ -545,7 +545,7 @@
     <string name="ui_pause_playback_65a4a8" formatted="false">"Pause playback"</string>
     <string name="ui_paused_on_a7fb4a" formatted="false">"Paused on "</string>
     <string name="ui_permission_object_read_write_apply_it_to_a_specific_bu_ac52d4" formatted="false">"Permission: Object Read &amp; Write. Apply it to a specific bucket and choose the one from step 2. Then tap Create."</string>
-    <string name="ui_personal_keys_do_not_grant_copyright_permission_use_tr_003d6d" formatted="false">"Personal keys do not grant copyright permission. Use tracks you have a lawful right to store and share with your household. Provider terms apply: subdl.com/terms and opensubtitles.com. For copyright complaints contact copyright@cablegram.app with the title and track details for removal."</string>
+    <string name="ui_personal_keys_do_not_grant_copyright_permission_use_tr_003d6d" formatted="false">"Personal keys do not grant copyright permission. Use tracks you have a lawful right to store and use on your own devices. Provider terms apply: subdl.com/terms and opensubtitles.com. For copyright complaints contact copyright@cablegram.app with the title and track details for removal."</string>
     <string name="ui_phone_approval_required_112e8c" formatted="false">"Phone approval required"</string>
     <string name="ui_phone_number_306f1b" formatted="false">"Phone number"</string>
     <string name="ui_phone_space_cloud_copies_transfers_f4925b" formatted="false">"Phone space, cloud copies &amp; transfers"</string>
@@ -635,8 +635,8 @@
     <string name="ui_save_a_cloud_copy_dbaf92" formatted="false">"Save a cloud copy"</string>
     <string name="ui_save_a_cloud_copy_of_any_title_to_your_own_google_driv_3aac39" formatted="false">"Save a cloud copy of any title to your own Google Drive. Your TV can play it when your phone isn\'t around, and you can free up space on the phone."</string>
     <string name="ui_save_account_name_7c6744" formatted="false">"Save account name"</string>
-    <string name="ui_save_artwork_to_household_2be5ad" formatted="false">"Save artwork to household"</string>
-    <string name="ui_save_artwork_to_household_e25fd0" formatted="false">"Save artwork to household?"</string>
+    <string name="ui_save_artwork_to_household_2be5ad" formatted="false">"Save artwork to your account"</string>
+    <string name="ui_save_artwork_to_household_e25fd0" formatted="false">"Save artwork to your account?"</string>
     <string name="ui_save_changes_dd0ae7" formatted="false">"Save changes"</string>
     <string name="ui_save_connection_df24ef" formatted="false">"Save connection"</string>
     <string name="ui_save_new_details_7ddcbe" formatted="false">"Save new details"</string>
@@ -644,7 +644,7 @@
     <string name="ui_save_titles_to_the_cloud_first_then_you_can_remove_the_a6c5d3" formatted="false">"Save titles to the cloud first. Then you can remove the phone copies."</string>
     <string name="ui_save_to_48c64f">"Save to %1$s"</string>
     <string name="ui_save_to_cloud_0fd280" formatted="false">"Save to Cloud"</string>
-    <string name="ui_save_to_household_f31fbf" formatted="false">"Save to household"</string>
+    <string name="ui_save_to_household_f31fbf" formatted="false">"Save to your account"</string>
     <string name="ui_save_to_telegram_f6c595" formatted="false">"Save to Telegram"</string>
     <string name="ui_saved_in_the_cloud_dc46d5" formatted="false">"Saved in the cloud"</string>
     <string name="ui_saved_it_will_be_used_on_your_tv_96182e" formatted="false">"Saved. It will be used on your TV."</string>
@@ -695,7 +695,7 @@
     <string name="ui_settings_subtitle_accounts_then_a_title_find_subtitles_60e1db" formatted="false">"Settings › Subtitle accounts, then a title › Find subtitles"</string>
     <string name="ui_settings_your_tvs_connect_a_tv_231c90" formatted="false">"Settings › Your TVs › Connect a TV"</string>
     <string name="ui_share_or_forward_a_video_into_the_private_channel_and__97bd0c" formatted="false">"Share or forward a video into the private channel and it shows up in your library."</string>
-    <string name="ui_share_your_catalog_with_your_household_your_video_file_fc6c1f" formatted="false">"Share your catalog with your household. Your video files stay in your own storage."</string>
+    <string name="ui_share_your_catalog_with_your_household_your_video_file_fc6c1f" formatted="false">"Sync your catalog to your account. Your video files stay in your own storage."</string>
     <string name="ui_should_this_require_phone_approval_92bae5" formatted="false">"Should this require phone approval?"</string>
     <string name="ui_show_me_around_80afe5" formatted="false">"Show me around"</string>
     <string name="ui_show_password_6aeaa6" formatted="false">"Show password"</string>
@@ -710,7 +710,7 @@
     <string name="ui_sign_in_again_to_keep_using_it_3abfd0" formatted="false">"Sign in again to keep using it"</string>
     <string name="ui_sign_in_before_attaching_a_subtitle_cdbcab" formatted="false">"Sign in before attaching a subtitle."</string>
     <string name="ui_sign_in_bfd402" formatted="false">"Sign in"</string>
-    <string name="ui_sign_in_first_then_name_the_household_57a8fb" formatted="false">"Sign in first, then name the household."</string>
+    <string name="ui_sign_in_first_then_name_the_household_57a8fb" formatted="false">"Sign in first, then name your account."</string>
     <string name="ui_sign_in_on_this_phone_1bc154" formatted="false">"Sign in on this phone"</string>
     <string name="ui_sign_in_or_create_a_free_account_at_subdl_112b2c" formatted="false">"Sign in or create a free account at SubDL."</string>
     <string name="ui_sign_in_or_create_an_account_to_bring_your_own_videos__e9e560" formatted="false">"Sign in or create an account to bring your own videos together, ready for your TV."</string>
@@ -810,8 +810,8 @@
     <string name="ui_the_biggest_catalogue_often_better_for_older_titles_it_9d2b9e" formatted="false">"The biggest catalogue, often better for older titles. It finds subtitles made for your exact file."</string>
     <string name="ui_the_bot_will_be_added_to_your_cablegram_library_channe_1d4a14" formatted="false">"The bot will be added to your Cablegram library channel as an administrator with permission to post messages. Telegram also gives administrators access to channel activity, statistics, and member information. The bot can receive new library posts, including videos and captions. Other optional permissions are off. If it is already an administrator, its existing permissions are kept. Some bots need additional setup in Telegram."</string>
     <string name="ui_the_cablegram_apps_are_open_source_anyone_can_check_wh_3a0623" formatted="false">"The Cablegram apps are open source. Anyone can check what they do with your Telegram account. Cablegram\'s servers are not part of that."</string>
-    <string name="ui_the_cover_will_be_removed_from_your_household_on_the_n_135e1a" formatted="false">"The cover will be removed from your household on the next sync"</string>
-    <string name="ui_the_cover_will_be_saved_to_your_household_on_the_next__87cda3" formatted="false">"The cover will be saved to your household on the next sync"</string>
+    <string name="ui_the_cover_will_be_removed_from_your_household_on_the_n_135e1a" formatted="false">"The cover will be removed from your account on the next sync"</string>
+    <string name="ui_the_cover_will_be_saved_to_your_household_on_the_next__87cda3" formatted="false">"The cover will be saved to your account on the next sync"</string>
     <string name="ui_the_name_you_gave_the_bucket_2ae9c0" formatted="false">"The name you gave the bucket."</string>
     <string name="ui_the_profile_31580c" formatted="false">"the profile"</string>
     <string name="ui_the_relay_is_used_when_your_tv_can_t_reach_this_phone__b14902">"The relay is used when your TV can\'t reach this phone on Wi‑Fi%1$s."</string>
@@ -838,16 +838,16 @@
     <string name="ui_this_file_changed_so_the_saved_subtitle_no_longer_appl_af0270" formatted="false">"This file changed, so the saved subtitle no longer applies. Search again."</string>
     <string name="ui_this_file_has_no_usable_subtitle_cues_or_has_invalid_t_f01576" formatted="false">"This file has no usable subtitle cues or has invalid timing. Choose another SRT/VTT file."</string>
     <string name="ui_this_file_is_larger_than_your_available_storage_e6fe5f" formatted="false">"This file is larger than your available storage."</string>
-    <string name="ui_this_household_already_uses_the_telegram_account_of_7d8c2e">"This household already uses the Telegram account of %1$s. "</string>
+    <string name="ui_this_household_already_uses_the_telegram_account_of_7d8c2e">"Your Cablegram account already uses the Telegram account of %1$s. "</string>
     <string name="ui_this_month_s_free_relay_traffic_is_used_up_same_wi_fi__ef740a">"This month\'s free relay traffic is used up%1$s. Same Wi‑Fi still works."</string>
     <string name="ui_this_name_is_saved_on_the_server_every_paired_tv_and_p_0a385b" formatted="false">"This name is saved on the server. Every paired TV and phone will see the same library."</string>
     <string name="ui_this_phone_is_on_the_same_wi_fi_as_the_tv_4eb203">"This phone is %1$s on the same Wi‑Fi as the TV."</string>
-    <string name="ui_this_phone_isn_t_registered_with_your_household_yet_co_bd64f3" formatted="false">"This phone isn\'t registered with your household yet. Connect with your phone number instead."</string>
+    <string name="ui_this_phone_isn_t_registered_with_your_household_yet_co_bd64f3" formatted="false">"This phone isn\'t registered with your account yet. Connect with your phone number instead."</string>
     <string name="ui_this_phone_isn_t_signed_in_to_telegram_yet_so_it_can_t_a21b4f" formatted="false">"This phone isn\'t signed in to Telegram yet, so it can\'t approve your TVs or save videos to Telegram."</string>
     <string name="ui_this_phone_stops_sharing_and_controlling_your_tvs_your_960038" formatted="false">"This phone stops sharing and controlling your TVs. Your videos stay on this phone, and your library comes back when you sign in again."</string>
     <string name="ui_this_recommendation_is_shared_for_informational_purpos_02f61b" formatted="false">"This recommendation is shared for informational purposes only. Using the bot is entirely optional and at the user\'s own discretion and responsibility.\n\nCablegram is not responsible for the bot\'s operation, content, privacy practices, or any consequences arising from its use. Please review its permissions before adding it to your channel."</string>
     <string name="ui_this_subtitle_is_too_large_choose_a_file_smaller_than__3cd02a" formatted="false">"This subtitle is too large. Choose a file smaller than 2 MB."</string>
-    <string name="ui_this_title_is_in_your_household_library_but_its_file_i_7fef21" formatted="false">"This title is in your household library, but its file isn\'t on this phone. Import the same file here to play it from this phone."</string>
+    <string name="ui_this_title_is_in_your_household_library_but_its_file_i_7fef21" formatted="false">"This title is in your library, but its file isn\'t on this phone. Import the same file here to play it from this phone."</string>
     <string name="ui_this_title_s_file_isn_t_available_right_now_b15ec6" formatted="false">"This title\'s file isn\'t available right now."</string>
     <string name="ui_this_video_can_t_be_opened_right_now_so_it_can_t_be_pr_395068" formatted="false">"This video can\'t be opened right now, so it can\'t be previewed."</string>
     <string name="ui_this_video_file_can_t_jump_to_different_points_quickly_99ad99" formatted="false">"This video file can\'t jump to different points quickly, so matches can\'t be checked against its audio. Use the preview to line them up."</string>
@@ -929,7 +929,7 @@
     <string name="ui_where_your_details_go_c282bf" formatted="false">"Where your details go"</string>
     <string name="ui_wi_fi_only_ca99bb" formatted="false">"Wi-Fi only"</string>
     <string name="ui_with_country_code_e_g_31_6_1234_5678_f10939" formatted="false">"With country code, e.g. +31 6 1234 5678"</string>
-    <string name="ui_with_your_household_library_everyone_in_your_household_90c154" formatted="false">"with your household library. Everyone in your household can then see it on their TVs, phones and the web remote, "</string>
+    <string name="ui_with_your_household_library_everyone_in_your_household_90c154" formatted="false">"with your library. All your TVs, phones and the web remote can then show it, "</string>
     <string name="ui_without_use_the_tv_then_goes_back_to_who_s_watching_an_cef3ab" formatted="false">"without use. The TV then goes back to Who\'s watching, and your phone has to allow it again."</string>
     <string name="ui_won_t_open_b1de63">"%1$s won\'t open %2$s."</string>
     <string name="ui_year_89f683" formatted="false">"Year"</string>

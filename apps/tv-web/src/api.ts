@@ -68,7 +68,7 @@ export function relayMessage(status: number | null, error: string | undefined): 
     case "relay_email_unverified": return "Free relay needs a confirmed email. Open Cablegram on your phone and confirm your email in Settings.";
     case "relay_free_device_limit": return "Free relay isn't available: your phone already gives free relay to other Cablegram accounts. Upgrade your plan to use it here.";
     case "relay_quota_exceeded": return "This month's relay traffic is used up. Upgrade your plan to keep watching here.";
-    case "relay_streams_exceeded": return "Too many relay streams are running in your household. Stop one and try again.";
+    case "relay_streams_exceeded": return "Too many relay streams are running on your account. Stop one and try again.";
     case "approval_required": return "Private titles need approval on your phone. Not supported on this TV yet.";
   }
   if (error === "phone_timeout" || error === "phone_disconnected" || status === 502 || status === 504) {
