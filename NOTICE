@@ -2,6 +2,7 @@ Cablegram
 Copyright (C) 2026 The Cablegram authors
 
 Cablegram is licensed under the GNU General Public License, version 3 (see LICENSE).
+As an additional permission under section 7, you may link it with OpenSSL (see LICENSE-OPENSSL-EXCEPTION.md).
 
 Cablegram is an unofficial app. It is not made or endorsed by Telegram. Its Telegram features use the
 user's own Telegram account through Telegram's public API. Forks must register their own api_id and
@@ -11,6 +12,13 @@ Third-party software used by the apps, each under its own licence:
 
 - TDLib (Telegram Database Library): Boost Software License 1.0. https://github.com/tdlib/td
 - tdl-coroutines-android (Kotlin bindings for TDLib): Apache License 2.0.
+- OpenSSL, linked into TDLib: the Android apps ship OpenSSL 1.1.1w (via tdl-coroutines-android 15.0.0), which is
+  under the OpenSSL and SSLeay licences. The additional permission in LICENSE-OPENSSL-EXCEPTION.md covers it.
+  The iPhone app's TDLib build (TDLibFramework 1.8.67) uses OpenSSL 3.1.5, Apache License 2.0.
+  https://www.openssl.org
+  This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit
+  (https://www.openssl.org/). This product includes cryptographic software written by Eric Young
+  (eay@cryptsoft.com).
 - LibVLC for Android (libvlc-all): LGPL-2.1-or-later. It is used unmodified as a separate library that
   the app links dynamically. https://www.videolan.org
 - NanoHTTPD: BSD 3-Clause. OkHttp, Kotlin, kotlinx.coroutines, kotlinx.serialization, AndroidX and
