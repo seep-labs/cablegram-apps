@@ -110,6 +110,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -311,24 +312,24 @@ private fun LibraryHome(viewModel: PhoneViewModel) {
             }
         }
         item(span = fullRow) {
+            // One compact line, so the grid starts higher: the TV, its Connect/Remote action, and the sync button.
+            val syncLabel = when (viewModel.librarySyncState) {
+                LibrarySyncState.Running -> ui.getString(R.string.ui_syncing_library_8e43e6)
+                LibrarySyncState.Completed -> ui.getString(R.string.ui_library_synced_704162)
+                LibrarySyncState.Failed -> ui.getString(R.string.ui_sync_needs_attention_retry_f4d943)
+                else -> ui.getString(R.string.ui_sync_library_dd3492)
+            }
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
-                    Text(if (viewModel.paired) viewModel.tvName else ui.getString(R.string.ui_made_for_your_big_screen_eb0ced), color = Color.White, style = MaterialTheme.typography.titleSmall)
-                    Text(if (viewModel.paired) ui.getString(R.string.ui_keep_your_phone_on_the_same_wi_fi_e373e7) else ui.getString(R.string.ui_connect_a_tv_when_you_re_ready_to_watch_d1ae74), color = VlcMuted, style = MaterialTheme.typography.bodySmall)
+                    Text(if (viewModel.paired) viewModel.tvName else ui.getString(R.string.ui_made_for_your_big_screen_eb0ced), color = Color.White, style = MaterialTheme.typography.titleSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(if (viewModel.paired) ui.getString(R.string.ui_keep_your_phone_on_the_same_wi_fi_e373e7) else ui.getString(R.string.ui_connect_a_tv_when_you_re_ready_to_watch_d1ae74), color = VlcMuted, style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
                 if (!viewModel.paired || viewModel.legacyRemote) TextButton(onClick = if (viewModel.paired) ({ viewModel.tab = PhoneTab.Remote }) else viewModel::startAddTv) {
                     Text(if (viewModel.paired) ui.getString(R.string.ui_remote_ffa98e) else ui.getString(R.string.ui_connect_1a2303))
                 }
-            }
-            TextButton(onClick = viewModel::syncNow, enabled = viewModel.librarySyncState != LibrarySyncState.Running) {
-                Icon(if (viewModel.librarySyncState == LibrarySyncState.Completed) Icons.Default.Check else Icons.Default.Sync, null, Modifier.size(16.dp))
-                Spacer(Modifier.width(8.dp))
-                Text(when (viewModel.librarySyncState) {
-                    LibrarySyncState.Running -> ui.getString(R.string.ui_syncing_library_8e43e6)
-                    LibrarySyncState.Completed -> ui.getString(R.string.ui_library_synced_704162)
-                    LibrarySyncState.Failed -> ui.getString(R.string.ui_sync_needs_attention_retry_f4d943)
-                    else -> ui.getString(R.string.ui_sync_library_dd3492)
-                }, style = MaterialTheme.typography.labelMedium)
+                IconButton(onClick = viewModel::syncNow, enabled = viewModel.librarySyncState != LibrarySyncState.Running, modifier = Modifier.maestro("library_sync")) {
+                    Icon(if (viewModel.librarySyncState == LibrarySyncState.Completed) Icons.Default.Check else Icons.Default.Sync, syncLabel, tint = VlcOrange)
+                }
             }
         }
         viewModel.scanProgress?.let { item(span = fullRow) { StatusNote(it) } }
@@ -343,7 +344,7 @@ private fun LibraryHome(viewModel: PhoneViewModel) {
             else -> {
                 if (!query.hasFilters) {
                     val watching = continueWatching(viewModel.items)
-                    if (watching.isNotEmpty()) item(span = fullRow) { Shelf(ui.getString(R.string.ui_continue_watching_81ebbe), watching, viewModel, showProgress = true) }
+                    if (watching.isNotEmpty()) item(span = fullRow) { Column { Shelf(ui.getString(R.string.ui_continue_watching_81ebbe), watching, viewModel, showProgress = true, posterWidth = 112.dp) } }
                 }
                 item(span = fullRow) {
                     Text(
@@ -354,7 +355,7 @@ private fun LibraryHome(viewModel: PhoneViewModel) {
                 // A series filtered down to some episodes still opens as the whole series (see PhoneViewModel.openedSeries).
                 items(entries, key = { it.key }) { entry ->
                     when (entry) {
-                        is LibraryEntry.Film -> PosterCard(entry.item, false, viewModel, Modifier.fillMaxWidth())
+                        is LibraryEntry.Film -> PosterCard(entry.item, false, viewModel, Modifier.fillMaxWidth(), showStatus = false)
                         is LibraryEntry.Series -> SeriesCard(entry, false, viewModel, Modifier.fillMaxWidth())
                     }
                 }
@@ -413,7 +414,7 @@ fun ApprovalCard(viewModel: PhoneViewModel, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun Shelf(title: String, items: List<LibraryItem>, viewModel: PhoneViewModel, showProgress: Boolean = false) {
+private fun Shelf(title: String, items: List<LibraryItem>, viewModel: PhoneViewModel, showProgress: Boolean = false, posterWidth: Dp = 144.dp) {
     if (items.isEmpty()) return
     // A series' episodes share one poster, as on the TV; its episodes open from there.
     val entries = groupIntoEntries(items)
@@ -421,8 +422,8 @@ private fun Shelf(title: String, items: List<LibraryItem>, viewModel: PhoneViewM
     LazyRow(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
         items(entries, key = { it.key }) { entry ->
             when (entry) {
-                is LibraryEntry.Film -> PosterCard(entry.item, showProgress, viewModel)
-                is LibraryEntry.Series -> SeriesCard(entry, showProgress, viewModel)
+                is LibraryEntry.Film -> PosterCard(entry.item, showProgress, viewModel, Modifier.width(posterWidth))
+                is LibraryEntry.Series -> SeriesCard(entry, showProgress, viewModel, Modifier.width(posterWidth))
             }
         }
     }
@@ -466,7 +467,7 @@ private fun SeriesCard(series: LibraryEntry.Series, showProgress: Boolean, viewM
             }
         }
         Text(series.title, color = Color.White, maxLines = 2, overflow = TextOverflow.Ellipsis, fontSize = 14.sp, modifier = Modifier.padding(top = 10.dp))
-        Text(series.summary(ui), color = VlcMuted, fontSize = 11.sp, maxLines = 1)
+        Text(series.summary(ui), color = VlcMuted, fontSize = 11.sp, maxLines = 2)
         if (showProgress) {
             Text(
                 listOfNotNull(episodeBadge(lead), remainingLabel(lead, resources = ui).ifBlank { null }).joinToString(" · ").ifBlank { ui.getString(R.string.ui_message_b6bb55, ((watchFraction(lead) * 100).toInt()).toString()) },
@@ -539,9 +540,10 @@ private fun SeriesOverlay(viewModel: PhoneViewModel, series: LibraryEntry.Series
     }
 }
 
+/** [showStatus] is off in the grid: the badge on the poster already says where the title is. */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun PosterCard(item: LibraryItem, showProgress: Boolean, viewModel: PhoneViewModel, modifier: Modifier = Modifier.width(144.dp)) {
+private fun PosterCard(item: LibraryItem, showProgress: Boolean, viewModel: PhoneViewModel, modifier: Modifier = Modifier.width(144.dp), showStatus: Boolean = true) {
     val ui = androidx.compose.ui.platform.LocalContext.current.resources
     // Flow 2 (legacy parity): a TMDb poster always outranks the extracted
     // still. posterPath is only used when no TMDb artwork was downloaded yet.
@@ -594,7 +596,7 @@ private fun PosterCard(item: LibraryItem, showProgress: Boolean, viewModel: Phon
             ItemActionMenu(viewModel, item, menu)
         }
         Text(item.title, color = Color.White, maxLines = 2, overflow = TextOverflow.Ellipsis, fontSize = 14.sp, modifier = Modifier.padding(top = 10.dp))
-        Text(storageStatusLine(item, resources = ui), color = if (storageBadge(item) == StorageBadge.Failed) Color(0xFFFFB74D) else VlcMuted, fontSize = 11.sp, maxLines = 2)
+        if (showStatus) Text(storageStatusLine(item, resources = ui), color = if (storageBadge(item) == StorageBadge.Failed) Color(0xFFFFB74D) else VlcMuted, fontSize = 11.sp, maxLines = 2)
         if (showProgress) {
             Text(
                 remainingLabel(item, resources = ui).ifBlank { ui.getString(R.string.ui_message_b6bb55, ((watchFraction(item) * 100).toInt()).toString()) },

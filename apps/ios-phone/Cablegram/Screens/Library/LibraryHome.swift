@@ -267,8 +267,11 @@ struct PosterCard: View {
                 }
                 .posterFrame(width: width).clipShape(RoundedRectangle(cornerRadius: 16))
                 Text(item.title).font(.system(.subheadline)).foregroundStyle(.white).lineLimit(2).multilineTextAlignment(.leading).padding(.top, 10)
-                Text(key: storageBadge(item).statusLineKey)
-                    .font(.system(.caption2)).foregroundStyle(storageBadge(item) == .failed ? Color(hex: 0xFFB74D) : Color.phoneMuted).lineLimit(2).multilineTextAlignment(.leading)
+                // Off in the grid: the badge on the poster already says where the title is.
+                if width != nil {
+                    Text(key: storageBadge(item).statusLineKey)
+                        .font(.system(.caption2)).foregroundStyle(storageBadge(item) == .failed ? Color(hex: 0xFFB74D) : Color.phoneMuted).lineLimit(2).multilineTextAlignment(.leading)
+                }
                 if showProgress {
                     Text(remainingDuration(item).map { L("ui_left_bc8cab", $0) } ?? percentText(item)).font(.system(.caption2)).foregroundStyle(Color.phoneMuted)
                 }
@@ -302,7 +305,7 @@ struct SeriesCard: View {
                 }
                 .posterFrame(width: width).clipShape(RoundedRectangle(cornerRadius: 16))
                 Text(entry.title).font(.system(.subheadline)).foregroundStyle(.white).lineLimit(2).multilineTextAlignment(.leading).padding(.top, 10)
-                Text(seriesSummary(entry)).font(.system(.caption2)).foregroundStyle(Color.phoneMuted).lineLimit(1)
+                Text(seriesSummary(entry)).font(.system(.caption2)).foregroundStyle(Color.phoneMuted).lineLimit(2).multilineTextAlignment(.leading)
                 if showProgress {
                     let parts = [episodeBadge(lead), remainingDuration(lead).map { L("ui_left_bc8cab", $0) }].compactMap { $0 }
                     Text(parts.isEmpty ? percentText(lead) : parts.joined(separator: " · ")).font(.system(.caption2)).foregroundStyle(Color.phoneMuted)
