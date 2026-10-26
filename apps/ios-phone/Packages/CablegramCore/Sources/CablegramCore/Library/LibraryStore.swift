@@ -322,6 +322,18 @@ public final class LibraryStore: @unchecked Sendable {
         }
     }
 
+    /// Puts titles back after "Remove from library" was undone, including household titles dismissed by it.
+    public func restoreRemoved(_ removed: [LibraryItem]) {
+        locked {
+            var file = snapshot()
+            let present = Set(file.items.map(\.id))
+            file.items.append(contentsOf: removed.filter { !present.contains($0.id) })
+            let ids = Set(removed.map(\.id))
+            file.dismissedRemoteIds.removeAll { ids.contains($0) }
+            save(file)
+        }
+    }
+
     /// Drops a restored placeholder that a re-imported file now represents (not a dismissal).
     public func dropPlaceholder(_ id: String) {
         locked {
@@ -373,20 +385,42 @@ public final class LibraryStore: @unchecked Sendable {
     @discardableResult
     public func addCollection(_ name: String) -> UserCollection {
         locked {
-            let collection = UserCollection(id: UUID().uuidString.lowercased(), name: name.trimmingCharacters(in: .whitespacesAndNewlines))
+            let clean = name.trimmingCharacters(in: .whitespacesAndNewlines)
             var file = snapshot()
+            // The name is unique, ignoring case: asking for one that exists gives that collection.
+            if let existing = file.collections.first(where: { $0.name.caseInsensitiveCompare(clean) == .orderedSame }) { return existing }
+            let collection = UserCollection(id: UUID().uuidString.lowercased(), name: clean)
             file.collections.append(collection)
             save(file)
             return collection
         }
     }
 
+    /// A synced collection is remembered for the server to delete; its titles stay and only lose the collection.
     public func deleteCollection(_ id: String) {
         locked {
             var file = snapshot()
+            let wasSynced = file.collections.first { $0.id == id }?.synced == true
             file.items = file.items.map { var i = $0; i.collectionIds.removeAll { $0 == id }; return i }
             file.collections.removeAll { $0.id == id }
+            if wasSynced && !file.pendingCollectionDeletes.contains(id) { file.pendingCollectionDeletes.append(id) }
             save(file)
+        }
+    }
+
+    /// The new name is sent to the server by the next sync; the name stays unique here too, ignoring case.
+    @discardableResult
+    public func renameCollection(_ id: String, name: String) -> Bool {
+        locked {
+            let clean = name.trimmingCharacters(in: .whitespacesAndNewlines)
+            var file = snapshot()
+            guard let index = file.collections.firstIndex(where: { $0.id == id }) else { return false }
+            if clean.isEmpty || file.collections.contains(where: { $0.id != id && $0.name.caseInsensitiveCompare(clean) == .orderedSame }) { return false }
+            if file.collections[index].name == clean { return true }
+            file.collections[index].name = clean
+            file.collections[index].dirty = file.collections[index].synced
+            save(file)
+            return true
         }
     }
 
@@ -395,7 +429,40 @@ public final class LibraryStore: @unchecked Sendable {
             guard var item = get(itemId) else { return }
             var seen = Set<String>()
             item.collectionIds = collectionIds.filter { seen.insert($0).inserted }
+            // Edited here: the server hears about it with the next sync.
+            item.collectionsPending = true
             update(item)
+        }
+    }
+
+    public func collectionsState() -> CollectionsState {
+        locked {
+            let file = snapshot()
+            return CollectionsState(collections: file.collections, pendingDeletes: file.pendingCollectionDeletes,
+                                    members: file.items.map { MemberState(itemId: $0.id, serverItemId: $0.catalogItemId ?? $0.id, collectionIds: $0.collectionIds, pending: $0.collectionsPending) })
+        }
+    }
+
+    /// Writes the result of `syncCollections` back. A part that changed here while the sync ran is skipped and redone by the next sync,
+    /// which is safe because every step of it can be repeated.
+    public func applyCollectionsState(base: CollectionsState, result: CollectionsState) {
+        locked {
+            var file = snapshot()
+            let before = Dictionary(base.members.map { ($0.itemId, $0) }, uniquingKeysWith: { first, _ in first })
+            let after = Dictionary(result.members.map { ($0.itemId, $0) }, uniquingKeysWith: { first, _ in first })
+            file.items = file.items.map { item in
+                guard let old = before[item.id], let new = after[item.id] else { return item }
+                guard item.collectionIds == old.collectionIds, item.collectionsPending == old.pending else { return item }
+                var item = item
+                item.collectionIds = new.collectionIds
+                item.collectionsPending = new.pending
+                return item
+            }
+            if file.collections == base.collections && file.pendingCollectionDeletes == base.pendingDeletes {
+                file.collections = result.collections
+                file.pendingCollectionDeletes = result.pendingDeletes
+            }
+            save(file)
         }
     }
 

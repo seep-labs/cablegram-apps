@@ -9,4 +9,24 @@
         <item quantity="one">"%1$d season"</item>
         <item quantity="other">"%1$d seasons"</item>
     </plurals>
+    <plurals name="library_title_count">
+        <item quantity="one">"%1$d title"</item>
+        <item quantity="other">"%1$d titles"</item>
+    </plurals>
+    <plurals name="library_remove_title_count">
+        <item quantity="one">"Remove %1$d title?"</item>
+        <item quantity="other">"Remove %1$d titles?"</item>
+    </plurals>
+    <plurals name="library_summary_phone">
+        <item quantity="one">"%1$d phone video"</item>
+        <item quantity="other">"%1$d phone videos"</item>
+    </plurals>
+    <plurals name="library_summary_telegram">
+        <item quantity="one">"%1$d Telegram video"</item>
+        <item quantity="other">"%1$d Telegram videos"</item>
+    </plurals>
+    <plurals name="library_removed_count">
+        <item quantity="one">"%1$d title removed"</item>
+        <item quantity="other">"%1$d titles removed"</item>
+    </plurals>
 </resources>

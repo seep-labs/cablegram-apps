@@ -9,4 +9,24 @@
         <item quantity="one">"%1$d فصل"</item>
         <item quantity="other">"%1$d فصل"</item>
     </plurals>
+    <plurals name="library_title_count">
+        <item quantity="one">"%1$d عنوان"</item>
+        <item quantity="other">"%1$d عنوان"</item>
+    </plurals>
+    <plurals name="library_remove_title_count">
+        <item quantity="one">"%1$d عنوان حذف شود؟"</item>
+        <item quantity="other">"%1$d عنوان حذف شود؟"</item>
+    </plurals>
+    <plurals name="library_summary_phone">
+        <item quantity="one">"%1$d ویدیو روی گوشی"</item>
+        <item quantity="other">"%1$d ویدیو روی گوشی"</item>
+    </plurals>
+    <plurals name="library_summary_telegram">
+        <item quantity="one">"%1$d ویدیو از Telegram"</item>
+        <item quantity="other">"%1$d ویدیو از Telegram"</item>
+    </plurals>
+    <plurals name="library_removed_count">
+        <item quantity="one">"%1$d عنوان حذف شد"</item>
+        <item quantity="other">"%1$d عنوان حذف شد"</item>
+    </plurals>
 </resources>

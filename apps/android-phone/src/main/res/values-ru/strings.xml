@@ -1052,4 +1052,57 @@
     <string name="tv_rename_title" formatted="false">"Переименовать телевизор"</string>
     <string name="tv_name_label" formatted="false">"Название телевизора"</string>
     <string name="ui_this_phone_uses_your_own_server_on_the_tv_choose_use_y_2bf9a0" formatted="false">"Этот телефон использует ваш сервер. Сначала на телевизоре выберите «Использовать свой сервер» и введите %1$s."</string>
+    <string name="library_filter_unwatched">"Не просмотрено"</string>
+    <string name="library_filter_in_progress">"В процессе"</string>
+    <string name="library_filter_more">"Ещё"</string>
+    <string name="library_filter_more_active">"Ещё (%1$d)"</string>
+    <string name="library_sort_button">"Сортировка: %1$s"</string>
+    <string name="library_sort_last_watched">"Недавно просмотренные"</string>
+    <string name="library_sort_title">"Название А–Я"</string>
+    <string name="library_sort_year">"Год"</string>
+    <string name="library_sort_size">"Размер (сначала большие)"</string>
+    <string name="library_filter_sheet_title">"Фильтры"</string>
+    <string name="library_where_heading">"Где находится"</string>
+    <string name="library_where_phone">"На этом телефоне"</string>
+    <string name="library_where_cloud">"Копия в облаке"</string>
+    <string name="library_where_telegram">"В Telegram"</string>
+    <string name="library_where_unavailable">"Источник недоступен"</string>
+    <string name="library_progress_heading">"Прогресс"</string>
+    <string name="library_watched_any">"Любые"</string>
+    <string name="library_watched_started">"Начато"</string>
+    <string name="library_watched_done">"Просмотрено"</string>
+    <string name="library_collection_heading">"Коллекция"</string>
+    <string name="library_filter_clear_all">"Сбросить всё"</string>
+    <string name="library_filter_show">"Показать: %1$d"</string>
+    <string name="library_filter_remove">"Убрать фильтр %1$s"</string>
+    <string name="library_select_action">"Выбрать"</string>
+    <string name="library_selected_count">"Выбрано: %1$d"</string>
+    <string name="library_selected_announce">"Выбрано: %1$d из %2$d"</string>
+    <string name="library_selected_item">"Выбрано"</string>
+    <string name="library_select_all">"Выбрать все"</string>
+    <string name="library_exit_selection">"Отменить выбор"</string>
+    <string name="library_action_add_to">"Добавить в…"</string>
+    <string name="library_action_free_up">"Освободить"</string>
+    <string name="library_action_remove">"Удалить…"</string>
+    <string name="library_add_to_title">"Добавить в коллекцию"</string>
+    <string name="library_remove_from_collection">"Убрать из «%1$s»"</string>
+    <string name="library_added_to">"Добавлено в «%1$s»"</string>
+    <string name="library_removed_from">"Убрано из «%1$s»"</string>
+    <string name="library_free_up_title">"Освободить место"</string>
+    <string name="library_free_up_summary">"У %1$d из %2$d названий есть другая копия. Удаление копии с телефона освободит %3$s."</string>
+    <string name="library_free_up_skipped">"У %1$d нет другой копии, они останутся на телефоне."</string>
+    <string name="library_free_up_none">"Ни у одного из этих названий нет другой копии, поэтому освободить нечего."</string>
+    <string name="library_freed_done">"Освобождено на телефоне: %1$s"</string>
+    <string name="library_remove_keep_desc">"Файлы остаются на месте. Видео из Telegram скрываются, их можно восстановить."</string>
+    <string name="library_remove_delete_label">"Также удалить файлы"</string>
+    <string name="library_remove_delete_phone">"Удалит файлы на телефоне: %1$d (%2$s)."</string>
+    <string name="library_remove_delete_telegram">"Удалит из вашего канала Telegram: %1$d."</string>
+    <string name="library_remove_irreversible">"Это нельзя отменить."</string>
+    <string name="library_bulk_removing">"Удаление: %1$d из %2$d…"</string>
+    <string name="library_bulk_freeing">"Освобождение: %1$d из %2$d…"</string>
+    <string name="library_undo">"Отменить"</string>
+    <string name="library_retry">"Повторить"</string>
+    <string name="library_bulk_result">"Удалено: %1$d, не удалось удалить: %2$d. Проверьте подключение."</string>
+    <string name="library_select_season">"Выбрать сезон"</string>
+    <string name="library_collection_name_taken">"Коллекция с таким названием уже есть."</string>
 </resources>

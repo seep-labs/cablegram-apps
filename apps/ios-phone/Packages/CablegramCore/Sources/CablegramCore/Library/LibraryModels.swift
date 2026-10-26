@@ -34,12 +34,29 @@ public struct ChannelTmdb: Codable, Sendable, Equatable {
     enum CodingKeys: String, CodingKey { case type = "tmdb_type", id = "tmdb_id", season = "season_number", episode = "episode_number" }
 }
 
+/// A collection of the account. Collections made before they were synced have an id made on this phone and `synced` false; the sync
+/// creates them on the server (merging by name) and swaps in the server's id. `dirty` is a rename the server has not accepted yet.
+/// See contracts/collections.md.
 public struct UserCollection: Codable, Sendable, Equatable, Identifiable {
     public var id: String
     public var name: String
-    public init(id: String, name: String) {
+    public var synced: Bool
+    public var dirty: Bool
+    public init(id: String, name: String, synced: Bool = false, dirty: Bool = false) {
         self.id = id
         self.name = name
+        self.synced = synced
+        self.dirty = dirty
+    }
+
+    enum CodingKeys: String, CodingKey { case id, name, synced, dirty }
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        name = try c.decode(String.self, forKey: .name)
+        synced = try c.decodeIfPresent(Bool.self, forKey: .synced) ?? false
+        dirty = try c.decodeIfPresent(Bool.self, forKey: .dirty) ?? false
     }
 }
 
@@ -77,17 +94,20 @@ public struct LibraryFile: Codable, Sendable, Equatable {
     public var dismissedRemoteIds: [String]
     public var items: [LibraryItem]
     public var collections: [UserCollection]
+    /// Ids of synced collections deleted here, until the server confirms (a 404 counts as confirmed).
+    public var pendingCollectionDeletes: [String]
     public var folders: [IndexedFolder]
     public var pendingSharedImports: [PendingSharedImport]
     /// Telegram titles the phone already asked about, so "Find details" never repeats for them.
     public var promptedTelegramIds: [String]
 
     public init(householdId: String? = nil, dismissedRemoteIds: [String] = [], items: [LibraryItem] = [], collections: [UserCollection] = [],
-                folders: [IndexedFolder] = [], pendingSharedImports: [PendingSharedImport] = [], promptedTelegramIds: [String] = []) {
+                pendingCollectionDeletes: [String] = [], folders: [IndexedFolder] = [], pendingSharedImports: [PendingSharedImport] = [], promptedTelegramIds: [String] = []) {
         self.householdId = householdId
         self.dismissedRemoteIds = dismissedRemoteIds
         self.items = items
         self.collections = collections
+        self.pendingCollectionDeletes = pendingCollectionDeletes
         self.folders = folders
         self.pendingSharedImports = pendingSharedImports
         self.promptedTelegramIds = promptedTelegramIds
@@ -99,6 +119,7 @@ public struct LibraryFile: Codable, Sendable, Equatable {
         dismissedRemoteIds = try c.decodeIfPresent([String].self, forKey: .dismissedRemoteIds) ?? []
         items = try c.decodeIfPresent([LibraryItem].self, forKey: .items) ?? []
         collections = try c.decodeIfPresent([UserCollection].self, forKey: .collections) ?? []
+        pendingCollectionDeletes = try c.decodeIfPresent([String].self, forKey: .pendingCollectionDeletes) ?? []
         folders = try c.decodeIfPresent([IndexedFolder].self, forKey: .folders) ?? []
         pendingSharedImports = try c.decodeIfPresent([PendingSharedImport].self, forKey: .pendingSharedImports) ?? []
         promptedTelegramIds = try c.decodeIfPresent([String].self, forKey: .promptedTelegramIds) ?? []

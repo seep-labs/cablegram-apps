@@ -159,6 +159,10 @@ data class ProfileSwitchRequest(
 @Serializable
 data class VideoLibrary(val videos: List<Video> = emptyList())
 
+/** One of the account's collections, as the catalog names it on a title. */
+@Serializable
+data class CollectionRef(val id: String, val name: String)
+
 @Serializable
 data class Video(
     val id: String,
@@ -179,6 +183,8 @@ data class Video(
     val cast: List<String> = emptyList(),
     val director: String? = null,
     @SerialName("collection_name") val collectionName: String? = null,
+    /** The account's own collections this title is in (Kids, Favourites…), from the catalog. */
+    val collections: List<CollectionRef> = emptyList(),
     @SerialName("tmdb_id") val tmdbId: Int? = null,
     @SerialName("media_type") val mediaType: String = "movie",
     @SerialName("season_number") val seasonNumber: Int? = null,

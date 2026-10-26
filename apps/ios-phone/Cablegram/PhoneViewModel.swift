@@ -40,6 +40,10 @@ final class PhoneViewModel {
     private(set) var items: [LibraryItem] = []
     private(set) var collections: [UserCollection] = []
     var searchQuery = ""
+    /// Library filters and sort, remembered on this phone; the search text is `searchQuery`.
+    var libraryFilters = decodeLibraryQuery(UserDefaults.standard.string(forKey: "library_query")) {
+        didSet { UserDefaults.standard.set(encodeLibraryQuery(libraryFilters), forKey: "library_query") }
+    }
     private(set) var librarySyncState: LibrarySyncState = .idle
     private(set) var prepareStep: String?
     private(set) var prepareProgress: Double = 0
@@ -49,6 +53,14 @@ final class PhoneViewModel {
     var collectionsDialogOpen = false
     var collectionDraft = ""
     var deleteTarget: LibraryItem?
+    // Selecting titles in the library and acting on all of them (PhoneViewModel+Bulk.swift).
+    var selectedIds = Set<String>()
+    var bulkSheet = BulkSheet.none
+    var bulkProgress: String?
+    var bulkFailure: BulkFailure?
+    var undoRemoval: UndoRemoval?
+    @ObservationIgnored var undoTask: Task<Void, Never>?
+    @ObservationIgnored var collectionsTask: Task<Void, Never>?
     var paired: Bool { tv.paired }
     var tvName: String { tv.tvName }
 
@@ -206,6 +218,7 @@ final class PhoneViewModel {
     private func startAddTvFromTour() { tv.startAddTv() }
 
     func selectTab(_ tab: PhoneTab) {
+        clearSelection()
         // A cloud sheet, a title page and a series page are full-screen overlays: leaving for another tab must not leave them covering it.
         cloud.dismissCloudSheet()
         closeItem()
@@ -236,19 +249,46 @@ final class PhoneViewModel {
         let current = store.get(item.id)?.collectionIds ?? item.collectionIds
         store.setItemCollections(item.id, collectionIds: current.contains(collectionId) ? current.filter { $0 != collectionId } : current + [collectionId])
         refresh()
+        scheduleCollectionsSync()
     }
 
     func createCollection() {
         let name = collectionDraft.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !name.isEmpty else { return }
+        if collections.contains(where: { $0.name.caseInsensitiveCompare(name) == .orderedSame }) {
+            status = L("library_collection_name_taken")
+            return
+        }
         store.addCollection(name)
         collectionDraft = ""
         refresh()
+        scheduleCollectionsSync()
+    }
+
+    @discardableResult
+    func renameCollection(_ id: String, _ name: String) -> Bool {
+        let renamed = store.renameCollection(id, name: name)
+        if renamed { refresh(); scheduleCollectionsSync() } else { status = L("library_collection_name_taken") }
+        return renamed
     }
 
     func deleteCollection(_ id: String) {
         store.deleteCollection(id)
         refresh()
+        scheduleCollectionsSync()
+    }
+
+    /// Collection edits reach the account soon after, without a full library sync (the full sync reconciles them too).
+    func scheduleCollectionsSync() {
+        guard pairing.syncLibraryToApi, !(pairing.accountToken ?? "").isEmpty else { return }
+        collectionsTask?.cancel()
+        collectionsTask = Task { [weak self] in
+            try? await Task.sleep(for: .milliseconds(1500))
+            guard !Task.isCancelled, let self, let token = self.pairing.accountToken, !token.isEmpty else { return }
+            guard let remotes = try? await self.catalog().fetchCatalog(token: token, failOnError: true) else { return }
+            await LibrarySync(store: self.store, client: self.catalog(), token: token, phoneDeviceId: self.pairing.phoneDeviceId).reconcileCollections(remotes: remotes)
+            self.refresh()
+        }
     }
 
     func saveMetadata(base: LibraryItem, title: String, year: Int?, mediaType: String, overview: String) {

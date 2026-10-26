@@ -1052,4 +1052,57 @@
     <string name="tv_rename_title" formatted="false">"Fernseher umbenennen"</string>
     <string name="tv_name_label" formatted="false">"Name des Fernsehers"</string>
     <string name="ui_this_phone_uses_your_own_server_on_the_tv_choose_use_y_2bf9a0" formatted="false">"Dieses Telefon nutzt deinen eigenen Server. Wähle auf dem Fernseher zuerst „Eigenen Server verwenden“ und gib %1$s ein."</string>
+    <string name="library_filter_unwatched">"Ungesehen"</string>
+    <string name="library_filter_in_progress">"Angefangen"</string>
+    <string name="library_filter_more">"Mehr"</string>
+    <string name="library_filter_more_active">"Mehr (%1$d)"</string>
+    <string name="library_sort_button">"Sortierung: %1$s"</string>
+    <string name="library_sort_last_watched">"Zuletzt gesehen"</string>
+    <string name="library_sort_title">"Titel A–Z"</string>
+    <string name="library_sort_year">"Jahr"</string>
+    <string name="library_sort_size">"Größe (größte zuerst)"</string>
+    <string name="library_filter_sheet_title">"Filter"</string>
+    <string name="library_where_heading">"Wo es liegt"</string>
+    <string name="library_where_phone">"Auf diesem Telefon"</string>
+    <string name="library_where_cloud">"Cloud-Kopie"</string>
+    <string name="library_where_telegram">"In Telegram"</string>
+    <string name="library_where_unavailable">"Quelle nicht verfügbar"</string>
+    <string name="library_progress_heading">"Fortschritt"</string>
+    <string name="library_watched_any">"Alle"</string>
+    <string name="library_watched_started">"Angefangen"</string>
+    <string name="library_watched_done">"Gesehen"</string>
+    <string name="library_collection_heading">"Sammlung"</string>
+    <string name="library_filter_clear_all">"Alle zurücksetzen"</string>
+    <string name="library_filter_show">"%1$d anzeigen"</string>
+    <string name="library_filter_remove">"Filter %1$s entfernen"</string>
+    <string name="library_select_action">"Auswählen"</string>
+    <string name="library_selected_count">"%1$d ausgewählt"</string>
+    <string name="library_selected_announce">"Ausgewählt, %1$d von %2$d"</string>
+    <string name="library_selected_item">"Ausgewählt"</string>
+    <string name="library_select_all">"Alle auswählen"</string>
+    <string name="library_exit_selection">"Auswahl beenden"</string>
+    <string name="library_action_add_to">"Hinzufügen zu…"</string>
+    <string name="library_action_free_up">"Platz schaffen"</string>
+    <string name="library_action_remove">"Entfernen…"</string>
+    <string name="library_add_to_title">"Zur Sammlung hinzufügen"</string>
+    <string name="library_remove_from_collection">"Aus %1$s entfernen"</string>
+    <string name="library_added_to">"Zu %1$s hinzugefügt"</string>
+    <string name="library_removed_from">"Aus %1$s entfernt"</string>
+    <string name="library_free_up_title">"Speicherplatz freigeben"</string>
+    <string name="library_free_up_summary">"%1$d von %2$d Titeln haben eine weitere Kopie. Das Entfernen der Telefonkopie schafft %3$s frei."</string>
+    <string name="library_free_up_skipped">"%1$d haben keine weitere Kopie und bleiben auf deinem Telefon."</string>
+    <string name="library_free_up_none">"Keiner dieser Titel hat eine weitere Kopie, deshalb lässt sich nichts freigeben."</string>
+    <string name="library_freed_done">"%1$s auf deinem Telefon freigegeben"</string>
+    <string name="library_remove_keep_desc">"Dateien bleiben, wo sie sind. Telegram-Videos werden ausgeblendet und lassen sich wiederherstellen."</string>
+    <string name="library_remove_delete_label">"Auch die Dateien löschen"</string>
+    <string name="library_remove_delete_phone">"Löscht Dateien auf dem Telefon: %1$d (%2$s)."</string>
+    <string name="library_remove_delete_telegram">"Löscht aus deinem Telegram-Kanal: %1$d."</string>
+    <string name="library_remove_irreversible">"Das lässt sich nicht rückgängig machen."</string>
+    <string name="library_bulk_removing">"%1$d von %2$d wird entfernt …"</string>
+    <string name="library_bulk_freeing">"%1$d von %2$d wird freigegeben …"</string>
+    <string name="library_undo">"Rückgängig"</string>
+    <string name="library_retry">"Erneut versuchen"</string>
+    <string name="library_bulk_result">"%1$d entfernt, %2$d konnten nicht entfernt werden. Prüfe deine Verbindung."</string>
+    <string name="library_select_season">"Staffel auswählen"</string>
+    <string name="library_collection_name_taken">"Du hast bereits eine Sammlung mit diesem Namen."</string>
 </resources>

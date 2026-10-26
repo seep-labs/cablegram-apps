@@ -1,0 +1,18 @@
+# Preconditions: authenticated main UI, English, library with at least two titles. Restores the default sort at the end.
+# Checks the title count, a type chip and the sort menu (Android and iPhone).
+appId: app.cablegram.phone
+---
+- assertVisible:
+    id: library_count
+- tapOn:
+    id: library_filter_movies
+- assertVisible:
+    id: library_count
+- tapOn:
+    id: library_filter_all
+- tapOn: "Sort: Recently added"
+- tapOn: "Title A–Z"
+- assertVisible: "Sort: Title A–Z"
+- tapOn: "Sort: Title A–Z"
+- tapOn: "Recently added"
+- assertVisible: "Sort: Recently added"

@@ -23,6 +23,12 @@ const items = [
     progress: e === 2 ? { position_seconds: 1200, state: "paused" } : undefined, sources: phone(`c${e}`) })),
 ].map((i) => ({ media_type: "movie", ...i }));
 
+// The account's own collections (made on the phone), so the library's collection rows and "All titles" can be seen.
+const kids = { id: "c-kids", name: "Kids" };
+const favourites = { id: "c-fav", name: "Favourites" };
+const inCollections = { 1: [kids], 3: [kids, favourites], 7: [kids], 4: [favourites], s1e1: [favourites], s1e2: [favourites] };
+items.forEach((i) => { i.collections = inCollections[i.id] ?? []; });
+
 const routes = {
   "POST /api/auth/device": { session_id: "m1", pin: "123456", pairing_token: "pt", expires_at: new Date(Date.now() + 6e5).toISOString() },
   "GET /api/auth/device/m1": { status: "paired", access_token: "mock-token" },

@@ -28,6 +28,12 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
+import java.util.concurrent.atomic.AtomicInteger
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withContext
@@ -37,6 +43,9 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.put
+
+private const val UNDO_WINDOW_MS = 8_000L
+private const val BULK_CONCURRENCY = 4
 
 class PhoneViewModel(application: Application, private val savedState: SavedStateHandle) : AndroidViewModel(application) {
     private val supportedLanguages: Set<String> by lazy {
@@ -329,6 +338,14 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
     var selectedId by mutableStateOf<String?>(null)
         private set
     var searchQuery by mutableStateOf("")
+    /** Library filters and sort, remembered on this phone; the search text is [searchQuery]. */
+    var libraryFilters by mutableStateOf(LibraryQueryStore.load(application))
+        private set
+
+    fun updateLibraryFilters(next: LibraryQuery) {
+        libraryFilters = next.copy(search = "")
+        LibraryQueryStore.save(getApplication(), libraryFilters)
+    }
     var editingMetadata by mutableStateOf(false)
     // Smart subtitles: the saved subtitle (if any) for the open title, and whether the Find Subtitles flow is showing.
     var subtitleFlowOpen by mutableStateOf(false)
@@ -2100,6 +2117,7 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
                         syncHouseholdArtwork(client, token, item.id)
                     }
                 }
+                reconcileCollections(token, remotes)
                 check(!metadataFailed) { uiText(R.string.ui_your_detail_edits_are_saved_on_this_phone_review_any_c_251495) }
             }
             refresh()
@@ -2547,20 +2565,62 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
     fun createCollection() {
         val name = collectionDraft.trim()
         if (name.isEmpty()) return
+        if (collections.any { it.name.equals(name, ignoreCase = true) }) {
+            status = uiText(R.string.library_collection_name_taken)
+            return
+        }
         store.addCollection(name)
         collectionDraft = ""
         refresh()
+        scheduleCollectionsSync()
+    }
+
+    fun renameCollection(id: String, name: String): Boolean {
+        val renamed = store.renameCollection(id, name)
+        if (renamed) { refresh(); scheduleCollectionsSync() } else status = uiText(R.string.library_collection_name_taken)
+        return renamed
     }
 
     fun toggleCollection(item: LibraryItem, collectionId: String) {
         val next = if (collectionId in item.collectionIds) item.collectionIds - collectionId else item.collectionIds + collectionId
         store.setItemCollections(item.id, next)
         refresh()
+        scheduleCollectionsSync()
     }
 
     fun deleteCollection(id: String) {
         store.deleteCollection(id)
         refresh()
+        scheduleCollectionsSync()
+    }
+
+    private var collectionsSyncJob: Job? = null
+
+    /** Collection edits reach the account soon after, without a full library sync (the full sync reconciles them too). */
+    private fun scheduleCollectionsSync() {
+        if (!pairing.syncLibraryToApi || pairing.accountToken.isNullOrBlank()) return
+        collectionsSyncJob?.cancel()
+        collectionsSyncJob = viewModelScope.launch {
+            delay(1_500)
+            val token = pairing.accountToken ?: return@launch
+            // A full sync is running and may have missed this edit: try again once it is done.
+            if (!librarySyncMutex.tryLock()) { scheduleCollectionsSync(); return@launch }
+            try {
+                val remotes = runCatching { catalog().fetchCatalog(token, failOnError = true) }.getOrNull() ?: return@launch
+                withContext(Dispatchers.IO) { reconcileCollections(token, remotes) }
+                refresh()
+            } finally {
+                librarySyncMutex.unlock()
+            }
+        }
+    }
+
+    /** Sends the phone's collection changes and takes the account's (see syncCollections). */
+    private suspend fun reconcileCollections(token: String, remotes: List<RemoteCatalogItem>) {
+        val base = store.collectionsState()
+        val serverMembers = remotes.associate { remote -> remote.id to remote.collections.map { it.id } }
+        val result = syncCollections(catalog().collectionsApi(token), base, serverMembers) ?: return
+        store.applyCollectionsState(base, result)
     }
 
     fun enhance(item: LibraryItem) {
@@ -2712,6 +2772,198 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
         refresh()
         viewModelScope.launch { syncLibrary() }
         status = uiText(R.string.ui_deleted_from_this_phone_b74440, item.title)
+    }
+
+    // ---- Selecting titles in the library and acting on all of them ----
+
+    enum class BulkSheet { None, AddTo, FreeUp, Remove }
+
+    /** "Remove from library" that can still be undone; the Telegram hides are sent when the window closes. */
+    class UndoRemoval(val items: List<LibraryItem>, val job: Job)
+
+    /** Titles a bulk removal could not finish, kept for Retry. */
+    class BulkFailure(val mode: RemovalMode, val items: List<LibraryItem>, val removed: Int)
+
+    var selectedIds by mutableStateOf<Set<String>>(emptySet())
+        private set
+    val selectedItems: List<LibraryItem> get() = items.filter { it.id in selectedIds }
+    val selecting: Boolean get() = items.any { it.id in selectedIds }
+    var bulkSheet by mutableStateOf(BulkSheet.None)
+    var bulkProgress by mutableStateOf<String?>(null)
+    var bulkFailure by mutableStateOf<BulkFailure?>(null)
+        private set
+    var undoRemoval by mutableStateOf<UndoRemoval?>(null)
+        private set
+
+    /** What the library grid lists right now: the remembered filters and sort plus the search text. */
+    val libraryEntries: List<LibraryEntry>
+        get() = applyLibraryQuery(items, libraryFilters.withoutUnknownCollections(collections.mapTo(mutableSetOf()) { it.id }).copy(search = searchQuery))
+
+    fun toggleSelected(ids: List<String>) { selectedIds = toggleSelection(selectedIds, ids) }
+    fun selectAll(ids: Collection<String>) { selectedIds = ids.toSet() }
+    fun clearSelection() { selectedIds = emptySet() }
+
+    fun bulkAddToCollection(collection: UserCollection) {
+        selectedItems.forEach { if (collection.id !in it.collectionIds) store.setItemCollections(it.id, it.collectionIds + collection.id) }
+        refresh()
+        bulkSheet = BulkSheet.None
+        clearSelection()
+        scheduleCollectionsSync()
+        status = uiText(R.string.library_added_to, collection.name)
+    }
+
+    fun bulkAddToNewCollection(name: String) {
+        val clean = name.trim()
+        if (clean.isEmpty()) return
+        bulkAddToCollection(store.addCollection(clean))
+    }
+
+    fun bulkRemoveFromCollection(collection: UserCollection) {
+        selectedItems.forEach { if (collection.id in it.collectionIds) store.setItemCollections(it.id, it.collectionIds - collection.id) }
+        refresh()
+        bulkSheet = BulkSheet.None
+        clearSelection()
+        scheduleCollectionsSync()
+        status = uiText(R.string.library_removed_from, collection.name)
+    }
+
+    /** Only titles with a verified copy elsewhere are freed ([canRemoveLocalCopy]); the sheet already listed the rest. */
+    fun confirmBulkFreeUp() {
+        val summary = summarizeFreeUp(selectedItems)
+        bulkSheet = BulkSheet.None
+        clearSelection()
+        if (summary.eligible.isEmpty()) return
+        viewModelScope.launch {
+            summary.eligible.forEachIndexed { index, item ->
+                bulkProgress = uiText(R.string.library_bulk_freeing, index + 1, summary.eligible.size)
+                withContext(Dispatchers.IO) {
+                    if (canRemoveLocalCopy(item)) {
+                        store.removeLocalCopy(item.id)
+                        store.updateItem(item.id) { it.copy(sourceAvailable = false) }
+                    }
+                }
+            }
+            bulkProgress = null
+            refresh()
+            status = uiText(R.string.library_freed_done, formatBytes(summary.bytes))
+        }
+    }
+
+    fun confirmBulkRemove(mode: RemovalMode) {
+        val targets = selectedItems
+        bulkSheet = BulkSheet.None
+        clearSelection()
+        if (targets.isEmpty()) return
+        finalizePendingRemoval()
+        bulkFailure = null
+        forgetOpenTitles(targets)
+        when (mode) {
+            RemovalMode.RemoveFromLibrary -> removeWithUndo(targets)
+            RemovalMode.DeleteFiles -> deleteFiles(targets)
+        }
+    }
+
+    private fun forgetOpenTitles(targets: List<LibraryItem>) {
+        val ids = targets.mapTo(mutableSetOf()) { it.id }
+        if (nowPlaying?.id in ids) nowPlaying = null
+        if (selectedId in ids) selectedId = null
+    }
+
+    private fun removeWithUndo(targets: List<LibraryItem>) {
+        targets.forEach { store.removeFromLibrary(it.id) }
+        refresh()
+        val job = viewModelScope.launch {
+            delay(UNDO_WINDOW_MS)
+            finishRemoval(targets)
+        }
+        undoRemoval = UndoRemoval(targets, job)
+    }
+
+    /** A second removal, or the end of the Undo window, commits the first one now. */
+    private fun finalizePendingRemoval() {
+        val pending = undoRemoval ?: return
+        pending.job.cancel()
+        viewModelScope.launch { finishRemoval(pending.items) }
+    }
+
+    fun undoBulkRemoval() {
+        val pending = undoRemoval ?: return
+        pending.job.cancel()
+        undoRemoval = null
+        store.restoreRemoved(pending.items)
+        refresh()
+    }
+
+    /** The Undo window closed: hide the Telegram titles on the control plane, then sync once. */
+    private suspend fun finishRemoval(targets: List<LibraryItem>) {
+        undoRemoval = null
+        val telegram = targets.filter { it.sourceKind == "telegram" }
+        val failed = removeTelegramRemotely(telegram, permanently = false, progress = null)
+        withContext(Dispatchers.IO) { releaseUnusedGrants() }
+        // A sync during the Undo window may have brought the hidden titles back; drop the ones the server now hides.
+        telegram.filter { it !in failed }.forEach { store.removeFromLibrary(it.id) }
+        refresh()
+        if (failed.isNotEmpty()) bulkFailure = BulkFailure(RemovalMode.RemoveFromLibrary, failed, targets.size - failed.size)
+        syncLibrary()
+    }
+
+    private fun deleteFiles(targets: List<LibraryItem>) {
+        viewModelScope.launch {
+            val total = targets.size
+            val (telegram, phone) = targets.partition { it.sourceKind == "telegram" }
+            bulkProgress = uiText(R.string.library_bulk_removing, 0, total)
+            withContext(Dispatchers.IO) { phone.forEach { store.deleteFile(it.id) } }
+            bulkProgress = uiText(R.string.library_bulk_removing, phone.size, total)
+            val failed = removeTelegramRemotely(telegram, permanently = true) { done -> bulkProgress = uiText(R.string.library_bulk_removing, phone.size + done, total) }
+            telegram.filter { it !in failed }.forEach { store.removeFromLibrary(it.id) }
+            withContext(Dispatchers.IO) { releaseUnusedGrants() }
+            refresh()
+            bulkProgress = null
+            processTelegramDeletions()
+            if (failed.isNotEmpty()) bulkFailure = BulkFailure(RemovalMode.DeleteFiles, failed, total - failed.size)
+            else status = uiResources().getQuantityString(R.plurals.library_removed_count, total, total)
+            syncLibrary()
+        }
+    }
+
+    fun retryBulkRemoval() {
+        val failure = bulkFailure ?: return
+        bulkFailure = null
+        viewModelScope.launch {
+            val permanently = failure.mode == RemovalMode.DeleteFiles
+            bulkProgress = uiText(R.string.library_bulk_removing, 0, failure.items.size)
+            val failed = removeTelegramRemotely(failure.items, permanently) { done -> bulkProgress = uiText(R.string.library_bulk_removing, done, failure.items.size) }
+            failure.items.filter { it !in failed }.forEach { store.removeFromLibrary(it.id) }
+            refresh()
+            bulkProgress = null
+            if (permanently) processTelegramDeletions()
+            if (failed.isNotEmpty()) bulkFailure = BulkFailure(failure.mode, failed, failure.removed + failure.items.size - failed.size)
+            syncLibrary()
+        }
+    }
+
+    fun dismissBulkFailure() { bulkFailure = null }
+
+    /** Hides or deletes Telegram titles four at a time; returns the ones the control plane could not reach. */
+    private suspend fun removeTelegramRemotely(titles: List<LibraryItem>, permanently: Boolean, progress: ((Int) -> Unit)?): List<LibraryItem> {
+        if (titles.isEmpty()) return emptyList()
+        val token = pairing.accountToken ?: return titles
+        val gate = Semaphore(BULK_CONCURRENCY)
+        val done = AtomicInteger()
+        return coroutineScope {
+            titles.map { item ->
+                async {
+                    gate.withPermit {
+                        val result = catalog().removeTelegramTitle(token, item.id, if (permanently) "delete" else "hide")
+                        progress?.invoke(done.incrementAndGet())
+                        result?.telegramDeletions?.forEach {
+                            telegramDeletions.add(PendingTelegramDeletion(it.stableSourceKey, it.chatId, it.messageIds, item.title, System.currentTimeMillis()))
+                        }
+                        item.takeIf { result == null }
+                    }
+                }
+            }.awaitAll().filterNotNull()
+        }
     }
 
     fun playOnTv(item: LibraryItem) {

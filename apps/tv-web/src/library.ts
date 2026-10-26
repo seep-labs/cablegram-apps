@@ -185,12 +185,15 @@ export function allGenres(videos: Title[]): string[] {
   return distinct(([] as string[]).concat(...videos.map((v) => v.genres)).map((g) => g.trim()).filter(Boolean)).sort();
 }
 
-export type LibraryType = "all" | "movie" | "tv" | "watchlist" | "mylist";
+export type LibraryType = "all" | "movie" | "tv" | "watchlist" | "mylist" | "titles";
 export interface Shelf { id: string; title: string; entries: Entry[] }
 
 const byAddedDesc = (a: Entry, b: Entry) => (entryAddedAt(a) < entryAddedAt(b) ? 1 : entryAddedAt(a) > entryAddedAt(b) ? -1 : 0);
 
-/** Continue watching, Recently added, My List, then one shelf per genre; Continue and My List alone are single lists. */
+/**
+ * Continue watching, Recently added, My List, one shelf per collection of the account, then one per genre; Continue and My List
+ * alone are single lists.
+ */
 export function buildShelves(videos: Title[], type: LibraryType, genre: string | null): Shelf[] {
   const typed = type === "tv" ? videos.filter((v) => v.mediaType === "tv")
     : type === "movie" ? videos.filter((v) => v.mediaType !== "tv")
@@ -209,10 +212,40 @@ export function buildShelves(videos: Title[], type: LibraryType, genre: string |
   const myList = toEntries(scoped.filter((v) => v.inMyList)).sort(byAddedDesc);
   if (myList.length) shelves.push({ id: "mylist", title: "My List", entries: myList });
   if (!genre) {
+    // The account's own collections (made on the phone), by name ignoring case.
+    const collections: { id: string; name: string }[] = [];
+    scoped.forEach((v) => (v.collections ?? []).forEach((c) => { if (!collections.some((x) => x.id === c.id)) collections.push(c); }));
+    collections.sort((a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : a.name.toLowerCase() > b.name.toLowerCase() ? 1 : 0)).forEach((c) => {
+      const entries = toEntries(scoped.filter((v) => (v.collections ?? []).some((x) => x.id === c.id))).sort(byAddedDesc);
+      if (entries.length) shelves.push({ id: `collection:${c.id}`, title: c.name, entries });
+    });
     allGenres(scoped).forEach((g) => {
       const entries = toEntries(scoped.filter((v) => v.genres.indexOf(g) >= 0)).sort(byAddedDesc);
       if (entries.length) shelves.push({ id: `genre:${g}`, title: g, entries });
     });
   }
   return shelves;
+}
+
+export type TitlesSort = "recent" | "title" | "year";
+export const TITLES_SORTS: TitlesSort[] = ["recent", "title", "year"];
+export const TITLES_SORT_LABEL: Record<TitlesSort, string> = { recent: "Recently added", title: "Title A–Z", year: "Year" };
+
+/**
+ * Every title once, as one poster each (a show's episodes together), narrowed to [type] and sorted. A show counts as its newest
+ * episode for "recently added" and as its earliest year for "year"; unknown years go last. Ties fall back to the title, then the
+ * id, so the order never flickers.
+ */
+export function allTitles(videos: Title[], type: "all" | "movie" | "tv", sort: TitlesSort): Entry[] {
+  const typed = type === "tv" ? videos.filter((v) => v.mediaType === "tv") : type === "movie" ? videos.filter((v) => v.mediaType !== "tv") : videos;
+  const yearOf = (e: Entry): number => {
+    const years = (e.kind === "movie" ? [e.video] : e.show.episodes).map((v) => v.year).filter((y): y is number => y != null);
+    return years.length ? Math.min.apply(null, years) : -Infinity;
+  };
+  const lower = (e: Entry) => e.title.toLowerCase();
+  const cmp = (a: string | number, b: string | number) => (a < b ? -1 : a > b ? 1 : 0);
+  return toEntries(typed).sort((a, b) => {
+    const primary = sort === "title" ? cmp(lower(a), lower(b)) : sort === "year" ? cmp(yearOf(b), yearOf(a)) : cmp(entryAddedAt(b), entryAddedAt(a));
+    return primary || cmp(lower(a), lower(b)) || cmp(a.id, b.id);
+  });
 }

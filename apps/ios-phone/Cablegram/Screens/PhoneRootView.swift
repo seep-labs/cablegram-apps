@@ -100,6 +100,7 @@ struct LibraryShell: View {
             }
             // A series page and a title page are full-screen overlays on any tab (Android `LibraryShell`).
             if let series = viewModel.shownSeries { SeriesOverlay(viewModel: viewModel, series: series).transition(.move(edge: .trailing)) }
+            if tab == .library { LibrarySelectionLayer(viewModel: viewModel) }
             if let selected = viewModel.selected {
                 if viewModel.subtitles.flowOpen {
                     SubtitleFlow(viewModel: viewModel, item: selected) { viewModel.subtitles.flowOpen = false }.id(selected.id)

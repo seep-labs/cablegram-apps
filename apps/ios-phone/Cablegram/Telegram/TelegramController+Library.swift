@@ -42,6 +42,39 @@ extension TelegramController {
         }
     }
 
+    /// Hides or deletes Telegram titles four at a time; returns the ones the control plane could not reach. Deleted titles also
+    /// queue their channel messages (`processDeletions` runs them).
+    func removeTitlesRemotely(_ titles: [LibraryItem], permanently: Bool, progress: ((Int) -> Void)?) async -> [LibraryItem] {
+        guard !titles.isEmpty else { return [] }
+        guard let token else { return titles }
+        let client = catalogClient()
+        var failed: [LibraryItem] = []
+        var done = 0
+        await withTaskGroup(of: (LibraryItem, [TelegramDeletionOrder]?).self) { group in
+            var next = 0
+            func launch() {
+                guard next < titles.count else { return }
+                let item = titles[next]
+                next += 1
+                group.addTask { (item, await client.removeTelegramTitle(token: token, itemId: item.id, mode: permanently ? "delete" : "hide")) }
+            }
+            for _ in 0..<min(4, titles.count) { launch() }
+            while let (item, orders) = await group.next() {
+                done += 1
+                progress?(done)
+                if let orders {
+                    for order in orders {
+                        deletions.add(PendingTelegramDeletion(stableSourceKey: order.stableSourceKey, chatId: order.chatId, messageIds: order.messageIds, title: item.title, createdAt: Int64(Date().timeIntervalSince1970 * 1000)))
+                    }
+                } else {
+                    failed.append(item)
+                }
+                launch()
+            }
+        }
+        return failed
+    }
+
     /// Runs the queued channel deletions; whatever fails stays queued and is retried on the next start or removal.
     func processDeletions() {
         guard !deletions.all().isEmpty, let token, !deletionsRunning else { return }

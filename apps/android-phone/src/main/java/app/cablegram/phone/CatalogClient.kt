@@ -620,6 +620,55 @@ class CatalogClient(
         runCatching { client.newCall(request).execute().use { it.isSuccessful } }.getOrDefault(false)
     }
 
+    /** The account's collection routes for the library sync (contracts/collections.md). */
+    fun collectionsApi(token: String): CollectionsApi = object : CollectionsApi {
+        private val base = baseUrl.trimEnd('/')
+
+        /** The status code and body, or null when the request never got an answer. */
+        private suspend fun call(path: String, method: String, body: kotlinx.serialization.json.JsonObject? = null): Pair<Int, String>? = withContext(Dispatchers.IO) {
+            val request = Request.Builder().url("$base$path").header("Authorization", "Bearer $token")
+                .method(method, body?.let { json.encodeToString(it).toRequestBody("application/json".toMediaType()) } ?: if (method == "GET" || method == "DELETE") null else "".toRequestBody())
+                .build()
+            runCatching { client.newCall(request).execute().use { it.code to it.body?.string().orEmpty() } }.getOrNull()
+        }
+
+        private fun outcome(code: Int?): CallOutcome = when {
+            code == null -> CallOutcome.Failed
+            code in 200..299 -> CallOutcome.Ok
+            code == 409 -> CallOutcome.Conflict
+            // An older server has no rename route and answers 404 or 405 to it; the caller treats only a real 404 as "gone".
+            code == 404 -> CallOutcome.NotFound
+            else -> CallOutcome.Failed
+        }
+
+        private fun collection(text: String): RemoteCollection? = runCatching { json.decodeFromString<RemoteCollection>(text) }.getOrNull()
+
+        override suspend fun list(): List<RemoteCollection>? {
+            val answer = call("/api/catalog/collections", "GET") ?: return null
+            if (answer.first !in 200..299) return null
+            return runCatching { json.decodeFromString<RemoteCollectionList>(answer.second).collections }.getOrNull()
+        }
+
+        override suspend fun create(name: String): CollectionCall<RemoteCollection> {
+            val answer = call("/api/catalog/collections", "POST", buildJsonObject { put("name", name) })
+            return CollectionCall(outcome(answer?.first), answer?.takeIf { it.first in 200..299 }?.let { collection(it.second) })
+        }
+
+        override suspend fun rename(id: String, name: String): CollectionCall<RemoteCollection> {
+            val answer = call("/api/catalog/collections/$id", "PATCH", buildJsonObject { put("name", name) })
+            // A server older than the rename route answers 405, or 404 with "Route PATCH:… not found". Only the server's own
+            // `collection_not_found` means the collection is gone; anything else keeps the rename pending.
+            val gone = answer?.first == 404 && answer.second.contains("collection_not_found")
+            val kind = if (answer?.first == 405 || (answer?.first == 404 && !gone)) CallOutcome.Failed else outcome(answer?.first)
+            return CollectionCall(kind, answer?.takeIf { it.first in 200..299 }?.let { collection(it.second) })
+        }
+
+        override suspend fun delete(id: String): CollectionCall<Unit> = CollectionCall(outcome(call("/api/catalog/collections/$id", "DELETE")?.first), Unit)
+
+        override suspend fun setMember(collectionId: String, itemId: String, present: Boolean): CollectionCall<Unit> =
+            CollectionCall(outcome(call("/api/catalog/items/$itemId/collections/$collectionId", "PUT", buildJsonObject { put("present", present) })?.first), Unit)
+    }
+
     suspend fun telegramTombstones(token: String): List<TelegramTombstone>? = withContext(Dispatchers.IO) {
         val request = Request.Builder().url("${baseUrl.trimEnd('/')}/api/catalog/tombstones")
             .header("Authorization", "Bearer $token").get().build()

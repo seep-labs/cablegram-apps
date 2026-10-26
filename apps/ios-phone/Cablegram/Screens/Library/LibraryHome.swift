@@ -1,32 +1,46 @@
 import CablegramCore
 import SwiftUI
 
-/// Port of `LibraryHome`: header, search, filter chips, the sync line, then the shelves.
+/// Port of `LibraryHome`: header, search, filter chips, the sync line, the Continue watching row, then every title once in a grid.
 struct LibraryHome: View {
     let viewModel: PhoneViewModel
-    @State private var filter = "all"
+    @State private var gridWidth: CGFloat = 0
+    @State private var moreOpen = false
+
+    /// Smallest poster width; narrower screens still get three columns, wider ones (iPad) fit more.
+    private static let minPoster: CGFloat = 104
+    private static let gap: CGFloat = 12
 
     var body: some View {
         @Bindable var vm = viewModel
-        let queried = searchLibrary(viewModel.items, query: viewModel.searchQuery)
-        let filtered = filter == "movie" ? movies(queried) : filter == "tv" ? tvShows(queried) : queried
+        let filters = viewModel.libraryFilters.withoutUnknownCollections(Set(viewModel.collections.map(\.id)))
+        let query = filters.searching(viewModel.searchQuery)
+        let entries = applyLibraryQuery(viewModel.items, query)
         ScrollView {
-            LazyVStack(alignment: .leading, spacing: 20) {
+            LazyVStack(alignment: .leading, spacing: 20, pinnedViews: [.sectionHeaders]) {
                 header
                 searchField
-                chips
                 tvLine
-                syncButton
                 if let step = viewModel.prepareStep { StatusNote(message: step) }
                 if let status = viewModel.status { StatusNote(message: status) }
-                content(filtered)
+                content(entries, query, filters)
             }
+            .background(GeometryReader { geo in
+                Color.clear.onAppear { gridWidth = geo.size.width }.onChange(of: geo.size.width) { _, width in gridWidth = width }
+            })
             .padding(.horizontal, 20).padding(.top, 20).padding(.bottom, 28)
         }
         // Pull down to check for new videos, e.g. one just shared into the Telegram channel.
         .refreshable { await viewModel.syncLibrary(force: true) }
+        // Content scrolls under the status bar; an opaque cap keeps it from showing behind the clock.
+        .overlay(alignment: .top) {
+            GeometryReader { geo in Color.phoneBackground.frame(height: geo.safeAreaInsets.top).ignoresSafeArea(edges: .top) }.allowsHitTesting(false)
+        }
         .phoneScreenBackground()
         .sheet(isPresented: $vm.collectionsDialogOpen) { CollectionsSheet(viewModel: viewModel) }
+        .sheet(isPresented: $moreOpen) {
+            LibraryFilterSheet(query: filters, count: entries.count, collections: viewModel.collections) { viewModel.libraryFilters = $0 }
+        }
     }
 
     private var header: some View {
@@ -67,61 +81,58 @@ struct LibraryHome: View {
         .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.phoneOutline, lineWidth: 1))
     }
 
-    private var chips: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                ForEach([("all", "ui_all_a52ace"), ("movie", "ui_movies_dff924"), ("tv", "ui_tv_shows_222906")], id: \.0) { key, label in
-                    FilterChip(label: label, selected: filter == key) { filter = key }
-                }
-            }
-        }
-    }
-
+    /// One compact line, so the grid starts higher: the TV, its Connect/Remote action, and the sync button.
     private var tvLine: some View {
-        HStack {
+        let state = viewModel.librarySyncState
+        return HStack {
             VStack(alignment: .leading, spacing: 2) {
-                Text(viewModel.paired ? viewModel.tvName : L("ui_made_for_your_big_screen_eb0ced")).font(.system(.subheadline).weight(.medium)).foregroundStyle(.white)
+                Text(viewModel.paired ? viewModel.tvName : L("ui_made_for_your_big_screen_eb0ced")).font(.system(.subheadline).weight(.medium)).foregroundStyle(.white).lineLimit(1)
                 Text(key: viewModel.paired ? "ui_keep_your_phone_on_the_same_wi_fi_e373e7" : "ui_connect_a_tv_when_you_re_ready_to_watch_d1ae74")
-                    .font(.system(.caption)).foregroundStyle(Color.phoneMuted)
+                    .font(.system(.caption)).foregroundStyle(Color.phoneMuted).lineLimit(1)
             }
             Spacer()
             if !viewModel.paired || viewModel.legacyRemote {
                 Button { if viewModel.paired { viewModel.selectTab(.remote) } else { viewModel.tv.startAddTv() } } label: { Text(key: viewModel.paired ? "ui_remote_ffa98e" : "ui_connect_1a2303") }
                     .buttonStyle(AccentTextButtonStyle())
             }
-        }
-    }
-
-    private var syncButton: some View {
-        let state = viewModel.librarySyncState
-        return Button { viewModel.syncNow() } label: {
-            HStack(spacing: 8) {
-                Image(systemName: state == .completed ? "checkmark" : "arrow.triangle.2.circlepath").font(.system(.footnote))
-                Text(key: state == .running ? "ui_syncing_library_8e43e6" : state == .completed ? "ui_library_synced_704162"
-                     : state == .failed ? "ui_sync_needs_attention_retry_f4d943" : "ui_sync_library_dd3492").font(PhoneFont.labelMedium)
+            Button { viewModel.syncNow() } label: {
+                Image(systemName: state == .completed ? "checkmark" : "arrow.triangle.2.circlepath").foregroundStyle(Color.phoneAccent).frame(width: 44, height: 44)
             }
+            .disabled(state == .running)
+            .accessibilityLabel(L(state == .running ? "ui_syncing_library_8e43e6" : state == .completed ? "ui_library_synced_704162"
+                                  : state == .failed ? "ui_sync_needs_attention_retry_f4d943" : "ui_sync_library_dd3492"))
+            .accessibilityIdentifier("library_sync")
         }
-        .buttonStyle(AccentTextButtonStyle()).disabled(state == .running)
     }
 
-    @ViewBuilder private func content(_ filtered: [LibraryItem]) -> some View {
+    @ViewBuilder private func content(_ entries: [LibraryEntry], _ query: LibraryQuery, _ filters: LibraryQuery) -> some View {
         if viewModel.items.isEmpty {
             EmptyState(symbol: "movieclapper", title: L("ui_a_home_for_your_favorites_1b3984"),
                        message: L("ui_import_a_few_videos_from_your_phone_your_personal_cine_1f8181"), action: L("ui_import_videos_fec728")) { viewModel.selectTab(.browse) }
-        } else if filtered.isEmpty {
-            EmptyState(symbol: "magnifyingglass", title: L("ui_no_titles_found_2aeb6d"), message: L("ui_try_another_title_or_clear_your_filters_to_see_the_who_ab222f"),
-                       action: L("ui_clear_filters_7179ea")) { viewModel.searchQuery = ""; filter = "all" }
-        } else if !viewModel.searchQuery.trimmingCharacters(in: .whitespaces).isEmpty || filter != "all" {
-            Shelf(title: L("ui_titles_77f1d9", "\(filtered.count)"), items: filtered, viewModel: viewModel)
         } else {
-            let watching = continueWatching(filtered)
-            if !watching.isEmpty { Shelf(title: L("ui_continue_watching_81ebbe"), items: watching, viewModel: viewModel, showProgress: true) }
-            Shelf(title: L("ui_recently_added_96ec5d"), items: recentlyAdded(filtered), viewModel: viewModel)
-            if !movies(filtered).isEmpty { Shelf(title: L("ui_movies_dff924"), items: movies(filtered), viewModel: viewModel) }
-            if !tvShows(filtered).isEmpty { Shelf(title: L("ui_tv_shows_222906"), items: tvShows(filtered), viewModel: viewModel) }
-            ForEach(viewModel.collections) { collection in
-                let inCollection = filtered.filter { $0.collectionIds.contains(collection.id) }
-                if !inCollection.isEmpty { Shelf(title: collection.name, items: inCollection, viewModel: viewModel) }
+            if !query.hasFilters {
+                let watching = continueWatching(viewModel.items)
+                if !watching.isEmpty { Shelf(title: L("ui_continue_watching_81ebbe"), items: watching, viewModel: viewModel, showProgress: true, posterWidth: 112, selectionFor: viewModel.selection(for:)) }
+            }
+            Section {
+                if entries.isEmpty {
+                    EmptyState(symbol: "magnifyingglass", title: L("ui_no_titles_found_2aeb6d"), message: L("ui_try_another_title_or_clear_your_filters_to_see_the_who_ab222f"),
+                               action: L("ui_clear_filters_7179ea")) { viewModel.searchQuery = ""; viewModel.libraryFilters = filters.cleared() }
+                } else {
+                    // A series filtered down to some episodes still opens as the whole series: the series page looks it up by key.
+                    let columns = Array(repeating: GridItem(.flexible(), spacing: Self.gap), count: max(3, Int((gridWidth + Self.gap) / (Self.minPoster + Self.gap))))
+                    LazyVGrid(columns: columns, alignment: .leading, spacing: 20) {
+                        ForEach(entries) { entry in
+                            switch entry {
+                            case .film(let item): PosterCard(item: item, showProgress: false, viewModel: viewModel, width: nil, selection: viewModel.selection(for: [item.id])).frame(maxHeight: .infinity, alignment: .top)
+                            case .series: SeriesCard(entry: entry, showProgress: false, viewModel: viewModel, width: nil, selection: viewModel.selection(for: entry.matchedItems.map(\.id))).frame(maxHeight: .infinity, alignment: .top)
+                            }
+                        }
+                    }
+                    .accessibilityIdentifier("library_grid")
+                }
+            } header: {
+                LibraryFilterBar(query: filters, count: entries.count, collections: viewModel.collections, onChange: { viewModel.libraryFilters = $0 }, onOpenMore: { moreOpen = true })
             }
         }
     }
@@ -172,6 +183,8 @@ struct Shelf: View {
     let items: [LibraryItem]
     let viewModel: PhoneViewModel
     var showProgress = false
+    var posterWidth: CGFloat = 144
+    var selectionFor: (([String]) -> CardSelection)?
 
     var body: some View {
         if !items.isEmpty {
@@ -181,14 +194,21 @@ struct Shelf: View {
                     LazyHStack(alignment: .top, spacing: 14) {
                         ForEach(groupIntoEntries(items)) { entry in
                             switch entry {
-                            case .film(let item): PosterCard(item: item, showProgress: showProgress, viewModel: viewModel)
-                            case .series: SeriesCard(entry: entry, showProgress: showProgress, viewModel: viewModel)
+                            case .film(let item): PosterCard(item: item, showProgress: showProgress, viewModel: viewModel, width: posterWidth, selection: selectionFor?([item.id]))
+                            case .series: SeriesCard(entry: entry, showProgress: showProgress, viewModel: viewModel, width: posterWidth, selection: selectionFor?(entry.matchedItems.map(\.id)))
                             }
                         }
                     }
                 }
             }
         }
+    }
+}
+
+private extension View {
+    /// A 144 x 210 poster on a shelf, or a flexible one with the same proportions in the grid.
+    @ViewBuilder func posterFrame(width: CGFloat?) -> some View {
+        if let width { frame(width: width, height: width * 210 / 144) } else { aspectRatio(144.0 / 210.0, contentMode: .fit).frame(maxWidth: .infinity) }
     }
 }
 
@@ -222,38 +242,42 @@ struct PosterCard: View {
     let item: LibraryItem
     let showProgress: Bool
     let viewModel: PhoneViewModel
+    /// The shelf's fixed poster width, or nil to fill a grid cell.
+    var width: CGFloat? = 144
+    var selection: CardSelection?
 
     var body: some View {
-        Button { viewModel.openItem(item) } label: {
-            VStack(alignment: .leading, spacing: 0) {
-                ZStack {
-                    MediaArtwork(item: item, store: viewModel.store)
-                    VStack {
-                        HStack(alignment: .top) {
-                            if item.isPrivate {
-                                Image(systemName: "lock.fill").font(.system(.callout)).foregroundStyle(.white).accessibilityLabel(L("ui_private_video_f0d5d4"))
-                            }
-                            Spacer()
-                            Badge(text: L(storageBadge(item).labelKey))
+        VStack(alignment: .leading, spacing: 0) {
+            ZStack {
+                MediaArtwork(item: item, store: viewModel.store)
+                SelectionMark(selection: selection)
+                VStack {
+                    HStack(alignment: .top) {
+                        if item.isPrivate {
+                            Image(systemName: "lock.fill").font(.system(.callout)).foregroundStyle(.white).accessibilityLabel(L("ui_private_video_f0d5d4"))
                         }
-                        .padding(6)
                         Spacer()
-                        if showProgress { ProgressBar(fraction: watchFraction(item)) }
+                        Badge(text: L(storageBadge(item).labelKey))
                     }
-                }
-                .frame(width: 144, height: 210).clipShape(RoundedRectangle(cornerRadius: 16))
-                Text(item.title).font(.system(.subheadline)).foregroundStyle(.white).lineLimit(2).multilineTextAlignment(.leading).padding(.top, 10)
-                Text(key: storageBadge(item).statusLineKey)
-                    .font(.system(.caption2)).foregroundStyle(storageBadge(item) == .failed ? Color(hex: 0xFFB74D) : Color.phoneMuted).lineLimit(2).multilineTextAlignment(.leading)
-                if showProgress {
-                    Text(remainingDuration(item).map { L("ui_left_bc8cab", $0) } ?? percentText(item)).font(.system(.caption2)).foregroundStyle(Color.phoneMuted)
+                    .padding(6)
+                    Spacer()
+                    if showProgress { ProgressBar(fraction: watchFraction(item)) }
                 }
             }
-            .frame(width: 144, alignment: .leading)
+            .posterFrame(width: width).clipShape(RoundedRectangle(cornerRadius: 16))
+            Text(item.title).font(.system(.subheadline)).foregroundStyle(.white).lineLimit(2).multilineTextAlignment(.leading).padding(.top, 10)
+            // Off in the grid: the badge on the poster already says where the title is.
+            if width != nil {
+                Text(key: storageBadge(item).statusLineKey)
+                    .font(.system(.caption2)).foregroundStyle(storageBadge(item) == .failed ? Color(hex: 0xFFB74D) : Color.phoneMuted).lineLimit(2).multilineTextAlignment(.leading)
+            }
+            if showProgress {
+                Text(remainingDuration(item).map { L("ui_left_bc8cab", $0) } ?? percentText(item)).font(.system(.caption2)).foregroundStyle(Color.phoneMuted)
+            }
         }
-        .buttonStyle(.plain)
+        .frame(width: width, alignment: .leading).frame(maxWidth: width == nil ? .infinity : nil, alignment: .leading)
+        .selectableCard(selection) { viewModel.openItem(item) }
         .accessibilityIdentifier("poster_\(item.id)")
-        .contextMenu { ItemMenu(item: item, viewModel: viewModel) }
     }
 }
 
@@ -261,30 +285,32 @@ struct SeriesCard: View {
     let entry: LibraryEntry
     let showProgress: Bool
     let viewModel: PhoneViewModel
+    /// The shelf's fixed poster width, or nil to fill a grid cell.
+    var width: CGFloat? = 144
+    var selection: CardSelection?
 
     var body: some View {
         let lead = entry.lead
-        Button { viewModel.openSeries(entry) } label: {
-            VStack(alignment: .leading, spacing: 0) {
-                ZStack {
-                    MediaArtwork(item: lead, store: viewModel.store)
-                    VStack {
-                        HStack { Spacer(); Badge(text: L("ui_tv_series_e50677")) }.padding(6)
-                        Spacer()
-                        if showProgress { ProgressBar(fraction: watchFraction(lead)) }
-                    }
-                }
-                .frame(width: 144, height: 210).clipShape(RoundedRectangle(cornerRadius: 16))
-                Text(entry.title).font(.system(.subheadline)).foregroundStyle(.white).lineLimit(2).multilineTextAlignment(.leading).padding(.top, 10)
-                Text(seriesSummary(entry)).font(.system(.caption2)).foregroundStyle(Color.phoneMuted).lineLimit(1)
-                if showProgress {
-                    let parts = [episodeBadge(lead), remainingDuration(lead).map { L("ui_left_bc8cab", $0) }].compactMap { $0 }
-                    Text(parts.isEmpty ? percentText(lead) : parts.joined(separator: " · ")).font(.system(.caption2)).foregroundStyle(Color.phoneMuted)
+        VStack(alignment: .leading, spacing: 0) {
+            ZStack {
+                MediaArtwork(item: lead, store: viewModel.store)
+                SelectionMark(selection: selection)
+                VStack {
+                    HStack { Spacer(); Badge(text: L("ui_tv_series_e50677")) }.padding(6)
+                    Spacer()
+                    if showProgress { ProgressBar(fraction: watchFraction(lead)) }
                 }
             }
-            .frame(width: 144, alignment: .leading)
+            .posterFrame(width: width).clipShape(RoundedRectangle(cornerRadius: 16))
+            Text(entry.title).font(.system(.subheadline)).foregroundStyle(.white).lineLimit(2).multilineTextAlignment(.leading).padding(.top, 10)
+            Text(seriesSummary(entry)).font(.system(.caption2)).foregroundStyle(Color.phoneMuted).lineLimit(2).multilineTextAlignment(.leading)
+            if showProgress {
+                let parts = [episodeBadge(lead), remainingDuration(lead).map { L("ui_left_bc8cab", $0) }].compactMap { $0 }
+                Text(parts.isEmpty ? percentText(lead) : parts.joined(separator: " · ")).font(.system(.caption2)).foregroundStyle(Color.phoneMuted)
+            }
         }
-        .buttonStyle(.plain)
+        .frame(width: width, alignment: .leading).frame(maxWidth: width == nil ? .infinity : nil, alignment: .leading)
+        .selectableCard(selection) { viewModel.openSeries(entry) }
         .accessibilityIdentifier("series_\(entry.key)")
     }
 }
@@ -318,6 +344,31 @@ struct ItemMenu: View {
     }
 }
 
+/// One collection in the Collections sheet: its name with Rename and Remove, or the name being edited.
+private struct CollectionRow: View {
+    let viewModel: PhoneViewModel
+    let collection: UserCollection
+    @State private var renaming = false
+    @State private var draft = ""
+
+    var body: some View {
+        HStack {
+            if renaming {
+                PhoneTextField(label: L("ui_collection_name_922214"), text: $draft).accessibilityIdentifier("collection_rename_field")
+                Button { if viewModel.renameCollection(collection.id, draft) { renaming = false } } label: { Text(key: "ui_save_1509f5") }
+                    .buttonStyle(AccentTextButtonStyle()).disabled(draft.trimmingCharacters(in: .whitespaces).isEmpty)
+                    .accessibilityIdentifier("collection_rename_save")
+            } else {
+                Text(collection.name).foregroundStyle(.white)
+                Spacer()
+                Button { draft = collection.name; renaming = true } label: { Text(key: "tv_rename") }
+                    .buttonStyle(AccentTextButtonStyle()).accessibilityIdentifier("collection_rename_\(collection.id)")
+                Button { viewModel.deleteCollection(collection.id) } label: { Text(key: "ui_remove_c3812f") }.buttonStyle(AccentTextButtonStyle())
+            }
+        }
+    }
+}
+
 private struct CollectionsSheet: View {
     let viewModel: PhoneViewModel
     @Environment(\.dismiss) private var dismiss
@@ -330,11 +381,7 @@ private struct CollectionsSheet: View {
                 Button { viewModel.createCollection() } label: { Text(key: "ui_create_collection_69152b") }
                     .buttonStyle(OutlinedButtonStyle()).disabled(viewModel.collectionDraft.trimmingCharacters(in: .whitespaces).isEmpty)
                 ForEach(viewModel.collections) { collection in
-                    HStack {
-                        Text(collection.name).foregroundStyle(.white)
-                        Spacer()
-                        Button { viewModel.deleteCollection(collection.id) } label: { Text(key: "ui_remove_c3812f") }.buttonStyle(AccentTextButtonStyle())
-                    }
+                    CollectionRow(viewModel: viewModel, collection: collection)
                 }
                 Spacer()
             }

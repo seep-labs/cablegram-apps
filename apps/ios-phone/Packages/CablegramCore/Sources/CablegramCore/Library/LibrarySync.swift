@@ -108,7 +108,17 @@ public struct LibrarySync: Sendable {
             _ = await client.pushLibraryItem(token: token, item: store.get(item.id) ?? item, deviceId: phoneDeviceId) { [store] in store.setCatalogIdentity(item.id, catalogId: $0) }
             _ = await syncHouseholdArtwork(item.id)
         }
+        await reconcileCollections(remotes: remotes)
         if metadataFailed { throw LibrarySyncError(kind: .metadata) }
+    }
+
+    /// Sends the phone's collection changes and takes the account's (see `syncCollections`).
+    public func reconcileCollections(remotes: [RemoteCatalogItem]) async {
+        let base = store.collectionsState()
+        var serverMembers: [String: [String]] = [:]
+        for remote in remotes { serverMembers[remote.id] = remote.collections.map(\.id) }
+        guard let result = await syncCollections(api: client.collectionsAPI(token: token), state: base, serverMembers: serverMembers) else { return }
+        store.applyCollectionsState(base: base, result: result)
     }
 
     /// Uploads or withdraws a cover the person chose to save to the household (CAB-29).

@@ -17,4 +17,44 @@
         <item quantity="many">"%1$d موسم"</item>
         <item quantity="other">"%1$d موسم"</item>
     </plurals>
+    <plurals name="library_title_count">
+        <item quantity="zero">"%1$d عنوان"</item>
+        <item quantity="one">"عنوان واحد"</item>
+        <item quantity="two">"عنوانان"</item>
+        <item quantity="few">"%1$d عناوين"</item>
+        <item quantity="many">"%1$d عنوانًا"</item>
+        <item quantity="other">"%1$d عنوان"</item>
+    </plurals>
+    <plurals name="library_remove_title_count">
+        <item quantity="zero">"إزالة %1$d عنوان؟"</item>
+        <item quantity="one">"إزالة عنوان واحد؟"</item>
+        <item quantity="two">"إزالة عنوانين؟"</item>
+        <item quantity="few">"إزالة %1$d عناوين؟"</item>
+        <item quantity="many">"إزالة %1$d عنوانًا؟"</item>
+        <item quantity="other">"إزالة %1$d عنوان؟"</item>
+    </plurals>
+    <plurals name="library_summary_phone">
+        <item quantity="zero">"%1$d فيديو على الهاتف"</item>
+        <item quantity="one">"فيديو واحد على الهاتف"</item>
+        <item quantity="two">"فيديوان على الهاتف"</item>
+        <item quantity="few">"%1$d فيديوهات على الهاتف"</item>
+        <item quantity="many">"%1$d فيديو على الهاتف"</item>
+        <item quantity="other">"%1$d فيديو على الهاتف"</item>
+    </plurals>
+    <plurals name="library_summary_telegram">
+        <item quantity="zero">"%1$d فيديو من Telegram"</item>
+        <item quantity="one">"فيديو واحد من Telegram"</item>
+        <item quantity="two">"فيديوان من Telegram"</item>
+        <item quantity="few">"%1$d فيديوهات من Telegram"</item>
+        <item quantity="many">"%1$d فيديو من Telegram"</item>
+        <item quantity="other">"%1$d فيديو من Telegram"</item>
+    </plurals>
+    <plurals name="library_removed_count">
+        <item quantity="zero">"تمت إزالة %1$d عنوان"</item>
+        <item quantity="one">"تمت إزالة عنوان واحد"</item>
+        <item quantity="two">"تمت إزالة عنوانين"</item>
+        <item quantity="few">"تمت إزالة %1$d عناوين"</item>
+        <item quantity="many">"تمت إزالة %1$d عنوانًا"</item>
+        <item quantity="other">"تمت إزالة %1$d عنوان"</item>
+    </plurals>
 </resources>

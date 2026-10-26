@@ -53,7 +53,7 @@ fun needsTelegramMatchPrompt(matchStatus: String?, createdAt: java.time.Instant?
         now.toEpochMilli() - createdAt.toEpochMilli() >= graceMs
 
 fun continueWatching(items: List<LibraryItem>): List<LibraryItem> =
-    items.filter { it.positionSeconds > 8 && watchFraction(item = it) < 0.92f }
+    items.filter(::isStarted)
         .sortedByDescending { it.lastWatchedAt.orEmpty() }
 
 fun recentlyAdded(items: List<LibraryItem>): List<LibraryItem> =
