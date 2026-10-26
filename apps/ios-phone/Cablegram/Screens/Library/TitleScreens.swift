@@ -26,7 +26,14 @@ struct SeriesOverlay: View {
                         }
                     }
                     ForEach(ordered, id: \.self) { season in
-                        Text(season.map { L("ui_season_ab5756", "\($0)") } ?? L("ui_episodes_83f972")).font(PhoneFont.titleMedium).foregroundStyle(.white)
+                        HStack {
+                            Text(season.map { L("ui_season_ab5756", "\($0)") } ?? L("ui_episodes_83f972")).font(PhoneFont.titleMedium).foregroundStyle(.white)
+                            Spacer()
+                            Button { viewModel.selectAll(Array(viewModel.selectedIds.union(seasons[season]!.map(\.id)))) } label: {
+                                Text(key: "library_select_season").font(PhoneFont.labelLarge).foregroundStyle(Color.phoneAccent).frame(minHeight: 44)
+                            }
+                            .accessibilityIdentifier("series_select_season_\(season ?? 0)")
+                        }
                         ForEach(seasons[season]!) { episode in EpisodeRow(episode: episode, viewModel: viewModel) }
                     }
                 }
@@ -42,8 +49,10 @@ private struct EpisodeRow: View {
     let viewModel: PhoneViewModel
 
     var body: some View {
-        // Tap opens the episode; long-press gives the same menu as a poster.
-        Button { viewModel.openItem(episode) } label: {
+        // Tap opens the episode (or selects it while selecting); a long press starts a selection, and the single-title menu
+        // (Delete, Save to Telegram…) is in the selection bar.
+        let picked = viewModel.selectedIds.contains(episode.id)
+        HStack {
             VStack(alignment: .leading, spacing: 2) {
                 Text(episodeBadge(episode) ?? L("ui_episode_b19c45")).foregroundStyle(.white)
                 Text(episode.filename.contains(".") ? String(episode.filename[..<episode.filename.lastIndex(of: ".")!]) : episode.filename)
@@ -54,11 +63,12 @@ private struct EpisodeRow: View {
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(12)
-            .background(Color.phonePanel, in: RoundedRectangle(cornerRadius: 12))
+            if picked { Image(systemName: "checkmark.circle.fill").font(.system(size: 24)).foregroundStyle(Color.phoneAccent).accessibilityLabel(L("library_selected_item")) }
         }
-        .buttonStyle(.plain)
-        .contextMenu { ItemMenu(item: episode, viewModel: viewModel) }
+        .padding(12)
+        .background(picked ? Color.phoneAccentContainer : Color.phonePanel, in: RoundedRectangle(cornerRadius: 12))
+        .selectableCard(viewModel.selection(for: [episode.id])) { viewModel.openItem(episode) }
+        .accessibilityIdentifier("episode_\(episode.id)")
     }
 }
 

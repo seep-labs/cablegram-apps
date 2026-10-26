@@ -1,0 +1,21 @@
+# Preconditions: authenticated main UI, English, library with at least one poster. Removes one title from the library and
+# undoes it inside the 8 second window, so the library ends as it started. Android and iPhone.
+appId: app.cablegram.phone
+---
+- longPressOn:
+    id: "poster_.*"
+    index: 0
+- assertVisible:
+    id: library_selected_count
+- tapOn:
+    id: library_action_remove
+- tapOn:
+    id: library_remove_confirm
+- assertVisible:
+    id: library_undo
+- tapOn:
+    id: library_undo
+- assertNotVisible:
+    id: library_undo
+- assertVisible:
+    id: library_count

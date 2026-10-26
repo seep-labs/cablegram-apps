@@ -322,6 +322,18 @@ public final class LibraryStore: @unchecked Sendable {
         }
     }
 
+    /// Puts titles back after "Remove from library" was undone, including household titles dismissed by it.
+    public func restoreRemoved(_ removed: [LibraryItem]) {
+        locked {
+            var file = snapshot()
+            let present = Set(file.items.map(\.id))
+            file.items.append(contentsOf: removed.filter { !present.contains($0.id) })
+            let ids = Set(removed.map(\.id))
+            file.dismissedRemoteIds.removeAll { ids.contains($0) }
+            save(file)
+        }
+    }
+
     /// Drops a restored placeholder that a re-imported file now represents (not a dismissal).
     public func dropPlaceholder(_ id: String) {
         locked {

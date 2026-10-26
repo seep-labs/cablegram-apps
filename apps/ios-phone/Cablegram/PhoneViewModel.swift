@@ -53,6 +53,13 @@ final class PhoneViewModel {
     var collectionsDialogOpen = false
     var collectionDraft = ""
     var deleteTarget: LibraryItem?
+    // Selecting titles in the library and acting on all of them (PhoneViewModel+Bulk.swift).
+    var selectedIds = Set<String>()
+    var bulkSheet = BulkSheet.none
+    var bulkProgress: String?
+    var bulkFailure: BulkFailure?
+    var undoRemoval: UndoRemoval?
+    @ObservationIgnored var undoTask: Task<Void, Never>?
     var paired: Bool { tv.paired }
     var tvName: String { tv.tvName }
 
@@ -210,6 +217,7 @@ final class PhoneViewModel {
     private func startAddTvFromTour() { tv.startAddTv() }
 
     func selectTab(_ tab: PhoneTab) {
+        clearSelection()
         // A cloud sheet, a title page and a series page are full-screen overlays: leaving for another tab must not leave them covering it.
         cloud.dismissCloudSheet()
         closeItem()

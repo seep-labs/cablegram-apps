@@ -112,7 +112,7 @@ struct LibraryHome: View {
         } else {
             if !query.hasFilters {
                 let watching = continueWatching(viewModel.items)
-                if !watching.isEmpty { Shelf(title: L("ui_continue_watching_81ebbe"), items: watching, viewModel: viewModel, showProgress: true, posterWidth: 112) }
+                if !watching.isEmpty { Shelf(title: L("ui_continue_watching_81ebbe"), items: watching, viewModel: viewModel, showProgress: true, posterWidth: 112, selectionFor: viewModel.selection(for:)) }
             }
             Section {
                 if entries.isEmpty {
@@ -124,8 +124,8 @@ struct LibraryHome: View {
                     LazyVGrid(columns: columns, alignment: .leading, spacing: 20) {
                         ForEach(entries) { entry in
                             switch entry {
-                            case .film(let item): PosterCard(item: item, showProgress: false, viewModel: viewModel, width: nil).frame(maxHeight: .infinity, alignment: .top)
-                            case .series: SeriesCard(entry: entry, showProgress: false, viewModel: viewModel, width: nil).frame(maxHeight: .infinity, alignment: .top)
+                            case .film(let item): PosterCard(item: item, showProgress: false, viewModel: viewModel, width: nil, selection: viewModel.selection(for: [item.id])).frame(maxHeight: .infinity, alignment: .top)
+                            case .series: SeriesCard(entry: entry, showProgress: false, viewModel: viewModel, width: nil, selection: viewModel.selection(for: entry.matchedItems.map(\.id))).frame(maxHeight: .infinity, alignment: .top)
                             }
                         }
                     }
@@ -184,6 +184,7 @@ struct Shelf: View {
     let viewModel: PhoneViewModel
     var showProgress = false
     var posterWidth: CGFloat = 144
+    var selectionFor: (([String]) -> CardSelection)?
 
     var body: some View {
         if !items.isEmpty {
@@ -193,8 +194,8 @@ struct Shelf: View {
                     LazyHStack(alignment: .top, spacing: 14) {
                         ForEach(groupIntoEntries(items)) { entry in
                             switch entry {
-                            case .film(let item): PosterCard(item: item, showProgress: showProgress, viewModel: viewModel, width: posterWidth)
-                            case .series: SeriesCard(entry: entry, showProgress: showProgress, viewModel: viewModel, width: posterWidth)
+                            case .film(let item): PosterCard(item: item, showProgress: showProgress, viewModel: viewModel, width: posterWidth, selection: selectionFor?([item.id]))
+                            case .series: SeriesCard(entry: entry, showProgress: showProgress, viewModel: viewModel, width: posterWidth, selection: selectionFor?(entry.matchedItems.map(\.id)))
                             }
                         }
                     }
@@ -243,41 +244,40 @@ struct PosterCard: View {
     let viewModel: PhoneViewModel
     /// The shelf's fixed poster width, or nil to fill a grid cell.
     var width: CGFloat? = 144
+    var selection: CardSelection?
 
     var body: some View {
-        Button { viewModel.openItem(item) } label: {
-            VStack(alignment: .leading, spacing: 0) {
-                ZStack {
-                    MediaArtwork(item: item, store: viewModel.store)
-                    VStack {
-                        HStack(alignment: .top) {
-                            if item.isPrivate {
-                                Image(systemName: "lock.fill").font(.system(.callout)).foregroundStyle(.white).accessibilityLabel(L("ui_private_video_f0d5d4"))
-                            }
-                            Spacer()
-                            Badge(text: L(storageBadge(item).labelKey))
+        VStack(alignment: .leading, spacing: 0) {
+            ZStack {
+                MediaArtwork(item: item, store: viewModel.store)
+                SelectionMark(selection: selection)
+                VStack {
+                    HStack(alignment: .top) {
+                        if item.isPrivate {
+                            Image(systemName: "lock.fill").font(.system(.callout)).foregroundStyle(.white).accessibilityLabel(L("ui_private_video_f0d5d4"))
                         }
-                        .padding(6)
                         Spacer()
-                        if showProgress { ProgressBar(fraction: watchFraction(item)) }
+                        Badge(text: L(storageBadge(item).labelKey))
                     }
-                }
-                .posterFrame(width: width).clipShape(RoundedRectangle(cornerRadius: 16))
-                Text(item.title).font(.system(.subheadline)).foregroundStyle(.white).lineLimit(2).multilineTextAlignment(.leading).padding(.top, 10)
-                // Off in the grid: the badge on the poster already says where the title is.
-                if width != nil {
-                    Text(key: storageBadge(item).statusLineKey)
-                        .font(.system(.caption2)).foregroundStyle(storageBadge(item) == .failed ? Color(hex: 0xFFB74D) : Color.phoneMuted).lineLimit(2).multilineTextAlignment(.leading)
-                }
-                if showProgress {
-                    Text(remainingDuration(item).map { L("ui_left_bc8cab", $0) } ?? percentText(item)).font(.system(.caption2)).foregroundStyle(Color.phoneMuted)
+                    .padding(6)
+                    Spacer()
+                    if showProgress { ProgressBar(fraction: watchFraction(item)) }
                 }
             }
-            .frame(width: width, alignment: .leading).frame(maxWidth: width == nil ? .infinity : nil, alignment: .leading)
+            .posterFrame(width: width).clipShape(RoundedRectangle(cornerRadius: 16))
+            Text(item.title).font(.system(.subheadline)).foregroundStyle(.white).lineLimit(2).multilineTextAlignment(.leading).padding(.top, 10)
+            // Off in the grid: the badge on the poster already says where the title is.
+            if width != nil {
+                Text(key: storageBadge(item).statusLineKey)
+                    .font(.system(.caption2)).foregroundStyle(storageBadge(item) == .failed ? Color(hex: 0xFFB74D) : Color.phoneMuted).lineLimit(2).multilineTextAlignment(.leading)
+            }
+            if showProgress {
+                Text(remainingDuration(item).map { L("ui_left_bc8cab", $0) } ?? percentText(item)).font(.system(.caption2)).foregroundStyle(Color.phoneMuted)
+            }
         }
-        .buttonStyle(.plain)
+        .frame(width: width, alignment: .leading).frame(maxWidth: width == nil ? .infinity : nil, alignment: .leading)
+        .selectableCard(selection) { viewModel.openItem(item) }
         .accessibilityIdentifier("poster_\(item.id)")
-        .contextMenu { ItemMenu(item: item, viewModel: viewModel) }
     }
 }
 
@@ -287,30 +287,30 @@ struct SeriesCard: View {
     let viewModel: PhoneViewModel
     /// The shelf's fixed poster width, or nil to fill a grid cell.
     var width: CGFloat? = 144
+    var selection: CardSelection?
 
     var body: some View {
         let lead = entry.lead
-        Button { viewModel.openSeries(entry) } label: {
-            VStack(alignment: .leading, spacing: 0) {
-                ZStack {
-                    MediaArtwork(item: lead, store: viewModel.store)
-                    VStack {
-                        HStack { Spacer(); Badge(text: L("ui_tv_series_e50677")) }.padding(6)
-                        Spacer()
-                        if showProgress { ProgressBar(fraction: watchFraction(lead)) }
-                    }
-                }
-                .posterFrame(width: width).clipShape(RoundedRectangle(cornerRadius: 16))
-                Text(entry.title).font(.system(.subheadline)).foregroundStyle(.white).lineLimit(2).multilineTextAlignment(.leading).padding(.top, 10)
-                Text(seriesSummary(entry)).font(.system(.caption2)).foregroundStyle(Color.phoneMuted).lineLimit(2).multilineTextAlignment(.leading)
-                if showProgress {
-                    let parts = [episodeBadge(lead), remainingDuration(lead).map { L("ui_left_bc8cab", $0) }].compactMap { $0 }
-                    Text(parts.isEmpty ? percentText(lead) : parts.joined(separator: " · ")).font(.system(.caption2)).foregroundStyle(Color.phoneMuted)
+        VStack(alignment: .leading, spacing: 0) {
+            ZStack {
+                MediaArtwork(item: lead, store: viewModel.store)
+                SelectionMark(selection: selection)
+                VStack {
+                    HStack { Spacer(); Badge(text: L("ui_tv_series_e50677")) }.padding(6)
+                    Spacer()
+                    if showProgress { ProgressBar(fraction: watchFraction(lead)) }
                 }
             }
-            .frame(width: width, alignment: .leading).frame(maxWidth: width == nil ? .infinity : nil, alignment: .leading)
+            .posterFrame(width: width).clipShape(RoundedRectangle(cornerRadius: 16))
+            Text(entry.title).font(.system(.subheadline)).foregroundStyle(.white).lineLimit(2).multilineTextAlignment(.leading).padding(.top, 10)
+            Text(seriesSummary(entry)).font(.system(.caption2)).foregroundStyle(Color.phoneMuted).lineLimit(2).multilineTextAlignment(.leading)
+            if showProgress {
+                let parts = [episodeBadge(lead), remainingDuration(lead).map { L("ui_left_bc8cab", $0) }].compactMap { $0 }
+                Text(parts.isEmpty ? percentText(lead) : parts.joined(separator: " · ")).font(.system(.caption2)).foregroundStyle(Color.phoneMuted)
+            }
         }
-        .buttonStyle(.plain)
+        .frame(width: width, alignment: .leading).frame(maxWidth: width == nil ? .infinity : nil, alignment: .leading)
+        .selectableCard(selection) { viewModel.openSeries(entry) }
         .accessibilityIdentifier("series_\(entry.key)")
     }
 }
