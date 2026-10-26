@@ -1,3 +1,4 @@
+import "./abort-polyfill"; // first, before anything creates an AbortController
 import "./style.css";
 import { ApiError, createApi, preflight, relayMessage } from "./api";
 import { API_BASE, WEB_APP_BASE } from "./config";
@@ -1124,6 +1125,9 @@ async function askToConnectTelegram(v: Title) {
     errorScreen("Can't reach Cablegram", "Check the TV's internet connection and try again.", [button("Back to library", back), button("Try again", () => void askToConnectTelegram(v), "panel")], back);
     return;
   }
+  // The connection takes about 20 s on older TVs: start it while the viewer reads the card. A failure shows up, and is
+  // retried, when they press Connect.
+  void Promise.all([telegramModule(), api.telegramClientConfig()]).then(([mod, config]) => mod.prepareSignIn(config)).catch(() => undefined);
   telegramCard("Connect Telegram to this TV?", [
     "This video is stored in your Telegram. To play it, this TV signs in to your Telegram account, and your phone approves it.",
     "Your Telegram password never goes through Cablegram. You can end the TV's access any time from Telegram's Devices list or the Cablegram app.",
@@ -1140,10 +1144,15 @@ async function connectTelegram(v: Title) {
   const cancel = () => button("Cancel", back, "raised");
   telegramCard("Connecting Telegram…", ["Getting ready"], [cancel()], undefined, back);
   const retry = [button("Back to library", () => libraryScreen()), button("Try again", () => void askToConnectTelegram(v), "panel")];
+  let waitingShown = false;
+  const slow = window.setTimeout(() => {
+    if (!waitingShown && !cancelled) {
+      telegramCard("Connecting Telegram…", ["Securing the connection to Telegram.", "This can take up to 30 seconds on older TVs."], [cancel()], undefined, back);
+    }
+  }, 2_500);
   try {
     const [mod, config] = await Promise.all([telegramModule(), api.telegramClientConfig()]);
     let requestId = "";
-    let waitingShown = false;
     const session = await mod.loginWithPhone(config, {
       cancelled: () => cancelled,
       postLink: async (link) => {
@@ -1174,6 +1183,8 @@ async function connectTelegram(v: Title) {
     } else {
       errorScreen("Couldn't connect Telegram", code ? `Telegram answered: ${code}.` : "Check the TV's internet connection and your phone, then try again.", retry, () => libraryScreen());
     }
+  } finally {
+    clearTimeout(slow);
   }
 }
 

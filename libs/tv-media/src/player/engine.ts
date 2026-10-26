@@ -232,6 +232,13 @@ export class Player extends Emitter<PlayerEvents> {
       if (startAt > 0) {
         this.suppressSeek = true; // the demuxer is already there; the seeking event would only restart the reads
         this.video.currentTime = startAt;
+        // Chromium 63 (Samsung 2019, Tizen 5.0) drops a currentTime set before the element has metadata: the playhead
+        // stayed at 0 in front of a buffer that starts at startAt, and playback never began. Set it again once it has.
+        this.video.addEventListener("loadedmetadata", () => {
+          if (this.destroyed || Math.abs(this.video.currentTime - startAt) < 0.5) return;
+          this.suppressSeek = true;
+          this.video.currentTime = startAt;
+        }, { once: true });
       }
       this.startPump();
       return info;

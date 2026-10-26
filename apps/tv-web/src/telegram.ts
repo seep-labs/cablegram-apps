@@ -105,15 +105,62 @@ export interface LoginHooks {
 const APPROVAL_WAIT_MS = 25_000;
 const MAX_ROUNDS = 12; // about five minutes of fresh links
 
+// A fresh connection first agrees an auth key with Telegram (Diffie-Hellman in JavaScript): about 20 s on a 2019 Samsung
+// TV, before the phone could even be asked. So the sign-in connection starts while the viewer reads the "Connect
+// Telegram?" card, and its key, which no account has authorised yet, is kept for the next sign-in on this TV. Once a
+// phone approves, the key belongs to that account: it is forgotten here and lives on only in the account's session.
+const SIGN_IN_KEY = "cablegram.tv.tgSignInKey";
+const SIGN_IN_CONNECT_MS = 60_000;
+
+let signIn: { apiId: number; client: TelegramClient; ready: Promise<void> } | null = null;
+
+function keyStore(): Storage | null {
+  try { return localStorage; } catch { return null; }
+}
+
+function keptKey(apiId: number): string {
+  try { return keyStore()?.getItem(`${SIGN_IN_KEY}.${apiId}`) ?? ""; } catch { return ""; }
+}
+
+function keepKey(apiId: number, session: string | null): void {
+  try {
+    if (session) keyStore()?.setItem(`${SIGN_IN_KEY}.${apiId}`, session);
+    else keyStore()?.removeItem(`${SIGN_IN_KEY}.${apiId}`);
+  } catch { /* storage blocked: the next sign-in agrees a new key */ }
+}
+
+/** Starts the connection a sign-in will use, or returns the one already starting. Safe to call more than once. */
+export function prepareSignIn(config: Config): Promise<void> {
+  if (signIn && signIn.apiId === config.apiId) return signIn.ready;
+  const start = (session: string): Promise<void> => {
+    const client = makeClient(config, session);
+    note(session ? "connecting for sign-in with the kept key" : "connecting for sign-in");
+    const entry = { apiId: config.apiId, client, ready: Promise.resolve() };
+    entry.ready = within("connect", SIGN_IN_CONNECT_MS, client.connect()).then(
+      () => { note("ready for sign-in"); keepKey(config.apiId, client.session.save() as unknown as string); },
+      (e) => {
+        if (signIn === entry) signIn = null;
+        void client.disconnect().catch(() => undefined);
+        if (!session) throw e;
+        keepKey(config.apiId, null); // Telegram no longer knows the kept key: agree a new one
+        return prepareSignIn(config);
+      },
+    );
+    signIn = entry;
+    return entry.ready;
+  };
+  return start(keptKey(config.apiId));
+}
+
 /**
  * Telegram "login by QR", but the code is shown to nobody: the phone, which already holds the account, approves the
  * link through Cablegram (contracts/telegram-link.md). Returns this TV's own session string. Telegram's secrets
  * (session, password) are known to Telegram, this TV and the phone only.
  */
 export async function loginWithPhone(config: Config, hooks: LoginHooks): Promise<string> {
-  const client = makeClient(config, "");
-  note("connecting for sign-in");
-  await within("connect", 30_000, client.connect());
+  await prepareSignIn(config);
+  const client = signIn!.client;
+  signIn = null; // this sign-in owns the connection now; the next one starts its own
   let tokenUpdate = () => undefined as void;
   const scanned = new Promise<void>((resolve) => { tokenUpdate = resolve; });
   const handler = (update: unknown) => { if (update instanceof Api.UpdateLoginToken) tokenUpdate(); };
@@ -142,6 +189,7 @@ export async function loginWithPhone(config: Config, hooks: LoginHooks): Promise
     }
     if (!approved) throw new LoginError("failed", "TIMEOUT");
     note("the phone approved");
+    keepKey(config.apiId, null); // the key is the account's from here on, whatever happens next
 
     // Telegram now has an authorisation for this link: collect it (on another data centre if it says so).
     let attempts = 0;

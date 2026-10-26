@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:tizen="http://tizen.org/ns/widgets"
+        id="https://cablegram.app/tv" version="0.1.1" viewmodes="maximized">
+  <tizen:application id="CblGramTV1.Cablegram" package="CblGramTV1" required_version="5.0"/>
+  <content src="index.html"/>
+  <access origin="*" subdomains="true"/>
+  <tizen:allow-navigation>tv.cablegram.app</tizen:allow-navigation>
+  <feature name="http://tizen.org/feature/screen.size.all"/>
+  <icon src="icon.png"/>
+  <name>Cablegram TV</name>
+  <tizen:privilege name="http://tizen.org/privilege/internet"/>
+  <tizen:profile name="tv"/>
+  <tizen:setting screen-orientation="landscape" context-menu="disable" background-support="disable" encryption="disable" install-location="auto" hwkey-event="enable"/>
+</widget>
