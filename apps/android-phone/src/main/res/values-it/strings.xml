@@ -1104,4 +1104,5 @@
     <string name="library_retry">"Riprova"</string>
     <string name="library_bulk_result">"%1$d rimossi, %2$d non si sono potuti rimuovere. Controlla la connessione."</string>
     <string name="library_select_season">"Seleziona stagione"</string>
+    <string name="library_collection_name_taken">"Hai già una raccolta con questo nome."</string>
 </resources>

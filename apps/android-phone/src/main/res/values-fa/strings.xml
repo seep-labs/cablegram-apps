@@ -1104,4 +1104,5 @@
     <string name="library_retry">"تلاش دوباره"</string>
     <string name="library_bulk_result">"%1$d حذف شد، %2$d حذف نشد. اتصال خود را بررسی کنید."</string>
     <string name="library_select_season">"انتخاب فصل"</string>
+    <string name="library_collection_name_taken">"شما از قبل مجموعه‌ای با این نام دارید."</string>
 </resources>

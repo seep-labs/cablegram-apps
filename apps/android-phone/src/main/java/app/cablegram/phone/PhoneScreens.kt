@@ -144,9 +144,22 @@ fun LibraryShell(viewModel: PhoneViewModel) {
                 OutlinedTextField(viewModel.collectionDraft, { viewModel.collectionDraft = it }, Modifier.fillMaxWidth(), singleLine = true, label = { Text(ui.getString(R.string.ui_collection_name_922214)) })
                 OutlinedButton(onClick = viewModel::createCollection, enabled = viewModel.collectionDraft.isNotBlank()) { Text(ui.getString(R.string.ui_create_collection_69152b)) }
                 viewModel.collections.forEach { collection ->
-                    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                        Text(collection.name, modifier = Modifier.weight(1f))
-                        TextButton(onClick = { viewModel.deleteCollection(collection.id) }) { Text(ui.getString(R.string.ui_remove_c3812f)) }
+                    var renaming by remember(collection.id) { mutableStateOf(false) }
+                    var draft by remember(collection.id, collection.name) { mutableStateOf(collection.name) }
+                    if (renaming) {
+                        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                            OutlinedTextField(draft, { draft = it }, Modifier.weight(1f).maestro("collection_rename_field"), singleLine = true)
+                            TextButton(
+                                onClick = { if (viewModel.renameCollection(collection.id, draft)) renaming = false },
+                                enabled = draft.isNotBlank(), modifier = Modifier.maestro("collection_rename_save"),
+                            ) { Text(ui.getString(R.string.ui_save_1509f5)) }
+                        }
+                    } else {
+                        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                            Text(collection.name, modifier = Modifier.weight(1f))
+                            TextButton(onClick = { renaming = true }, modifier = Modifier.maestro("collection_rename_${collection.id}")) { Text(ui.getString(R.string.tv_rename)) }
+                            TextButton(onClick = { viewModel.deleteCollection(collection.id) }) { Text(ui.getString(R.string.ui_remove_c3812f)) }
+                        }
                     }
                 }
             }

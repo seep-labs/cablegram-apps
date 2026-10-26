@@ -1104,4 +1104,5 @@
     <string name="library_retry">"إعادة المحاولة"</string>
     <string name="library_bulk_result">"تمت إزالة %1$d وتعذّرت إزالة %2$d. تحقق من اتصالك."</string>
     <string name="library_select_season">"تحديد الموسم"</string>
+    <string name="library_collection_name_taken">"لديك مجموعة بهذا الاسم بالفعل."</string>
 </resources>

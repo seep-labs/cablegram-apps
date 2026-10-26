@@ -755,21 +755,75 @@ class LibraryStore private constructor(private val context: Context) {
 
     @Synchronized
     fun addCollection(name: String): UserCollection {
+        // The name is unique, ignoring case: asking for one that exists gives that collection.
+        collections().firstOrNull { it.name.equals(name.trim(), ignoreCase = true) }?.let { return it }
         val collection = UserCollection(UUID.randomUUID().toString(), name.trim())
         save(snapshot().copy(collections = collections() + collection))
         return collection
     }
 
+    /** A synced collection is remembered for the server to delete; its titles stay and only lose the collection. */
     @Synchronized
     fun deleteCollection(id: String) {
-        val items = list().map { it.copy(collectionIds = it.collectionIds.filterNot { cid -> cid == id }) }
-        save(snapshot().copy(items = items, collections = collections().filterNot { it.id == id }))
+        val file = snapshot()
+        val wasSynced = file.collections.firstOrNull { it.id == id }?.synced == true
+        val items = file.items.map { it.copy(collectionIds = it.collectionIds.filterNot { cid -> cid == id }) }
+        save(file.copy(
+            items = items,
+            collections = file.collections.filterNot { it.id == id },
+            pendingCollectionDeletes = if (wasSynced) (file.pendingCollectionDeletes + id).distinct() else file.pendingCollectionDeletes,
+        ))
     }
 
+    /** The new name is sent to the server by the next sync; the name stays unique here too, ignoring case. */
+    @Synchronized
+    fun renameCollection(id: String, name: String): Boolean {
+        val clean = name.trim()
+        val file = snapshot()
+        val current = file.collections.firstOrNull { it.id == id } ?: return false
+        if (clean.isEmpty() || file.collections.any { it.id != id && it.name.equals(clean, ignoreCase = true) }) return false
+        if (current.name == clean) return true
+        save(file.copy(collections = file.collections.map { if (it.id == id) it.copy(name = clean, dirty = it.synced) else it }))
+        return true
+    }
+
+    /** Edited here: the server hears about it with the next sync, and until then a sync keeps this list instead of taking the server's. */
     @Synchronized
     fun setItemCollections(itemId: String, collectionIds: List<String>) {
         val item = get(itemId) ?: return
-        update(item.copy(collectionIds = collectionIds.distinct()))
+        update(item.copy(collectionIds = collectionIds.distinct(), collectionsPending = true))
+    }
+
+    @Synchronized
+    fun collectionsState(): CollectionsState {
+        val file = snapshot()
+        return CollectionsState(
+            file.collections, file.pendingCollectionDeletes,
+            file.items.map { MemberState(it.id, it.catalogItemId ?: it.id, it.collectionIds, it.collectionsPending) },
+        )
+    }
+
+    /**
+     * Writes the result of [syncCollections] back. A part that changed here while the sync ran is skipped and redone by the next
+     * sync, which is safe because every step of it can be repeated.
+     */
+    @Synchronized
+    fun applyCollectionsState(base: CollectionsState, result: CollectionsState) {
+        val file = snapshot()
+        val before = base.members.associateBy { it.itemId }
+        val after = result.members.associateBy { it.itemId }
+        val items = file.items.map { item ->
+            val old = before[item.id] ?: return@map item
+            val new = after[item.id] ?: return@map item
+            if (item.collectionIds != old.collectionIds || item.collectionsPending != old.pending) item
+            else item.copy(collectionIds = new.collectionIds, collectionsPending = new.pending)
+        }
+        val collectionsUnchanged = file.collections == base.collections && file.pendingCollectionDeletes == base.pendingDeletes
+        save(file.copy(
+            items = items,
+            collections = if (collectionsUnchanged) result.collections else file.collections,
+            pendingCollectionDeletes = if (collectionsUnchanged) result.pendingDeletes else file.pendingCollectionDeletes,
+        ))
     }
 
     @Synchronized

@@ -344,6 +344,31 @@ struct ItemMenu: View {
     }
 }
 
+/// One collection in the Collections sheet: its name with Rename and Remove, or the name being edited.
+private struct CollectionRow: View {
+    let viewModel: PhoneViewModel
+    let collection: UserCollection
+    @State private var renaming = false
+    @State private var draft = ""
+
+    var body: some View {
+        HStack {
+            if renaming {
+                PhoneTextField(label: L("ui_collection_name_922214"), text: $draft).accessibilityIdentifier("collection_rename_field")
+                Button { if viewModel.renameCollection(collection.id, draft) { renaming = false } } label: { Text(key: "ui_save_1509f5") }
+                    .buttonStyle(AccentTextButtonStyle()).disabled(draft.trimmingCharacters(in: .whitespaces).isEmpty)
+                    .accessibilityIdentifier("collection_rename_save")
+            } else {
+                Text(collection.name).foregroundStyle(.white)
+                Spacer()
+                Button { draft = collection.name; renaming = true } label: { Text(key: "tv_rename") }
+                    .buttonStyle(AccentTextButtonStyle()).accessibilityIdentifier("collection_rename_\(collection.id)")
+                Button { viewModel.deleteCollection(collection.id) } label: { Text(key: "ui_remove_c3812f") }.buttonStyle(AccentTextButtonStyle())
+            }
+        }
+    }
+}
+
 private struct CollectionsSheet: View {
     let viewModel: PhoneViewModel
     @Environment(\.dismiss) private var dismiss
@@ -356,11 +381,7 @@ private struct CollectionsSheet: View {
                 Button { viewModel.createCollection() } label: { Text(key: "ui_create_collection_69152b") }
                     .buttonStyle(OutlinedButtonStyle()).disabled(viewModel.collectionDraft.trimmingCharacters(in: .whitespaces).isEmpty)
                 ForEach(viewModel.collections) { collection in
-                    HStack {
-                        Text(collection.name).foregroundStyle(.white)
-                        Spacer()
-                        Button { viewModel.deleteCollection(collection.id) } label: { Text(key: "ui_remove_c3812f") }.buttonStyle(AccentTextButtonStyle())
-                    }
+                    CollectionRow(viewModel: viewModel, collection: collection)
                 }
                 Spacer()
             }

@@ -377,6 +377,63 @@ paths:
       responses:
         "200":
           description: Updated
+  /api/catalog/collections:
+    get:
+      summary: The account's collections (see collections.md)
+      responses:
+        "200":
+          description: "{ collections: [{ id, name, sort_order, item_count }] }"
+    post:
+      summary: Create a collection; the name is unique per account, ignoring case
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CollectionName"
+      responses:
+        "201":
+          description: "{ id, name, item_count }"
+        "409":
+          description: A collection with that name exists (collection_exists)
+  /api/catalog/collections/{collectionId}:
+    patch:
+      summary: Rename a collection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CollectionName"
+      responses:
+        "200":
+          description: "{ id, name, sort_order, item_count }"
+        "404":
+          description: Not this account's collection
+        "409":
+          description: Another collection has that name (collection_exists)
+    delete:
+      summary: Delete a collection; its titles stay in the library
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not this account's collection
+  /api/catalog/items/{itemId}/collections/{collectionId}:
+    put:
+      summary: Add a title to a collection, or take it out
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                present: { type: boolean, default: true }
+      responses:
+        "200":
+          description: "{ collection_id, item_id, present }"
+        "404":
+          description: Unknown collection or title for this account
   /api/catalog/items/{itemId}/poster:
     put:
       summary: Upload poster image bytes (not video)
@@ -413,6 +470,12 @@ components:
   security:
     - bearerAuth: []
   schemas:
+    CollectionName:
+      type: object
+      additionalProperties: false
+      required: [name]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 100 }
     ImportBody:
       type: object
       required: [origin_filename, origin_identity]

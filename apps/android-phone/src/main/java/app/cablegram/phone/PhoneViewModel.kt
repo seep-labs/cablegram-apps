@@ -2117,6 +2117,7 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
                         syncHouseholdArtwork(client, token, item.id)
                     }
                 }
+                reconcileCollections(token, remotes)
                 check(!metadataFailed) { uiText(R.string.ui_your_detail_edits_are_saved_on_this_phone_review_any_c_251495) }
             }
             refresh()
@@ -2564,20 +2565,62 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
     fun createCollection() {
         val name = collectionDraft.trim()
         if (name.isEmpty()) return
+        if (collections.any { it.name.equals(name, ignoreCase = true) }) {
+            status = uiText(R.string.library_collection_name_taken)
+            return
+        }
         store.addCollection(name)
         collectionDraft = ""
         refresh()
+        scheduleCollectionsSync()
+    }
+
+    fun renameCollection(id: String, name: String): Boolean {
+        val renamed = store.renameCollection(id, name)
+        if (renamed) { refresh(); scheduleCollectionsSync() } else status = uiText(R.string.library_collection_name_taken)
+        return renamed
     }
 
     fun toggleCollection(item: LibraryItem, collectionId: String) {
         val next = if (collectionId in item.collectionIds) item.collectionIds - collectionId else item.collectionIds + collectionId
         store.setItemCollections(item.id, next)
         refresh()
+        scheduleCollectionsSync()
     }
 
     fun deleteCollection(id: String) {
         store.deleteCollection(id)
         refresh()
+        scheduleCollectionsSync()
+    }
+
+    private var collectionsSyncJob: Job? = null
+
+    /** Collection edits reach the account soon after, without a full library sync (the full sync reconciles them too). */
+    private fun scheduleCollectionsSync() {
+        if (!pairing.syncLibraryToApi || pairing.accountToken.isNullOrBlank()) return
+        collectionsSyncJob?.cancel()
+        collectionsSyncJob = viewModelScope.launch {
+            delay(1_500)
+            val token = pairing.accountToken ?: return@launch
+            // A full sync is running and may have missed this edit: try again once it is done.
+            if (!librarySyncMutex.tryLock()) { scheduleCollectionsSync(); return@launch }
+            try {
+                val remotes = runCatching { catalog().fetchCatalog(token, failOnError = true) }.getOrNull() ?: return@launch
+                withContext(Dispatchers.IO) { reconcileCollections(token, remotes) }
+                refresh()
+            } finally {
+                librarySyncMutex.unlock()
+            }
+        }
+    }
+
+    /** Sends the phone's collection changes and takes the account's (see syncCollections). */
+    private suspend fun reconcileCollections(token: String, remotes: List<RemoteCatalogItem>) {
+        val base = store.collectionsState()
+        val serverMembers = remotes.associate { remote -> remote.id to remote.collections.map { it.id } }
+        val result = syncCollections(catalog().collectionsApi(token), base, serverMembers) ?: return
+        store.applyCollectionsState(base, result)
     }
 
     fun enhance(item: LibraryItem) {
@@ -2765,6 +2808,7 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
         refresh()
         bulkSheet = BulkSheet.None
         clearSelection()
+        scheduleCollectionsSync()
         status = uiText(R.string.library_added_to, collection.name)
     }
 
@@ -2779,6 +2823,7 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
         refresh()
         bulkSheet = BulkSheet.None
         clearSelection()
+        scheduleCollectionsSync()
         status = uiText(R.string.library_removed_from, collection.name)
     }
 

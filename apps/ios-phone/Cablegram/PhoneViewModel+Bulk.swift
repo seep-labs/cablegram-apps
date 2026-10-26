@@ -33,6 +33,7 @@ extension PhoneViewModel {
         refresh()
         bulkSheet = .none
         clearSelection()
+        scheduleCollectionsSync()
         status = L("library_added_to", collection.name)
     }
 
@@ -49,6 +50,7 @@ extension PhoneViewModel {
         refresh()
         bulkSheet = .none
         clearSelection()
+        scheduleCollectionsSync()
         status = L("library_removed_from", collection.name)
     }
 

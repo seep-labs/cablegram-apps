@@ -1067,4 +1067,5 @@
     <string name="library_retry">"Retry"</string>
     <string name="library_bulk_result">"%1$d removed, %2$d couldn't be removed. Check your connection."</string>
     <string name="library_select_season">"Select season"</string>
+    <string name="library_collection_name_taken">"You already have a collection with that name."</string>
 </resources>

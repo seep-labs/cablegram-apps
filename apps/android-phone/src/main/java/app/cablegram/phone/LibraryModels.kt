@@ -34,6 +34,8 @@ data class LibraryItem(
     val positionSeconds: Int = 0,
     val lastWatchedAt: String? = null,
     val collectionIds: List<String> = emptyList(),
+    /** [collectionIds] was edited here and the server has not been told yet; until then a sync keeps it instead of taking the server's list. */
+    val collectionsPending: Boolean = false,
     val resolution: String? = null,
     val downloadBytes: Long? = null,
     val downloadTotal: Long? = null,
@@ -91,10 +93,17 @@ data class LibraryItem(
     val householdArtworkUploadedVersion: Int? = null,
 )
 
+/**
+ * A collection of the account. Collections made before they were synced have an id made on this phone and [synced] false; the
+ * sync creates them on the server (merging by name) and swaps in the server's id. [dirty] is a rename the server has not
+ * accepted yet. See contracts/collections.md.
+ */
 @Serializable
 data class UserCollection(
     val id: String,
     val name: String,
+    val synced: Boolean = false,
+    val dirty: Boolean = false,
 )
 
 @Serializable
@@ -112,6 +121,8 @@ data class LibraryFile(
     val dismissedRemoteIds: List<String> = emptyList(),
     val items: List<LibraryItem> = emptyList(),
     val collections: List<UserCollection> = emptyList(),
+    /** Ids of synced collections deleted here, until the server confirms (a 404 counts as confirmed). */
+    val pendingCollectionDeletes: List<String> = emptyList(),
     val folders: List<IndexedFolder> = emptyList(),
     val pendingWebImports: List<PendingWebImport> = emptyList(),
     /** Shared files being copied in; a process death mid-copy leaves the entry for the next start. */
@@ -119,6 +130,12 @@ data class LibraryFile(
     /** Telegram titles the phone already asked about, so "Find details" never repeats for them. */
     val promptedTelegramIds: List<String> = emptyList(),
 )
+
+@Serializable
+data class RemoteCollection(val id: String, val name: String)
+
+@Serializable
+data class RemoteCollectionList(val collections: List<RemoteCollection> = emptyList())
 
 @Serializable
 data class PendingWebImport(
@@ -217,6 +234,8 @@ data class RemoteCatalogItem(
     @SerialName("match_status") val matchStatus: String? = null,
     @SerialName("created_at") val createdAt: String? = null,
     val sources: List<RemoteCatalogSource> = emptyList(),
+    /** The collections this title is in, from the account's catalog. */
+    val collections: List<RemoteCollection> = emptyList(),
     @SerialName("channel_tmdb") val channelTmdb: ChannelTmdb? = null,
 )
 

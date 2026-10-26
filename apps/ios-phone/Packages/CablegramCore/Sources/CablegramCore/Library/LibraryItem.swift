@@ -28,6 +28,8 @@ public struct LibraryItem: Codable, Sendable, Equatable, Identifiable {
     public var positionSeconds: Int
     public var lastWatchedAt: String?
     public var collectionIds: [String]
+    /// `collectionIds` was edited here and the server has not been told yet; until then a sync keeps it instead of taking the server's list.
+    public var collectionsPending: Bool
     public var resolution: String?
     public var downloadBytes: Int64?
     public var downloadTotal: Int64?
@@ -86,6 +88,7 @@ public struct LibraryItem: Codable, Sendable, Equatable, Identifiable {
         positionSeconds: Int = 0,
         lastWatchedAt: String? = nil,
         collectionIds: [String] = [],
+        collectionsPending: Bool = false,
         resolution: String? = nil,
         downloadBytes: Int64? = nil,
         downloadTotal: Int64? = nil,
@@ -143,6 +146,7 @@ public struct LibraryItem: Codable, Sendable, Equatable, Identifiable {
         self.positionSeconds = positionSeconds
         self.lastWatchedAt = lastWatchedAt
         self.collectionIds = collectionIds
+        self.collectionsPending = collectionsPending
         self.resolution = resolution
         self.downloadBytes = downloadBytes
         self.downloadTotal = downloadTotal
@@ -202,6 +206,7 @@ public struct LibraryItem: Codable, Sendable, Equatable, Identifiable {
         case positionSeconds
         case lastWatchedAt
         case collectionIds
+        case collectionsPending
         case resolution
         case downloadBytes
         case downloadTotal
@@ -262,6 +267,7 @@ public struct LibraryItem: Codable, Sendable, Equatable, Identifiable {
         positionSeconds = try c.decodeIfPresent(Int.self, forKey: .positionSeconds) ?? 0
         lastWatchedAt = try c.decodeIfPresent(String.self, forKey: .lastWatchedAt)
         collectionIds = try c.decodeIfPresent([String].self, forKey: .collectionIds) ?? []
+        collectionsPending = try c.decodeIfPresent(Bool.self, forKey: .collectionsPending) ?? false
         resolution = try c.decodeIfPresent(String.self, forKey: .resolution)
         downloadBytes = try c.decodeIfPresent(Int64.self, forKey: .downloadBytes)
         downloadTotal = try c.decodeIfPresent(Int64.self, forKey: .downloadTotal)
@@ -322,6 +328,7 @@ public struct LibraryItem: Codable, Sendable, Equatable, Identifiable {
         try c.encode(positionSeconds, forKey: .positionSeconds)
         try c.encodeIfPresent(lastWatchedAt, forKey: .lastWatchedAt)
         try c.encode(collectionIds, forKey: .collectionIds)
+        try c.encode(collectionsPending, forKey: .collectionsPending)
         try c.encodeIfPresent(resolution, forKey: .resolution)
         try c.encodeIfPresent(downloadBytes, forKey: .downloadBytes)
         try c.encodeIfPresent(downloadTotal, forKey: .downloadTotal)
