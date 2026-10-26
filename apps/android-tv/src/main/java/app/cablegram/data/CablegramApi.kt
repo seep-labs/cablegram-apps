@@ -543,6 +543,7 @@ class CablegramApi(
         var ownCloudLooked = false
         var ownCloudFound: PlaybackResponse? = null
         var ownCloudLimited = false
+        var ownCloudFailureReason: String? = null
         val ownCloud: suspend () -> PlaybackResponse? = {
             if (!ownCloudLooked) {
                 ownCloudLooked = true
@@ -552,25 +553,87 @@ class CablegramApi(
                 } catch (cancelled: kotlinx.coroutines.CancellationException) {
                     throw cancelled
                 } catch (failure: ApiException) {
-                    if (failure.statusCode == 429) ownCloudLimited = true
+                    if (failure.statusCode in 500..599) {
+                        ownCloudFailureReason = "unknown"
+                    } else when (failure.error) {
+                        "429", "provider_rate_limited" -> {
+                            ownCloudLimited = true
+                            ownCloudFailureReason = "cloud_limited"
+                        }
+                        "credentials_rejected" -> ownCloudFailureReason = "cloud_credentials_rejected"
+                        "source_unavailable" -> ownCloudFailureReason = "cloud_disconnected"
+                        else -> {
+                            if (failure.statusCode == 429) {
+                                ownCloudLimited = true
+                                ownCloudFailureReason = "cloud_limited"
+                            } else {
+                                ownCloudFailureReason = "unknown"
+                            }
+                        }
+                    }
                     null
                 } catch (_: Exception) {
+                    ownCloudFailureReason = "unknown"
                     null
                 }
             }
             ownCloudFound
         }
-        val limitedNotice = {
+        val cloudNotice = { reason: String, label: String ->
             PlaybackResponse(
                 status = "denied",
-                prepareLabel = "Your cloud storage is limiting downloads of this video. Try again in a little while.",
+                failureReason = reason,
+                prepareLabel = label,
                 title = item.title,
                 posterUrl = item.posterUrl,
             )
         }
+        val limitedNotice = {
+            cloudNotice(
+                "cloud_limited",
+                "Your cloud storage is limiting downloads of this video. Try again in a little while.",
+            )
+        }
         if (source == null && hasR2) {
-            ownCloud()?.let { return it.copy(title = item.title, posterUrl = item.posterUrl, fallbackUrl = telegram) }
-            if (ownCloudLimited && telegram == null) return limitedNotice()
+            val phoneResolver: (suspend () -> String?)? = if (telegramSource != null) {
+                { runCatching { telegramThroughPhone(token, item, telegramSource, telegramPhoneId(), lanPin)?.url }.getOrNull() }
+            } else null
+            ownCloud()?.let {
+                return it.copy(
+                    title = item.title,
+                    posterUrl = item.posterUrl,
+                    fallbackUrl = telegram,
+                    fallbackResolver = if (telegram == null) phoneResolver else null,
+                )
+            }
+            if (telegram != null) {
+                return PlaybackResponse(
+                    status = "ready",
+                    url = telegram,
+                    title = item.title,
+                    posterUrl = item.posterUrl,
+                    fallbackResolver = phoneResolver,
+                )
+            }
+            if (telegramSource != null) {
+                val viaPhone = telegramThroughPhone(token, item, telegramSource, telegramPhoneId(), lanPin)
+                if (viaPhone != null) return viaPhone
+                return PlaybackResponse(
+                    status = "denied",
+                    failureReason = "telegram_not_connected",
+                    prepareLabel = "Telegram isn't connected on this TV or your phone.",
+                    title = item.title,
+                    posterUrl = item.posterUrl,
+                )
+            }
+            val reason = ownCloudFailureReason ?: "cloud_disconnected"
+            val label = when (reason) {
+                "cloud_limited" -> "Your cloud storage is limiting downloads of this video. Try again in a little while."
+                "cloud_credentials_rejected" -> "Your cloud storage credentials were rejected. Reconnect your storage on your phone."
+                "cloud_disconnected" -> "Your cloud storage is disconnected. Reconnect your storage on your phone."
+                else -> "This video can't play right now."
+            }
+            return cloudNotice(reason, label)
         }
         if (source == null) {
             // No Telegram session on this TV (temporary TV, or not signed in yet): the phone streams it.
@@ -586,8 +649,9 @@ class CablegramApi(
             } else {
                 PlaybackResponse(
                     status = "denied",
-                    prepareLabel = if (telegramSource == null) "This video is no longer in your Telegram channel"
-                    else "Telegram isn't connected on this TV. Check Settings → Telegram.",
+                    failureReason = if (telegramSource != null) "telegram_not_connected" else (ownCloudFailureReason ?: "unknown"),
+                    prepareLabel = if (telegramSource == null) "This video is not available"
+                    else "Telegram isn't connected on this TV or your phone.",
                     title = item.title,
                     posterUrl = item.posterUrl,
                 )
@@ -595,12 +659,39 @@ class CablegramApi(
         }
         val identity = source.originIdentity
         val me = execute<MeDto>(authenticatedRequest("api/me", token).get().build())
+        val phoneReplaced = source.servingDeviceId != null &&
+            me.devices.any { it.kind == "phone" && it.id == source.servingDeviceId && !it.revokedAt.isNullOrBlank() }
+        if (phoneReplaced) {
+            if (hasR2) {
+                ownCloud()?.let { return it.copy(title = item.title, posterUrl = item.posterUrl, fallbackUrl = telegram) }
+                if (ownCloudLimited && telegram == null) return limitedNotice()
+            }
+            if (telegram != null) {
+                return PlaybackResponse(status = "ready", url = telegram, title = item.title, posterUrl = item.posterUrl)
+            }
+            return PlaybackResponse(
+                status = "denied",
+                failureReason = "phone_replaced",
+                prepareLabel = "This video was on your previous phone install. Add the video again on your phone.",
+                title = item.title,
+                posterUrl = item.posterUrl,
+            )
+        }
         val phone = servingPhone(me.devices, source)
         val host = phone?.lastLanHost
+        var phoneLostFile = false
         if (phone != null && !identity.isNullOrBlank()) {
             // LAN first; the relay carries the same request when the phone isn't reachable here.
-            val lan = if (!host.isNullOrBlank()) lanStreamUrl(phone, "media/$identity", lanPin) else null
-            val relay = relayUrl(phone, "media/$identity", lanPin, null, token)
+            val lanRes = if (!host.isNullOrBlank()) lanStreamResult(phone, "media/$identity", lanPin) else LanStreamResult.Unreachable
+            val lan = when (lanRes) {
+                is LanStreamResult.Ready -> lanRes.url
+                is LanStreamResult.Rejected -> {
+                    if (lanRes.code == 404 && lanRes.error == "not_in_library") phoneLostFile = true
+                    null
+                }
+                is LanStreamResult.Unreachable -> null
+            }
+            val relay = if (!phoneLostFile) relayUrl(phone, "media/$identity", lanPin, null, token) else null
             // Spec 005: LAN, then the user's R2 bucket, then the relay. R2 beats the relay because it
             // costs the phone's mobile data and Cablegram's relay quota nothing.
             if (lan == null && hasR2) {
@@ -623,13 +714,49 @@ class CablegramApi(
                 )
             }
         }
+        if (phoneLostFile) {
+            if (hasR2) {
+                ownCloud()?.let { return it.copy(title = item.title, posterUrl = item.posterUrl, fallbackUrl = telegram) }
+                if (ownCloudLimited && telegram == null) return limitedNotice()
+            }
+            if (telegram != null) {
+                return PlaybackResponse(status = "ready", url = telegram, title = item.title, posterUrl = item.posterUrl)
+            }
+            return PlaybackResponse(
+                status = "denied",
+                failureReason = "phone_lost_file",
+                prepareLabel = "This video isn't on your phone. Add the video again on your phone.",
+                title = item.title,
+                posterUrl = item.posterUrl,
+            )
+        }
         // No phone to ask on this Wi‑Fi and no relay: the bucket still has it.
         if (hasR2) {
             ownCloud()?.let { return it.copy(title = item.title, posterUrl = item.posterUrl, fallbackUrl = telegram) }
             if (ownCloudLimited && telegram == null) return limitedNotice()
+            if (ownCloudFailureReason != null && telegram == null && telegramSource == null) {
+                val label = when (ownCloudFailureReason) {
+                    "cloud_limited" -> "Your cloud storage is limiting downloads of this video. Try again in a little while."
+                    "cloud_credentials_rejected" -> "Your cloud storage credentials were rejected. Reconnect your storage on your phone."
+                    "cloud_disconnected" -> "Your cloud storage is disconnected. Reconnect your storage on your phone."
+                    else -> "This video can't play right now."
+                }
+                return cloudNotice(ownCloudFailureReason!!, label)
+            }
         }
         if (telegram != null) {
             return PlaybackResponse(status = "ready", url = telegram, title = item.title, posterUrl = item.posterUrl)
+        }
+        if (telegramSource != null) {
+            val viaPhone = telegramThroughPhone(token, item, telegramSource, telegramPhoneId(), lanPin)
+            if (viaPhone != null) return viaPhone
+            return PlaybackResponse(
+                status = "denied",
+                failureReason = "telegram_not_connected",
+                prepareLabel = "Telegram isn't connected on this TV or your phone.",
+                title = item.title,
+                posterUrl = item.posterUrl,
+            )
         }
         return PlaybackResponse(
             status = "preparing",
@@ -884,13 +1011,45 @@ class CablegramApi(
         // cleared data) has a new device id and the old record stays behind, offline: ask the server who serves it now.
         val servingId = runCatching { telegramLink(token).phoneDeviceId }.getOrNull() ?: phoneId
         val phone = me.devices.firstOrNull { it.kind == "phone" && it.revokedAt.isNullOrBlank() && (servingId == null || it.id == servingId) } ?: return null
-        val lan = if (!phone.lastLanHost.isNullOrBlank()) lanStreamUrl(phone, "telegram/$uniqueId", lanPin) else null
+        val notConnected = PlaybackResponse(
+            status = "denied",
+            failureReason = "telegram_not_connected",
+            prepareLabel = "Telegram isn't connected on this TV or your phone.",
+            title = item.title,
+            posterUrl = item.posterUrl,
+        )
+        val lanRes = if (!phone.lastLanHost.isNullOrBlank()) lanStreamResult(phone, "telegram/$uniqueId", lanPin) else null
+        if (lanRes is LanStreamResult.Rejected && lanRes.error == TELEGRAM_NOT_SIGNED_IN) return notConnected
+        val lan = (lanRes as? LanStreamResult.Ready)?.url
         val relay = relayUrl(phone, "telegram/$uniqueId", lanPin, null, token)
+        // Not on this Wi-Fi: ask through the relay before the player gets a URL that would only fail.
+        if (lan == null && relay != null && phoneSaysTelegramSignedOut(relay)) return notConnected
         val primary = lan ?: relay ?: return null
         return PlaybackResponse(
             status = "ready", url = primary, title = item.title, posterUrl = item.posterUrl,
             fallbackUrl = if (lan != null) relay else null,
         )
+    }
+
+    /**
+     * One byte of [relayUrl], to hear the phone's answer before playback. Only its explicit "no Telegram session" counts; a
+     * slow phone (still starting Telegram), a timeout or any other answer leaves playback to try as before.
+     */
+    private suspend fun phoneSaysTelegramSignedOut(relayUrl: String): Boolean = withContext(Dispatchers.IO) {
+        val request = Request.Builder().url(relayUrl).header("Range", "bytes=0-0").get().build()
+        runCatching {
+            probeClient.newCall(request).execute().use { response ->
+                response.code == 503 &&
+                    json.parseToJsonElement(response.body?.string().orEmpty()).jsonObject["error"]?.jsonPrimitive?.content == TELEGRAM_NOT_SIGNED_IN
+            }
+        }.getOrDefault(false)
+    }
+
+    private val probeClient by lazy {
+        client.newBuilder()
+            .readTimeout(5, java.util.concurrent.TimeUnit.SECONDS)
+            .callTimeout(6, java.util.concurrent.TimeUnit.SECONDS)
+            .build()
     }
 
     private suspend fun relayUrl(phone: DeviceHintDto, path: String, capability: String?, privatePass: String?, token: String): String? {
@@ -943,32 +1102,60 @@ class CablegramApi(
         return url.toString()
     }
 
+    sealed interface LanStreamResult {
+        data class Ready(val url: String) : LanStreamResult
+        data class Rejected(val code: Int, val error: String?) : LanStreamResult
+        data object Unreachable : LanStreamResult
+    }
+
     /**
      * CAB-44: the player cannot send a header, so it gets a short-lived link the phone issues for this one title and this
-     * TV; the capability goes only in this request's header. Null when the phone doesn't answer on this Wi-Fi (quickly,
-     * so the relay or the cloud copy takes over) or refuses this TV.
+     * TV; the capability goes only in this request's header. Returns [LanStreamResult.Ready] with the playback URL,
+     * [LanStreamResult.Rejected] if the phone explicitly rejects with a code/error, or [LanStreamResult.Unreachable]
+     * when the phone doesn't answer on this Wi-Fi.
      */
-    private suspend fun lanStreamUrl(phone: DeviceHintDto, path: String, capability: String?, privatePass: String? = null): String? {
-        val media = lanUrl(phone, path) ?: return null
-        val linkUrl = lanUrl(phone, "links/$path") ?: return null
+    internal suspend fun lanStreamResult(phone: DeviceHintDto, path: String, capability: String?, privatePass: String? = null): LanStreamResult {
+        val media = lanUrl(phone, path) ?: return LanStreamResult.Unreachable
+        val linkUrl = lanUrl(phone, "links/$path") ?: return LanStreamResult.Unreachable
         if (!privatePass.isNullOrBlank()) media.addQueryParameter("pass", privatePass)
         // Without a capability the phone refuses the stream anyway; the player reports that as it always has.
-        if (capability.isNullOrBlank()) return lanStream(media.build().toString())
+        if (capability.isNullOrBlank()) {
+            val url = lanStream(media.build().toString()) ?: return LanStreamResult.Unreachable
+            return LanStreamResult.Ready(url)
+        }
         val request = Request.Builder()
             .url(linkUrl.build())
             .header("Authorization", "Bearer $capability")
             .get()
             .build()
-        val link = withContext(Dispatchers.IO) {
-            runCatching {
+        return withContext(Dispatchers.IO) {
+            try {
                 lanClient.newCall(request).execute().use { response ->
-                    if (!response.isSuccessful) null
-                    else json.decodeFromString<StreamLinkDto>(response.body?.string().orEmpty()).link.takeIf { it.isNotBlank() }
+                    val body = response.body?.string().orEmpty()
+                    if (response.isSuccessful) {
+                        val link = runCatching { json.decodeFromString<StreamLinkDto>(body).link.takeIf { it.isNotBlank() } }.getOrNull()
+                        if (link != null) {
+                            val streamUrl = lanStream(media.addQueryParameter(STREAM_LINK_PARAM, link).build().toString())
+                            if (streamUrl != null) LanStreamResult.Ready(streamUrl) else LanStreamResult.Unreachable
+                        } else {
+                            LanStreamResult.Unreachable
+                        }
+                    } else {
+                        val err = runCatching { json.parseToJsonElement(body).jsonObject["error"]?.jsonPrimitive?.content }.getOrNull()
+                        LanStreamResult.Rejected(response.code, err)
+                    }
                 }
-            }.getOrNull()
-        } ?: return null
-        return lanStream(media.addQueryParameter(STREAM_LINK_PARAM, link).build().toString())
+            } catch (_: Exception) {
+                LanStreamResult.Unreachable
+            }
+        }
     }
+
+    private suspend fun lanStreamUrl(phone: DeviceHintDto, path: String, capability: String?, privatePass: String? = null): String? =
+        when (val res = lanStreamResult(phone, path, capability, privatePass)) {
+            is LanStreamResult.Ready -> res.url
+            else -> null
+        }
 
     /** A phone that isn't on this Wi-Fi must not hold up playback for long; its certificate is pinned (CAB-48). */
     private val lanClient by lazy {
@@ -1120,6 +1307,9 @@ internal data class DeviceHintDto(
 
 /** Playback is waiting for the serving phone to come online on the LAN. */
 internal const val PHONE_OFFLINE_STAGE = "phone_offline"
+
+/** The phone's answer when it has no Telegram session to stream from (contracts/playback-failures.md). */
+private const val TELEGRAM_NOT_SIGNED_IN = "telegram_not_signed_in"
 
 /**
  * The phone that serves a title: the source's own serving device when known.

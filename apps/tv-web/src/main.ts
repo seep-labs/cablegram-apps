@@ -1160,6 +1160,33 @@ async function startPlayback(v: Title) {
   }
   if (cancelled) return;
   if (playback.status === "denied") {
+    const reason = playback.failure_reason ?? playback.reason;
+    if (reason === "telegram_not_connected") {
+      errorScreen("Connect Telegram", playback.message ?? "Telegram isn't connected on this TV or your phone.",
+        [button("Connect Telegram", () => askToConnectTelegram(v), "raised", true)], back);
+      return;
+    }
+    const singleButtonTitles: Record<string, string> = {
+      phone_lost_file: "Video unavailable",
+      phone_replaced: "Video unavailable",
+      phone_offline: "Phone offline",
+      cloud_disconnected: "Storage disconnected",
+      cloud_credentials_rejected: "Storage sign-in required",
+      cloud_limited: "Storage download limit",
+      unknown: "Can't play this video",
+    };
+    const retryReasons = new Set(["cloud_limited", "phone_offline", "unknown"]);
+    if (reason && retryReasons.has(reason)) {
+      const title = singleButtonTitles[reason] ?? "Can't play this video";
+      errorScreen(title, playback.message ?? "This video can't play right now.",
+        [button("Back to library", back), button("Try again", () => void startPlayback(v), "panel")], back);
+      return;
+    }
+    if (reason && singleButtonTitles[reason]) {
+      errorScreen(singleButtonTitles[reason], playback.message ?? "This video can't play right now.",
+        [button("Back to library", back, "raised", true)], back);
+      return;
+    }
     errorScreen("Couldn't play this private title", playback.message ?? "Playback wasn't approved on the phone",
       [button("Back to library", back), button("Try again", () => void startPlayback(v), "panel")], back);
     return;

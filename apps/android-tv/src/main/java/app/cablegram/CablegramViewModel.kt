@@ -102,6 +102,10 @@ sealed interface ScreenState {
         val convertibleVideo: Video? = null,
         /** Offers "Back to library" (and makes the Back key return there instead of leaving the app). */
         val canGoBack: Boolean = false,
+        val primaryActionLabel: String? = null,
+        val onPrimaryAction: (() -> Unit)? = null,
+        val secondaryActionLabel: String? = null,
+        val onSecondaryAction: (() -> Unit)? = null,
     ) : ScreenState
 }
 
@@ -880,16 +884,82 @@ class CablegramViewModel @JvmOverloads constructor(
                 }
                 if (playback.status == "denied") {
                     castApp?.mediaSession?.stop(com.google.android.gms.cast.MediaStatus.IDLE_REASON_ERROR)
-                    // T075 / R-5: private playback was not approved — show why and stop.
                     playbackJob?.cancel()
                     failedPlaybackVideo = currentVideo
-                    screen = ScreenState.Error(
-                        uiText(R.string.ui_playback_wasn_t_approved_5cb346),
-                        playback.prepareLabel ?: uiText(R.string.ui_your_phone_didn_t_approve_this_title_press_try_again_t_6fe116),
-                        canSignOut = false,
-                        removableVideo = null,
-                        canGoBack = true,
-                    )
+                    val reason = playback.failureReason
+                    if (reason != null) {
+                        data class FailureAction(val titleRes: Int, val messageRes: Int, val buttonRes: Int, val action: () -> Unit)
+                        val config = when (reason) {
+                            "telegram_not_connected" -> FailureAction(
+                                R.string.ui_connect_telegram_title,
+                                R.string.ui_telegram_not_connected_message,
+                                R.string.ui_connect_telegram_button,
+                                ::openTelegramSettings,
+                            )
+                            "phone_lost_file" -> FailureAction(
+                                R.string.ui_video_unavailable_title,
+                                R.string.ui_phone_lost_file_message,
+                                R.string.ui_back_to_library_008e42,
+                                ::closePlayer,
+                            )
+                            "phone_replaced" -> FailureAction(
+                                R.string.ui_video_unavailable_title,
+                                R.string.ui_phone_replaced_message,
+                                R.string.ui_back_to_library_008e42,
+                                ::closePlayer,
+                            )
+                            "phone_offline" -> FailureAction(
+                                R.string.ui_phone_offline_title,
+                                R.string.ui_phone_offline_message,
+                                R.string.ui_back_to_library_008e42,
+                                ::closePlayer,
+                            )
+                            "cloud_disconnected" -> FailureAction(
+                                R.string.ui_storage_disconnected_title,
+                                R.string.ui_cloud_disconnected_message,
+                                R.string.ui_back_to_library_008e42,
+                                ::closePlayer,
+                            )
+                            "cloud_credentials_rejected" -> FailureAction(
+                                R.string.ui_storage_credentials_rejected_title,
+                                R.string.ui_cloud_credentials_rejected_message,
+                                R.string.ui_back_to_library_008e42,
+                                ::closePlayer,
+                            )
+                            "cloud_limited" -> FailureAction(
+                                R.string.ui_storage_limited_title,
+                                R.string.ui_cloud_limited_message,
+                                R.string.ui_back_to_library_008e42,
+                                ::closePlayer,
+                            )
+                            else -> FailureAction(
+                                R.string.ui_can_t_play_this_video_7cfde0,
+                                R.string.ui_unknown_playback_failure_message,
+                                R.string.ui_back_to_library_008e42,
+                                ::closePlayer,
+                            )
+                        }
+                        val withRetry = reason == "cloud_limited" || reason == "phone_offline" || reason == "unknown" ||
+                            (reason !in setOf("telegram_not_connected", "phone_lost_file", "phone_replaced", "cloud_disconnected", "cloud_credentials_rejected"))
+                        screen = ScreenState.Error(
+                            title = uiText(config.titleRes),
+                            message = playback.prepareLabel?.takeIf { it.isNotBlank() } ?: uiText(config.messageRes),
+                            canGoBack = true,
+                            primaryActionLabel = uiText(config.buttonRes),
+                            onPrimaryAction = config.action,
+                            secondaryActionLabel = if (withRetry) uiText(R.string.ui_try_again_d8b839) else null,
+                            onSecondaryAction = if (withRetry) ::retry else null,
+                        )
+                    } else {
+                        // T075 / R-5: private playback was not approved — show why and stop.
+                        screen = ScreenState.Error(
+                            uiText(R.string.ui_playback_wasn_t_approved_5cb346),
+                            playback.prepareLabel ?: uiText(R.string.ui_your_phone_didn_t_approve_this_title_press_try_again_t_6fe116),
+                            canSignOut = false,
+                            removableVideo = null,
+                            canGoBack = true,
+                        )
+                    }
                     break
                 }
                 if (playback.status != "preparing" && playback.status != "transcoding") {
@@ -960,6 +1030,12 @@ class CablegramViewModel @JvmOverloads constructor(
         libraryVideos = cachedVideos
         screen = ScreenState.Library
         if (!isDemoMode) startLibrarySync()
+    }
+
+    fun openTelegramSettings() {
+        closePlayer()
+        selectLibrarySection("settings")
+        telegram.connectStandalone()
     }
 
     fun reportPlaybackState(videoId: String, positionSeconds: Int, durationSeconds: Int?, isPlaying: Boolean, volume: Int, muted: Boolean, engine: String? = null) {

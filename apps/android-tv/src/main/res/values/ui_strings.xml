@@ -301,4 +301,21 @@
     <string name="tv_sort">"Sort: %1$s"</string>
     <string name="tv_sort_title">"Title A–Z"</string>
     <string name="tv_sort_year">"Year"</string>
+
+    <!-- Playback failure reasons (contracts/playback-failures.md) -->
+    <string name="ui_connect_telegram_title" formatted="false">"Connect Telegram"</string>
+    <string name="ui_connect_telegram_button" formatted="false">"Connect Telegram"</string>
+    <string name="ui_telegram_not_connected_message" formatted="false">"Telegram isn\'t connected on this TV or your phone."</string>
+    <string name="ui_video_unavailable_title" formatted="false">"Video unavailable"</string>
+    <string name="ui_phone_lost_file_message" formatted="false">"This video isn\'t on your phone. Add the video again on your phone."</string>
+    <string name="ui_phone_replaced_message" formatted="false">"This video was on your previous phone install. Add the video again on your phone."</string>
+    <string name="ui_phone_offline_title" formatted="false">"Phone offline"</string>
+    <string name="ui_phone_offline_message" formatted="false">"Your phone isn\'t reachable. Open Cablegram on your phone and check that it has internet."</string>
+    <string name="ui_storage_disconnected_title" formatted="false">"Storage disconnected"</string>
+    <string name="ui_cloud_disconnected_message" formatted="false">"Your cloud storage is disconnected. Reconnect your storage on your phone."</string>
+    <string name="ui_storage_credentials_rejected_title" formatted="false">"Storage sign-in required"</string>
+    <string name="ui_cloud_credentials_rejected_message" formatted="false">"Your cloud storage credentials were rejected. Reconnect your storage on your phone."</string>
+    <string name="ui_storage_limited_title" formatted="false">"Storage download limit"</string>
+    <string name="ui_cloud_limited_message" formatted="false">"Your cloud storage is limiting downloads of this video. Try again in a little while."</string>
+    <string name="ui_unknown_playback_failure_message" formatted="false">"This video can\'t play right now. Try again in a moment."</string>
 </resources>

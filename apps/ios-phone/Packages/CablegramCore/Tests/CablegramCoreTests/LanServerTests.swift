@@ -97,8 +97,12 @@ import Testing
 
     @Test func unknownTitleIs404() async throws {
         let f = try await Self.fixture(); defer { f.server.stop() }
-        #expect(try await f.get("/media/zzz").1.statusCode == 404)
-        #expect(try await f.get("/nothing").1.statusCode == 404)
+        let (dataZ, respZ) = try await f.get("/media/zzz")
+        #expect(respZ.statusCode == 404)
+        #expect(String(decoding: dataZ, as: UTF8.self).contains("not_in_library"))
+        let (dataN, respN) = try await f.get("/nothing")
+        #expect(respN.statusCode == 404)
+        #expect(String(decoding: dataN, as: UTF8.self).contains("not_found"))
     }
 
     @Test func aStreamLinkPlaysOnlyItsOwnTitleWithoutAHeader() async throws {
@@ -318,14 +322,49 @@ import Testing
         if case .empty = head.body {} else { Issue.record("HEAD must carry no body") }
     }
 
-    @Test func unknownIdsMalformedIdsAndNoTelegramAre404() async {
+    final class SignedOutTelegramMedia: TelegramMedia {
+        var signedOut: Bool { get async { true } }
+        func resolve(uniqueId: String) async -> TelegramFileRef? { nil }
+        func read(fileId: Int, position: Int64, want: Int) async -> Data? { nil }
+        func release(fileId: Int) {}
+    }
+
+    @Test func unknownIdsMalformedIdsAndNoTelegramAreErrors() async {
         let r = router(telegram: FakeTelegramMedia())
         for id in ["unknownid123", "short", "has%20space%20in%20it", "../etc/passwd"] {
             let status = await r.handle(HTTPRequest(method: "GET", target: "/telegram/\(id)", headers: ["authorization": "Bearer capA"])).status
             #expect(status == 404, Comment(rawValue: id))
         }
         let none = router(telegram: nil)
-        #expect(await none.handle(HTTPRequest(method: "GET", target: "/telegram/abcdefgh1234", headers: ["authorization": "Bearer capA"])).status == 404)
+        let noTg = await none.handle(HTTPRequest(method: "GET", target: "/telegram/abcdefgh1234", headers: ["authorization": "Bearer capA"]))
+        #expect(noTg.status == 503)
+        let noTgLink = await none.handle(HTTPRequest(method: "GET", target: "/links/telegram/abcdefgh1234", headers: ["authorization": "Bearer capA"]))
+        #expect(noTgLink.status == 503)
+        let signedOut = router(telegram: SignedOutTelegramMedia())
+        let signedOutMedia = await signedOut.handle(HTTPRequest(method: "GET", target: "/telegram/abcdefgh1234", headers: ["authorization": "Bearer capA"]))
+        #expect(signedOutMedia.status == 503)
+        let signedOutLink = await signedOut.handle(HTTPRequest(method: "GET", target: "/links/telegram/abcdefgh1234", headers: ["authorization": "Bearer capA"]))
+        #expect(signedOutLink.status == 503)
+    }
+
+    /// Starting while the request arrives, then asking for a sign-in once `resolve` gave up waiting.
+    final class StartingTelegramMedia: TelegramMedia, @unchecked Sendable {
+        private let lock = NSLock()
+        private var settledSignedOut = false
+        private let endsSignedOut: Bool
+        init(endsSignedOut: Bool) { self.endsSignedOut = endsSignedOut }
+        var signedOut: Bool { get async { lock.withLock { settledSignedOut } } }
+        func resolve(uniqueId: String) async -> TelegramFileRef? { lock.withLock { settledSignedOut = endsSignedOut }; return nil }
+        func read(fileId: Int, position: Int64, want: Int) async -> Data? { nil }
+        func release(fileId: Int) {}
+    }
+
+    @Test func aStartingSessionGetsItsLinkAndIs503OnlyIfItEndsSignedOut() async {
+        let starting = router(telegram: StartingTelegramMedia(endsSignedOut: true))
+        #expect(await starting.handle(HTTPRequest(method: "GET", target: "/links/telegram/abcdefgh1234", headers: ["authorization": "Bearer capA"])).status == 200)
+        #expect(await starting.handle(HTTPRequest(method: "GET", target: "/telegram/abcdefgh1234", headers: ["authorization": "Bearer capA"])).status == 503)
+        let missing = router(telegram: StartingTelegramMedia(endsSignedOut: false))
+        #expect(await missing.handle(HTTPRequest(method: "GET", target: "/telegram/abcdefgh1234", headers: ["authorization": "Bearer capA"])).status == 404)
     }
 
     @Test func aTelegramTitleNeedsACapabilityOrALink() async throws {
@@ -338,5 +377,6 @@ import Testing
         #expect(played.status == 200)
         _ = await body(played)
         #expect(await r.handle(HTTPRequest(method: "GET", target: "/links/telegram/nope", headers: ["authorization": "Bearer capA"])).status == 404)
+        #expect(await r.handle(HTTPRequest(method: "GET", target: "/links/media/nope", headers: ["authorization": "Bearer capA"])).status == 404)
     }
 }

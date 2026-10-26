@@ -103,12 +103,15 @@ export function relayMessage(status: number | null, error: string | undefined): 
     case "relay_quota_exceeded": return "This month's relay traffic is used up. Upgrade your plan to keep watching here.";
     case "relay_streams_exceeded": return "Too many relay streams are running on your account. Stop one and try again.";
     case "approval_required": return "Playback wasn't approved on the phone.";
+    case "not_in_library": return "This video isn't on your phone. Add the video again on your phone.";
+    case "telegram_not_signed_in": return "Telegram isn't connected on this TV or your phone.";
   }
   if (error === "phone_timeout" || error === "phone_disconnected" || status === 502 || status === 504) {
     return "Your phone didn't respond. Check that Cablegram is open on the phone.";
   }
   if (status === 401 || status === 403) return "This TV isn't allowed to play this video any more. Pair it again from your phone.";
-  if (status === 404) return "This video isn't on your phone any more.";
+  if (status === 404) return "This video isn't on your phone. Add the video again on your phone.";
+  if (status === 503 && error === "telegram_not_signed_in") return "Telegram isn't connected on this TV or your phone.";
   return "This video can't play right now.";
 }
 
@@ -369,34 +372,81 @@ export function createApi(opts: { base?: string | (() => string); fetch?: Fetch;
       const live = title.sources.filter(usable);
       const cloud = live.some((s) => s.kind === "own_cloud" || s.kind === "web");
       const phone = live.find(isPhoneSource);
+      const tg = live.find((s) => s.kind === "telegram");
       if (phone) {
         const cachedCaps = capsCache.get(resolveBase());
         if (!cachedCaps || cachedCaps.features.relay) {
-          const phoneDevice = servingPhone(await api.devices(), phone.servingDeviceId);
+          const devices = await api.devices();
+          const replaced = phone.servingDeviceId && devices.some((d) => d.kind === "phone" && d.id === phone.servingDeviceId && !!d.revokedAt);
+          if (replaced) {
+            if (!cloud && !tg) {
+              return {
+                ...none,
+                status: "denied",
+                failure_reason: "phone_replaced",
+                reason: "phone_replaced",
+                message: "This video was on your previous phone install. Add the video again on your phone.",
+              };
+            }
+          }
+          const phoneDevice = servingPhone(devices, phone.servingDeviceId);
           if (phoneDevice) {
             try {
               const ticket = await api.relayTicket(phoneDevice.id);
               return { ...none, status: "ready", engine: true, url: relayUrl(resolveBase(), phoneDevice.id, `media/${phone.originIdentity}`, capability, ticket) };
             } catch (e) {
-              if (e instanceof ApiError && (e.status === 404 || e.status === 410) && !cloud && !live.some((s) => s.kind === "telegram")) {
+              if (e instanceof ApiError && (e.status === 404 || e.status === 410) && !cloud && !tg) {
                 return { ...none, status: "unsupported", message: RELAY_DISABLED_MESSAGE };
               }
-              if (!cloud) throw e;
+              if (!cloud && !tg) throw e;
             }
           }
-        } else if (!cloud && !live.some((s) => s.kind === "telegram")) {
+        } else if (!cloud && !tg) {
           return { ...none, status: "unsupported", message: RELAY_DISABLED_MESSAGE };
         }
       }
+      let cloudFailureReason: string | undefined;
       if (cloud) {
-        const ready = await readyCloudPlayback(title.id);
-        if (ready) return ready;
+        try {
+          const ready = await readyCloudPlayback(title.id);
+          if (ready) return ready;
+        } catch (e) {
+          if (e instanceof ApiError) {
+            if (e.status >= 500 && e.status < 600) {
+              cloudFailureReason = "unknown";
+            } else if (e.code === "credentials_rejected") {
+              cloudFailureReason = "cloud_credentials_rejected";
+            } else if (e.code === "source_unavailable") {
+              cloudFailureReason = "cloud_disconnected";
+            } else if (e.code === "429" || e.code === "provider_rate_limited" || e.status === 429) {
+              cloudFailureReason = "cloud_limited";
+            } else {
+              cloudFailureReason = "unknown";
+            }
+          } else {
+            cloudFailureReason = "unknown";
+          }
+        }
       }
-      const tg = live.find((s) => s.kind === "telegram");
       const ref = TG_DIRECT ? parseTelegramIdentity(tg?.originIdentity) : null;
       if (ref) return { ...none, status: "ready", engine: true, telegram: ref };
-      if (tg) {
-        return { ...none, status: "unsupported", message: "This video is stored in Telegram. Telegram playback isn't available on this TV yet." };
+      // Without the direct Telegram build this TV can't play Telegram at all: connecting wouldn't help.
+      if (tg) return { ...none, status: "unsupported", message: "This video is stored in Telegram. Telegram playback isn't available on this TV yet." };
+      if (cloudFailureReason) {
+        const msg = cloudFailureReason === "cloud_limited"
+          ? "Your cloud storage is limiting downloads of this video. Try again in a little while."
+          : (cloudFailureReason === "cloud_credentials_rejected"
+            ? "Your cloud storage credentials were rejected. Reconnect your storage on your phone."
+            : (cloudFailureReason === "cloud_disconnected"
+              ? "Your cloud storage is disconnected. Reconnect your storage on your phone."
+              : "This video can't play right now."));
+        return {
+          ...none,
+          status: "denied",
+          failure_reason: cloudFailureReason,
+          reason: cloudFailureReason,
+          message: msg,
+        };
       }
       return { ...none, status: "preparing", message: "Waiting for your phone to come online." };
     },

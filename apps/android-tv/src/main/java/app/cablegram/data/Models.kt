@@ -239,6 +239,7 @@ fun Video.hasCompletedIngest(): Boolean {
 data class PlaybackResponse(
     val status: String,
     val url: String? = null,
+    @SerialName("failure_reason") val failureReason: String? = null,
     @SerialName("mime_type") val mimeType: String? = null,
     val headers: Map<String, String> = emptyMap(),
     val expiresAt: String? = null,
