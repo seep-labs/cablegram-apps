@@ -154,6 +154,12 @@ public func decodeLibraryQuery(_ text: String?) -> LibraryQuery {
 }
 
 extension LibraryQuery {
+    public func searching(_ text: String) -> LibraryQuery {
+        var copy = self
+        copy.search = text
+        return copy
+    }
+
     /// A collection deleted since the filter was saved must not leave an empty library behind.
     public func withoutUnknownCollections(_ known: Set<String>) -> LibraryQuery {
         var copy = self

@@ -40,6 +40,10 @@ final class PhoneViewModel {
     private(set) var items: [LibraryItem] = []
     private(set) var collections: [UserCollection] = []
     var searchQuery = ""
+    /// Library filters and sort, remembered on this phone; the search text is `searchQuery`.
+    var libraryFilters = decodeLibraryQuery(UserDefaults.standard.string(forKey: "library_query")) {
+        didSet { UserDefaults.standard.set(encodeLibraryQuery(libraryFilters), forKey: "library_query") }
+    }
     private(set) var librarySyncState: LibrarySyncState = .idle
     private(set) var prepareStep: String?
     private(set) var prepareProgress: Double = 0

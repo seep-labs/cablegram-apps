@@ -4,8 +4,8 @@ import SwiftUI
 /// Port of `LibraryHome`: header, search, filter chips, the sync line, the Continue watching row, then every title once in a grid.
 struct LibraryHome: View {
     let viewModel: PhoneViewModel
-    @State private var type = LibraryTypeFilter.all
     @State private var gridWidth: CGFloat = 0
+    @State private var moreOpen = false
 
     /// Smallest poster width; narrower screens still get three columns, wider ones (iPad) fit more.
     private static let minPoster: CGFloat = 104
@@ -13,17 +13,17 @@ struct LibraryHome: View {
 
     var body: some View {
         @Bindable var vm = viewModel
-        let query = LibraryQuery(type: type, search: viewModel.searchQuery)
+        let filters = viewModel.libraryFilters.withoutUnknownCollections(Set(viewModel.collections.map(\.id)))
+        let query = filters.searching(viewModel.searchQuery)
         let entries = applyLibraryQuery(viewModel.items, query)
         ScrollView {
-            LazyVStack(alignment: .leading, spacing: 20) {
+            LazyVStack(alignment: .leading, spacing: 20, pinnedViews: [.sectionHeaders]) {
                 header
                 searchField
-                chips
                 tvLine
                 if let step = viewModel.prepareStep { StatusNote(message: step) }
                 if let status = viewModel.status { StatusNote(message: status) }
-                content(entries, query)
+                content(entries, query, filters)
             }
             .background(GeometryReader { geo in
                 Color.clear.onAppear { gridWidth = geo.size.width }.onChange(of: geo.size.width) { _, width in gridWidth = width }
@@ -32,8 +32,15 @@ struct LibraryHome: View {
         }
         // Pull down to check for new videos, e.g. one just shared into the Telegram channel.
         .refreshable { await viewModel.syncLibrary(force: true) }
+        // Content scrolls under the status bar; an opaque cap keeps it from showing behind the clock.
+        .overlay(alignment: .top) {
+            GeometryReader { geo in Color.phoneBackground.frame(height: geo.safeAreaInsets.top).ignoresSafeArea(edges: .top) }.allowsHitTesting(false)
+        }
         .phoneScreenBackground()
         .sheet(isPresented: $vm.collectionsDialogOpen) { CollectionsSheet(viewModel: viewModel) }
+        .sheet(isPresented: $moreOpen) {
+            LibraryFilterSheet(query: filters, count: entries.count, collections: viewModel.collections) { viewModel.libraryFilters = $0 }
+        }
     }
 
     private var header: some View {
@@ -74,17 +81,6 @@ struct LibraryHome: View {
         .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.phoneOutline, lineWidth: 1))
     }
 
-    private var chips: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                ForEach([(LibraryTypeFilter.all, "all", "ui_all_a52ace"), (.movies, "movies", "ui_movies_dff924"), (.shows, "shows", "ui_tv_shows_222906")], id: \.1) { filterType, key, label in
-                    FilterChip(label: label, selected: type == filterType) { type = filterType }
-                        .accessibilityIdentifier("library_filter_\(key)")
-                }
-            }
-        }
-    }
-
     /// One compact line, so the grid starts higher: the TV, its Connect/Remote action, and the sync button.
     private var tvLine: some View {
         let state = viewModel.librarySyncState
@@ -109,31 +105,35 @@ struct LibraryHome: View {
         }
     }
 
-    @ViewBuilder private func content(_ entries: [LibraryEntry], _ query: LibraryQuery) -> some View {
+    @ViewBuilder private func content(_ entries: [LibraryEntry], _ query: LibraryQuery, _ filters: LibraryQuery) -> some View {
         if viewModel.items.isEmpty {
             EmptyState(symbol: "movieclapper", title: L("ui_a_home_for_your_favorites_1b3984"),
                        message: L("ui_import_a_few_videos_from_your_phone_your_personal_cine_1f8181"), action: L("ui_import_videos_fec728")) { viewModel.selectTab(.browse) }
-        } else if entries.isEmpty {
-            EmptyState(symbol: "magnifyingglass", title: L("ui_no_titles_found_2aeb6d"), message: L("ui_try_another_title_or_clear_your_filters_to_see_the_who_ab222f"),
-                       action: L("ui_clear_filters_7179ea")) { viewModel.searchQuery = ""; type = .all }
         } else {
             if !query.hasFilters {
                 let watching = continueWatching(viewModel.items)
                 if !watching.isEmpty { Shelf(title: L("ui_continue_watching_81ebbe"), items: watching, viewModel: viewModel, showProgress: true, posterWidth: 112) }
             }
-            Text(L("ui_titles_77f1d9", "\(entries.count)")).font(PhoneFont.labelLarge).foregroundStyle(Color.phoneMuted)
-                .accessibilityIdentifier("library_count")
-            // A series filtered down to some episodes still opens as the whole series: the series page looks it up by key.
-            let columns = Array(repeating: GridItem(.flexible(), spacing: Self.gap), count: max(3, Int((gridWidth + Self.gap) / (Self.minPoster + Self.gap))))
-            LazyVGrid(columns: columns, alignment: .leading, spacing: 20) {
-                ForEach(entries) { entry in
-                    switch entry {
-                    case .film(let item): PosterCard(item: item, showProgress: false, viewModel: viewModel, width: nil).frame(maxHeight: .infinity, alignment: .top)
-                    case .series: SeriesCard(entry: entry, showProgress: false, viewModel: viewModel, width: nil).frame(maxHeight: .infinity, alignment: .top)
+            Section {
+                if entries.isEmpty {
+                    EmptyState(symbol: "magnifyingglass", title: L("ui_no_titles_found_2aeb6d"), message: L("ui_try_another_title_or_clear_your_filters_to_see_the_who_ab222f"),
+                               action: L("ui_clear_filters_7179ea")) { viewModel.searchQuery = ""; viewModel.libraryFilters = filters.cleared() }
+                } else {
+                    // A series filtered down to some episodes still opens as the whole series: the series page looks it up by key.
+                    let columns = Array(repeating: GridItem(.flexible(), spacing: Self.gap), count: max(3, Int((gridWidth + Self.gap) / (Self.minPoster + Self.gap))))
+                    LazyVGrid(columns: columns, alignment: .leading, spacing: 20) {
+                        ForEach(entries) { entry in
+                            switch entry {
+                            case .film(let item): PosterCard(item: item, showProgress: false, viewModel: viewModel, width: nil).frame(maxHeight: .infinity, alignment: .top)
+                            case .series: SeriesCard(entry: entry, showProgress: false, viewModel: viewModel, width: nil).frame(maxHeight: .infinity, alignment: .top)
+                            }
+                        }
                     }
+                    .accessibilityIdentifier("library_grid")
                 }
+            } header: {
+                LibraryFilterBar(query: filters, count: entries.count, collections: viewModel.collections, onChange: { viewModel.libraryFilters = $0 }, onOpenMore: { moreOpen = true })
             }
-            .accessibilityIdentifier("library_grid")
         }
     }
 }
