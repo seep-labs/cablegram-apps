@@ -50,7 +50,6 @@ file needs a signed-in account and has not been run.
 Not the same as Android TV yet:
 - **Telegram-hosted titles** work only in `VITE_TG_DIRECT=1` builds, with the account signed in on the TV (see above);
   the Android TV app's TDLib does not run in a TV web view.
-- **Private titles** (need phone approval, `/api/playback/private-approvals`).
 - **Phone over LAN.** A browser cannot pin the phone's self-signed certificate, so the relay carries phone copies.
 - **Image subtitles** (PGS, VobSub) inside a file are not shown; text subtitles in the file (SubRip, ASS as plain text,
   WebVTT, 3GPP timed text) and Cablegram subtitles (picked and synced on the phone) are, drawn by the player.

@@ -44,11 +44,36 @@ const routes = {
     content: "WEBVTT\n\n00:00:00.500 --> 00:00:30.000\nThis is a Cablegram subtitle\nsynced on the phone\n" }] },
 };
 
+let approvalPolls = 0;
+
 http.createServer((req, res) => {
   const cors = { "access-control-allow-origin": "*", "access-control-allow-headers": "authorization, content-type", "access-control-allow-methods": "*",
     "access-control-expose-headers": "content-range, accept-ranges, content-length" };
   if (req.method === "OPTIONS") { res.writeHead(204, cors).end(); return; }
   const path = (req.url ?? "").split("?")[0];
+  if (path === "/api/playback/private-approvals" && req.method === "POST") {
+    approvalPolls = 0;
+    res.writeHead(201, { ...cors, "content-type": "application/json" });
+    res.end(JSON.stringify({ attempt_id: "att-mock", expires_at: new Date(Date.now() + 60000).toISOString() }));
+    return;
+  }
+  if (path.startsWith("/api/playback/private-approvals/") && path.endsWith("/start") && req.method === "POST") {
+    res.writeHead(200, { ...cors, "content-type": "application/json" });
+    res.end(JSON.stringify({ lan_pass: "mock-lan-pass", expires_at: new Date(Date.now() + 60000).toISOString() }));
+    return;
+  }
+  if (path.startsWith("/api/playback/private-approvals/") && path.endsWith("/cancel") && req.method === "POST") {
+    res.writeHead(200, { ...cors, "content-type": "application/json" });
+    res.end(JSON.stringify({ ok: true }));
+    return;
+  }
+  if (path.startsWith("/api/playback/private-approvals/") && req.method === "GET") {
+    approvalPolls++;
+    const status = approvalPolls >= 1 ? "approved" : "pending";
+    res.writeHead(200, { ...cors, "content-type": "application/json" });
+    res.end(JSON.stringify({ attempt_id: "att-mock", status }));
+    return;
+  }
   // MOCK_VIDEO=<file> serves that file for every relay media request (with Range support, as the relay does), so the
   // player can be seen working. An MKV with two audio tracks and an embedded SRT shows the tv-media engine.
   if (path.startsWith("/relay/") && process.env.MOCK_VIDEO && existsSync(process.env.MOCK_VIDEO)) {

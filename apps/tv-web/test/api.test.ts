@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createApi, parseServerCapabilities, parseTitle, relayUrl, servingPhone } from "../src/api";
+import { DENIED_LABEL, createApi, parseServerCapabilities, parseTitle, relayUrl, servingPhone } from "../src/api";
 import { pickNext } from "../src/nav";
 import { normalizeServerUrl, setServerUrl, serverUrl } from "../src/session";
 
@@ -40,12 +40,284 @@ describe("resolvePlayback", () => {
     expect(p.status).toBe("ready");
     expect(p.url).toContain("/relay/v1/p/p1/media/x");
   });
-  it("refuses private and Telegram-only titles with an explanation", async () => {
+  it("refuses Telegram-only titles with an explanation", async () => {
     const api = createApi({ fetch: async () => json(200, {}) });
-    const priv = parseTitle({ id: "2", sources: [{ kind: "phone_local", origin_identity: "x", private: true }] });
     const tg = parseTitle({ id: "3", sources: [{ kind: "telegram", origin_identity: "tg:1:2" }] });
-    expect((await api.resolvePlayback(priv, undefined)).status).toBe("unsupported");
     expect((await api.resolvePlayback(tg, undefined)).message).toMatch(/Telegram/);
+  });
+  it("plays a private title after phone approval and carries the lan pass", async () => {
+    let awaitingApprovalCalled = false;
+    let statusMessage = "";
+    const priv = parseTitle({
+      id: "priv1",
+      title: "Secret",
+      sources: [{ kind: "phone_local", origin_identity: "file-p", private: true, serving_device_id: "ph1" }],
+    });
+    const calls: string[] = [];
+    const api = createApi({
+      base: "https://api.example",
+      token: () => "tv-token",
+      fetch: async (url, init) => {
+        calls.push(`${init?.method ?? "GET"} ${url}`);
+        if (url.endsWith("api/playback/private-approvals") && init?.method === "POST") {
+          return json(201, { attempt_id: "att-1", expires_at: "2026-10-26T18:00:00Z" });
+        }
+        if (url.endsWith("api/playback/private-approvals/att-1")) {
+          return json(200, { attempt_id: "att-1", status: "approved" });
+        }
+        if (url.endsWith("api/playback/private-approvals/att-1/start") && init?.method === "POST") {
+          return json(200, { lan_pass: "pass-123", expires_at: "2026-10-26T19:00:00Z" });
+        }
+        if (url.endsWith("api/me")) {
+          return json(200, { devices: [{ id: "ph1", kind: "phone" }] });
+        }
+        if (url.endsWith("api/relay/ticket")) {
+          return json(200, { ticket: "rt1" });
+        }
+        return json(404, {});
+      },
+    });
+
+    const p = await api.resolvePlayback(priv, "cap", {
+      pollIntervalMs: 5,
+      onAwaitingApproval: () => { awaitingApprovalCalled = true; },
+      onStatus: (s) => { statusMessage = s; },
+    });
+
+    expect(awaitingApprovalCalled).toBe(true);
+    expect(statusMessage).toContain("Waiting for your phone to approve");
+    expect(p.status).toBe("ready");
+    expect(p.url).toBe("https://api.example/relay/v1/p/ph1/media/file-p?token=cap&pass=pass-123&rt=rt1");
+    expect(calls).toContain("POST https://api.example/api/playback/private-approvals");
+    expect(calls).toContain("GET https://api.example/api/playback/private-approvals/att-1");
+    expect(calls).toContain("POST https://api.example/api/playback/private-approvals/att-1/start");
+  });
+  it("returns denied status when the phone denies approval", async () => {
+    const priv = parseTitle({
+      id: "priv2",
+      sources: [{ kind: "phone_local", origin_identity: "file-p", private: true, serving_device_id: "ph1" }],
+    });
+    const api = createApi({
+      base: "https://api.example",
+      token: () => "tv-token",
+      fetch: async (url, init) => {
+        if (url.endsWith("api/playback/private-approvals") && init?.method === "POST") {
+          return json(201, { attempt_id: "att-2", expires_at: "2026-10-26T18:00:00Z" });
+        }
+        if (url.endsWith("api/playback/private-approvals/att-2")) {
+          return json(200, { attempt_id: "att-2", status: "denied" });
+        }
+        return json(404, {});
+      },
+    });
+
+    const p = await api.resolvePlayback(priv, "cap", { pollIntervalMs: 5 });
+    expect(p.status).toBe("denied");
+    expect(p.message).toBe(DENIED_LABEL);
+  });
+  it("cancels approval request and stops polling when signal aborts", async () => {
+    const priv = parseTitle({
+      id: "priv3",
+      sources: [{ kind: "phone_local", origin_identity: "file-p", private: true, serving_device_id: "ph1" }],
+    });
+    const controller = new AbortController();
+    const calls: string[] = [];
+    let polls = 0;
+    const api = createApi({
+      base: "https://api.example",
+      token: () => "tv-token",
+      fetch: async (url, init) => {
+        calls.push(`${init?.method ?? "GET"} ${url}`);
+        if (url.endsWith("api/playback/private-approvals") && init?.method === "POST") {
+          return json(201, { attempt_id: "att-3", expires_at: "2026-10-26T18:00:00Z" });
+        }
+        if (url.endsWith("api/playback/private-approvals/att-3")) {
+          polls++;
+          controller.abort();
+          return json(200, { attempt_id: "att-3", status: "pending" });
+        }
+        if (url.endsWith("api/playback/private-approvals/att-3/cancel") && init?.method === "POST") {
+          return json(200, { ok: true });
+        }
+        return json(404, {});
+      },
+    });
+
+    const p = await api.resolvePlayback(priv, "cap", {
+      signal: controller.signal,
+      pollIntervalMs: 5,
+    });
+
+    expect(p.status).toBe("denied");
+    expect(calls).toContain("POST https://api.example/api/playback/private-approvals/att-3/cancel");
+    expect(polls).toBe(1);
+  });
+  it("returns timeout error and cancels when approval times out", async () => {
+    const priv = parseTitle({
+      id: "priv4",
+      sources: [{ kind: "phone_local", origin_identity: "file-p", private: true, serving_device_id: "ph1" }],
+    });
+    const calls: string[] = [];
+    const api = createApi({
+      base: "https://api.example",
+      token: () => "tv-token",
+      fetch: async (url, init) => {
+        calls.push(`${init?.method ?? "GET"} ${url}`);
+        if (url.endsWith("api/playback/private-approvals") && init?.method === "POST") {
+          return json(201, { attempt_id: "att-4", expires_at: "2026-10-26T18:00:00Z" });
+        }
+        if (url.endsWith("api/playback/private-approvals/att-4")) {
+          return json(200, { attempt_id: "att-4", status: "pending" });
+        }
+        if (url.endsWith("api/playback/private-approvals/att-4/cancel") && init?.method === "POST") {
+          return json(200, { ok: true });
+        }
+        return json(404, {});
+      },
+    });
+
+    const p = await api.resolvePlayback(priv, "cap", {
+      pollIntervalMs: 5,
+      maxWaitSeconds: 0.02,
+    });
+
+    expect(p.status).toBe("denied");
+    expect(p.message).toBe("No approval came in time. Start playback again when your phone is nearby.");
+    expect(calls).toContain("POST https://api.example/api/playback/private-approvals/att-4/cancel");
+  });
+  it("resolves private cloud titles with attemptId upon approval", async () => {
+    const privCloud = parseTitle({
+      id: "priv-cloud",
+      sources: [{ kind: "own_cloud", origin_identity: "c1", private: true }],
+    });
+    let resolveBody: Record<string, unknown> | null = null;
+    const api = createApi({
+      base: "https://api.example",
+      token: () => "tv-token",
+      fetch: async (url, init) => {
+        if (url.endsWith("api/playback/private-approvals") && init?.method === "POST") {
+          return json(201, { attempt_id: "att-cloud", expires_at: "2026-10-26T18:00:00Z" });
+        }
+        if (url.endsWith("api/playback/private-approvals/att-cloud")) {
+          return json(200, { attempt_id: "att-cloud", status: "approved" });
+        }
+        if (url.endsWith("api/playback/resolve") && init?.method === "POST") {
+          resolveBody = JSON.parse(init.body as string);
+          return json(200, { status: "ready", url: "https://cloud.example/video.mp4", headers: { "X-Custom": "1" } });
+        }
+        return json(404, {});
+      },
+    });
+
+    const p = await api.resolvePlayback(privCloud, undefined, { pollIntervalMs: 5 });
+    expect(p.status).toBe("ready");
+    expect(p.url).toBe("https://cloud.example/video.mp4");
+    expect(p.headers).toEqual({ "X-Custom": "1" });
+    expect(resolveBody).toEqual({ media_item_id: "priv-cloud", attempt_id: "att-cloud" });
+  });
+  it("plays from cloud without calling /start when relay ticket fails and cloud copy exists", async () => {
+    const privBoth = parseTitle({
+      id: "priv-both",
+      sources: [
+        { kind: "phone_local", origin_identity: "file-p", private: true, serving_device_id: "ph1" },
+        { kind: "own_cloud", origin_identity: "c1", private: true },
+      ],
+    });
+    const calls: string[] = [];
+    let resolveBody: Record<string, unknown> | null = null;
+    const api = createApi({
+      base: "https://api.example",
+      token: () => "tv-token",
+      fetch: async (url, init) => {
+        calls.push(`${init?.method ?? "GET"} ${url}`);
+        if (url.endsWith("api/playback/private-approvals") && init?.method === "POST") {
+          return json(201, { attempt_id: "att-fallback", expires_at: "2026-10-26T18:00:00Z" });
+        }
+        if (url.endsWith("api/playback/private-approvals/att-fallback")) {
+          return json(200, { attempt_id: "att-fallback", status: "approved" });
+        }
+        if (url.endsWith("api/me")) {
+          return json(200, { devices: [{ id: "ph1", kind: "phone" }] });
+        }
+        if (url.endsWith("api/relay/ticket")) {
+          return json(503, { error: "relay_unavailable" });
+        }
+        if (url.endsWith("api/playback/resolve") && init?.method === "POST") {
+          resolveBody = JSON.parse(init.body as string);
+          return json(200, { status: "ready", url: "https://cloud.example/fallback.mp4", headers: {} });
+        }
+        if (url.includes("/start")) {
+          return json(200, { lan_pass: "pass-consumed" });
+        }
+        return json(404, {});
+      },
+    });
+
+    const p = await api.resolvePlayback(privBoth, "cap", { pollIntervalMs: 5 });
+    expect(p.status).toBe("ready");
+    expect(p.url).toBe("https://cloud.example/fallback.mp4");
+    expect(resolveBody).toEqual({ media_item_id: "priv-both", attempt_id: "att-fallback" });
+    expect(calls.some((c) => c.includes("/start"))).toBe(false);
+  });
+  it("falls through to cloud when serving phone is not found", async () => {
+    const priv = parseTitle({
+      id: "priv-nophone",
+      sources: [
+        { kind: "phone_local", origin_identity: "file-p", private: true, serving_device_id: "ph-missing" },
+        { kind: "own_cloud", origin_identity: "c1", private: true },
+      ],
+    });
+    const api = createApi({
+      base: "https://api.example",
+      token: () => "tv-token",
+      fetch: async (url, init) => {
+        if (url.endsWith("api/playback/private-approvals") && init?.method === "POST") {
+          return json(201, { attempt_id: "att-np", expires_at: "2026-10-26T18:00:00Z" });
+        }
+        if (url.endsWith("api/playback/private-approvals/att-np")) {
+          return json(200, { attempt_id: "att-np", status: "approved" });
+        }
+        if (url.endsWith("api/me")) {
+          return json(200, { devices: [] }); // no phones
+        }
+        if (url.endsWith("api/playback/resolve") && init?.method === "POST") {
+          return json(200, { status: "ready", url: "https://cloud.example/nophone.mp4", headers: {} });
+        }
+        return json(404, {});
+      },
+    });
+
+    const p = await api.resolvePlayback(priv, "cap", { pollIntervalMs: 5 });
+    expect(p.status).toBe("ready");
+    expect(p.url).toBe("https://cloud.example/nophone.mp4");
+  });
+  it("reports phone not available when serving phone is not found and no cloud copy exists", async () => {
+    const priv = parseTitle({
+      id: "priv-nocloud",
+      sources: [
+        { kind: "phone_local", origin_identity: "file-p", private: true, serving_device_id: "ph-missing" },
+      ],
+    });
+    const api = createApi({
+      base: "https://api.example",
+      token: () => "tv-token",
+      fetch: async (url, init) => {
+        if (url.endsWith("api/playback/private-approvals") && init?.method === "POST") {
+          return json(201, { attempt_id: "att-nc", expires_at: "2026-10-26T18:00:00Z" });
+        }
+        if (url.endsWith("api/playback/private-approvals/att-nc")) {
+          return json(200, { attempt_id: "att-nc", status: "approved" });
+        }
+        if (url.endsWith("api/me")) {
+          return json(200, { devices: [] }); // no phones
+        }
+        return json(404, {});
+      },
+    });
+
+    const p = await api.resolvePlayback(priv, "cap", { pollIntervalMs: 5 });
+    expect(p.status).toBe("denied");
+    expect(p.message).toBe("Your phone isn't available.");
   });
   it("maps a PIN failure to its status", async () => {
     const api = createApi({ fetch: async () => json(403, { error: "wrong_pin" }) });
