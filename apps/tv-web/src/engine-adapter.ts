@@ -31,6 +31,18 @@ export function trackLabel(t: { language?: string; name?: string }, position: nu
   return [lang, name].filter(Boolean).join(" · ") || `Track ${position + 1}`;
 }
 
+/**
+ * Every audio track in the file, in file order. One this TV cannot decode is listed but not selectable, with the reason,
+ * so a track the phone plays does not just vanish (MP3 on Samsung's 2019 TVs, AC-3 on some others).
+ */
+export function audioMenu(tracks: Array<Pick<Track, "id" | "codec" | "language" | "name">>, canPlay: (t: Pick<Track, "codec">) => boolean): HudTrack[] {
+  return tracks.map((t, i) => {
+    const label = trackLabel({ language: t.language ?? undefined, name: t.name ?? undefined }, i);
+    if (canPlay(t)) return { id: EMBEDDED + t.id, label };
+    return { id: EMBEDDED + t.id, label: `${label} · ${CODEC_NAMES[t.codec.toLowerCase()] ?? t.codec} (not supported on this TV)`, disabled: true };
+  });
+}
+
 /** Inserts keeping the list sorted by start time; cues re-read after a seek are ignored. */
 export function insertCues(list: Cue[], fresh: Cue[]): void {
   for (const c of fresh) {
@@ -89,7 +101,7 @@ export function openEngine(video: HTMLVideoElement, source: string | ByteSource,
   player.on("error", events.onError);
   return {
     player,
-    audioTracks: () => player.audioTracks.filter((t) => player.canPlay(t)).map((t, i) => ({ id: EMBEDDED + t.id, label: trackLabel(t, i) })),
+    audioTracks: () => audioMenu(player.audioTracks, (t) => player.canPlay(t as Track)),
     selectedAudio: () => (player.currentAudio ? EMBEDDED + player.currentAudio.id : null),
     selectAudio: (id) => { void player.selectAudio(Number(id.slice(EMBEDDED.length))).catch(() => undefined); },
     subtitleTracks: () => player.subtitleTracks.map((t: Track, i: number) => ({ id: EMBEDDED + t.id, label: `${trackLabel(t, i)} · in file` })),

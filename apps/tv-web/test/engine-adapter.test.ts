@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { engineFailureMessage, insertCues, silentVideoNotice, trackLabel } from "../src/engine-adapter";
+import { audioMenu, engineFailureMessage, insertCues, silentVideoNotice, trackLabel } from "../src/engine-adapter";
 
 describe("trackLabel", () => {
   it("uses the language name and a distinct track name", () => {
@@ -8,6 +8,16 @@ describe("trackLabel", () => {
     expect(trackLabel({ language: "eng", name: "English" }, 0)).toBe("English");
     expect(trackLabel({ language: "xyz" }, 0)).toBe("XYZ");
     expect(trackLabel({}, 2)).toBe("Track 3");
+  });
+});
+
+describe("audioMenu", () => {
+  it("keeps a track this TV cannot decode in the menu, marked and not selectable", () => {
+    const tracks = [{ id: 2, codec: "aac", language: null, name: null }, { id: 3, codec: "mp3", language: "per", name: null }] as never;
+    expect(audioMenu(tracks, (t) => t.codec !== "mp3")).toEqual([
+      { id: "emb:2", label: "Track 1" },
+      { id: "emb:3", label: "Persian · MP3 (not supported on this TV)", disabled: true },
+    ]);
   });
 });
 

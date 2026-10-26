@@ -1391,7 +1391,7 @@ function playerScreen(t: Title, p: Profile, url: string, startAt?: number, attem
       const block = (title: string, section: "audio" | "subtitles", selected: string | null) => {
         const items = menuOptions(section, c).map((o, i) => {
           const focused = hud.menuSection === section && hud.menuIndex === i;
-          const opt = h("div", `menu-option${focused ? " focused" : ""}${o.id === selected ? " selected" : ""}`, `${o.id === selected ? "●  " : "    "}${o.id == null ? "Off" : o.label}`);
+          const opt = h("div", `menu-option${focused ? " focused" : ""}${o.id === selected ? " selected" : ""}${o.disabled ? " disabled" : ""}`, `${o.id === selected ? "●  " : "    "}${o.id == null ? "Off" : o.label}`);
           opt.addEventListener("mouseenter", () => {
             if (hud.menuSection !== section || hud.menuIndex !== i) {
               hud = { ...hud, menuSection: section, menuIndex: i };
@@ -1400,6 +1400,7 @@ function playerScreen(t: Title, p: Profile, url: string, startAt?: number, attem
           });
           opt.addEventListener("click", (e) => {
             e.stopPropagation();
+            if (o.disabled) return;
             apply(section === "audio" ? (o.id != null ? [{ type: "audio", id: o.id }] : []) : [{ type: "subtitle", id: o.id }]);
             hud = { ...hud, overlay: "closed", focus: "audioSubtitles" };
             render(); arm();
@@ -1582,7 +1583,7 @@ function playerScreen(t: Title, p: Profile, url: string, startAt?: number, attem
     // For inspection from a debugger on the TV (tracks, codecs); not used by the app.
     (window as unknown as { __player?: unknown }).__player = engine.player;
     engine.player.ready.then(() => {
-      const say = silentVideoNotice(engine?.audioTracks().length ?? 0, engine?.player.unplayableAudio.map((t) => t.codec) ?? []);
+      const say = silentVideoNotice(engine?.audioTracks().filter((t) => !t.disabled).length ?? 0, engine?.player.unplayableAudio.map((t) => t.codec) ?? []);
       if (say) notice(say, 9_000);
     }).catch(() => undefined);
   } else video.src = url;
