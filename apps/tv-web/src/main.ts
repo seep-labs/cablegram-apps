@@ -1074,7 +1074,7 @@ async function startPlayback(v: Title) {
   }
   if (cancelled) return;
   if (playback.status === "denied") {
-    errorScreen("Playback wasn't approved", playback.message ?? "Playback wasn't approved on the phone",
+    errorScreen("Couldn't play this private title", playback.message ?? "Playback wasn't approved on the phone",
       [button("Back to library", back), button("Try again", () => void startPlayback(v), "panel")], back);
     return;
   }

@@ -215,6 +215,50 @@ describe("resolvePlayback", () => {
     expect(p.headers).toEqual({ "X-Custom": "1" });
     expect(resolveBody).toEqual({ media_item_id: "priv-cloud", attempt_id: "att-cloud" });
   });
+  it("plays from cloud without calling /start when relay ticket fails and cloud copy exists", async () => {
+    const privBoth = parseTitle({
+      id: "priv-both",
+      sources: [
+        { kind: "phone_local", origin_identity: "file-p", private: true, serving_device_id: "ph1" },
+        { kind: "own_cloud", origin_identity: "c1", private: true },
+      ],
+    });
+    const calls: string[] = [];
+    let resolveBody: Record<string, unknown> | null = null;
+    const api = createApi({
+      base: "https://api.example",
+      token: () => "tv-token",
+      fetch: async (url, init) => {
+        calls.push(`${init?.method ?? "GET"} ${url}`);
+        if (url.endsWith("api/playback/private-approvals") && init?.method === "POST") {
+          return json(201, { attempt_id: "att-fallback", expires_at: "2026-10-26T18:00:00Z" });
+        }
+        if (url.endsWith("api/playback/private-approvals/att-fallback")) {
+          return json(200, { attempt_id: "att-fallback", status: "approved" });
+        }
+        if (url.endsWith("api/me")) {
+          return json(200, { devices: [{ id: "ph1", kind: "phone" }] });
+        }
+        if (url.endsWith("api/relay/ticket")) {
+          return json(503, { error: "relay_unavailable" });
+        }
+        if (url.endsWith("api/playback/resolve") && init?.method === "POST") {
+          resolveBody = JSON.parse(init.body as string);
+          return json(200, { status: "ready", url: "https://cloud.example/fallback.mp4", headers: {} });
+        }
+        if (url.includes("/start")) {
+          return json(200, { lan_pass: "pass-consumed" });
+        }
+        return json(404, {});
+      },
+    });
+
+    const p = await api.resolvePlayback(privBoth, "cap", { pollIntervalMs: 5 });
+    expect(p.status).toBe("ready");
+    expect(p.url).toBe("https://cloud.example/fallback.mp4");
+    expect(resolveBody).toEqual({ media_item_id: "priv-both", attempt_id: "att-fallback" });
+    expect(calls.some((c) => c.includes("/start"))).toBe(false);
+  });
   it("maps a PIN failure to its status", async () => {
     const api = createApi({ fetch: async () => json(403, { error: "wrong_pin" }) });
     expect(await api.unlockProfile("p", "0000")).toBe(403);

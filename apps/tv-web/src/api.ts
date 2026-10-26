@@ -61,6 +61,15 @@ export function relayUrl(base: string, phoneId: string, path: string, capability
 
 export const GRANT_WAIT_SECONDS = 60;
 export const DENIED_LABEL = "Playback wasn't approved on the phone";
+export const RELAY_DISABLED_MESSAGE = "Relay playback is not enabled on this server. Play phone-stored videos on the Android TV app over your local network.";
+
+export interface ResolveOptions {
+  onAwaitingApproval?: () => void;
+  onStatus?: (status: string) => void;
+  signal?: AbortSignal;
+  pollIntervalMs?: number;
+  maxWaitSeconds?: number;
+}
 
 function sleep(ms: number, signal?: AbortSignal): Promise<void> {
   return new Promise((resolve) => {
@@ -309,17 +318,7 @@ export function createApi(opts: { base?: string | (() => string); fetch?: Fetch;
     async cancelPrivateApproval(attemptId: string): Promise<void> {
       await call(`api/playback/private-approvals/${encodeURIComponent(attemptId)}/cancel`, { method: "POST", body: "{}" }).catch(() => undefined);
     },
-    async privatePlaybackFlow(
-      title: Title,
-      capability: string | undefined,
-      opts: {
-        onAwaitingApproval?: () => void;
-        onStatus?: (status: string) => void;
-        signal?: AbortSignal;
-        pollIntervalMs?: number;
-        maxWaitSeconds?: number;
-      } = {},
-    ): Promise<Playback> {
+    async privatePlaybackFlow(title: Title, capability: string | undefined, opts: ResolveOptions = {}): Promise<Playback> {
       const none = { headers: {} as Record<string, string> };
       let request: { attemptId: string; expiresAt: string } | null = null;
       try {
@@ -359,17 +358,7 @@ export function createApi(opts: { base?: string | (() => string); fetch?: Fetch;
      * Where a title plays from. A browser cannot pin the phone's self-signed LAN certificate, so the TV web app uses the
      * relay for phone copies and the signed URL for cloud copies. Telegram needs an MTProto client (not built yet).
      */
-    async resolvePlayback(
-      title: Title,
-      capability: string | undefined,
-      opts: {
-        onAwaitingApproval?: () => void;
-        onStatus?: (status: string) => void;
-        signal?: AbortSignal;
-        pollIntervalMs?: number;
-        maxWaitSeconds?: number;
-      } = {},
-    ): Promise<Playback> {
+    async resolvePlayback(title: Title, capability: string | undefined, opts: ResolveOptions = {}): Promise<Playback> {
       const none = { headers: {} as Record<string, string> };
       if (title.sources.some((s) => s.isPrivate)) {
         return api.privatePlaybackFlow(title, capability, opts);
@@ -387,18 +376,18 @@ export function createApi(opts: { base?: string | (() => string); fetch?: Fetch;
               return { ...none, status: "ready", engine: true, url: relayUrl(resolveBase(), phoneDevice.id, `media/${phone.originIdentity}`, capability, ticket) };
             } catch (e) {
               if (e instanceof ApiError && (e.status === 404 || e.status === 410) && !cloud && !live.some((s) => s.kind === "telegram")) {
-                return { ...none, status: "unsupported", message: "Relay playback is not enabled on this server. Play phone-stored videos on the Android TV app over your local network." };
+                return { ...none, status: "unsupported", message: RELAY_DISABLED_MESSAGE };
               }
               if (!cloud) throw e;
             }
           }
         } else if (!cloud && !live.some((s) => s.kind === "telegram")) {
-          return { ...none, status: "unsupported", message: "Relay playback is not enabled on this server. Play phone-stored videos on the Android TV app over your local network." };
+          return { ...none, status: "unsupported", message: RELAY_DISABLED_MESSAGE };
         }
       }
       if (cloud) {
-        const r = await api.resolveCloud(title.id);
-        if (r.status === "ready" && str(r.url)) return { status: "ready", url: r.url, headers: (r.headers as Record<string, string>) ?? {} };
+        const ready = await readyCloudPlayback(title.id);
+        if (ready) return ready;
       }
       const tg = live.find((s) => s.kind === "telegram");
       const ref = TG_DIRECT ? parseTelegramIdentity(tg?.originIdentity) : null;
@@ -410,15 +399,19 @@ export function createApi(opts: { base?: string | (() => string); fetch?: Fetch;
     },
   };
 
+  async function readyCloudPlayback(itemId: string, attemptId?: string): Promise<Playback | null> {
+    const r = await api.resolveCloud(itemId, attemptId);
+    if (r?.status === "ready" && str(r.url)) {
+      return { status: "ready", url: r.url, headers: (r.headers as Record<string, string>) ?? {} };
+    }
+    return null;
+  }
+
   async function awaitApproval(
     attemptId: string,
     title: Title,
     capability: string | undefined,
-    opts: {
-      signal?: AbortSignal;
-      pollIntervalMs?: number;
-      maxWaitSeconds?: number;
-    } = {},
+    opts: ResolveOptions = {},
   ): Promise<Playback> {
     const none = { headers: {} as Record<string, string> };
     const interval = opts.pollIntervalMs ?? 2000;
@@ -443,20 +436,25 @@ export function createApi(opts: { base?: string | (() => string); fetch?: Fetch;
         const cloud = live.some((s) => s.kind === "own_cloud" || s.kind === "web");
         const phone = live.find(isPhoneSource);
 
-        if (cloud && !phone) {
-          const r = await api.resolveCloud(title.id, attemptId);
-          if (r.status === "ready" && str(r.url)) {
-            return { status: "ready", url: r.url, headers: (r.headers as Record<string, string>) ?? {} };
-          }
-          return { ...none, status: "denied", message: DENIED_LABEL };
-        }
-
         if (phone) {
           const cachedCaps = capsCache.get(resolveBase());
           if (!cachedCaps || cachedCaps.features.relay) {
             const phoneDevice = servingPhone(await api.devices(), phone.servingDeviceId);
             if (!phoneDevice || !phone.originIdentity) {
               return { ...none, status: "denied", message: DENIED_LABEL };
+            }
+            let ticket: string;
+            try {
+              ticket = await api.relayTicket(phoneDevice.id);
+            } catch (e) {
+              if (cloud) {
+                const ready = await readyCloudPlayback(title.id, attemptId);
+                if (ready) return ready;
+              }
+              if (e instanceof ApiError && (e.status === 404 || e.status === 410) && !cloud) {
+                return { ...none, status: "unsupported", message: RELAY_DISABLED_MESSAGE };
+              }
+              throw e;
             }
             let pass: { lanPass: string; expiresAt: string };
             try {
@@ -468,36 +466,20 @@ export function createApi(opts: { base?: string | (() => string); fetch?: Fetch;
                 message: "This approval was already used or expired. Start playback again on the TV.",
               };
             }
-            try {
-              const ticket = await api.relayTicket(phoneDevice.id);
-              return {
-                ...none,
-                status: "ready",
-                engine: true,
-                url: relayUrl(resolveBase(), phoneDevice.id, `media/${phone.originIdentity}`, capability, ticket, pass.lanPass),
-              };
-            } catch (e) {
-              if (cloud) {
-                const r = await api.resolveCloud(title.id, attemptId);
-                if (r.status === "ready" && str(r.url)) {
-                  return { status: "ready", url: r.url, headers: (r.headers as Record<string, string>) ?? {} };
-                }
-              }
-              if (e instanceof ApiError && (e.status === 404 || e.status === 410)) {
-                return { ...none, status: "unsupported", message: "Relay playback is not enabled on this server. Play phone-stored videos on the Android TV app over your local network." };
-              }
-              throw e;
-            }
+            return {
+              ...none,
+              status: "ready",
+              engine: true,
+              url: relayUrl(resolveBase(), phoneDevice.id, `media/${phone.originIdentity}`, capability, ticket, pass.lanPass),
+            };
           } else if (!cloud) {
-            return { ...none, status: "unsupported", message: "Relay playback is not enabled on this server. Play phone-stored videos on the Android TV app over your local network." };
+            return { ...none, status: "unsupported", message: RELAY_DISABLED_MESSAGE };
           }
         }
 
         if (cloud) {
-          const r = await api.resolveCloud(title.id, attemptId);
-          if (r.status === "ready" && str(r.url)) {
-            return { status: "ready", url: r.url, headers: (r.headers as Record<string, string>) ?? {} };
-          }
+          const ready = await readyCloudPlayback(title.id, attemptId);
+          if (ready) return ready;
         }
 
         return { ...none, status: "denied", message: DENIED_LABEL };
