@@ -64,7 +64,7 @@ public func watchFraction(_ item: LibraryItem) -> Float {
 }
 
 public func continueWatching(_ items: [LibraryItem]) -> [LibraryItem] {
-    items.filter { $0.positionSeconds > 8 && watchFraction($0) < 0.92 }
+    items.filter(isStarted)
         .sorted { ($0.lastWatchedAt ?? "") > ($1.lastWatchedAt ?? "") }
 }
 
