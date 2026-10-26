@@ -70,6 +70,7 @@ Package Manager chooses the exact versions at build time within those ranges.
 | big-integer | 1.6.52 | Unlicense | <https://github.com/peterolson/BigInteger.js> |
 | buffer | 6.0.3 | MIT | <https://github.com/feross/buffer> |
 | events | 3.3.0 | MIT | <https://github.com/browserify/events> |
+| jsbn | 1.1.0 | MIT | <https://github.com/andyperlitch/jsbn> |
 | qrcode-generator | 2.0.4 | MIT | <https://github.com/kazuhikoarase/qrcode-generator> |
 | async-mutex | 0.3.2 | MIT | <https://github.com/DirtyHairy/async-mutex> |
 | pako | 2.2.0 | MIT AND Zlib | <https://github.com/nodeca/pako> |

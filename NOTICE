@@ -36,7 +36,7 @@ Seep Labs (libs/tv-media/LICENSE and libs/tv-media/NOTICE). It has no runtime de
 it without GPL obligations. Apache-2.0 code can be combined with the GPL-3.0 apps here.
 
 The TV web app (apps/tv-web) additionally bundles, under their own licences: qrcode-generator, GramJS (`telegram`),
-buffer, events and async-mutex (MIT); big-integer (Unlicense); pako (MIT and Zlib); websocket (Apache-2.0); and
+buffer, events, jsbn and async-mutex (MIT); big-integer (Unlicense); pako (MIT and Zlib); websocket (Apache-2.0); and
 @cryptography/aes, which is GPL-3.0-or-later (the app is GPL-3.0, so that is compatible; keep it out of libs/tv-media).
 Direct Telegram playback in that app is built only with VITE_TG_DIRECT=1.
 

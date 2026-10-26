@@ -12,6 +12,7 @@
     "e2e": "node scripts/e2e-engine.mjs"
   },
   "devDependencies": {
+    "@types/jsbn": "^1.2.33",
     "@types/node": "^26.6.5",
     "@vitejs/plugin-legacy": "^7.2.1",
     "playwright-core": "^1.64.1",
@@ -25,6 +26,7 @@
     "big-integer": "^1.6.52",
     "buffer": "^6.0.3",
     "events": "^3.3.0",
+    "jsbn": "^1.1.0",
     "qrcode-generator": "^2.0.4",
     "telegram": "^2.26.22",
     "tv-media": "file:../../libs/tv-media"

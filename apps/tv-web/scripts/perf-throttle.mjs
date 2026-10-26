@@ -63,11 +63,21 @@ try {
     await page.goto(base_url + "/");
     await cdp.send("Emulation.setCPUThrottlingRate", { rate });
     const ige = await page.evaluate(() => window.perf.ige(8));
+    const dh = await page.evaluate(() => window.perf.dh());
     const mp4 = await page.evaluate((u) => window.perf.pump(u, 25), `${base_url}/mp4-hi.mp4`);
     const mkv = await page.evaluate((u) => window.perf.pump(u, 25), `${base_url}/mkv-hi.mkv`);
-    rows.push({ rate, ige, mp4, mkv });
-    console.log(`CPU ${rate}x slower: AES-IGE ${ige.toFixed(1)} MB/s | MP4 20 Mbit/s: ${(mp4.mediaSec / mp4.wallSec).toFixed(1)}x real time | MKV: ${(mkv.mediaSec / mkv.wallSec).toFixed(1)}x real time`);
     await page.close();
+
+    const pageTv = await browser.newPage();
+    const cdpTv = await pageTv.context().newCDPSession(pageTv);
+    await pageTv.addInitScript("delete window.BigInt;");
+    await pageTv.goto(base_url + "/");
+    await cdpTv.send("Emulation.setCPUThrottlingRate", { rate });
+    const dhTv = await pageTv.evaluate(() => window.perf.dh());
+    await pageTv.close();
+
+    rows.push({ rate, ige, mp4, mkv, dh, dhTv });
+    console.log(`CPU ${rate}x slower: AES-IGE ${ige.toFixed(1)} MB/s | MP4 20 Mbit/s: ${(mp4.mediaSec / mp4.wallSec).toFixed(1)}x real time | MKV: ${(mkv.mediaSec / mkv.wallSec).toFixed(1)}x real time | DH 2048-bit (Chromium 63 / no BigInt): ${dhTv.toFixed(2)}s | DH (native BigInt): ${dh.toFixed(2)}s`);
   }
 } finally {
   await browser.close();
