@@ -41,6 +41,12 @@ export class Player extends Emitter<PlayerEvents> {
   private url: string | null = null;
   private lanes: Lane[] = [];
   private offsetSec = 0;
+  /**
+   * Element time minus media time. A file whose first decode time is negative (B-frames: -0.04 s is typical) plays that
+   * much later than its media time, because Chromium 63 (Samsung 2019, Tizen 5.0) drops frames with a negative decode
+   * time up to the next keyframe: the first GOP vanished and playback waited at 0 in front of the gap. hls.js does the same.
+   */
+  private shiftSec = 0;
   private gen = 0;
   private abort = new AbortController();
   private pumping: Promise<void> = Promise.resolve();
@@ -166,14 +172,14 @@ export class Player extends Emitter<PlayerEvents> {
         if (r.length) await lane.queue.remove(0, Math.max(r[r.length - 1][1], this.ms?.duration ?? 0) + 1);
         lane.track = next;
         await lane.queue.append(buildInitSegment(muxTrack(lane)));
-        await demuxer.seek(t, this.abort.signal);
+        await demuxer.seek(this.seekTarget(t), this.abort.signal);
       } else {
         // Different codec: a SourceBuffer cannot change type everywhere (changeType needs Chrome 70), so start a new
         // MediaSource at the playhead.
         this.teardownMediaSource();
         this.lanes = [];
         await this.attach([video, next].filter((x): x is Track => !!x), this.info!.duration);
-        await demuxer.seek(t, this.abort.signal);
+        await demuxer.seek(this.seekTarget(t), this.abort.signal);
         if (t > 0.001) {
           this.suppressSeek = true;
           this.video.currentTime = t;
@@ -219,6 +225,7 @@ export class Player extends Emitter<PlayerEvents> {
       const text = info.tracks.filter((t) => t.kind === "subtitle" && TEXT_SUBTITLES.has(t.codec));
       this.demuxer.setEnabledTracks([video, audio, ...text].filter((t): t is Track => !!t).map((t) => t.id));
       this.offsetSec = -info.minDts;
+      this.shiftSec = Math.max(0, this.offsetSec);
 
       await this.attach([video, audio].filter((t): t is Track => !!t), info.duration);
       this.video.addEventListener("seeking", this.onSeeking);
@@ -228,16 +235,17 @@ export class Player extends Emitter<PlayerEvents> {
       this.video.addEventListener("canplay", this.onResume);
 
       const startAt = this.opts.startAt ?? 0;
-      await this.demuxer.seek(startAt, this.abort.signal);
+      await this.demuxer.seek(this.seekTarget(startAt + this.shiftSec), this.abort.signal);
       if (startAt > 0) {
+        const at = startAt + this.shiftSec;
         this.suppressSeek = true; // the demuxer is already there; the seeking event would only restart the reads
-        this.video.currentTime = startAt;
+        this.video.currentTime = at;
         // Chromium 63 (Samsung 2019, Tizen 5.0) drops a currentTime set before the element has metadata: the playhead
         // stayed at 0 in front of a buffer that starts at startAt, and playback never began. Set it again once it has.
         this.video.addEventListener("loadedmetadata", () => {
-          if (this.destroyed || Math.abs(this.video.currentTime - startAt) < 0.5) return;
+          if (this.destroyed || Math.abs(this.video.currentTime - at) < 0.5) return;
           this.suppressSeek = true;
-          this.video.currentTime = startAt;
+          this.video.currentTime = at;
         }, { once: true });
       }
       this.startPump();
@@ -247,6 +255,15 @@ export class Player extends Emitter<PlayerEvents> {
       this.fail(err);
       throw err;
     }
+  }
+
+  /**
+   * Where the demuxer starts for element time t. Demuxers find the keyframe by decode time, which is up to shiftSec
+   * before its picture: stepping back that much more keeps the picture at or before t, so the playhead never waits in
+   * front of a gap.
+   */
+  private seekTarget(t: number): number {
+    return Math.max(0, t - 2 * this.shiftSec);
   }
 
   /** Whether this TV's decoders accept the track (MediaSource.isTypeSupported). */
@@ -269,10 +286,11 @@ export class Player extends Emitter<PlayerEvents> {
     const opened = new Promise<void>((resolve) => ms.addEventListener("sourceopen", () => resolve(), { once: true }));
     this.video.src = this.url;
     await opened;
-    if (duration > 0) ms.duration = duration;
+    if (duration > 0) ms.duration = duration + this.shiftSec;
     for (const track of tracks) {
       const sb = ms.addSourceBuffer(mimeType(track));
-      sb.timestampOffset = -this.offsetSec;
+      // Fragments carry decode times moved up by offsetSec, so they start at 0; this puts media time 0 at shiftSec.
+      sb.timestampOffset = this.shiftSec - this.offsetSec;
       const queue = new SourceBufferQueue(sb);
       this.lanes.push({ track, queue, sequence: 1, muxId: track.kind === "video" ? 1 : 2 });
     }
@@ -339,8 +357,9 @@ export class Player extends Emitter<PlayerEvents> {
   private emitCues(batch: Sample[]): void {
     const fresh = new Map<number, SubtitleCue[]>();
     for (const sample of batch) {
-      const cue = sample.cue;
-      if (!cue) continue;
+      if (!sample.cue) continue;
+      // on the element's timeline, which the app compares with currentTime
+      const cue = this.shiftSec ? { ...sample.cue, start: sample.cue.start + this.shiftSec, end: sample.cue.end + this.shiftSec } : sample.cue;
       let seen = this.seenCues.get(sample.trackId);
       if (!seen) this.seenCues.set(sample.trackId, (seen = new Map()));
       const key = `${cue.start}|${cue.text}`;
@@ -396,7 +415,7 @@ export class Player extends Emitter<PlayerEvents> {
         const r = rangesOf(lane.queue.sb.buffered);
         if (r.length) await lane.queue.remove(0, Math.max(r[r.length - 1][1], this.ms?.duration ?? 0) + 1);
       }
-      await this.demuxer.seek(t, this.abort.signal);
+      await this.demuxer.seek(this.seekTarget(t), this.abort.signal);
       if (gen !== this.gen) return;
       this.startPump();
     } catch (e) {
