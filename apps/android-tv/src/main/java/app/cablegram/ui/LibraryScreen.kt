@@ -128,6 +128,8 @@ internal fun LibraryScreen(
     var selectedGenre by remember { mutableStateOf<String?>(null) }
     var titlesFilter by remember { mutableStateOf("all") }
     var titlesSort by remember { mutableStateOf(TitlesSort.RecentlyAdded) }
+    // True once a show was opened from the "All titles" grid, so closing it puts focus back on that poster.
+    var gridReturn by remember { mutableStateOf(false) }
     var selectedShow by remember { mutableStateOf<TvShow?>(null) }
     var focusedEntry by remember { mutableStateOf<LibraryEntry?>(null) }
     var rail by remember(selectedType) {
@@ -273,8 +275,8 @@ internal fun LibraryScreen(
                     menuFocus = homeFocus,
                     onTypeSelected = { type ->
                         rail = RailDestination.Home
-                        // The grid starts at its first poster; a poster remembered from the rows must not pull focus off the pill.
-                        if (type == "titles") onExplorerFocus(null, null)
+                        // Pressing the pill opens the grid at its first poster; only coming back from a show restores a poster.
+                        if (type == "titles") gridReturn = false
                         onTypeSelected(type)
                     },
                     onGenreCycle = {
@@ -357,10 +359,10 @@ internal fun LibraryScreen(
                         onFilter = { titlesFilter = it },
                         sort = titlesSort,
                         onSort = { titlesSort = it },
-                        focusId = restoredFocusId,
+                        focusId = if (gridReturn) restoredFocusId else null,
                         menuFocus = homeFocus,
                         onPlay = onPlay,
-                        onSelectShow = selectShow,
+                        onSelectShow = { show -> gridReturn = true; selectShow(show) },
                         onToggleMyList = toggleMyList,
                         onFocused = entryFocused,
                         modifier = Modifier.weight(1f),
