@@ -1,3 +1,4 @@
+import "./abort-polyfill"; // first, before anything creates an AbortController
 import "./style.css";
 import { ApiError, createApi, preflight, relayMessage } from "./api";
 import { API_BASE, WEB_APP_BASE } from "./config";
