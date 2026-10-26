@@ -1039,13 +1039,31 @@ async function startPlayback(v: Title) {
   if (!entry) return;
   const back = () => libraryScreen();
   let cancelled = false;
+  const controller = new AbortController();
+  const cancel = () => {
+    cancelled = true;
+    controller.abort();
+    back();
+  };
   show([h("div", "player-start", undefined, [h("div", "start-card", undefined, [
     h("div", "start-title", "Starting playback…"),
     h("div", "start-sub", displayTitle(v)),
-  ])])], () => { cancelled = true; back(); });
+  ])])], cancel);
   let playback: Playback;
   try {
-    playback = await api.resolvePlayback(v, entry.account.lanCapability);
+    playback = await api.resolvePlayback(v, entry.account.lanCapability, {
+      signal: controller.signal,
+      onAwaitingApproval: () => {
+        if (cancelled) return;
+        show([h("div", "center-screen pad", undefined, [h("div", "approval-panel", undefined, [
+          brandMark(),
+          h("div", "pin-eyebrow", "Waiting for approval"),
+          h("div", "pin-name", displayTitle(v)),
+          h("div", "approval-text", "This title is private. Open Cablegram or its notification on your phone and tap “Allow once”."),
+          button("Cancel", cancel, "raised", true),
+        ])])], cancel);
+      },
+    });
   } catch (e) {
     if (cancelled) return;
     const offline = e instanceof ApiError && e.status === 503;
@@ -1055,6 +1073,11 @@ async function startPlayback(v: Title) {
     return;
   }
   if (cancelled) return;
+  if (playback.status === "denied") {
+    errorScreen("Playback wasn't approved", playback.message ?? "Playback wasn't approved on the phone",
+      [button("Back to library", back), button("Try again", () => void startPlayback(v), "panel")], back);
+    return;
+  }
   if (playback.status !== "ready" || (!playback.url && !playback.telegram)) {
     errorScreen("This video can't play here", playback.message ?? "This video can't play right now.",
       [button("Back to library", back), button("Try again", () => void startPlayback(v), "panel")], back);

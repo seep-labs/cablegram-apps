@@ -135,6 +135,22 @@ try {
     check(!f.error, "fallback plays without error");
   }
 
+  const screenText = () => page.evaluate(() => document.body.innerText.replace(/\s+/g, " "));
+
+  // Private titles: asks for approval on phone, shows waiting card, then plays once approved.
+  await startMock(fixture);
+  const openPrivate = async () => {
+    await page.goto(`http://127.0.0.1:${server.address().port}/`);
+    await until(() => page.evaluate(() => !!document.querySelector(".card")), 10000, "library");
+    await page.evaluate(() => [...document.querySelectorAll(".card")].find((e) => /VID-20261018-WA0012/.test(e.textContent)).onSelect());
+  };
+  await openPrivate();
+  await until(async () => /Waiting for approval/.test(await screenText()) && /Allow once/.test(await screenText()), 10000, "waiting for approval card");
+  check(true, "private title shows waiting for approval card");
+  await until(async () => (await video())?.t > 1, 20000, "private playback to start");
+  const vp = await video();
+  check(vp.src === "blob:", "private title plays through the engine after approval");
+
   // Direct Telegram playback (VITE_TG_DIRECT=1 build): without a session the TV says so instead of failing obscurely.
   build({ VITE_TG_DIRECT: "1" });
   await startMock(fixture);
@@ -143,7 +159,6 @@ try {
     await until(() => page.evaluate(() => !!document.querySelector(".card")), 10000, "library");
     await page.evaluate(() => [...document.querySelectorAll(".card")].find((e) => /Cosmos Laundromat/.test(e.textContent)).onSelect());
   };
-  const screenText = () => page.evaluate(() => document.body.innerText.replace(/\s+/g, " "));
   await openCosmos();
   await until(async () => /Connect Telegram to this TV\?/.test(await screenText()) && /Connect with my phone/.test(await screenText()), 15000, "connect question");
   check(true, "Telegram title without a session asks whether to connect Telegram");
