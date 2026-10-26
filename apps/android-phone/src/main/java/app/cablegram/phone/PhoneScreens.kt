@@ -3,6 +3,7 @@ package app.cablegram.phone
 import androidx.compose.material3.RadioButton
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.aspectRatio
@@ -45,6 +46,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridItemSpanScope
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -233,29 +239,36 @@ private fun LibraryNav(viewModel: PhoneViewModel) {
     }
 }
 
+/** Smallest poster width in the library grid; narrower screens still get three columns. */
+private const val GRID_MIN_POSTER_DP = 104
+
 @Composable
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 private fun LibraryHome(viewModel: PhoneViewModel) {
     val ui = androidx.compose.ui.platform.LocalContext.current.resources
-    var filter by rememberSaveable { mutableStateOf("all") }
-    val queried = searchLibrary(viewModel.items, viewModel.searchQuery)
-    val filtered = when (filter) {
-        "movie" -> movies(queried)
-        "tv" -> tvShows(queried)
-        else -> queried
-    }
+    var typeName by rememberSaveable { mutableStateOf(LibraryTypeFilter.All.name) }
+    val query = LibraryQuery(type = LibraryTypeFilter.valueOf(typeName), search = viewModel.searchQuery)
+    val entries = applyLibraryQuery(viewModel.items, query)
     // Pull down to check for new videos, e.g. one just shared into the Telegram channel.
     androidx.compose.material3.pulltorefresh.PullToRefreshBox(
         isRefreshing = viewModel.librarySyncState == LibrarySyncState.Running,
         onRefresh = viewModel::syncNow,
         modifier = Modifier.fillMaxSize(),
     ) {
-    LazyColumn(
-        Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 28.dp),
+    // Three columns on a phone; wider screens fit more posters of at least GRID_MIN_POSTER_DP.
+    BoxWithConstraints(Modifier.fillMaxSize()) {
+    val gap = 12.dp
+    val sidePadding = 20.dp
+    val columns = maxOf(3, ((maxWidth - sidePadding * 2 + gap) / (GRID_MIN_POSTER_DP.dp + gap)).toInt())
+    val fullRow: (LazyGridItemSpanScope.() -> GridItemSpan) = { GridItemSpan(maxLineSpan) }
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(columns),
+        modifier = Modifier.fillMaxSize().maestro("library_grid"),
+        contentPadding = PaddingValues(start = sidePadding, end = sidePadding, top = 20.dp, bottom = 28.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp),
+        horizontalArrangement = Arrangement.spacedBy(gap),
     ) {
-        item {
+        item(span = fullRow) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     BrandMark(compact = true)
@@ -269,7 +282,7 @@ private fun LibraryHome(viewModel: PhoneViewModel) {
                 }
             }
         }
-        item {
+        item(span = fullRow) {
             OutlinedTextField(
                 value = viewModel.searchQuery,
                 onValueChange = { viewModel.searchQuery = it },
@@ -283,14 +296,21 @@ private fun LibraryHome(viewModel: PhoneViewModel) {
                 shape = RoundedCornerShape(16.dp),
             )
         }
-        item {
+        item(span = fullRow) {
             Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                listOf("all" to R.string.ui_all_a52ace, "movie" to R.string.ui_movies_dff924, "tv" to R.string.ui_tv_shows_222906).forEach { (key, label) ->
-                    FilterChip(selected = filter == key, onClick = { filter = key }, label = { Text(ui.getString(label)) })
+                listOf(
+                    Triple(LibraryTypeFilter.All, "all", R.string.ui_all_a52ace),
+                    Triple(LibraryTypeFilter.Movies, "movies", R.string.ui_movies_dff924),
+                    Triple(LibraryTypeFilter.Shows, "shows", R.string.ui_tv_shows_222906),
+                ).forEach { (type, key, label) ->
+                    FilterChip(
+                        selected = query.type == type, onClick = { typeName = type.name }, label = { Text(ui.getString(label)) },
+                        modifier = Modifier.maestro("library_filter_$key"),
+                    )
                 }
             }
         }
-        item {
+        item(span = fullRow) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
                     Text(if (viewModel.paired) viewModel.tvName else ui.getString(R.string.ui_made_for_your_big_screen_eb0ced), color = Color.White, style = MaterialTheme.typography.titleSmall)
@@ -311,27 +331,36 @@ private fun LibraryHome(viewModel: PhoneViewModel) {
                 }, style = MaterialTheme.typography.labelMedium)
             }
         }
-        viewModel.scanProgress?.let { item { StatusNote(it) } }
-        viewModel.status?.let { item { StatusNote(it) } }
+        viewModel.scanProgress?.let { item(span = fullRow) { StatusNote(it) } }
+        viewModel.status?.let { item(span = fullRow) { StatusNote(it) } }
         when {
-            viewModel.items.isEmpty() -> item {
+            viewModel.items.isEmpty() -> item(span = fullRow) {
                 EmptyState(Icons.Default.Movie, ui.getString(R.string.ui_a_home_for_your_favorites_1b3984), ui.getString(R.string.ui_import_a_few_videos_from_your_phone_your_personal_cine_1f8181), ui.getString(R.string.ui_import_videos_fec728), { viewModel.tab = PhoneTab.Browse })
             }
-            filtered.isEmpty() -> item {
-                EmptyState(Icons.Default.Search, ui.getString(R.string.ui_no_titles_found_2aeb6d), ui.getString(R.string.ui_try_another_title_or_clear_your_filters_to_see_the_who_ab222f), ui.getString(R.string.ui_clear_filters_7179ea), { viewModel.searchQuery = ""; filter = "all" })
+            entries.isEmpty() -> item(span = fullRow) {
+                EmptyState(Icons.Default.Search, ui.getString(R.string.ui_no_titles_found_2aeb6d), ui.getString(R.string.ui_try_another_title_or_clear_your_filters_to_see_the_who_ab222f), ui.getString(R.string.ui_clear_filters_7179ea), { viewModel.searchQuery = ""; typeName = LibraryTypeFilter.All.name })
             }
-            viewModel.searchQuery.isNotBlank() || filter != "all" -> item { Shelf(ui.getString(R.string.ui_titles_77f1d9, (filtered.size).toString()), filtered, viewModel) }
             else -> {
-                if (continueWatching(filtered).isNotEmpty()) item { Shelf(ui.getString(R.string.ui_continue_watching_81ebbe), continueWatching(filtered), viewModel, showProgress = true) }
-                item { Shelf(ui.getString(R.string.ui_recently_added_96ec5d), recentlyAdded(filtered), viewModel) }
-                if (movies(filtered).isNotEmpty()) item { Shelf(ui.getString(R.string.ui_movies_dff924), movies(filtered), viewModel) }
-                if (tvShows(filtered).isNotEmpty()) item { Shelf(ui.getString(R.string.ui_tv_shows_222906), tvShows(filtered), viewModel) }
-                viewModel.collections.forEach { collection ->
-                    val collectionItems = filtered.filter { collection.id in it.collectionIds }
-                    if (collectionItems.isNotEmpty()) item(key = "collection_${collection.id}") { Shelf(collection.name, collectionItems, viewModel) }
+                if (!query.hasFilters) {
+                    val watching = continueWatching(viewModel.items)
+                    if (watching.isNotEmpty()) item(span = fullRow) { Shelf(ui.getString(R.string.ui_continue_watching_81ebbe), watching, viewModel, showProgress = true) }
+                }
+                item(span = fullRow) {
+                    Text(
+                        ui.getString(R.string.ui_titles_77f1d9, entries.size.toString()),
+                        color = VlcMuted, style = MaterialTheme.typography.labelLarge, modifier = Modifier.maestro("library_count"),
+                    )
+                }
+                // A series filtered down to some episodes still opens as the whole series (see PhoneViewModel.openedSeries).
+                items(entries, key = { it.key }) { entry ->
+                    when (entry) {
+                        is LibraryEntry.Film -> PosterCard(entry.item, false, viewModel, Modifier.fillMaxWidth())
+                        is LibraryEntry.Series -> SeriesCard(entry, false, viewModel, Modifier.fillMaxWidth())
+                    }
                 }
             }
         }
+    }
     }
     }
 }
@@ -400,18 +429,18 @@ private fun Shelf(title: String, items: List<LibraryItem>, viewModel: PhoneViewM
 }
 
 @Composable
-private fun SeriesCard(series: LibraryEntry.Series, showProgress: Boolean, viewModel: PhoneViewModel) {
+private fun SeriesCard(series: LibraryEntry.Series, showProgress: Boolean, viewModel: PhoneViewModel, modifier: Modifier = Modifier.width(144.dp)) {
     val ui = androidx.compose.ui.platform.LocalContext.current.resources
     val lead = series.lead
     Column(
-        Modifier
-            .width(144.dp)
+        modifier
             .clickable { viewModel.openSeries(series) }
             .maestro("series_${series.key}"),
     ) {
         Box(
             Modifier
-                .size(144.dp, 210.dp)
+                .fillMaxWidth()
+                .aspectRatio(144f / 210f)
                 .clip(RoundedCornerShape(16.dp))
                 .background(Color(0xFF1E1E1E)),
             contentAlignment = Alignment.Center,
@@ -512,7 +541,7 @@ private fun SeriesOverlay(viewModel: PhoneViewModel, series: LibraryEntry.Series
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun PosterCard(item: LibraryItem, showProgress: Boolean, viewModel: PhoneViewModel) {
+private fun PosterCard(item: LibraryItem, showProgress: Boolean, viewModel: PhoneViewModel, modifier: Modifier = Modifier.width(144.dp)) {
     val ui = androidx.compose.ui.platform.LocalContext.current.resources
     // Flow 2 (legacy parity): a TMDb poster always outranks the extracted
     // still. posterPath is only used when no TMDb artwork was downloaded yet.
@@ -520,8 +549,7 @@ private fun PosterCard(item: LibraryItem, showProgress: Boolean, viewModel: Phon
     val cardKey = remember { "${item.id}:${java.util.UUID.randomUUID()}" }
     val menu = viewModel.actionMenuId == cardKey
     Column(
-        Modifier
-            .width(144.dp)
+        modifier
             .combinedClickable(
                 onClick = { viewModel.openItem(item) },
                 onLongClick = { viewModel.actionMenuId = cardKey },
@@ -530,7 +558,8 @@ private fun PosterCard(item: LibraryItem, showProgress: Boolean, viewModel: Phon
     ) {
         Box(
             Modifier
-                .size(144.dp, 210.dp)
+                .fillMaxWidth()
+                .aspectRatio(144f / 210f)
                 .clip(RoundedCornerShape(16.dp))
                 .background(Color(0xFF1E1E1E)),
             contentAlignment = Alignment.Center,

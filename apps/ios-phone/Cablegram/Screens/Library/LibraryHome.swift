@@ -1,15 +1,20 @@
 import CablegramCore
 import SwiftUI
 
-/// Port of `LibraryHome`: header, search, filter chips, the sync line, then the shelves.
+/// Port of `LibraryHome`: header, search, filter chips, the sync line, the Continue watching row, then every title once in a grid.
 struct LibraryHome: View {
     let viewModel: PhoneViewModel
-    @State private var filter = "all"
+    @State private var type = LibraryTypeFilter.all
+    @State private var gridWidth: CGFloat = 0
+
+    /// Smallest poster width; narrower screens still get three columns, wider ones (iPad) fit more.
+    private static let minPoster: CGFloat = 104
+    private static let gap: CGFloat = 12
 
     var body: some View {
         @Bindable var vm = viewModel
-        let queried = searchLibrary(viewModel.items, query: viewModel.searchQuery)
-        let filtered = filter == "movie" ? movies(queried) : filter == "tv" ? tvShows(queried) : queried
+        let query = LibraryQuery(type: type, search: viewModel.searchQuery)
+        let entries = applyLibraryQuery(viewModel.items, query)
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 20) {
                 header
@@ -19,8 +24,11 @@ struct LibraryHome: View {
                 syncButton
                 if let step = viewModel.prepareStep { StatusNote(message: step) }
                 if let status = viewModel.status { StatusNote(message: status) }
-                content(filtered)
+                content(entries, query)
             }
+            .background(GeometryReader { geo in
+                Color.clear.onAppear { gridWidth = geo.size.width }.onChange(of: geo.size.width) { _, width in gridWidth = width }
+            })
             .padding(.horizontal, 20).padding(.top, 20).padding(.bottom, 28)
         }
         // Pull down to check for new videos, e.g. one just shared into the Telegram channel.
@@ -70,8 +78,9 @@ struct LibraryHome: View {
     private var chips: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                ForEach([("all", "ui_all_a52ace"), ("movie", "ui_movies_dff924"), ("tv", "ui_tv_shows_222906")], id: \.0) { key, label in
-                    FilterChip(label: label, selected: filter == key) { filter = key }
+                ForEach([(LibraryTypeFilter.all, "all", "ui_all_a52ace"), (.movies, "movies", "ui_movies_dff924"), (.shows, "shows", "ui_tv_shows_222906")], id: \.1) { filterType, key, label in
+                    FilterChip(label: label, selected: type == filterType) { type = filterType }
+                        .accessibilityIdentifier("library_filter_\(key)")
                 }
             }
         }
@@ -104,25 +113,31 @@ struct LibraryHome: View {
         .buttonStyle(AccentTextButtonStyle()).disabled(state == .running)
     }
 
-    @ViewBuilder private func content(_ filtered: [LibraryItem]) -> some View {
+    @ViewBuilder private func content(_ entries: [LibraryEntry], _ query: LibraryQuery) -> some View {
         if viewModel.items.isEmpty {
             EmptyState(symbol: "movieclapper", title: L("ui_a_home_for_your_favorites_1b3984"),
                        message: L("ui_import_a_few_videos_from_your_phone_your_personal_cine_1f8181"), action: L("ui_import_videos_fec728")) { viewModel.selectTab(.browse) }
-        } else if filtered.isEmpty {
+        } else if entries.isEmpty {
             EmptyState(symbol: "magnifyingglass", title: L("ui_no_titles_found_2aeb6d"), message: L("ui_try_another_title_or_clear_your_filters_to_see_the_who_ab222f"),
-                       action: L("ui_clear_filters_7179ea")) { viewModel.searchQuery = ""; filter = "all" }
-        } else if !viewModel.searchQuery.trimmingCharacters(in: .whitespaces).isEmpty || filter != "all" {
-            Shelf(title: L("ui_titles_77f1d9", "\(filtered.count)"), items: filtered, viewModel: viewModel)
+                       action: L("ui_clear_filters_7179ea")) { viewModel.searchQuery = ""; type = .all }
         } else {
-            let watching = continueWatching(filtered)
-            if !watching.isEmpty { Shelf(title: L("ui_continue_watching_81ebbe"), items: watching, viewModel: viewModel, showProgress: true) }
-            Shelf(title: L("ui_recently_added_96ec5d"), items: recentlyAdded(filtered), viewModel: viewModel)
-            if !movies(filtered).isEmpty { Shelf(title: L("ui_movies_dff924"), items: movies(filtered), viewModel: viewModel) }
-            if !tvShows(filtered).isEmpty { Shelf(title: L("ui_tv_shows_222906"), items: tvShows(filtered), viewModel: viewModel) }
-            ForEach(viewModel.collections) { collection in
-                let inCollection = filtered.filter { $0.collectionIds.contains(collection.id) }
-                if !inCollection.isEmpty { Shelf(title: collection.name, items: inCollection, viewModel: viewModel) }
+            if !query.hasFilters {
+                let watching = continueWatching(viewModel.items)
+                if !watching.isEmpty { Shelf(title: L("ui_continue_watching_81ebbe"), items: watching, viewModel: viewModel, showProgress: true) }
             }
+            Text(L("ui_titles_77f1d9", "\(entries.count)")).font(PhoneFont.labelLarge).foregroundStyle(Color.phoneMuted)
+                .accessibilityIdentifier("library_count")
+            // A series filtered down to some episodes still opens as the whole series: the series page looks it up by key.
+            let columns = Array(repeating: GridItem(.flexible(), spacing: Self.gap), count: max(3, Int((gridWidth + Self.gap) / (Self.minPoster + Self.gap))))
+            LazyVGrid(columns: columns, alignment: .leading, spacing: 20) {
+                ForEach(entries) { entry in
+                    switch entry {
+                    case .film(let item): PosterCard(item: item, showProgress: false, viewModel: viewModel, width: nil)
+                    case .series: SeriesCard(entry: entry, showProgress: false, viewModel: viewModel, width: nil)
+                    }
+                }
+            }
+            .accessibilityIdentifier("library_grid")
         }
     }
 }
@@ -192,6 +207,13 @@ struct Shelf: View {
     }
 }
 
+private extension View {
+    /// A 144 x 210 poster on a shelf, or a flexible one with the same proportions in the grid.
+    @ViewBuilder func posterFrame(width: CGFloat?) -> some View {
+        if let width { frame(width: width, height: width * 210 / 144) } else { aspectRatio(144.0 / 210.0, contentMode: .fit).frame(maxWidth: .infinity) }
+    }
+}
+
 private struct Badge: View {
     let text: String
 
@@ -222,6 +244,8 @@ struct PosterCard: View {
     let item: LibraryItem
     let showProgress: Bool
     let viewModel: PhoneViewModel
+    /// The shelf's fixed poster width, or nil to fill a grid cell.
+    var width: CGFloat? = 144
 
     var body: some View {
         Button { viewModel.openItem(item) } label: {
@@ -241,7 +265,7 @@ struct PosterCard: View {
                         if showProgress { ProgressBar(fraction: watchFraction(item)) }
                     }
                 }
-                .frame(width: 144, height: 210).clipShape(RoundedRectangle(cornerRadius: 16))
+                .posterFrame(width: width).clipShape(RoundedRectangle(cornerRadius: 16))
                 Text(item.title).font(.system(.subheadline)).foregroundStyle(.white).lineLimit(2).multilineTextAlignment(.leading).padding(.top, 10)
                 Text(key: storageBadge(item).statusLineKey)
                     .font(.system(.caption2)).foregroundStyle(storageBadge(item) == .failed ? Color(hex: 0xFFB74D) : Color.phoneMuted).lineLimit(2).multilineTextAlignment(.leading)
@@ -249,7 +273,7 @@ struct PosterCard: View {
                     Text(remainingDuration(item).map { L("ui_left_bc8cab", $0) } ?? percentText(item)).font(.system(.caption2)).foregroundStyle(Color.phoneMuted)
                 }
             }
-            .frame(width: 144, alignment: .leading)
+            .frame(width: width, alignment: .leading).frame(maxWidth: width == nil ? .infinity : nil, alignment: .leading)
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier("poster_\(item.id)")
@@ -261,6 +285,8 @@ struct SeriesCard: View {
     let entry: LibraryEntry
     let showProgress: Bool
     let viewModel: PhoneViewModel
+    /// The shelf's fixed poster width, or nil to fill a grid cell.
+    var width: CGFloat? = 144
 
     var body: some View {
         let lead = entry.lead
@@ -274,7 +300,7 @@ struct SeriesCard: View {
                         if showProgress { ProgressBar(fraction: watchFraction(lead)) }
                     }
                 }
-                .frame(width: 144, height: 210).clipShape(RoundedRectangle(cornerRadius: 16))
+                .posterFrame(width: width).clipShape(RoundedRectangle(cornerRadius: 16))
                 Text(entry.title).font(.system(.subheadline)).foregroundStyle(.white).lineLimit(2).multilineTextAlignment(.leading).padding(.top, 10)
                 Text(seriesSummary(entry)).font(.system(.caption2)).foregroundStyle(Color.phoneMuted).lineLimit(1)
                 if showProgress {
@@ -282,7 +308,7 @@ struct SeriesCard: View {
                     Text(parts.isEmpty ? percentText(lead) : parts.joined(separator: " · ")).font(.system(.caption2)).foregroundStyle(Color.phoneMuted)
                 }
             }
-            .frame(width: 144, alignment: .leading)
+            .frame(width: width, alignment: .leading).frame(maxWidth: width == nil ? .infinity : nil, alignment: .leading)
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier("series_\(entry.key)")
