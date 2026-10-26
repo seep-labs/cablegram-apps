@@ -10,13 +10,14 @@ import bigInt from "big-integer";
 import { Api, TelegramClient, errors, helpers } from "telegram";
 import { StringSession } from "telegram/sessions";
 import { fastModExp } from "./telegram-modpow";
-
-// Accelerate MTProto auth-key exchange (2048-bit Diffie-Hellman) on slow CPUs / Chromium 63
-(helpers as Record<string, unknown>)["modExp"] = fastModExp;
 import { peerOf } from "./telegram-identity";
 import type { TelegramRef } from "./telegram-identity";
 import { loginLink } from "./telegram-link";
 import { Slots } from "./telegram-slots";
+
+// The auth-key exchange (2048-bit Diffie-Hellman) took ~19 s on a 2019 Samsung TV with GramJS's own modExp. The handshake
+// reads helpers.modExp at call time, also in the bundle, so replacing it here is enough.
+(helpers as Record<string, unknown>)["modExp"] = fastModExp;
 
 export const SESSION_KEY = "cablegram.tv.tgSession";
 
