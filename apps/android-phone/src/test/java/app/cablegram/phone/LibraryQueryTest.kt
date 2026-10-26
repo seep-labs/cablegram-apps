@@ -110,3 +110,47 @@ class LibraryQueryTest {
         assertTrue(LibraryQuery(collectionIds = setOf("kids")).hasFilters)
     }
 }
+
+class LibraryQueryStoreTest {
+    @Test
+    fun `filters and sort survive a round trip, search is not kept`() {
+        val query = LibraryQuery(
+            type = LibraryTypeFilter.Shows, locations = setOf(LibraryLocation.Telegram, LibraryLocation.Cloud),
+            watched = WatchedFilter.Started, collectionIds = setOf("kids", "fav"), search = "dune", sort = LibrarySort.SizeLargest,
+        )
+        assertEquals(query.copy(search = ""), decodeLibraryQuery(encodeLibraryQuery(query)))
+    }
+
+    @Test
+    fun `missing, broken or unknown stored values give the defaults`() {
+        assertEquals(LibraryQuery(), decodeLibraryQuery(null))
+        assertEquals(LibraryQuery(), decodeLibraryQuery("not json"))
+        assertEquals(
+            LibraryQuery(sort = LibrarySort.Year, locations = setOf(LibraryLocation.Cloud)),
+            decodeLibraryQuery("""{"type":"Anime","locations":["Cloud","Mars"],"watched":"?","sort":"Year","future":1}"""),
+        )
+    }
+
+    @Test
+    fun `reads what the iPhone app writes`() {
+        assertEquals(
+            LibraryQuery(type = LibraryTypeFilter.Movies, locations = setOf(LibraryLocation.OnPhone, LibraryLocation.Cloud), collectionIds = setOf("a", "b"), sort = LibrarySort.TitleAZ),
+            decodeLibraryQuery("""{"collections":["a","b"],"locations":["Cloud","OnPhone"],"sort":"TitleAZ","type":"Movies","watched":"Any"}"""),
+        )
+    }
+
+    @Test
+    fun `collections that no longer exist are dropped`() {
+        val query = LibraryQuery(collectionIds = setOf("kids", "gone"))
+        assertEquals(setOf("kids"), query.withoutUnknownCollections(setOf("kids", "fav")).collectionIds)
+        assertEquals(emptySet<String>(), query.withoutUnknownCollections(emptySet()).collectionIds)
+    }
+
+    @Test
+    fun `the More chip counts location, Watched and collection filters but not type, sort or the chip filters`() {
+        assertEquals(0, LibraryQuery(type = LibraryTypeFilter.Movies, sort = LibrarySort.Year).moreFilterCount)
+        assertEquals(0, LibraryQuery(watched = WatchedFilter.Unwatched).moreFilterCount)
+        assertEquals(0, LibraryQuery(watched = WatchedFilter.Started).moreFilterCount)
+        assertEquals(4, LibraryQuery(locations = setOf(LibraryLocation.Cloud), watched = WatchedFilter.Watched, collectionIds = setOf("a", "b")).moreFilterCount)
+    }
+}

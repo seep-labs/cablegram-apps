@@ -13,4 +13,10 @@
         <item quantity="many">"%1$d сезонов"</item>
         <item quantity="other">"%1$d сезона"</item>
     </plurals>
+    <plurals name="library_title_count">
+        <item quantity="one">"%1$d название"</item>
+        <item quantity="few">"%1$d названия"</item>
+        <item quantity="many">"%1$d названий"</item>
+        <item quantity="other">"%1$d названия"</item>
+    </plurals>
 </resources>

@@ -329,6 +329,14 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
     var selectedId by mutableStateOf<String?>(null)
         private set
     var searchQuery by mutableStateOf("")
+    /** Library filters and sort, remembered on this phone; the search text is [searchQuery]. */
+    var libraryFilters by mutableStateOf(LibraryQueryStore.load(application))
+        private set
+
+    fun updateLibraryFilters(next: LibraryQuery) {
+        libraryFilters = next.copy(search = "")
+        LibraryQueryStore.save(getApplication(), libraryFilters)
+    }
     var editingMetadata by mutableStateOf(false)
     // Smart subtitles: the saved subtitle (if any) for the open title, and whether the Find Subtitles flow is showing.
     var subtitleFlowOpen by mutableStateOf(false)

@@ -17,4 +17,12 @@
         <item quantity="many">"%1$d موسم"</item>
         <item quantity="other">"%1$d موسم"</item>
     </plurals>
+    <plurals name="library_title_count">
+        <item quantity="zero">"%1$d عنوان"</item>
+        <item quantity="one">"عنوان واحد"</item>
+        <item quantity="two">"عنوانان"</item>
+        <item quantity="few">"%1$d عناوين"</item>
+        <item quantity="many">"%1$d عنوانًا"</item>
+        <item quantity="other">"%1$d عنوان"</item>
+    </plurals>
 </resources>

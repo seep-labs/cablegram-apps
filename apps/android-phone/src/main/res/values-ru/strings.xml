@@ -1052,4 +1052,27 @@
     <string name="tv_rename_title" formatted="false">"Переименовать телевизор"</string>
     <string name="tv_name_label" formatted="false">"Название телевизора"</string>
     <string name="ui_this_phone_uses_your_own_server_on_the_tv_choose_use_y_2bf9a0" formatted="false">"Этот телефон использует ваш сервер. Сначала на телевизоре выберите «Использовать свой сервер» и введите %1$s."</string>
+    <string name="library_filter_unwatched">"Не просмотрено"</string>
+    <string name="library_filter_in_progress">"В процессе"</string>
+    <string name="library_filter_more">"Ещё"</string>
+    <string name="library_filter_more_active">"Ещё (%1$d)"</string>
+    <string name="library_sort_button">"Сортировка: %1$s"</string>
+    <string name="library_sort_last_watched">"Недавно просмотренные"</string>
+    <string name="library_sort_title">"Название А–Я"</string>
+    <string name="library_sort_year">"Год"</string>
+    <string name="library_sort_size">"Размер (сначала большие)"</string>
+    <string name="library_filter_sheet_title">"Фильтры"</string>
+    <string name="library_where_heading">"Где находится"</string>
+    <string name="library_where_phone">"На этом телефоне"</string>
+    <string name="library_where_cloud">"Копия в облаке"</string>
+    <string name="library_where_telegram">"В Telegram"</string>
+    <string name="library_where_unavailable">"Источник недоступен"</string>
+    <string name="library_progress_heading">"Прогресс"</string>
+    <string name="library_watched_any">"Любые"</string>
+    <string name="library_watched_started">"Начато"</string>
+    <string name="library_watched_done">"Просмотрено"</string>
+    <string name="library_collection_heading">"Коллекция"</string>
+    <string name="library_filter_clear_all">"Сбросить всё"</string>
+    <string name="library_filter_show">"Показать: %1$d"</string>
+    <string name="library_filter_remove">"Убрать фильтр %1$s"</string>
 </resources>

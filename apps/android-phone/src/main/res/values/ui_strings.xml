@@ -1015,4 +1015,27 @@
     <string name="ui_badge_unavailable">"Unavailable"</string>
     <string name="ui_badge_not_on_phone">"Not on this phone"</string>
     <string name="ui_this_phone_uses_your_own_server_on_the_tv_choose_use_y_2bf9a0" formatted="false">"This phone uses your own server. On the TV, choose Use your own server and enter %1$s first."</string>
+    <string name="library_filter_unwatched">"Unwatched"</string>
+    <string name="library_filter_in_progress">"In progress"</string>
+    <string name="library_filter_more">"More"</string>
+    <string name="library_filter_more_active">"More (%1$d)"</string>
+    <string name="library_sort_button">"Sort: %1$s"</string>
+    <string name="library_sort_last_watched">"Last watched"</string>
+    <string name="library_sort_title">"Title A–Z"</string>
+    <string name="library_sort_year">"Year"</string>
+    <string name="library_sort_size">"Size (largest)"</string>
+    <string name="library_filter_sheet_title">"Filters"</string>
+    <string name="library_where_heading">"Where it is"</string>
+    <string name="library_where_phone">"On this phone"</string>
+    <string name="library_where_cloud">"Cloud copy"</string>
+    <string name="library_where_telegram">"On Telegram"</string>
+    <string name="library_where_unavailable">"Source unavailable"</string>
+    <string name="library_progress_heading">"Progress"</string>
+    <string name="library_watched_any">"Any"</string>
+    <string name="library_watched_started">"Started"</string>
+    <string name="library_watched_done">"Watched"</string>
+    <string name="library_collection_heading">"Collection"</string>
+    <string name="library_filter_clear_all">"Clear all"</string>
+    <string name="library_filter_show">"Show %1$d"</string>
+    <string name="library_filter_remove">"Remove filter %1$s"</string>
 </resources>

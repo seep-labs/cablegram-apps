@@ -1052,4 +1052,27 @@
     <string name="tv_rename_title" formatted="false">"Renombrar la tele"</string>
     <string name="tv_name_label" formatted="false">"Nombre de la tele"</string>
     <string name="ui_this_phone_uses_your_own_server_on_the_tv_choose_use_y_2bf9a0" formatted="false">"Este teléfono usa tu propio servidor. En la TV, elige primero «Usar tu propio servidor» e introduce %1$s."</string>
+    <string name="library_filter_unwatched">"Sin ver"</string>
+    <string name="library_filter_in_progress">"En curso"</string>
+    <string name="library_filter_more">"Más"</string>
+    <string name="library_filter_more_active">"Más (%1$d)"</string>
+    <string name="library_sort_button">"Orden: %1$s"</string>
+    <string name="library_sort_last_watched">"Visto recientemente"</string>
+    <string name="library_sort_title">"Título A–Z"</string>
+    <string name="library_sort_year">"Año"</string>
+    <string name="library_sort_size">"Tamaño (mayor primero)"</string>
+    <string name="library_filter_sheet_title">"Filtros"</string>
+    <string name="library_where_heading">"Dónde está"</string>
+    <string name="library_where_phone">"En este teléfono"</string>
+    <string name="library_where_cloud">"Copia en la nube"</string>
+    <string name="library_where_telegram">"En Telegram"</string>
+    <string name="library_where_unavailable">"Origen no disponible"</string>
+    <string name="library_progress_heading">"Progreso"</string>
+    <string name="library_watched_any">"Cualquiera"</string>
+    <string name="library_watched_started">"Empezado"</string>
+    <string name="library_watched_done">"Visto"</string>
+    <string name="library_collection_heading">"Colección"</string>
+    <string name="library_filter_clear_all">"Borrar todo"</string>
+    <string name="library_filter_show">"Mostrar %1$d"</string>
+    <string name="library_filter_remove">"Quitar filtro %1$s"</string>
 </resources>

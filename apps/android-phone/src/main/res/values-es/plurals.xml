@@ -9,4 +9,8 @@
         <item quantity="one">"%1$d temporada"</item>
         <item quantity="other">"%1$d temporadas"</item>
     </plurals>
+    <plurals name="library_title_count">
+        <item quantity="one">"%1$d título"</item>
+        <item quantity="other">"%1$d títulos"</item>
+    </plurals>
 </resources>

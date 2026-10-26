@@ -50,6 +50,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridItemSpanScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -99,6 +100,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -247,9 +249,11 @@ private const val GRID_MIN_POSTER_DP = 104
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 private fun LibraryHome(viewModel: PhoneViewModel) {
     val ui = androidx.compose.ui.platform.LocalContext.current.resources
-    var typeName by rememberSaveable { mutableStateOf(LibraryTypeFilter.All.name) }
-    val query = LibraryQuery(type = LibraryTypeFilter.valueOf(typeName), search = viewModel.searchQuery)
+    val knownCollections = viewModel.collections.mapTo(mutableSetOf()) { it.id }
+    val filters = viewModel.libraryFilters.withoutUnknownCollections(knownCollections)
+    val query = filters.copy(search = viewModel.searchQuery)
     val entries = applyLibraryQuery(viewModel.items, query)
+    var moreOpen by rememberSaveable { mutableStateOf(false) }
     // Pull down to check for new videos, e.g. one just shared into the Telegram channel.
     androidx.compose.material3.pulltorefresh.PullToRefreshBox(
         isRefreshing = viewModel.librarySyncState == LibrarySyncState.Running,
@@ -262,7 +266,14 @@ private fun LibraryHome(viewModel: PhoneViewModel) {
     val sidePadding = 20.dp
     val columns = maxOf(3, ((maxWidth - sidePadding * 2 + gap) / (GRID_MIN_POSTER_DP.dp + gap)).toInt())
     val fullRow: (LazyGridItemSpanScope.() -> GridItemSpan) = { GridItemSpan(maxLineSpan) }
+    val gridState = rememberLazyGridState()
+    val showContinue = viewModel.items.isNotEmpty() && !query.hasFilters && continueWatching(viewModel.items).isNotEmpty()
+    // Items before the filter bar: header, search, TV line, the two optional notes, the Continue watching row.
+    val barIndex = 3 + (if (viewModel.scanProgress != null) 1 else 0) + (if (viewModel.status != null) 1 else 0) + (if (showContinue) 1 else 0)
+    val pinBar by remember(barIndex) { derivedStateOf { gridState.firstVisibleItemIndex > barIndex } }
+    val onFiltersChange: (LibraryQuery) -> Unit = viewModel::updateLibraryFilters
     LazyVerticalGrid(
+        state = gridState,
         columns = GridCells.Fixed(columns),
         modifier = Modifier.fillMaxSize().maestro("library_grid"),
         contentPadding = PaddingValues(start = sidePadding, end = sidePadding, top = 20.dp, bottom = 28.dp),
@@ -298,20 +309,6 @@ private fun LibraryHome(viewModel: PhoneViewModel) {
             )
         }
         item(span = fullRow) {
-            Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                listOf(
-                    Triple(LibraryTypeFilter.All, "all", R.string.ui_all_a52ace),
-                    Triple(LibraryTypeFilter.Movies, "movies", R.string.ui_movies_dff924),
-                    Triple(LibraryTypeFilter.Shows, "shows", R.string.ui_tv_shows_222906),
-                ).forEach { (type, key, label) ->
-                    FilterChip(
-                        selected = query.type == type, onClick = { typeName = type.name }, label = { Text(ui.getString(label)) },
-                        modifier = Modifier.maestro("library_filter_$key"),
-                    )
-                }
-            }
-        }
-        item(span = fullRow) {
             // One compact line, so the grid starts higher: the TV, its Connect/Remote action, and the sync button.
             val syncLabel = when (viewModel.librarySyncState) {
                 LibrarySyncState.Running -> ui.getString(R.string.ui_syncing_library_8e43e6)
@@ -334,24 +331,20 @@ private fun LibraryHome(viewModel: PhoneViewModel) {
         }
         viewModel.scanProgress?.let { item(span = fullRow) { StatusNote(it) } }
         viewModel.status?.let { item(span = fullRow) { StatusNote(it) } }
-        when {
-            viewModel.items.isEmpty() -> item(span = fullRow) {
+        if (viewModel.items.isEmpty()) {
+            item(span = fullRow) {
                 EmptyState(Icons.Default.Movie, ui.getString(R.string.ui_a_home_for_your_favorites_1b3984), ui.getString(R.string.ui_import_a_few_videos_from_your_phone_your_personal_cine_1f8181), ui.getString(R.string.ui_import_videos_fec728), { viewModel.tab = PhoneTab.Browse })
             }
-            entries.isEmpty() -> item(span = fullRow) {
-                EmptyState(Icons.Default.Search, ui.getString(R.string.ui_no_titles_found_2aeb6d), ui.getString(R.string.ui_try_another_title_or_clear_your_filters_to_see_the_who_ab222f), ui.getString(R.string.ui_clear_filters_7179ea), { viewModel.searchQuery = ""; typeName = LibraryTypeFilter.All.name })
+        } else {
+            if (showContinue) item(span = fullRow) { Column { Shelf(ui.getString(R.string.ui_continue_watching_81ebbe), continueWatching(viewModel.items), viewModel, showProgress = true, posterWidth = 112.dp) } }
+            item(span = fullRow, key = "filter_bar") {
+                LibraryFilterBar(filters, entries.size, viewModel.collections, onFiltersChange, { moreOpen = true })
             }
-            else -> {
-                if (!query.hasFilters) {
-                    val watching = continueWatching(viewModel.items)
-                    if (watching.isNotEmpty()) item(span = fullRow) { Column { Shelf(ui.getString(R.string.ui_continue_watching_81ebbe), watching, viewModel, showProgress = true, posterWidth = 112.dp) } }
-                }
+            if (entries.isEmpty()) {
                 item(span = fullRow) {
-                    Text(
-                        ui.getString(R.string.ui_titles_77f1d9, entries.size.toString()),
-                        color = VlcMuted, style = MaterialTheme.typography.labelLarge, modifier = Modifier.maestro("library_count"),
-                    )
+                    EmptyState(Icons.Default.Search, ui.getString(R.string.ui_no_titles_found_2aeb6d), ui.getString(R.string.ui_try_another_title_or_clear_your_filters_to_see_the_who_ab222f), ui.getString(R.string.ui_clear_filters_7179ea), { viewModel.searchQuery = ""; onFiltersChange(filters.cleared()) })
                 }
+            } else {
                 // A series filtered down to some episodes still opens as the whole series (see PhoneViewModel.openedSeries).
                 items(entries, key = { it.key }) { entry ->
                     when (entry) {
@@ -361,6 +354,14 @@ private fun LibraryHome(viewModel: PhoneViewModel) {
                 }
             }
         }
+    }
+    if (pinBar) {
+        Surface(color = VlcBlack, modifier = Modifier.align(Alignment.TopCenter).fillMaxWidth()) {
+            LibraryFilterBar(filters, entries.size, viewModel.collections, onFiltersChange, { moreOpen = true }, Modifier.padding(horizontal = sidePadding, vertical = 8.dp))
+        }
+    }
+    if (moreOpen) {
+        LibraryFilterSheet(filters, entries.size, viewModel.collections, onFiltersChange, onDismiss = { moreOpen = false })
     }
     }
     }

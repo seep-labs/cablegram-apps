@@ -1052,4 +1052,27 @@
     <string name="tv_rename_title" formatted="false">"إعادة تسمية التلفزيون"</string>
     <string name="tv_name_label" formatted="false">"اسم التلفزيون"</string>
     <string name="ui_this_phone_uses_your_own_server_on_the_tv_choose_use_y_2bf9a0" formatted="false">"يستخدم هذا الهاتف خادمك الخاص. على التلفاز، اختر أولاً «استخدم خادمك الخاص» وأدخل %1$s."</string>
+    <string name="library_filter_unwatched">"غير مشاهد"</string>
+    <string name="library_filter_in_progress">"قيد المشاهدة"</string>
+    <string name="library_filter_more">"المزيد"</string>
+    <string name="library_filter_more_active">"المزيد (%1$d)"</string>
+    <string name="library_sort_button">"الترتيب: %1$s"</string>
+    <string name="library_sort_last_watched">"آخر ما شوهد"</string>
+    <string name="library_sort_title">"العنوان أ–ي"</string>
+    <string name="library_sort_year">"السنة"</string>
+    <string name="library_sort_size">"الحجم (الأكبر أولاً)"</string>
+    <string name="library_filter_sheet_title">"عوامل التصفية"</string>
+    <string name="library_where_heading">"مكان الملف"</string>
+    <string name="library_where_phone">"على هذا الهاتف"</string>
+    <string name="library_where_cloud">"نسخة سحابية"</string>
+    <string name="library_where_telegram">"في Telegram"</string>
+    <string name="library_where_unavailable">"المصدر غير متاح"</string>
+    <string name="library_progress_heading">"التقدم"</string>
+    <string name="library_watched_any">"أي"</string>
+    <string name="library_watched_started">"بدأت مشاهدته"</string>
+    <string name="library_watched_done">"تمت مشاهدته"</string>
+    <string name="library_collection_heading">"المجموعة"</string>
+    <string name="library_filter_clear_all">"مسح الكل"</string>
+    <string name="library_filter_show">"عرض %1$d"</string>
+    <string name="library_filter_remove">"إزالة عامل التصفية %1$s"</string>
 </resources>

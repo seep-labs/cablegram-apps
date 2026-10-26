@@ -102,3 +102,38 @@ private func darkEpisodes(_ query: LibraryQuery) -> [String] {
         #expect(LibraryQuery(collectionIds: ["kids"]).hasFilters)
     }
 }
+
+@Suite struct LibraryQueryStoreTests {
+    @Test func filtersAndSortSurviveARoundTripSearchIsNotKept() {
+        let query = LibraryQuery(type: .shows, locations: [.telegram, .cloud], watched: .started, collectionIds: ["kids", "fav"], search: "dune", sort: .sizeLargest)
+        var expected = query; expected.search = ""
+        #expect(decodeLibraryQuery(encodeLibraryQuery(query)) == expected)
+    }
+
+    @Test func missingBrokenOrUnknownStoredValuesGiveTheDefaults() {
+        #expect(decodeLibraryQuery(nil) == LibraryQuery())
+        #expect(decodeLibraryQuery("not json") == LibraryQuery())
+        #expect(decodeLibraryQuery(#"{"type":"Anime","locations":["Cloud","Mars"],"watched":"?","sort":"Year","future":1}"#)
+                == LibraryQuery(locations: [.cloud], sort: .year))
+    }
+
+    @Test func readsWhatTheAndroidAppWritesAndWritesSortedKeys() {
+        #expect(decodeLibraryQuery(#"{"type":"Movies","locations":["Cloud","OnPhone"],"watched":"Any","collections":["a","b"],"sort":"TitleAZ"}"#)
+                == LibraryQuery(type: .movies, locations: [.cloud, .onPhone], collectionIds: ["a", "b"], sort: .titleAZ))
+        #expect(encodeLibraryQuery(LibraryQuery(type: .movies, locations: [.cloud, .onPhone], collectionIds: ["b", "a"], sort: .titleAZ))
+                == #"{"collections":["a","b"],"locations":["Cloud","OnPhone"],"sort":"TitleAZ","type":"Movies","watched":"Any"}"#)
+    }
+
+    @Test func collectionsThatNoLongerExistAreDropped() {
+        let query = LibraryQuery(collectionIds: ["kids", "gone"])
+        #expect(query.withoutUnknownCollections(["kids", "fav"]).collectionIds == ["kids"])
+        #expect(query.withoutUnknownCollections([]).collectionIds.isEmpty)
+    }
+
+    @Test func theMoreChipCountsLocationWatchedAndCollectionFiltersButNotTypeSortOrChipFilters() {
+        #expect(LibraryQuery(type: .movies, sort: .year).moreFilterCount == 0)
+        #expect(LibraryQuery(watched: .unwatched).moreFilterCount == 0)
+        #expect(LibraryQuery(watched: .started).moreFilterCount == 0)
+        #expect(LibraryQuery(locations: [.cloud], watched: .watched, collectionIds: ["a", "b"]).moreFilterCount == 4)
+    }
+}
