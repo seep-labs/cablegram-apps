@@ -112,6 +112,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
@@ -137,6 +138,7 @@ fun LibraryShell(viewModel: PhoneViewModel) {
         return
     }
     if (viewModel.collectionsDialogOpen) AlertDialog(
+        modifier = Modifier.maestroRoot(),
         onDismissRequest = { viewModel.collectionsDialogOpen = false },
         title = { Text(ui.getString(R.string.ui_collections_9f9fea)) },
         text = {
@@ -147,8 +149,10 @@ fun LibraryShell(viewModel: PhoneViewModel) {
                     var renaming by remember(collection.id) { mutableStateOf(false) }
                     var draft by remember(collection.id, collection.name) { mutableStateOf(collection.name) }
                     if (renaming) {
+                        val focus = remember { androidx.compose.ui.focus.FocusRequester() }
+                        LaunchedEffect(Unit) { focus.requestFocus() }
                         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                            OutlinedTextField(draft, { draft = it }, Modifier.weight(1f).maestro("collection_rename_field"), singleLine = true)
+                            OutlinedTextField(draft, { draft = it }, Modifier.weight(1f).focusRequester(focus).maestro("collection_rename_field"), singleLine = true)
                             TextButton(
                                 onClick = { if (viewModel.renameCollection(collection.id, draft)) renaming = false },
                                 enabled = draft.isNotBlank(), modifier = Modifier.maestro("collection_rename_save"),
