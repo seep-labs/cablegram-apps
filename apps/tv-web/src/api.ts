@@ -440,38 +440,37 @@ export function createApi(opts: { base?: string | (() => string); fetch?: Fetch;
           const cachedCaps = capsCache.get(resolveBase());
           if (!cachedCaps || cachedCaps.features.relay) {
             const phoneDevice = servingPhone(await api.devices(), phone.servingDeviceId);
-            if (!phoneDevice || !phone.originIdentity) {
-              return { ...none, status: "denied", message: DENIED_LABEL };
-            }
-            let ticket: string;
-            try {
-              ticket = await api.relayTicket(phoneDevice.id);
-            } catch (e) {
-              if (cloud) {
-                const ready = await readyCloudPlayback(title.id, attemptId);
-                if (ready) return ready;
+            if (phoneDevice && phone.originIdentity) {
+              let ticket: string;
+              try {
+                ticket = await api.relayTicket(phoneDevice.id);
+              } catch (e) {
+                if (cloud) {
+                  const ready = await readyCloudPlayback(title.id, attemptId);
+                  if (ready) return ready;
+                }
+                if (e instanceof ApiError && (e.status === 404 || e.status === 410) && !cloud) {
+                  return { ...none, status: "unsupported", message: RELAY_DISABLED_MESSAGE };
+                }
+                throw e;
               }
-              if (e instanceof ApiError && (e.status === 404 || e.status === 410) && !cloud) {
-                return { ...none, status: "unsupported", message: RELAY_DISABLED_MESSAGE };
+              let pass: { lanPass: string; expiresAt: string };
+              try {
+                pass = await api.startPrivatePlayback(attemptId);
+              } catch {
+                return {
+                  ...none,
+                  status: "denied",
+                  message: "This approval was already used or expired. Start playback again on the TV.",
+                };
               }
-              throw e;
-            }
-            let pass: { lanPass: string; expiresAt: string };
-            try {
-              pass = await api.startPrivatePlayback(attemptId);
-            } catch {
               return {
                 ...none,
-                status: "denied",
-                message: "This approval was already used or expired. Start playback again on the TV.",
+                status: "ready",
+                engine: true,
+                url: relayUrl(resolveBase(), phoneDevice.id, `media/${phone.originIdentity}`, capability, ticket, pass.lanPass),
               };
             }
-            return {
-              ...none,
-              status: "ready",
-              engine: true,
-              url: relayUrl(resolveBase(), phoneDevice.id, `media/${phone.originIdentity}`, capability, ticket, pass.lanPass),
-            };
           } else if (!cloud) {
             return { ...none, status: "unsupported", message: RELAY_DISABLED_MESSAGE };
           }
@@ -482,7 +481,7 @@ export function createApi(opts: { base?: string | (() => string); fetch?: Fetch;
           if (ready) return ready;
         }
 
-        return { ...none, status: "denied", message: DENIED_LABEL };
+        return { ...none, status: "denied", message: phone ? "Your phone isn't available." : DENIED_LABEL };
       }
 
       if (status === "denied" || status === "consumed" || status === "expired") {
