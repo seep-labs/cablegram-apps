@@ -137,3 +137,35 @@ private func darkEpisodes(_ query: LibraryQuery) -> [String] {
         #expect(LibraryQuery(locations: [.cloud], watched: .watched, collectionIds: ["a", "b"]).moreFilterCount == 4)
     }
 }
+
+/// The same cases, with the same fixtures, as LibraryBulkTest.kt on Android.
+private func bulkItem(_ id: String, size: Int64, copied: Bool = true, kind: String = "phone_local", telegramCopy: Bool = false, cloud: Bool = false) -> LibraryItem {
+    LibraryItem(id: id, title: id, filename: "\(id).mkv", fileSizeBytes: size, importedAt: "2026-01-01T00:00:00Z", sourceKind: kind, copied: copied, telegramCopy: telegramCopy, ownCloudCopy: cloud)
+}
+
+@Suite struct LibraryBulkTests {
+    @Test func togglingAPosterSelectsOrClearsAllOfItsTitles() {
+        #expect(toggleSelection(["c"], ["a", "b"]) == ["a", "b", "c"])
+        #expect(toggleSelection(["a", "b", "c"], ["a", "b"]) == ["c"])
+        // A half-selected series is completed, not cleared.
+        #expect(toggleSelection(["a"], ["a", "b"]) == ["a", "b"])
+        #expect(!isSelected(["a"], ["a", "b"]))
+        #expect(!isSelected(["a"], []))
+        #expect(isSelected(["a", "b"], ["a", "b"]))
+    }
+
+    @Test func aRemovalCountsTelegramAndPhoneTitlesAndTheBytesKeptInsideTheApp() {
+        let summary = summarizeRemoval([bulkItem("p1", size: 100), bulkItem("p2", size: 200, copied: false),
+                                        bulkItem("t1", size: 400, copied: false, kind: "telegram"), bulkItem("p3", size: 50)])
+        #expect(summary == RemovalSummary(total: 4, phoneItems: 3, telegramItems: 1, phoneBytes: 150))
+        #expect(summarizeRemoval([]) == RemovalSummary(total: 0, phoneItems: 0, telegramItems: 0, phoneBytes: 0))
+    }
+
+    @Test func freeUpOnlyTakesTitlesWithAnotherCopyAndListsTheRestAsSkipped() {
+        let summary = summarizeFreeUp([bulkItem("a", size: 100, telegramCopy: true), bulkItem("c", size: 500), bulkItem("b", size: 300, cloud: true),
+                                       bulkItem("d", size: 700, copied: false, telegramCopy: true)])
+        #expect(summary.eligible.map(\.id) == ["a", "b"])
+        #expect(summary.skipped.map(\.id) == ["c", "d"])
+        #expect(summary.bytes == 400)
+    }
+}

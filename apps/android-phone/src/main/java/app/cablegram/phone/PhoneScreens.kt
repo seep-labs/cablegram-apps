@@ -113,6 +113,12 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -147,8 +153,9 @@ fun LibraryShell(viewModel: PhoneViewModel) {
         },
         confirmButton = { TextButton(onClick = { viewModel.collectionsDialogOpen = false }) { Text(ui.getString(R.string.ui_done_11a676)) } },
     )
-    BackHandler(enabled = viewModel.selected != null || viewModel.openSeriesKey != null || viewModel.tab != PhoneTab.Library) {
+    BackHandler(enabled = viewModel.selecting || viewModel.selected != null || viewModel.openSeriesKey != null || viewModel.tab != PhoneTab.Library) {
         if (viewModel.selected != null) viewModel.closeItem()
+        else if (viewModel.selecting) viewModel.clearSelection()
         else if (viewModel.openSeriesKey != null) viewModel.closeSeries()
         else if (viewModel.tab == PhoneTab.Storage) viewModel.tab = PhoneTab.Settings
         else viewModel.tab = PhoneTab.Library
@@ -182,6 +189,7 @@ fun LibraryShell(viewModel: PhoneViewModel) {
                 }
             }
             viewModel.shownSeries?.let { SeriesOverlay(viewModel, it) }
+            LibrarySelectionLayer(viewModel)
             viewModel.selected?.let { if (viewModel.subtitleFlowOpen) SubtitleFlow(viewModel, it) { viewModel.subtitleFlowOpen = false } else DetailOverlay(viewModel, it) }
             viewModel.deleteTarget?.let { DeleteDialog(viewModel, it) }
             viewModel.removeCloudCopyTarget?.let { RemoveCloudCopyDialog(viewModel, it) }
@@ -272,11 +280,14 @@ private fun LibraryHome(viewModel: PhoneViewModel) {
     val barIndex = 3 + (if (viewModel.scanProgress != null) 1 else 0) + (if (viewModel.status != null) 1 else 0) + (if (showContinue) 1 else 0)
     val pinBar by remember(barIndex) { derivedStateOf { gridState.firstVisibleItemIndex > barIndex } }
     val onFiltersChange: (LibraryQuery) -> Unit = viewModel::updateLibraryFilters
+    val selectionFor: (List<String>) -> CardSelection? = { ids ->
+        CardSelection(ids, viewModel.selecting, isSelected(viewModel.selectedIds, ids)) { viewModel.toggleSelected(ids) }
+    }
     LazyVerticalGrid(
         state = gridState,
         columns = GridCells.Fixed(columns),
         modifier = Modifier.fillMaxSize().maestro("library_grid"),
-        contentPadding = PaddingValues(start = sidePadding, end = sidePadding, top = 20.dp, bottom = 28.dp),
+        contentPadding = PaddingValues(start = sidePadding, end = sidePadding, top = 20.dp, bottom = if (viewModel.selecting) 104.dp else 28.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp),
         horizontalArrangement = Arrangement.spacedBy(gap),
     ) {
@@ -336,7 +347,7 @@ private fun LibraryHome(viewModel: PhoneViewModel) {
                 EmptyState(Icons.Default.Movie, ui.getString(R.string.ui_a_home_for_your_favorites_1b3984), ui.getString(R.string.ui_import_a_few_videos_from_your_phone_your_personal_cine_1f8181), ui.getString(R.string.ui_import_videos_fec728), { viewModel.tab = PhoneTab.Browse })
             }
         } else {
-            if (showContinue) item(span = fullRow) { Column { Shelf(ui.getString(R.string.ui_continue_watching_81ebbe), continueWatching(viewModel.items), viewModel, showProgress = true, posterWidth = 112.dp) } }
+            if (showContinue) item(span = fullRow) { Column { Shelf(ui.getString(R.string.ui_continue_watching_81ebbe), continueWatching(viewModel.items), viewModel, showProgress = true, posterWidth = 112.dp, selectionFor = selectionFor) } }
             item(span = fullRow, key = "filter_bar") {
                 LibraryFilterBar(filters, entries.size, viewModel.collections, onFiltersChange, { moreOpen = true })
             }
@@ -348,8 +359,8 @@ private fun LibraryHome(viewModel: PhoneViewModel) {
                 // A series filtered down to some episodes still opens as the whole series (see PhoneViewModel.openedSeries).
                 items(entries, key = { it.key }) { entry ->
                     when (entry) {
-                        is LibraryEntry.Film -> PosterCard(entry.item, false, viewModel, Modifier.fillMaxWidth(), showStatus = false)
-                        is LibraryEntry.Series -> SeriesCard(entry, false, viewModel, Modifier.fillMaxWidth())
+                        is LibraryEntry.Film -> PosterCard(entry.item, false, viewModel, Modifier.fillMaxWidth(), showStatus = false, selection = selectionFor(listOf(entry.item.id)))
+                        is LibraryEntry.Series -> SeriesCard(entry, false, viewModel, Modifier.fillMaxWidth(), selection = selectionFor(entry.episodes.map { it.id }))
                     }
                 }
             }
@@ -415,7 +426,7 @@ fun ApprovalCard(viewModel: PhoneViewModel, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun Shelf(title: String, items: List<LibraryItem>, viewModel: PhoneViewModel, showProgress: Boolean = false, posterWidth: Dp = 144.dp) {
+private fun Shelf(title: String, items: List<LibraryItem>, viewModel: PhoneViewModel, showProgress: Boolean = false, posterWidth: Dp = 144.dp, selectionFor: (List<String>) -> CardSelection? = { null }) {
     if (items.isEmpty()) return
     // A series' episodes share one poster, as on the TV; its episodes open from there.
     val entries = groupIntoEntries(items)
@@ -423,20 +434,21 @@ private fun Shelf(title: String, items: List<LibraryItem>, viewModel: PhoneViewM
     LazyRow(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
         items(entries, key = { it.key }) { entry ->
             when (entry) {
-                is LibraryEntry.Film -> PosterCard(entry.item, showProgress, viewModel, Modifier.width(posterWidth))
-                is LibraryEntry.Series -> SeriesCard(entry, showProgress, viewModel, Modifier.width(posterWidth))
+                is LibraryEntry.Film -> PosterCard(entry.item, showProgress, viewModel, Modifier.width(posterWidth), selection = selectionFor(listOf(entry.item.id)))
+                is LibraryEntry.Series -> SeriesCard(entry, showProgress, viewModel, Modifier.width(posterWidth), selection = selectionFor(entry.episodes.map { it.id }))
             }
         }
     }
 }
 
 @Composable
-private fun SeriesCard(series: LibraryEntry.Series, showProgress: Boolean, viewModel: PhoneViewModel, modifier: Modifier = Modifier.width(144.dp)) {
+@OptIn(ExperimentalFoundationApi::class)
+private fun SeriesCard(series: LibraryEntry.Series, showProgress: Boolean, viewModel: PhoneViewModel, modifier: Modifier = Modifier.width(144.dp), selection: CardSelection? = null) {
     val ui = androidx.compose.ui.platform.LocalContext.current.resources
     val lead = series.lead
     Column(
         modifier
-            .clickable { viewModel.openSeries(series) }
+            .selectableCard(selection, ui.getString(R.string.library_select_action), onOpen = { viewModel.openSeries(series) })
             .maestro("series_${series.key}"),
     ) {
         Box(
@@ -448,6 +460,7 @@ private fun SeriesCard(series: LibraryEntry.Series, showProgress: Boolean, viewM
             contentAlignment = Alignment.Center,
         ) {
             MediaArtwork(lead, Modifier.fillMaxSize())
+            SelectionMark(selection)
             Text(
                 ui.getString(R.string.ui_tv_series_e50677),
                 color = Color.White,
@@ -503,16 +516,31 @@ private fun SeriesOverlay(viewModel: PhoneViewModel, series: LibraryEntry.Series
             }
         }
         seasons.forEach { (season, episodes) ->
-            Text(if (season != null) ui.getString(R.string.ui_season_ab5756, season) else ui.getString(R.string.ui_episodes_83f972), color = Color.White, style = MaterialTheme.typography.titleMedium)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(if (season != null) ui.getString(R.string.ui_season_ab5756, season) else ui.getString(R.string.ui_episodes_83f972), color = Color.White, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+                TextButton(
+                    onClick = { viewModel.selectAll(viewModel.selectedIds + episodes.map { it.id }) },
+                    modifier = Modifier.maestro("series_select_season_${season ?: 0}"),
+                ) { Text(ui.getString(R.string.library_select_season), color = VlcOrange) }
+            }
             episodes.forEach { episode ->
-                // Tap opens the episode; long-press gives the same menu as a poster (Delete, Save to Telegram…).
-                val rowKey = remember(episode.id) { "episode:${episode.id}:${java.util.UUID.randomUUID()}" }
+                // Tap opens the episode (or selects it while selecting); a long press starts a selection, and the
+                // single-title menu (Delete, Save to Telegram…) is in the selection bar.
+                val picked = episode.id in viewModel.selectedIds
                 Row(
                     Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(12.dp))
-                        .background(VlcPanel)
-                        .combinedClickable(onClick = { viewModel.openItem(episode) }, onLongClick = { viewModel.actionMenuId = rowKey })
+                        .background(if (picked) Color(0xFF3D3022) else VlcPanel)
+                        .combinedClickable(
+                            onClick = { if (viewModel.selecting) viewModel.toggleSelected(listOf(episode.id)) else viewModel.openItem(episode) },
+                            onLongClick = { viewModel.toggleSelected(listOf(episode.id)) },
+                        )
+                        .semantics {
+                            selected = picked
+                            customActions = listOf(CustomAccessibilityAction(ui.getString(R.string.library_select_action)) { viewModel.toggleSelected(listOf(episode.id)); true })
+                        }
+                        .maestro("episode_${episode.id}")
                         .padding(12.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -534,7 +562,7 @@ private fun SeriesOverlay(viewModel: PhoneViewModel, series: LibraryEntry.Series
                         onClick = { viewModel.playOnTv(episode) },
                         enabled = episode.sourceAvailable != false || episode.cloudObjectPresent || episode.telegramCopy || episode.ownCloudCopy || episode.sourceKind == "telegram",
                     ) { Text(ui.getString(R.string.ui_play_436e61)) }
-                    ItemActionMenu(viewModel, episode, viewModel.actionMenuId == rowKey)
+                    if (picked) Icon(Icons.Default.CheckCircle, ui.getString(R.string.library_selected_item), tint = VlcOrange, modifier = Modifier.size(24.dp))
                 }
             }
         }
@@ -544,7 +572,7 @@ private fun SeriesOverlay(viewModel: PhoneViewModel, series: LibraryEntry.Series
 /** [showStatus] is off in the grid: the badge on the poster already says where the title is. */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun PosterCard(item: LibraryItem, showProgress: Boolean, viewModel: PhoneViewModel, modifier: Modifier = Modifier.width(144.dp), showStatus: Boolean = true) {
+private fun PosterCard(item: LibraryItem, showProgress: Boolean, viewModel: PhoneViewModel, modifier: Modifier = Modifier.width(144.dp), showStatus: Boolean = true, selection: CardSelection? = null) {
     val ui = androidx.compose.ui.platform.LocalContext.current.resources
     // Flow 2 (legacy parity): a TMDb poster always outranks the extracted
     // still. posterPath is only used when no TMDb artwork was downloaded yet.
@@ -553,10 +581,7 @@ private fun PosterCard(item: LibraryItem, showProgress: Boolean, viewModel: Phon
     val menu = viewModel.actionMenuId == cardKey
     Column(
         modifier
-            .combinedClickable(
-                onClick = { viewModel.openItem(item) },
-                onLongClick = { viewModel.actionMenuId = cardKey },
-            )
+            .selectableCard(selection, ui.getString(R.string.library_select_action), onOpen = { viewModel.openItem(item) }, onLongPress = { viewModel.actionMenuId = cardKey })
             .maestro("poster_${item.id}"),
     ) {
         Box(
@@ -568,6 +593,7 @@ private fun PosterCard(item: LibraryItem, showProgress: Boolean, viewModel: Phon
             contentAlignment = Alignment.Center,
         ) {
             MediaArtwork(item, Modifier.fillMaxSize())
+            SelectionMark(selection)
             Text(
                 storageBadgeLabel(storageBadge(item), ui),
                 color = Color.White,
@@ -609,9 +635,31 @@ private fun PosterCard(item: LibraryItem, showProgress: Boolean, viewModel: Phon
     }
 }
 
+/** A poster: a tap opens it, or toggles it while titles are being selected; a long press starts (or continues) a selection. */
+@OptIn(ExperimentalFoundationApi::class)
+private fun Modifier.selectableCard(selection: CardSelection?, selectLabel: String, onOpen: () -> Unit, onLongPress: (() -> Unit)? = null): Modifier =
+    combinedClickable(
+        onClick = { if (selection?.active == true) selection.toggle() else onOpen() },
+        onLongClick = { if (selection != null) selection.toggle() else onLongPress?.invoke() },
+    ).semantics {
+        if (selection != null) {
+            selected = selection.selected
+            customActions = listOf(CustomAccessibilityAction(selectLabel) { selection.toggle(); true })
+        }
+    }
+
+/** Dims a selected poster and marks it with a check. */
+@Composable
+private fun BoxScope.SelectionMark(selection: CardSelection?) {
+    if (selection?.selected != true) return
+    val ui = androidx.compose.ui.platform.LocalContext.current.resources
+    Box(Modifier.matchParentSize().background(Color(0x66000000)))
+    Icon(Icons.Default.CheckCircle, ui.getString(R.string.library_selected_item), tint = VlcOrange, modifier = Modifier.align(Alignment.BottomStart).padding(8.dp).size(24.dp))
+}
+
 /** The long-press menu of one title: on a poster, and on an episode inside a series. */
 @Composable
-private fun ItemActionMenu(viewModel: PhoneViewModel, item: LibraryItem, expanded: Boolean) {
+internal fun ItemActionMenu(viewModel: PhoneViewModel, item: LibraryItem, expanded: Boolean) {
     val ui = androidx.compose.ui.platform.LocalContext.current.resources
     DropdownMenu(expanded = expanded, onDismissRequest = { viewModel.actionMenuId = null }) {
         CompactMenuItem(ui.getString(R.string.ui_play_436e61), enabled = item.sourceAvailable != false || item.cloudObjectPresent || item.telegramCopy || item.ownCloudCopy || item.sourceKind == "telegram") {

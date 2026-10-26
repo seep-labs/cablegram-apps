@@ -60,7 +60,8 @@ private fun matchesFilters(item: LibraryItem, query: LibraryQuery): Boolean {
     return true
 }
 
-private fun LibraryEntry.items(): List<LibraryItem> = when (this) {
+/** The titles a poster stands for: the film itself, or the series' episodes (only the matched ones under a filter). */
+fun LibraryEntry.matchedItems(): List<LibraryItem> = when (this) {
     is LibraryEntry.Film -> listOf(item)
     is LibraryEntry.Series -> episodes
 }
@@ -74,14 +75,14 @@ fun applyLibraryQuery(items: List<LibraryItem>, query: LibraryQuery): List<Libra
     val tiebreak = compareBy<LibraryEntry>({ it.title.lowercase() }, { it.key })
     val order: Comparator<LibraryEntry> = when (query.sort) {
         // Newest first; a series counts as its newest episode.
-        LibrarySort.RecentlyAdded -> compareByDescending<LibraryEntry> { entry -> entry.items().maxOf { it.importedAt } }
+        LibrarySort.RecentlyAdded -> compareByDescending<LibraryEntry> { entry -> entry.matchedItems().maxOf { it.importedAt } }
         // Most recently watched first; never-watched titles go last.
-        LibrarySort.LastWatched -> compareByDescending<LibraryEntry> { entry -> entry.items().maxOf { it.lastWatchedAt.orEmpty() } }
+        LibrarySort.LastWatched -> compareByDescending<LibraryEntry> { entry -> entry.matchedItems().maxOf { it.lastWatchedAt.orEmpty() } }
         LibrarySort.TitleAZ -> compareBy<LibraryEntry> { it.title.lowercase() }
         // Newest year first, unknown last; a series counts as its premiere (earliest episode year).
-        LibrarySort.Year -> compareByDescending<LibraryEntry> { entry -> entry.items().mapNotNull { it.year }.minOrNull() ?: Int.MIN_VALUE }
+        LibrarySort.Year -> compareByDescending<LibraryEntry> { entry -> entry.matchedItems().mapNotNull { it.year }.minOrNull() ?: Int.MIN_VALUE }
         // Largest first; a series counts as the total of its episodes.
-        LibrarySort.SizeLargest -> compareByDescending<LibraryEntry> { entry -> entry.items().sumOf { it.fileSizeBytes ?: 0L } }
+        LibrarySort.SizeLargest -> compareByDescending<LibraryEntry> { entry -> entry.matchedItems().sumOf { it.fileSizeBytes ?: 0L } }
     }
     return groupIntoEntries(matching).sortedWith(order.then(tiebreak))
 }

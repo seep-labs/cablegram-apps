@@ -64,8 +64,9 @@ private func matchesFilters(_ item: LibraryItem, _ query: LibraryQuery) -> Bool 
     return true
 }
 
-private extension LibraryEntry {
-    var items: [LibraryItem] {
+extension LibraryEntry {
+    /// The titles a poster stands for: the film itself, or the series' episodes (only the matched ones under a filter).
+    public var matchedItems: [LibraryItem] {
         switch self {
         case .film(let item): [item]
         case .series(_, let episodes): episodes
@@ -84,22 +85,22 @@ public func applyLibraryQuery(_ items: [LibraryItem], _ query: LibraryQuery) -> 
         switch query.sort {
         case .recentlyAdded:
             // Newest first; a series counts as its newest episode.
-            let x = a.items.map(\.importedAt).max()!, y = b.items.map(\.importedAt).max()!
+            let x = a.matchedItems.map(\.importedAt).max()!, y = b.matchedItems.map(\.importedAt).max()!
             return x == y ? nil : x > y
         case .lastWatched:
             // Most recently watched first; never-watched titles go last.
-            let x = a.items.map { $0.lastWatchedAt ?? "" }.max()!, y = b.items.map { $0.lastWatchedAt ?? "" }.max()!
+            let x = a.matchedItems.map { $0.lastWatchedAt ?? "" }.max()!, y = b.matchedItems.map { $0.lastWatchedAt ?? "" }.max()!
             return x == y ? nil : x > y
         case .titleAZ:
             let x = a.title.lowercased(), y = b.title.lowercased()
             return x == y ? nil : x < y
         case .year:
             // Newest year first, unknown last; a series counts as its premiere (earliest episode year).
-            let x = a.items.compactMap(\.year).min() ?? Int.min, y = b.items.compactMap(\.year).min() ?? Int.min
+            let x = a.matchedItems.compactMap(\.year).min() ?? Int.min, y = b.matchedItems.compactMap(\.year).min() ?? Int.min
             return x == y ? nil : x > y
         case .sizeLargest:
             // Largest first; a series counts as the total of its episodes.
-            let x = a.items.reduce(Int64(0)) { $0 + ($1.fileSizeBytes ?? 0) }, y = b.items.reduce(Int64(0)) { $0 + ($1.fileSizeBytes ?? 0) }
+            let x = a.matchedItems.reduce(Int64(0)) { $0 + ($1.fileSizeBytes ?? 0) }, y = b.matchedItems.reduce(Int64(0)) { $0 + ($1.fileSizeBytes ?? 0) }
             return x == y ? nil : x > y
         }
     }

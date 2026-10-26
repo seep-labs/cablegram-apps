@@ -672,6 +672,17 @@ class LibraryStore private constructor(private val context: Context) {
         ))
     }
 
+    /** Puts titles back after "Remove from library" was undone, including household titles dismissed by it. */
+    @Synchronized
+    fun restoreRemoved(removed: List<LibraryItem>) {
+        val current = snapshot()
+        val present = current.items.map { it.id }.toSet()
+        save(current.copy(
+            items = current.items + removed.filter { it.id !in present },
+            dismissedRemoteIds = current.dismissedRemoteIds - removed.map { it.id }.toSet(),
+        ))
+    }
+
     /** Drops a restored placeholder that a re-imported file now represents (not a user dismissal). */
     @Synchronized
     fun dropPlaceholder(id: String) {

@@ -154,3 +154,41 @@ class LibraryQueryStoreTest {
         assertEquals(4, LibraryQuery(locations = setOf(LibraryLocation.Cloud), watched = WatchedFilter.Watched, collectionIds = setOf("a", "b")).moreFilterCount)
     }
 }
+
+/** The same cases, with the same fixtures, as LibraryBulkTests.swift on iOS. */
+class LibraryBulkTest {
+    private fun item(id: String, size: Long, copied: Boolean = true, kind: String = "phone_local", telegramCopy: Boolean = false, cloud: Boolean = false) =
+        LibraryItem(id = id, title = id, filename = "$id.mkv", fileSizeBytes = size, importedAt = "2026-01-01T00:00:00Z", copied = copied, sourceKind = kind, telegramCopy = telegramCopy, ownCloudCopy = cloud)
+
+    @Test
+    fun `toggling a poster selects or clears all of its titles`() {
+        assertEquals(setOf("a", "b", "c"), toggleSelection(setOf("c"), listOf("a", "b")))
+        assertEquals(setOf("c"), toggleSelection(setOf("a", "b", "c"), listOf("a", "b")))
+        // A half-selected series is completed, not cleared.
+        assertEquals(setOf("a", "b"), toggleSelection(setOf("a"), listOf("a", "b")))
+        assertFalse(isSelected(setOf("a"), listOf("a", "b")))
+        assertFalse(isSelected(setOf("a"), emptyList()))
+        assertTrue(isSelected(setOf("a", "b"), listOf("a", "b")))
+    }
+
+    @Test
+    fun `a removal counts telegram and phone titles and the bytes kept inside the app`() {
+        val summary = summarizeRemoval(
+            listOf(item("p1", 100), item("p2", 200, copied = false), item("t1", 400, copied = false, kind = "telegram"), item("p3", 50)),
+        )
+        assertEquals(RemovalSummary(total = 4, phoneItems = 3, telegramItems = 1, phoneBytes = 150), summary)
+        assertEquals(RemovalSummary(0, 0, 0, 0), summarizeRemoval(emptyList()))
+    }
+
+    @Test
+    fun `free up only takes titles with another copy and lists the rest as skipped`() {
+        val withTelegram = item("a", 100, telegramCopy = true)
+        val withCloud = item("b", 300, cloud = true)
+        val alone = item("c", 500)
+        val gone = item("d", 700, copied = false, telegramCopy = true)
+        val summary = summarizeFreeUp(listOf(withTelegram, alone, withCloud, gone))
+        assertEquals(listOf("a", "b"), summary.eligible.map { it.id })
+        assertEquals(listOf("c", "d"), summary.skipped.map { it.id })
+        assertEquals(400L, summary.bytes)
+    }
+}

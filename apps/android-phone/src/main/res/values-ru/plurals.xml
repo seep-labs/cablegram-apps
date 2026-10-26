@@ -19,4 +19,28 @@
         <item quantity="many">"%1$d названий"</item>
         <item quantity="other">"%1$d названия"</item>
     </plurals>
+    <plurals name="library_remove_title_count">
+        <item quantity="one">"Удалить %1$d название?"</item>
+        <item quantity="few">"Удалить %1$d названия?"</item>
+        <item quantity="many">"Удалить %1$d названий?"</item>
+        <item quantity="other">"Удалить %1$d названия?"</item>
+    </plurals>
+    <plurals name="library_summary_phone">
+        <item quantity="one">"%1$d видео на телефоне"</item>
+        <item quantity="few">"%1$d видео на телефоне"</item>
+        <item quantity="many">"%1$d видео на телефоне"</item>
+        <item quantity="other">"%1$d видео на телефоне"</item>
+    </plurals>
+    <plurals name="library_summary_telegram">
+        <item quantity="one">"%1$d видео из Telegram"</item>
+        <item quantity="few">"%1$d видео из Telegram"</item>
+        <item quantity="many">"%1$d видео из Telegram"</item>
+        <item quantity="other">"%1$d видео из Telegram"</item>
+    </plurals>
+    <plurals name="library_removed_count">
+        <item quantity="one">"Удалено: %1$d"</item>
+        <item quantity="few">"Удалено: %1$d"</item>
+        <item quantity="many">"Удалено: %1$d"</item>
+        <item quantity="other">"Удалено: %1$d"</item>
+    </plurals>
 </resources>

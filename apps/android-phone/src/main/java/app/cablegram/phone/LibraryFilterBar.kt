@@ -181,7 +181,7 @@ internal fun LibraryFilterSheet(
 ) {
     val ui = LocalContext.current.resources
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true), containerColor = VlcPanel) {
-        Column(Modifier.padding(horizontal = 20.dp).padding(bottom = 20.dp)) {
+        Column(Modifier.maestroRoot().padding(horizontal = 20.dp).padding(bottom = 20.dp)) {
         // The sections scroll on a small screen; Clear all and Show stay in view below them.
         Column(Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(ui.getString(R.string.library_where_heading), color = VlcMuted, style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(top = 4.dp))
