@@ -21,7 +21,6 @@ struct LibraryHome: View {
                 searchField
                 chips
                 tvLine
-                syncButton
                 if let step = viewModel.prepareStep { StatusNote(message: step) }
                 if let status = viewModel.status { StatusNote(message: status) }
                 content(entries, query)
@@ -86,31 +85,28 @@ struct LibraryHome: View {
         }
     }
 
+    /// One compact line, so the grid starts higher: the TV, its Connect/Remote action, and the sync button.
     private var tvLine: some View {
-        HStack {
+        let state = viewModel.librarySyncState
+        return HStack {
             VStack(alignment: .leading, spacing: 2) {
-                Text(viewModel.paired ? viewModel.tvName : L("ui_made_for_your_big_screen_eb0ced")).font(.system(.subheadline).weight(.medium)).foregroundStyle(.white)
+                Text(viewModel.paired ? viewModel.tvName : L("ui_made_for_your_big_screen_eb0ced")).font(.system(.subheadline).weight(.medium)).foregroundStyle(.white).lineLimit(1)
                 Text(key: viewModel.paired ? "ui_keep_your_phone_on_the_same_wi_fi_e373e7" : "ui_connect_a_tv_when_you_re_ready_to_watch_d1ae74")
-                    .font(.system(.caption)).foregroundStyle(Color.phoneMuted)
+                    .font(.system(.caption)).foregroundStyle(Color.phoneMuted).lineLimit(1)
             }
             Spacer()
             if !viewModel.paired || viewModel.legacyRemote {
                 Button { if viewModel.paired { viewModel.selectTab(.remote) } else { viewModel.tv.startAddTv() } } label: { Text(key: viewModel.paired ? "ui_remote_ffa98e" : "ui_connect_1a2303") }
                     .buttonStyle(AccentTextButtonStyle())
             }
-        }
-    }
-
-    private var syncButton: some View {
-        let state = viewModel.librarySyncState
-        return Button { viewModel.syncNow() } label: {
-            HStack(spacing: 8) {
-                Image(systemName: state == .completed ? "checkmark" : "arrow.triangle.2.circlepath").font(.system(.footnote))
-                Text(key: state == .running ? "ui_syncing_library_8e43e6" : state == .completed ? "ui_library_synced_704162"
-                     : state == .failed ? "ui_sync_needs_attention_retry_f4d943" : "ui_sync_library_dd3492").font(PhoneFont.labelMedium)
+            Button { viewModel.syncNow() } label: {
+                Image(systemName: state == .completed ? "checkmark" : "arrow.triangle.2.circlepath").foregroundStyle(Color.phoneAccent).frame(width: 44, height: 44)
             }
+            .disabled(state == .running)
+            .accessibilityLabel(L(state == .running ? "ui_syncing_library_8e43e6" : state == .completed ? "ui_library_synced_704162"
+                                  : state == .failed ? "ui_sync_needs_attention_retry_f4d943" : "ui_sync_library_dd3492"))
+            .accessibilityIdentifier("library_sync")
         }
-        .buttonStyle(AccentTextButtonStyle()).disabled(state == .running)
     }
 
     @ViewBuilder private func content(_ entries: [LibraryEntry], _ query: LibraryQuery) -> some View {
@@ -123,7 +119,7 @@ struct LibraryHome: View {
         } else {
             if !query.hasFilters {
                 let watching = continueWatching(viewModel.items)
-                if !watching.isEmpty { Shelf(title: L("ui_continue_watching_81ebbe"), items: watching, viewModel: viewModel, showProgress: true) }
+                if !watching.isEmpty { Shelf(title: L("ui_continue_watching_81ebbe"), items: watching, viewModel: viewModel, showProgress: true, posterWidth: 112) }
             }
             Text(L("ui_titles_77f1d9", "\(entries.count)")).font(PhoneFont.labelLarge).foregroundStyle(Color.phoneMuted)
                 .accessibilityIdentifier("library_count")
@@ -132,8 +128,8 @@ struct LibraryHome: View {
             LazyVGrid(columns: columns, alignment: .leading, spacing: 20) {
                 ForEach(entries) { entry in
                     switch entry {
-                    case .film(let item): PosterCard(item: item, showProgress: false, viewModel: viewModel, width: nil)
-                    case .series: SeriesCard(entry: entry, showProgress: false, viewModel: viewModel, width: nil)
+                    case .film(let item): PosterCard(item: item, showProgress: false, viewModel: viewModel, width: nil).frame(maxHeight: .infinity, alignment: .top)
+                    case .series: SeriesCard(entry: entry, showProgress: false, viewModel: viewModel, width: nil).frame(maxHeight: .infinity, alignment: .top)
                     }
                 }
             }
@@ -187,6 +183,7 @@ struct Shelf: View {
     let items: [LibraryItem]
     let viewModel: PhoneViewModel
     var showProgress = false
+    var posterWidth: CGFloat = 144
 
     var body: some View {
         if !items.isEmpty {
@@ -196,8 +193,8 @@ struct Shelf: View {
                     LazyHStack(alignment: .top, spacing: 14) {
                         ForEach(groupIntoEntries(items)) { entry in
                             switch entry {
-                            case .film(let item): PosterCard(item: item, showProgress: showProgress, viewModel: viewModel)
-                            case .series: SeriesCard(entry: entry, showProgress: showProgress, viewModel: viewModel)
+                            case .film(let item): PosterCard(item: item, showProgress: showProgress, viewModel: viewModel, width: posterWidth)
+                            case .series: SeriesCard(entry: entry, showProgress: showProgress, viewModel: viewModel, width: posterWidth)
                             }
                         }
                     }
