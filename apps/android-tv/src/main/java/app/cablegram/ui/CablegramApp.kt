@@ -285,6 +285,10 @@ fun CablegramApp(viewModel: CablegramViewModel) {
                     // On a shared TV only the open account can be removed here; never every account (CAB-65).
                     onSignOut = if (screen.canSignOut && (!viewModel.sharedTv || viewModel.hasActiveAccount)) viewModel::unpairFromHere else null,
                     onBack = if (screen.canGoBack) viewModel::closePlayer else null,
+                    primaryActionLabel = screen.primaryActionLabel,
+                    onPrimaryAction = screen.onPrimaryAction,
+                    secondaryActionLabel = screen.secondaryActionLabel,
+                    onSecondaryAction = screen.onSecondaryAction,
                 )
             }
         }
@@ -882,36 +886,52 @@ internal fun ErrorScreen(
     onSignOut: (() -> Unit)?,
     onBack: (() -> Unit)? = null,
     errorVideoUrl: String? = null,
+    primaryActionLabel: String? = null,
+    onPrimaryAction: (() -> Unit)? = null,
+    secondaryActionLabel: String? = null,
+    onSecondaryAction: (() -> Unit)? = null,
 ) {
     val ui = androidx.compose.ui.platform.LocalContext.current.resources
-    if (onBack != null) BackHandler(onBack = onBack)
+    val effectiveBack = onPrimaryAction ?: onBack
+    if (effectiveBack != null) BackHandler(onBack = effectiveBack)
     UnhappyScenarioFrame(eventKey = "$title:$message", videoUrl = errorVideoUrl) {
             Text("CABLEGRAM", color = Coral, fontSize = 12.sp, fontWeight = FontWeight.Bold)
             Text(title, fontSize = 26.sp, fontWeight = FontWeight.Bold, color = Paper, lineHeight = 31.sp)
             Text(message, color = Muted, fontSize = 16.sp, lineHeight = 23.sp)
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                val retryFocus = remember { FocusRequester() }
+                val actionFocus = remember { FocusRequester() }
                 LaunchedEffect(Unit) {
                     // Let the Button start observing focus before focusing it.
                     androidx.compose.runtime.withFrameNanos { }
-                    runCatching { retryFocus.requestFocus() }
+                    runCatching { actionFocus.requestFocus() }
                 }
-                // After a deleted video, "Try again" reloads the library; "Back to library" leaves at once.
-                if (onBack != null) {
-                    Button(onClick = onBack, modifier = Modifier.focusRequester(retryFocus)) { Text(ui.getString(R.string.ui_back_to_library_008e42)) }
-                    Button(onClick = onRetry, colors = ButtonDefaults.colors(containerColor = Panel)) { Text(ui.getString(R.string.ui_try_again_d8b839)) }
+                if (primaryActionLabel != null && onPrimaryAction != null) {
+                    Button(onClick = onPrimaryAction, modifier = Modifier.focusRequester(actionFocus)) {
+                        Text(primaryActionLabel)
+                    }
+                    if (secondaryActionLabel != null && onSecondaryAction != null) {
+                        Button(onClick = onSecondaryAction, colors = ButtonDefaults.colors(containerColor = Panel)) {
+                            Text(secondaryActionLabel)
+                        }
+                    }
                 } else {
-                    Button(onClick = onRetry, modifier = Modifier.focusRequester(retryFocus)) { Text(ui.getString(R.string.ui_try_again_d8b839)) }
-                }
-                if (onConvert != null) Button(onClick = onConvert) { Text(ui.getString(R.string.ui_convert_anyway_2c1857)) }
-                if (onRemove != null) {
-                    Button(onClick = onRemove, colors = ButtonDefaults.colors(containerColor = Coral)) { Text(ui.getString(R.string.ui_remove_c3812f)) }
-                }
-                if (onSignOut != null) {
-                    val unpair = remember { UnpairConfirmState() }
-                    UnpairConfirmDialog(unpair, onSignOut)
-                    Button(onClick = unpair::ask, colors = ButtonDefaults.colors(containerColor = Panel)) {
-                        Text(ui.getString(R.string.ui_unpair_tv_fbd044))
+                    // After a deleted video, "Try again" reloads the library; "Back to library" leaves at once.
+                    if (onBack != null) {
+                        Button(onClick = onBack, modifier = Modifier.focusRequester(actionFocus)) { Text(ui.getString(R.string.ui_back_to_library_008e42)) }
+                        Button(onClick = onRetry, colors = ButtonDefaults.colors(containerColor = Panel)) { Text(ui.getString(R.string.ui_try_again_d8b839)) }
+                    } else {
+                        Button(onClick = onRetry, modifier = Modifier.focusRequester(actionFocus)) { Text(ui.getString(R.string.ui_try_again_d8b839)) }
+                    }
+                    if (onConvert != null) Button(onClick = onConvert) { Text(ui.getString(R.string.ui_convert_anyway_2c1857)) }
+                    if (onRemove != null) {
+                        Button(onClick = onRemove, colors = ButtonDefaults.colors(containerColor = Coral)) { Text(ui.getString(R.string.ui_remove_c3812f)) }
+                    }
+                    if (onSignOut != null) {
+                        val unpair = remember { UnpairConfirmState() }
+                        UnpairConfirmDialog(unpair, onSignOut)
+                        Button(onClick = unpair::ask, colors = ButtonDefaults.colors(containerColor = Panel)) {
+                            Text(ui.getString(R.string.ui_unpair_tv_fbd044))
+                        }
                     }
                 }
             }

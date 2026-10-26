@@ -17,6 +17,8 @@ export interface Device { id: string; kind: string; revokedAt?: string }
 export interface Playback {
   status: "ready" | "denied" | "preparing" | "unsupported";
   url?: string; headers: Record<string, string>; message?: string;
+  failure_reason?: string;
+  reason?: string;
   /** Play through the tv-media engine (own demuxing into MSE) instead of a plain <video src>. */
   engine?: boolean;
   /** A Telegram message to play over MTProto (only with VITE_TG_DIRECT=1); `url` is empty then. */

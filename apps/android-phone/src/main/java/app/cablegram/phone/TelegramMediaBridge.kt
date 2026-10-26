@@ -2,6 +2,7 @@ package app.cablegram.phone
 
 import android.content.Context
 import app.cablegram.telegram.TelegramFileReader
+import app.cablegram.telegram.TelegramSession
 import app.cablegram.telegram.TelegramState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +20,11 @@ data class TelegramFileRef(val fileId: Int, val size: Long, val mime: String)
 
 /** What [LanLibraryServer] needs to serve `/telegram/<file id>` (spec 004 US8). Blocking: the server is threaded. */
 interface TelegramMedia {
+    /**
+     * True when this phone has no usable Telegram session: never linked here, signed out, or waiting for the user
+     * (number, code, password). False while the session is still starting; [resolve] waits for that. Never blocks.
+     */
+    val signedOut: Boolean get() = false
     /** Resolves Telegram's unique file id (the part after `tgfile:`) to a readable file, or null. */
     fun resolve(uniqueId: String): TelegramFileRef?
     /** Up to [want] bytes at [position], or null if Telegram delivered nothing in time. */
@@ -42,20 +48,28 @@ class PhoneTelegramMedia(
     /** How far ahead Telegram downloads per request; streaming to a TV wants a large window, analysis a small one. */
     private val window: Long = 48L * TelegramFileReader.MB,
     private val refillAt: Long = 16L * TelegramFileReader.MB,
+    private val sessionProvider: () -> TelegramSession = { PhoneTelegram.session(context) },
+    private val wasLinked: () -> Boolean = { PhoneTelegram.wasLinked(context) },
+    /** How long a TV's request waits for a session that is still starting (a phone woken by the request). */
+    private val readyWaitMs: Long = 20_000,
     private val chatId: suspend () -> Long?,
 ) : TelegramMedia {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val known = ConcurrentHashMap<String, TelegramFileRef>()
-    private val reader by lazy { TelegramFileReader(PhoneTelegram.session(context).api, window = window, refillAt = refillAt) }
+    private val reader by lazy { TelegramFileReader(sessionProvider().api, window = window, refillAt = refillAt) }
     /** Last read per file: several TVs can stream different titles at once (review fix 7). */
     private val lastUsed = ConcurrentHashMap<Int, Long>()
     @Volatile private var releaseJobRunning = false
 
+    override val signedOut: Boolean
+        get() = !wasLinked() || sessionProvider().state.value.let { it !is TelegramState.Starting && it !is TelegramState.Ready }
+
     override fun resolve(uniqueId: String): TelegramFileRef? = runBlocking {
-        if (!PhoneTelegram.wasLinked(context)) return@runBlocking null
+        if (!wasLinked()) return@runBlocking null
         if (isRemoved("tgfile:$uniqueId")) return@runBlocking null
-        val session = PhoneTelegram.session(context)
-        if (withTimeoutOrNull(20_000) { session.state.first { it is TelegramState.Ready } } == null) return@runBlocking null
+        val session = sessionProvider()
+        val settled = withTimeoutOrNull(readyWaitMs) { session.state.first { it !is TelegramState.Starting } }
+        if (settled !is TelegramState.Ready) return@runBlocking null
         known[uniqueId]?.let { return@runBlocking it }
         val channel = chatId() ?: return@runBlocking null
         app.cablegram.telegram.TelegramLibrarySync.forEachVideo(session.api, channel) { video ->

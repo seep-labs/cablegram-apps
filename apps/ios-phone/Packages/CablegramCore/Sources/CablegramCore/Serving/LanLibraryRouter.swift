@@ -18,12 +18,19 @@ public struct TelegramFileRef: Sendable, Equatable {
 
 /// What the media server needs to serve `/telegram/<file unique id>`.
 public protocol TelegramMedia: Sendable {
+    /// True when this phone has no usable Telegram session: never linked here, signed out, or waiting for the user (number, code,
+    /// password). False while the session is still starting; `resolve` waits for that. Never waits itself.
+    var signedOut: Bool { get async }
     /// Resolves Telegram's unique file id (the part after `tgfile:`) to a readable file, or nil.
     func resolve(uniqueId: String) async -> TelegramFileRef?
     /// Up to `want` bytes at `position`, or nil if Telegram delivered nothing in time.
     func read(fileId: Int, position: Int64, want: Int) async -> Data?
     /// Nothing more will be read from `fileId` for now: stop its download and drop what is stored.
     func release(fileId: Int)
+}
+
+public extension TelegramMedia {
+    var signedOut: Bool { get async { false } }
 }
 
 /// The bytes `[start, end]` of a Telegram file, read in `chunk`-sized pieces.
@@ -152,11 +159,14 @@ public final class LanLibraryRouter: Sendable {
     /// be able to mint more links (CAB-44).
     private func issueLink(_ request: HTTPRequest, _ path: String) async -> HTTPResponse {
         guard let capability = Self.headerCapability(request), await credentials.authorized([capability]) else { return .error(401, "header_required") }
-        let streamable: Bool
-        if path.hasPrefix("/media/") { streamable = store.get(String(path.dropFirst(7))) != nil }
-        else if path.hasPrefix("/telegram/") { streamable = telegram != nil && Self.isTelegramId(String(path.dropFirst(10))) }
-        else { streamable = false }
-        guard streamable else { return .error(404, "not_found") }
+        if path.hasPrefix("/media/") {
+            guard store.get(String(path.dropFirst(7))) != nil else { return .error(404, "not_in_library") }
+        } else if path.hasPrefix("/telegram/") {
+            guard let telegram, await !telegram.signedOut else { return .error(503, "telegram_not_signed_in") }
+            guard Self.isTelegramId(String(path.dropFirst(10))) else { return .error(404, "not_found") }
+        } else {
+            return .error(404, "not_found")
+        }
         let id = links.issue(path: path, capability: capability, tvDeviceId: await credentials.tvDeviceId(capability))
         return .json("{\"link\":\"\(id)\",\"expires_in_seconds\":\(links.idleSeconds)}")
     }
@@ -168,7 +178,12 @@ public final class LanLibraryRouter: Sendable {
     /// A title in the household's Telegram channel, streamed through this phone's own session for TVs that hold none. Single ranges only;
     /// a malformed range is served as the whole file.
     private func serveTelegram(_ request: HTTPRequest, uniqueId: String, isHead: Bool) async -> HTTPResponse {
-        guard let telegram, Self.isTelegramId(uniqueId), let file = await telegram.resolve(uniqueId: uniqueId), file.size > 0 else { return .error(404, "not_found") }
+        guard let telegram, await !telegram.signedOut else { return .error(503, "telegram_not_signed_in") }
+        guard Self.isTelegramId(uniqueId) else { return .error(404, "not_found") }
+        guard let file = await telegram.resolve(uniqueId: uniqueId), file.size > 0 else {
+            // A session that was still starting may have ended up asking for a sign-in.
+            return await telegram.signedOut ? .error(503, "telegram_not_signed_in") : .error(404, "not_found")
+        }
         let range = TelegramByteRange.parse(request.headers["range"], size: file.size)
         let start: Int64, end: Int64, status: Int
         var headers: [(name: String, value: String)] = [("Content-Type", file.mime), ("Accept-Ranges", "bytes")]
@@ -189,7 +204,7 @@ public final class LanLibraryRouter: Sendable {
     // MARK: Media
 
     private func serveMedia(_ request: HTTPRequest, id: String, grant: LanStreamLinks.Grant?, supplied: [String], isHead: Bool) async -> HTTPResponse {
-        guard let item = store.get(id) else { return .error(404, "not_found") }
+        guard let item = store.get(id) else { return .error(404, "not_in_library") }
         if item.isPrivate {
             var tv = grant?.tvDeviceId
             if tv == nil { for capability in supplied { if let found = await credentials.tvDeviceId(capability) { tv = found; break } } }
