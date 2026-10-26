@@ -43,7 +43,36 @@ describe("resolvePlayback", () => {
   it("refuses Telegram-only titles with an explanation", async () => {
     const api = createApi({ fetch: async () => json(200, {}) });
     const tg = parseTitle({ id: "3", sources: [{ kind: "telegram", origin_identity: "tg:1:2" }] });
-    expect((await api.resolvePlayback(tg, undefined)).message).toMatch(/Telegram/);
+    const res = await api.resolvePlayback(tg, undefined);
+    expect(res.status).toBe("unsupported");
+    expect(res.failure_reason).toBeUndefined();
+    expect(res.message).toMatch(/Telegram/);
+  });
+  it("reports phone_replaced when serving phone record is revoked", async () => {
+    const api = createApi({
+      base: "https://api.example",
+      token: () => "t",
+      fetch: async (url) => url.endsWith("api/me") ? json(200, { devices: [{ id: "p1", kind: "phone", revoked_at: "2026-10-01T00:00:00Z" }, { id: "p2", kind: "phone" }] }) : json(404, {}),
+    });
+    const oldPhoneTitle = parseTitle({ id: "1", title: "A", sources: [{ kind: "phone_local", origin_identity: "x", serving_device_id: "p1" }] });
+    const p = await api.resolvePlayback(oldPhoneTitle, "cap");
+    expect(p.status).toBe("denied");
+    expect(p.failure_reason).toBe("phone_replaced");
+    expect(p.message).toContain("previous phone install");
+  });
+  it("reports cloud failure reasons with typed reason", async () => {
+    const api = createApi({
+      base: "https://api.example",
+      token: () => "t",
+      fetch: async (url) => {
+        if (url.endsWith("api/playback/resolve")) return json(429, { error: "cloud_limited" });
+        return json(404, {});
+      },
+    });
+    const cloudTitle = parseTitle({ id: "c1", title: "Cloud", sources: [{ kind: "own_cloud", origin_identity: "c1" }] });
+    const p = await api.resolvePlayback(cloudTitle, undefined);
+    expect(p.status).toBe("denied");
+    expect(p.failure_reason).toBe("cloud_limited");
   });
   it("plays a private title after phone approval and carries the lan pass", async () => {
     let awaitingApprovalCalled = false;

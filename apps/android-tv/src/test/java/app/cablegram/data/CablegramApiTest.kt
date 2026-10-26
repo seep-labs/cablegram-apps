@@ -581,6 +581,127 @@ class CablegramApiTest {
     }
 
     @Test
+    fun `returns telegram_not_connected when title is Telegram-only and neither TV nor phone has Telegram`() = runBlocking {
+        server.enqueue(MockResponse().setBody("""{"items":[{"id":"item-1","title":"Inception","sources":[{"kind":"telegram","origin_identity":"tg:1:2","stable_source_key":"tgfile:xyz"}]}]}"""))
+        server.enqueue(MockResponse().setBody("""{"devices":[]}"""))
+
+        val playback = api.getPlayback("item-1", "jwt", telegramUrl = { null })
+
+        assertEquals("denied", playback.status)
+        assertEquals("telegram_not_connected", playback.failureReason)
+        assertEquals("Telegram isn't connected on this TV or your phone.", playback.prepareLabel)
+    }
+
+    @Test
+    fun `returns phone_replaced when source serving device is revoked`() = runBlocking {
+        server.enqueue(MockResponse().setBody("""{"items":[{"id":"item-1","title":"Inception","sources":[{"origin_identity":"video-1","serving_device_id":"old-phone-id"}]}]}"""))
+        server.enqueue(MockResponse().setBody("""{"devices":[{"id":"old-phone-id","kind":"phone","revoked_at":"2026-10-01T00:00:00Z"},{"id":"new-phone-id","kind":"phone","last_lan_host":"192.168.1.50"}]}"""))
+
+        val playback = api.getPlayback("item-1", "jwt")
+
+        assertEquals("denied", playback.status)
+        assertEquals("phone_replaced", playback.failureReason)
+        assertEquals("This video was on your previous phone install. Add the video again on your phone.", playback.prepareLabel)
+    }
+
+    @Test
+    fun `returns telegram_not_connected when phone returns 503 telegram_not_signed_in over LAN`() = runBlocking {
+        val phone = TestLanCert.phone()
+        try {
+            server.enqueue(MockResponse().setBody("""{"items":[{"id":"item-1","title":"TgClip","sources":[{"kind":"telegram","origin_identity":"tg:1:2","stable_source_key":"tgfile:xyz"}]}]}"""))
+            server.enqueue(MockResponse().setBody("""{"devices":[{"id":"phone-1","kind":"phone","last_lan_host":"127.0.0.1","last_lan_port":${phone.port},"lan_cert_sha256":"${TestLanCert.sha256}"}]}"""))
+            phone.enqueue(MockResponse().setResponseCode(503).setBody("""{"error":"telegram_not_signed_in"}"""))
+
+            val playback = api.getPlayback("item-1", "jwt", lanPin = "cap-tv1", telegramUrl = { null })
+
+            assertEquals("denied", playback.status)
+            assertEquals("telegram_not_connected", playback.failureReason)
+            assertEquals("Telegram isn't connected on this TV or your phone.", playback.prepareLabel)
+        } finally {
+            phone.shutdown()
+        }
+    }
+
+    @Test
+    fun `returns telegram_not_connected when the phone answers 503 telegram_not_signed_in through the relay`() = runBlocking {
+        server.enqueue(MockResponse().setBody("""{"items":[{"id":"item-1","title":"TgClip","sources":[{"kind":"telegram","origin_identity":"tg:1:2","stable_source_key":"tgfile:xyz"}]}]}"""))
+        server.enqueue(MockResponse().setBody("""{"devices":[{"id":"phone-1","kind":"phone"}]}"""))
+        server.enqueue(MockResponse().setBody("""{"linked":true,"phone_device_id":"phone-1"}"""))
+        server.enqueue(MockResponse().setBody("""{"ticket":"rt-1","expires_at":"2099-01-01T00:00:00Z"}"""))
+        server.enqueue(MockResponse().setResponseCode(503).setBody("""{"error":"telegram_not_signed_in"}"""))
+
+        val playback = api.getPlayback("item-1", "jwt", lanPin = "cap-tv1", telegramUrl = { null })
+
+        assertEquals("telegram_not_connected", playback.failureReason)
+        val probe = (1..5).map { server.takeRequest() }.last()
+        assertTrue(probe.path!!.startsWith("/relay/v1/p/phone-1/telegram/xyz"))
+        assertEquals("bytes=0-0", probe.getHeader("Range"))
+    }
+
+    @Test
+    fun `any other relay answer still plays through the relay`() = runBlocking {
+        server.enqueue(MockResponse().setBody("""{"items":[{"id":"item-1","title":"TgClip","sources":[{"kind":"telegram","origin_identity":"tg:1:2","stable_source_key":"tgfile:xyz"}]}]}"""))
+        server.enqueue(MockResponse().setBody("""{"devices":[{"id":"phone-1","kind":"phone"}]}"""))
+        server.enqueue(MockResponse().setBody("""{"linked":true,"phone_device_id":"phone-1"}"""))
+        server.enqueue(MockResponse().setBody("""{"ticket":"rt-1","expires_at":"2099-01-01T00:00:00Z"}"""))
+        server.enqueue(MockResponse().setResponseCode(503).setBody("""{"error":"phone_busy"}"""))
+
+        val playback = api.getPlayback("item-1", "jwt", lanPin = "cap-tv1", telegramUrl = { null })
+
+        assertEquals("ready", playback.status)
+        assertTrue(playback.url!!.contains("/relay/v1/p/phone-1/telegram/xyz"))
+    }
+
+    @Test
+    fun `maps cloud error codes to specific failure reasons`() = runBlocking {
+        // credentials_rejected
+        server.enqueue(MockResponse().setBody("""{"items":[{"id":"c1","title":"Cloud1","sources":[{"kind":"own_cloud","origin_identity":"r2:c1"}]}]}"""))
+        server.enqueue(MockResponse().setResponseCode(400).setBody("""{"error":"credentials_rejected"}"""))
+        val p1 = api.getPlayback("c1", "jwt")
+        assertEquals("denied", p1.status)
+        assertEquals("cloud_credentials_rejected", p1.failureReason)
+
+        // source_unavailable
+        server.enqueue(MockResponse().setBody("""{"items":[{"id":"c2","title":"Cloud2","sources":[{"kind":"own_cloud","origin_identity":"r2:c2"}]}]}"""))
+        server.enqueue(MockResponse().setResponseCode(404).setBody("""{"error":"source_unavailable"}"""))
+        val p2 = api.getPlayback("c2", "jwt")
+        assertEquals("denied", p2.status)
+        assertEquals("cloud_disconnected", p2.failureReason)
+
+        // 429
+        server.enqueue(MockResponse().setBody("""{"items":[{"id":"c3","title":"Cloud3","sources":[{"kind":"own_cloud","origin_identity":"r2:c3"}]}]}"""))
+        server.enqueue(MockResponse().setResponseCode(429).setBody("""{"error":"provider_rate_limited"}"""))
+        val p3 = api.getPlayback("c3", "jwt")
+        assertEquals("denied", p3.status)
+        assertEquals("cloud_limited", p3.failureReason)
+
+        // 500 -> unknown
+        server.enqueue(MockResponse().setBody("""{"items":[{"id":"c4","title":"Cloud4","sources":[{"kind":"own_cloud","origin_identity":"r2:c4"}]}]}"""))
+        server.enqueue(MockResponse().setResponseCode(500).setBody("""{"error":"internal_error"}"""))
+        val p4 = api.getPlayback("c4", "jwt")
+        assertEquals("denied", p4.status)
+        assertEquals("unknown", p4.failureReason)
+    }
+
+    @Test
+    fun `returns phone_lost_file when phone answers 404 not_in_library`() = runBlocking {
+        val phone = TestLanCert.phone()
+        try {
+            server.enqueue(MockResponse().setBody("""{"items":[{"id":"item-1","title":"Clip","sources":[{"origin_identity":"video-1","serving_device_id":"phone-1"}]}]}"""))
+            server.enqueue(MockResponse().setBody("""{"devices":[{"id":"phone-1","kind":"phone","last_lan_host":"127.0.0.1","last_lan_port":${phone.port},"lan_cert_sha256":"${TestLanCert.sha256}"}]}"""))
+            phone.enqueue(MockResponse().setResponseCode(404).setBody("""{"error":"not_in_library"}"""))
+
+            val playback = api.getPlayback("item-1", "jwt", "capability")
+
+            assertEquals("denied", playback.status)
+            assertEquals("phone_lost_file", playback.failureReason)
+            assertEquals("This video isn't on your phone. Add the video again on your phone.", playback.prepareLabel)
+        } finally {
+            phone.shutdown()
+        }
+    }
+
+    @Test
     fun `marks ingest complete once playback is ready`() {
         val ready = Video(
             id = "video-1",

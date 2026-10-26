@@ -93,7 +93,7 @@ class LanLibraryServer(
             }
             (session.method == Method.GET || isHead) && path.startsWith("/media/") -> {
                 val id = path.removePrefix("/media/")
-                val item = store.get(id) ?: return notFound()
+                val item = store.get(id) ?: return notInLibrary()
                 if (item.isPrivate) {
                     val pass = session.parameters["pass"]?.firstOrNull()
                     val tvDeviceId = grant?.tvDeviceId ?: suppliedCredentials(session).firstNotNullOfOrNull(credentials::tvDeviceId)
@@ -105,9 +105,10 @@ class LanLibraryServer(
                 if (isHead) headAware(wrapped, true, keepContentLength = true) else trackStream(wrapped)
             }
             (session.method == Method.GET || isHead) && path.startsWith("/telegram/") -> {
-                val media = telegram ?: return notFound()
+                val media = telegram?.takeUnless { it.signedOut } ?: return telegramNotSignedIn()
                 val uniqueId = path.removePrefix("/telegram/").takeIf { it.matches(UNIQUE_ID) } ?: return notFound()
-                val file = media.resolve(uniqueId) ?: return notFound()
+                // A session that was still starting may have ended up asking for a sign-in.
+                val file = media.resolve(uniqueId) ?: return if (media.signedOut) telegramNotSignedIn() else notFound()
                 if (file.size <= 0) return notFound()
                 val response = when (val range = ByteRange.parse(session.headers["range"], file.size)) {
                     is ByteRange.Unsatisfiable -> unsatisfiable(file.size)
@@ -167,12 +168,16 @@ class LanLibraryServer(
     private fun issueLink(session: IHTTPSession, path: String): Response {
         val capability = headerCapability(session)?.takeIf { credentials.authorized(listOf(it)) }
             ?: return newFixedLengthResponse(Response.Status.UNAUTHORIZED, "application/json", """{"error":"header_required"}""")
-        val streamable = when {
-            path.startsWith("/media/") -> store.get(path.removePrefix("/media/")) != null
-            path.startsWith("/telegram/") -> telegram != null && path.removePrefix("/telegram/").matches(UNIQUE_ID)
-            else -> false
+        when {
+            path.startsWith("/media/") -> {
+                if (store.get(path.removePrefix("/media/")) == null) return notInLibrary()
+            }
+            path.startsWith("/telegram/") -> {
+                if (telegram == null || telegram.signedOut) return telegramNotSignedIn()
+                if (!path.removePrefix("/telegram/").matches(UNIQUE_ID)) return notFound()
+            }
+            else -> return notFound()
         }
-        if (!streamable) return notFound()
         val id = links.issue(path, capability, credentials.tvDeviceId(capability))
         return jsonResponse(json.encodeToString(StreamLink(link = id, expiresInSeconds = links.idleSeconds)))
     }
@@ -194,6 +199,12 @@ class LanLibraryServer(
 
     private fun notFound() =
         newFixedLengthResponse(Response.Status.NOT_FOUND, "application/json", """{"error":"not_found"}""")
+
+    private fun notInLibrary() =
+        newFixedLengthResponse(Response.Status.NOT_FOUND, "application/json", """{"error":"not_in_library"}""")
+
+    private fun telegramNotSignedIn() =
+        newFixedLengthResponse(Response.Status.SERVICE_UNAVAILABLE, "application/json", """{"error":"telegram_not_signed_in"}""")
 
     /** Send the real media type when known; do not assume video/mp4 (R-6). */
     private fun contentTypeFor(item: LibraryItem): String {

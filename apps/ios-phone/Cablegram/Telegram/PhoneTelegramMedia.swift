@@ -50,12 +50,24 @@ final class PhoneTelegramMedia: TelegramMedia, @unchecked Sendable {
         }
     }
 
+    var signedOut: Bool {
+        get async {
+            guard await MainActor.run(body: { PhoneTelegram.wasLinked }) else { return true }
+            let session = await MainActor.run { PhoneTelegram.session() }
+            switch await MainActor.run(body: { session.state }) {
+            case .starting, .ready: return false
+            default: return true
+            }
+        }
+    }
+
     func resolve(uniqueId: String) async -> TelegramFileRef? {
         guard await MainActor.run(body: { PhoneTelegram.wasLinked }) else { return nil }
         await dropCachesIfSessionChanged()
         if await removed.contains("tgfile:\(uniqueId)") { return nil }
         let session = await MainActor.run { PhoneTelegram.session() }
-        guard await session.first(timeout: 20, where: { if case .ready = $0 { true } else { false } }) != nil else { return nil }
+        // A phone woken by the TV's request may still be starting Telegram; stop waiting once it asks for a sign-in.
+        guard case .ready? = await session.first(timeout: 20, where: { if case .starting = $0 { false } else { true } }) else { return nil }
         if let hit = lock.withLock({ known[uniqueId] }) { return hit }
         guard let channel = await chatId() else { return nil }
         let api = session.api
