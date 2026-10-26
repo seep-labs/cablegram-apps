@@ -85,4 +85,12 @@ describe("player remote", () => {
     expect(reduceHud(shown, "back", 0, ctx)[0].controlsVisible).toBe(false);
     expect(reduceHud(initialHud, "back", 0, ctx)[1]).toEqual([{ type: "exit" }]);
   });
+  it("lists a track the TV cannot decode but does not switch to it", () => {
+    const audio = { ...ctx, audioTracks: [{ id: "emb:2", label: "AAC" }, { id: "emb:3", label: "Persian · MP3 (not supported on this TV)", disabled: true }], selectedAudioId: "emb:2" };
+    const menu = { ...initialHud, controlsVisible: true, overlay: "audioSubtitles" as const, menuSection: "audio" as const, menuIndex: 0 };
+    const [onMp3] = reduceHud(menu, "down", 0, audio);
+    expect(onMp3.menuIndex).toBe(1);
+    expect(reduceHud(onMp3, "ok", 0, audio)[1]).toEqual([]);
+    expect(reduceHud(menu, "ok", 0, audio)[1]).toEqual([{ type: "audio", id: "emb:2" }]);
+  });
 });

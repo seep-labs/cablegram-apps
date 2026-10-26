@@ -90,7 +90,8 @@ The webOS package builds and validates with `ares-package`. The Tizen package ne
 
 `platforms/tizen-hosted` is the Samsung counterpart of `platforms/webos-hosted`: a `.wgt` that only opens
 `https://tv.cablegram.app/`, so it needs no `file://` origin on the server. Package it as it is
-(`tizen package -t wgt -s <cert profile> -- platforms/tizen-hosted`). Tizen applies `script-src 'self'; style-src 'self'`
+(`tizen package -t wgt -s <cert profile> -- platforms/tizen-hosted`; the package is named after the app, `Cablegram TV.wgt`,
+and `tizen install` fails on the space, so rename it first). Tizen applies `script-src 'self'; style-src 'self'`
 to packaged apps, so the redirect and its styles must stay in their own files: an inline `<script>` never runs and the
 TV shows a black screen. The hosted page gets no `tizen` object, so media and colour keys cannot be registered from it;
 arrows, OK, Back and digits arrive anyway. Verified 2026-10-26 on Samsung Remote Test Lab: QT80 (2020, Tizen 5.5) and

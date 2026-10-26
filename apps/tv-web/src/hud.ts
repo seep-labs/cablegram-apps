@@ -18,7 +18,8 @@ export const SEEK_FLASH_MS = 1_500;
 /** Quiet time on the timeline before a skimmed position lands. */
 export const SCRUB_COMMIT_MS = 1_200;
 
-export interface HudTrack { id: string | null; label: string }
+/** `disabled`: shown in the menu (with the reason in its label) but not selectable. */
+export interface HudTrack { id: string | null; label: string; disabled?: boolean }
 
 export interface HudContext {
   isPlaying: boolean; positionMs: number; durationMs: number;
@@ -176,7 +177,7 @@ function reduceTracksMenu(state: HudState, key: DpadKey, ctx: HudContext): Resul
     case "right": return [switchSection(state, "subtitles", ctx), []];
     case "ok": {
       const option = options[state.menuIndex];
-      if (!option) return [state, []];
+      if (!option || option.disabled) return [state, []];
       if (state.menuSection === "audio") return [state, option.id != null ? [{ type: "audio", id: option.id }] : []];
       return [state, [{ type: "subtitle", id: option.id }]];
     }

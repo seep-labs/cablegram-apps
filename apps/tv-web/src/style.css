@@ -311,6 +311,7 @@ html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; color: 
 .menu-option { padding: 16px 24px; border-radius: 16px; font-size: 32px; color: var(--paper); white-space: pre; cursor: pointer; }
 .menu-option.selected { font-weight: 700; }
 .menu-option.focused { background: var(--acid); color: var(--ink); font-weight: 700; }
+.menu-option.disabled { opacity: .5; cursor: default; }
 .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding: 24px; border-radius: 16px;
   font-size: 32px; font-weight: 600; color: var(--paper); cursor: pointer; }
 .setting-row b { margin-left: 48px; }
