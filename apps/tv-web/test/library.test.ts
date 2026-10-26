@@ -3,7 +3,7 @@ import { parseTitle } from "../src/api";
 import { initialHud, reduceHud } from "../src/hud";
 import type { HudContext } from "../src/hud";
 import {
-  buildShelves, displayTitle, formatRuntime, metadataParts, monogram, placeholderColors, privateThumbnail, remainingLabel, showTitle,
+  allTitles, buildShelves, displayTitle, formatRuntime, metadataParts, monogram, placeholderColors, privateThumbnail, remainingLabel, showTitle,
   sourceBadge, toEntries,
 } from "../src/library";
 
@@ -92,5 +92,52 @@ describe("player remote", () => {
     expect(onMp3.menuIndex).toBe(1);
     expect(reduceHud(onMp3, "ok", 0, audio)[1]).toEqual([]);
     expect(reduceHud(menu, "ok", 0, audio)[1]).toEqual([{ type: "audio", id: "emb:2" }]);
+  });
+});
+
+describe("collections and all titles", () => {
+  const kids = { id: "c-kids", name: "Kids" };
+  const fav = { id: "c-fav", name: "favourites" };
+  const videos = [
+    t({ id: "up", title: "Up", created_at: "2026-09-08", genres: ["Animation"], year: 2009, collections: [kids] }),
+    t({ id: "cars", title: "Cars", created_at: "2026-09-09", genres: ["Animation"], year: 2006, collections: [kids, fav] }),
+    t({ id: "heat", title: "Heat", created_at: "2026-09-01", genres: ["Action"], year: 1995, in_my_list: true }),
+    t({ id: "zodiac", title: "zodiac", created_at: "2026-09-02" }),
+    t({ id: "bluey1", title: "Bluey", media_type: "tv", tmdb_id: 5, season_number: 1, episode_number: 1, created_at: "2026-09-05", year: 2018, collections: [kids] }),
+    t({ id: "bluey2", title: "Bluey", media_type: "tv", tmdb_id: 5, season_number: 2, episode_number: 1, created_at: "2026-09-06", year: 2020, collections: [kids] }),
+  ];
+
+  it("reads each title's collections from the catalog and ignores malformed ones", () => {
+    expect(t({ id: "1", collections: [{ id: "c1", name: "Kids" }, { id: 3 }, null] }).collections).toEqual([{ id: "c1", name: "Kids" }]);
+    expect(t({ id: "1" }).collections).toEqual([]);
+  });
+
+  it("puts each collection after My List and before the genres, by name, newest first", () => {
+    const shelves = buildShelves(videos, "all", null);
+    expect(shelves.map((s) => s.id)).toEqual(["recent", "mylist", "collection:c-fav", "collection:c-kids", "genre:Action", "genre:Animation"]);
+    expect(shelves.filter((s) => s.id.startsWith("collection:")).map((s) => s.title)).toEqual(["favourites", "Kids"]);
+    expect(shelves.find((s) => s.id === "collection:c-kids")!.entries.map((e) => e.id)).toEqual(["cars", "up", "tmdb:5"]);
+  });
+
+  it("follows the type filter and leaves collections out when a genre is chosen", () => {
+    expect(buildShelves(videos, "movie", null).find((s) => s.id === "collection:c-kids")!.entries.map((e) => e.id)).toEqual(["cars", "up"]);
+    expect(buildShelves(videos, "tv", null).find((s) => s.id === "collection:c-kids")!.entries.map((e) => e.id)).toEqual(["tmdb:5"]);
+    expect(buildShelves(videos, "all", "Animation").some((s) => s.id.startsWith("collection:"))).toBe(false);
+  });
+
+  it("lists every title once, a show as one poster, newest first by default", () => {
+    expect(allTitles(videos, "all", "recent").map((e) => e.id)).toEqual(["cars", "up", "tmdb:5", "zodiac", "heat"]);
+  });
+
+  it("sorts by title ignoring case, and by year newest first with unknown years last", () => {
+    expect(allTitles(videos, "all", "title").map((e) => e.id)).toEqual(["tmdb:5", "cars", "heat", "up", "zodiac"]);
+    // A show counts as its earliest episode year (2018).
+    expect(allTitles(videos, "all", "year").map((e) => e.id)).toEqual(["tmdb:5", "up", "cars", "heat", "zodiac"]);
+  });
+
+  it("narrows to movies or shows and is empty for an empty library", () => {
+    expect(allTitles(videos, "movie", "recent").map((e) => e.id)).toEqual(["cars", "up", "zodiac", "heat"]);
+    expect(allTitles(videos, "tv", "recent").map((e) => e.id)).toEqual(["tmdb:5"]);
+    expect(allTitles([], "all", "recent")).toEqual([]);
   });
 });

@@ -207,6 +207,7 @@ class CablegramApi(
                     originIdentity = source?.originIdentity,
                     addedAtTimestamp = item.createdAt.orEmpty(),
                     inMyList = item.inMyList,
+                    collections = item.collections,
                     isPrivate = isPrivate,
                     sourceKinds = item.sources
                         .filter { it.archiveState != "archived" && it.availability != "unavailable" }
@@ -1046,6 +1047,7 @@ private data class CatalogItemDto(
     @kotlinx.serialization.SerialName("match_status") val matchStatus: String = "matched",
     val sources: List<CatalogSourceDto> = emptyList(),
     val progress: CatalogProgressDto? = null,
+    val collections: List<CollectionRef> = emptyList(),
 )
 
 @Serializable

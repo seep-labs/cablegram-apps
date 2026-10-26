@@ -197,6 +197,12 @@ html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; color: 
 .hero-remaining { margin: 0 36px 0 20px; font-size: 26px; font-weight: 500; color: var(--paper); white-space: nowrap; }
 .hero-hint { font-size: 26px; color: var(--slate); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+.titles-bar { display: flex; align-items: center; flex: none; margin: 16px 0 4px; }
+.titles-count { margin-left: 24px; font-size: 26px; color: var(--slate); }
+.titles-wrap { position: relative; -webkit-box-flex: 1; flex: 1; min-height: 0; overflow: hidden; }
+.titles-grid { position: relative; display: flex; flex-wrap: wrap; padding: 28px 8px 120px; transition: transform .25s; }
+.titles-grid .card { margin: 0 40px 56px 0; }
+
 .shelves { position: relative; -webkit-box-flex: 1; flex: 1; min-height: 0; overflow: hidden; }
 .shelf { margin-bottom: 8px; transition: transform .25s; }
 .shelf-head { padding: 0 24px 0 8px; display: flex; align-items: flex-end; }

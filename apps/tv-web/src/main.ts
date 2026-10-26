@@ -8,11 +8,11 @@ import {
 } from "./hud";
 import type { Aspect, DpadKey, HudContext, HudEffect, HudState, HudTrack, SettingsRow } from "./hud";
 import {
-  allGenres, buildShelves, displayTitle, entryBackdrop, entryHint, entryIds, entryInMyList, entryMetadata, entryOverview,
+  allGenres, allTitles, buildShelves, displayTitle, entryBackdrop, entryHint, entryIds, entryInMyList, entryMetadata, entryOverview,
   entryProgress, entryRemaining, entrySourceBadge, episodeBadge, episodeCaption, metadataParts, monogram, nextEpisode,
-  placeholderColors, privateThumbnail, progressFraction, remainingLabel, seasonSummary, showTitle, sourceBadge, toEntries,
+  placeholderColors, privateThumbnail, progressFraction, remainingLabel, seasonSummary, showTitle, sourceBadge, TITLES_SORT_LABEL, TITLES_SORTS, toEntries,
 } from "./library";
-import type { Entry, LibraryType, Show } from "./library";
+import type { Entry, LibraryType, Show, TitlesSort } from "./library";
 import { focusEl, focusFirst, keyFromEvent, moveFocus, registerPlatformKeys } from "./nav";
 import type { Key } from "./nav";
 import { pairLink, qrCanvas } from "./pairlink";
@@ -507,7 +507,11 @@ function showConnectedWelcome() {
 // ---- Library -----------------------------------------------------------------------------------------------------
 
 type Rail = "home" | "player" | "library" | "settings";
-interface LibraryState { rail: Rail; type: LibraryType; genre: string | null; show: Show | null; focusId: string | null }
+interface LibraryState {
+  rail: Rail; type: LibraryType; genre: string | null; show: Show | null; focusId: string | null;
+  /** The "All titles" grid's type chip and sort order (default: all, recently added). */
+  titlesType?: "all" | "movie" | "tv"; titlesSort?: TitlesSort;
+}
 let libraryState: LibraryState = { rail: "home", type: "all", genre: null, show: null, focusId: null };
 let videos: Title[] = [];
 
@@ -600,6 +604,7 @@ function libraryScreen() {
       pill("All", st.type === "all", setType("all")),
       pill("Movies", st.type === "movie", setType("movie")),
       pill("TV Shows", st.type === "tv", setType("tv")),
+      pill("All titles", st.type === "titles", setType("titles")),
       pill(`Genre: ${st.genre ?? "All"}`, !!st.genre, () => {
         if (!genres.length) return;
         const i = st.genre ? genres.indexOf(st.genre) : -1;
@@ -708,6 +713,74 @@ function libraryScreen() {
     return;
   }
 
+  if (st.type === "titles" && st.rail === "home" && videos.length) {
+    // ---- All titles: every title once in a grid, with type chips and a sort pill.
+    const tType = st.titlesType ?? "all";
+    const tSort = st.titlesSort ?? "recent";
+    const entries = allTitles(videos, tType, tSort);
+    const chip = (label: string, selected: boolean, onSelect: () => void, outlined = false) => {
+      const el = focusable("div", `pill${selected ? " selected" : ""}${outlined ? " outlined" : ""}`, onSelect, [], label);
+      el.setAttribute("data-left", "rail-home");
+      return el;
+    };
+    const retitle = (patch: Partial<LibraryState>, index: number) => () => {
+      libraryState = { ...st, ...patch, show: null, focusId: null };
+      libraryScreen();
+      const el = root.querySelectorAll(".titles-bar .pill")[index] as HTMLElement | undefined;
+      if (el) focusEl(el);
+    };
+    // OK steps through the orders: Recently added, Title A–Z, Year.
+    const nextSort = TITLES_SORTS[(TITLES_SORTS.indexOf(tSort) + 1) % TITLES_SORTS.length];
+    const chips = [
+      chip("All", tType === "all", retitle({ titlesType: "all" }, 0)),
+      chip("Movies", tType === "movie", retitle({ titlesType: "movie" }, 1)),
+      chip("TV Shows", tType === "tv", retitle({ titlesType: "tv" }, 2)),
+      chip(`Sort: ${TITLES_SORT_LABEL[tSort]}`, false, retitle({ titlesSort: nextSort }, 3), true),
+    ];
+    chips.forEach((c, i) => { c.id = `titles-chip-${i}`; });
+    main.appendChild(h("div", "titles-bar", undefined, chips.concat([h("div", "titles-count", String(entries.length))])));
+    // Down from a top pill lands on the chip below it (All, Movies, TV Shows, then the sort pill for the rest), not past the chips.
+    const topPills = top.querySelectorAll(".pill");
+    for (let i = 0; i < topPills.length; i++) topPills[i].setAttribute("data-down", `titles-chip-${Math.min(i, 3)}`);
+    const grid = h("div", "titles-grid");
+    entries.forEach((e) => {
+      const isShow = e.kind === "show";
+      grid.appendChild(posterCard({
+        id: e.id, shelf: "titles", title: e.title, caption: e.title,
+        poster: e.kind === "movie" ? (e.video.isPrivate ? privateThumbnail(e.video.id) : e.video.posterUrl) : e.show.poster,
+        progress: entryProgress(e), inMyList: entryInMyList(e),
+        badge: isShow ? (e.show.episodes.length === 1 ? episodeBadge(e.show.episodes[0]) : undefined) ?? `${e.show.episodes.length} EP` : undefined,
+        sourceBadge: entrySourceBadge(e), first: false,
+        onFocus: () => { libraryState = { ...st, focusId: e.id }; },
+        onSelect: () => {
+          if (e.kind === "movie") play(e.video);
+          else { libraryState = { ...st, show: fullShows[e.id] ?? e.show, focusId: null }; libraryScreen(); }
+        },
+        onLong: () => toggleMyList(e),
+      }));
+    });
+    main.appendChild(entries.length
+      ? h("div", "titles-wrap", undefined, [grid])
+      : h("div", "empty-wrap", undefined, [h("div", "empty-search", "No titles match these filters.")]));
+    show([h("div", "library", undefined, [ambient, h("div", "lib-row", undefined, [rail, main])])], libraryBack);
+    // The first column goes Left to the menu, as the first poster of a row does.
+    const cards = Array.prototype.slice.call(grid.children) as HTMLElement[];
+    if (cards.length) {
+      const firstColumn = cards[0].offsetLeft;
+      const lastRow = cards[cards.length - 1].offsetTop;
+      cards.forEach((c, i) => {
+        c.id = `title-card-${i}`;
+        if (c.offsetLeft === firstColumn) c.setAttribute("data-left", "rail-home");
+        // Down on the last row stays put; it must not jump to the menu's Settings.
+        if (c.offsetTop === lastRow) c.setAttribute("data-down", c.id);
+      });
+    }
+    const back = st.focusId ? grid.querySelector(`.card[data-id="${cssEscape(st.focusId)}"]`) as HTMLElement | null : null;
+    if (back) focusCard(back); else focusPill("titles");
+    installLibraryKeys(rail, () => lastContent, (el) => { lastContent = el; });
+    return;
+  }
+
   main.appendChild(hero);
   const hero0 = (st.focusId ? catalogEntries.filter((e) => e.id === st.focusId)[0] : undefined) ?? catalogEntries[0];
   if (hero0) describeEntry(hero0);
@@ -782,8 +855,8 @@ function libraryScreen() {
 }
 
 function focusPill(which: LibraryType | "genre") {
-  const pills = root.querySelectorAll(".pill");
-  const index = { all: 0, movie: 1, tv: 2, genre: 3 } as Record<string, number>;
+  const pills = root.querySelectorAll(".topbar .pill");
+  const index = { all: 0, movie: 1, tv: 2, titles: 3, genre: 4 } as Record<string, number>;
   const el = pills[index[which] ?? 0] as HTMLElement | undefined;
   if (el) focusEl(el);
 }
@@ -853,6 +926,19 @@ function focusCard(el: HTMLElement) {
 /** Keeps a focused card (and its shelf) on screen, the way a LazyRow inside a LazyColumn scrolls. */
 function bringIntoView(card: HTMLElement) {
   const strip = card.parentElement as HTMLElement;
+  if (strip.className === "titles-grid") {
+    // The All titles grid scrolls vertically, keeping the focused row in view.
+    const wrap = strip.parentElement as HTMLElement;
+    let y = -(parseFloat(strip.getAttribute("data-y") || "0"));
+    const top = card.offsetTop - 40;
+    const bottom = card.offsetTop + card.offsetHeight + 100;
+    if (top < y) y = top;
+    else if (bottom > y + wrap.clientHeight) y = bottom - wrap.clientHeight;
+    y = Math.max(0, y);
+    strip.setAttribute("data-y", String(-y));
+    strip.style.transform = `translateY(${-y}px)`;
+    return;
+  }
   const wrap = strip.parentElement as HTMLElement;
   const pad = 8;
   const left = card.offsetLeft - pad;

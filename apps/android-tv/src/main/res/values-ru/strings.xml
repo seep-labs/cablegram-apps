@@ -300,4 +300,8 @@
     <string name="ui_return_to_cablegram_e2e1d7" formatted="false">"Вернуться в Cablegram"</string>
     <string name="ui_this_tv_cannot_keep_up_with_this_video_96ad4c" formatted="false">"Этот телевизор не успевает показывать это видео"</string>
     <string name="ui_the_sound_plays_but_the_pictures_arrive_too_late_to_sh_a95878" formatted="false">"Звук идёт, но кадры приходят слишком поздно, чтобы их показать. Закройте другие приложения на телевизоре или включите другую версию этого видео."</string>
+    <string name="tv_all_titles">"Все названия"</string>
+    <string name="tv_sort">"Сортировка: %1$s"</string>
+    <string name="tv_sort_title">"Название А–Я"</string>
+    <string name="tv_sort_year">"Год"</string>
 </resources>

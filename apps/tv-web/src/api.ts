@@ -47,6 +47,9 @@ export function parseTitle(raw: Json): Title {
     isPrivate,
     sourceKinds: kinds,
     sources,
+    collections: ((raw.collections as Json[] | undefined) ?? [])
+      .filter((c) => typeof c?.id === "string" && typeof c?.name === "string")
+      .map((c) => ({ id: c.id as string, name: c.name as string })),
   };
 }
 

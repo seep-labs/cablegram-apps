@@ -12,6 +12,8 @@ export interface Title {
   genres: string[]; addedAt: string; tmdbId?: number; isPrivate: boolean;
   /** Where the title can play from (usable source kinds), for the poster's source badge. */
   sourceKinds: string[];
+  /** The account's own collections this title is in (Kids, Favourites…), from the catalog. */
+  collections?: { id: string; name: string }[];
 }
 export interface Device { id: string; kind: string; revokedAt?: string }
 export interface Playback {

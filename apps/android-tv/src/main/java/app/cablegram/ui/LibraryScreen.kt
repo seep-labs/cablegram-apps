@@ -32,6 +32,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -121,6 +126,8 @@ internal fun LibraryScreen(
     val ui = androidx.compose.ui.platform.LocalContext.current.resources
     val exitHint = ui.getString(R.string.ui_press_back_again_to_exit_e12dfa)
     var selectedGenre by remember { mutableStateOf<String?>(null) }
+    var titlesFilter by remember { mutableStateOf("all") }
+    var titlesSort by remember { mutableStateOf(TitlesSort.RecentlyAdded) }
     var selectedShow by remember { mutableStateOf<TvShow?>(null) }
     var focusedEntry by remember { mutableStateOf<LibraryEntry?>(null) }
     var rail by remember(selectedType) {
@@ -266,6 +273,8 @@ internal fun LibraryScreen(
                     menuFocus = homeFocus,
                     onTypeSelected = { type ->
                         rail = RailDestination.Home
+                        // The grid starts at its first poster; a poster remembered from the rows must not pull focus off the pill.
+                        if (type == "titles") onExplorerFocus(null, null)
                         onTypeSelected(type)
                     },
                     onGenreCycle = {
@@ -326,6 +335,38 @@ internal fun LibraryScreen(
                     )
                     return@Column
                 }
+                val selectShow: (TvShow) -> Unit = { show ->
+                    selectedShow = fullShows[show.id] ?: show
+                    focusedEntry = null
+                    onExplorerFocus(show.episodes.firstOrNull()?.id, show.id)
+                }
+                val toggleMyList: (LibraryEntry) -> Unit = { entry ->
+                    val ids = entry.myListVideoIds()
+                    val next = !entry.inMyList
+                    onToggleMyList(ids, next)
+                    listNotice = if (next) ui.getString(R.string.ui_added_to_my_list_c528ea) else ui.getString(R.string.ui_removed_from_my_list_570caa)
+                }
+                val entryFocused: (LibraryEntry) -> Unit = { entry ->
+                    focusedEntry = entry
+                    onExplorerFocus(entry.id, null)
+                }
+                if (selectedType == "titles" && rail == RailDestination.Home && videos.isNotEmpty()) {
+                    TitlesGrid(
+                        videos = videos,
+                        filter = titlesFilter,
+                        onFilter = { titlesFilter = it },
+                        sort = titlesSort,
+                        onSort = { titlesSort = it },
+                        focusId = restoredFocusId,
+                        menuFocus = homeFocus,
+                        onPlay = onPlay,
+                        onSelectShow = selectShow,
+                        onToggleMyList = toggleMyList,
+                        onFocused = entryFocused,
+                        modifier = Modifier.weight(1f),
+                    )
+                    return@Column
+                }
                 HeroHeader(
                     title = hero?.title ?: when (rail) {
                         RailDestination.Player -> ui.getString(R.string.ui_nothing_in_progress_44a3cc)
@@ -357,21 +398,9 @@ internal fun LibraryScreen(
                         focusId = restoredFocusId,
                         menuFocus = homeFocus,
                         onPlay = onPlay,
-                        onSelectShow = { show ->
-                            selectedShow = fullShows[show.id] ?: show
-                            focusedEntry = null
-                            onExplorerFocus(show.episodes.firstOrNull()?.id, show.id)
-                        },
-                        onToggleMyList = { entry ->
-                            val ids = entry.myListVideoIds()
-                            val next = !entry.inMyList
-                            onToggleMyList(ids, next)
-                            listNotice = if (next) ui.getString(R.string.ui_added_to_my_list_c528ea) else ui.getString(R.string.ui_removed_from_my_list_570caa)
-                        },
-                        onFocused = { entry ->
-                            focusedEntry = entry
-                            onExplorerFocus(entry.id, null)
-                        },
+                        onSelectShow = selectShow,
+                        onToggleMyList = toggleMyList,
+                        onFocused = entryFocused,
                     )
                 }
             }
@@ -487,6 +516,7 @@ private fun LibraryTopBar(
                 FilterPill(ui.getString(R.string.ui_all_a52ace), selected = selectedType == "all", menuFocus = menuFocus) { onTypeSelected("all") }
                 FilterPill(ui.getString(R.string.ui_movies_dff924), selected = selectedType == "movie", menuFocus = menuFocus) { onTypeSelected("movie") }
                 FilterPill(ui.getString(R.string.ui_tv_shows_6adcc6), selected = selectedType == "tv", menuFocus = menuFocus) { onTypeSelected("tv") }
+                FilterPill(ui.getString(R.string.tv_all_titles), selected = selectedType == "titles", menuFocus = menuFocus) { onTypeSelected("titles") }
                 FilterPill(
                     label = ui.getString(R.string.ui_genre_8dc737, selectedGenre ?: ui.getString(R.string.ui_all_a52ace)),
                     selected = selectedGenre != null,
@@ -903,6 +933,97 @@ private fun LibraryShelves(
         }
     }
 }
+
+/**
+ * Every title once, in a grid: type chips and a sort pill above it. Focus moves along the pills and down into the grid, back up
+ * from its first row, and left from the first column to the menu; a show opened from here returns to the same poster.
+ */
+@Composable
+private fun TitlesGrid(
+    videos: List<Video>,
+    filter: String,
+    onFilter: (String) -> Unit,
+    sort: TitlesSort,
+    onSort: (TitlesSort) -> Unit,
+    focusId: String?,
+    menuFocus: FocusRequester,
+    onPlay: (Video) -> Unit,
+    onSelectShow: (TvShow) -> Unit,
+    onToggleMyList: (LibraryEntry) -> Unit,
+    onFocused: (LibraryEntry) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val ui = androidx.compose.ui.platform.LocalContext.current.resources
+    val entries = remember(videos, filter, sort) { allTitlesEntries(videos, filter, sort) }
+    val gridState = rememberLazyGridState()
+    LaunchedEffect(focusId, entries) {
+        val index = entries.indexOfFirst { it.id == focusId }
+        if (index >= 0) gridState.scrollToItem(index)
+    }
+    val sortLabel = when (sort) {
+        TitlesSort.RecentlyAdded -> ui.getString(R.string.ui_recently_added_96ec5d)
+        TitlesSort.TitleAZ -> ui.getString(R.string.tv_sort_title)
+        TitlesSort.Year -> ui.getString(R.string.tv_sort_year)
+    }
+    Column(modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.padding(top = 16.dp, bottom = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            FilterPill(ui.getString(R.string.ui_all_a52ace), selected = filter == "all", menuFocus = menuFocus) { onFilter("all") }
+            FilterPill(ui.getString(R.string.ui_movies_dff924), selected = filter == "movie", menuFocus = menuFocus) { onFilter("movie") }
+            FilterPill(ui.getString(R.string.ui_tv_shows_6adcc6), selected = filter == "tv", menuFocus = menuFocus) { onFilter("tv") }
+            Spacer(Modifier.width(16.dp))
+            // OK steps through the orders: Recently added, Title A–Z, Year.
+            FilterPill(
+                label = ui.getString(R.string.tv_sort, sortLabel), selected = false, outlined = true, menuFocus = menuFocus,
+                onClick = { onSort(TitlesSort.entries[(sort.ordinal + 1) % TitlesSort.entries.size]) },
+            )
+            Text("${entries.size}", color = Muted, fontSize = 13.sp, modifier = Modifier.padding(start = 12.dp))
+        }
+        if (entries.isEmpty()) {
+            EmptySearchResult(ui.getString(R.string.ui_no_titles_match_these_filters_a0f06f), Modifier.weight(1f))
+            return@Column
+        }
+        BoxWithConstraints(Modifier.weight(1f).fillMaxWidth()) {
+            val gap = 20.dp
+            val columns = ((maxWidth + gap) / (GRID_CARD_WIDTH + gap)).toInt().coerceAtLeast(1)
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(columns),
+                state = gridState,
+                modifier = Modifier.fillMaxSize().focusRestorer(),
+                contentPadding = PaddingValues(start = 4.dp, end = 12.dp, top = 8.dp, bottom = 36.dp),
+                horizontalArrangement = Arrangement.spacedBy(gap),
+                verticalArrangement = Arrangement.spacedBy(22.dp),
+            ) {
+                itemsIndexed(entries, key = { _, entry -> entry.id }) { index, entry ->
+                    // The first column goes Left to the menu, as the first poster of a row does.
+                    val rowIndex = if (index % columns == 0) 0 else 1
+                    when (entry) {
+                        is MovieEntry -> PosterCard(
+                            title = entry.title, caption = entry.title, poster = entry.video.posterModel(), progress = entry.progress,
+                            preparing = entry.video.tier == "ingesting", prepareProgress = entry.video.ingestProgress, inMyList = entry.inMyList,
+                            sourceBadge = sourceBadge(entry.video.sourceKinds), requestFocus = entry.id == focusId, menuFocus = menuFocus, rowIndex = rowIndex,
+                            onFocused = { onFocused(entry) }, onClick = { onPlay(entry.video) }, onLongClick = { onToggleMyList(entry) },
+                        )
+                        is ShowEntry -> PosterCard(
+                            title = entry.title, caption = entry.title, poster = entry.show.poster, progress = entry.progress,
+                            preparing = false, prepareProgress = null, inMyList = entry.inMyList,
+                            badge = entry.show.episodes.singleOrNull()?.episodeBadge() ?: "${entry.show.episodes.size} EP",
+                            sourceBadge = sourceBadge(entry.show.episodes.flatMap { it.sourceKinds }.toSet()),
+                            requestFocus = entry.id == focusId, menuFocus = menuFocus, rowIndex = rowIndex,
+                            onFocused = { onFocused(entry) }, onClick = { onSelectShow(entry.show) }, onLongClick = { onToggleMyList(entry) },
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+/** A portrait poster's width, which the grid's columns are counted in. */
+private val GRID_CARD_WIDTH = 128.dp
 
 @Composable
 private fun LabeledPosterRow(
@@ -1327,6 +1448,11 @@ private fun buildLibraryShelves(
         shelves += LibraryShelf("mylist", "My List", myList)
     }
     if (selectedGenre == null) {
+        // The account's own collections (made on the phone), one row each, after My List.
+        scoped.flatMap { it.collections }.distinctBy { it.id }.sortedBy { it.name.lowercase() }.forEach { collection ->
+            val entries = toLibraryEntries(scoped.filter { video -> video.collections.any { it.id == collection.id } }).sortedByDescending { it.addedAt }
+            if (entries.isNotEmpty()) shelves += LibraryShelf("collection:${collection.id}", collection.name, entries)
+        }
         scoped.flatMap { it.genres }.map { it.trim() }.filter { it.isNotEmpty() }.distinct().sorted().forEach { genre ->
             val genreEntries = toLibraryEntries(scoped.filter { genre in it.genres }).sortedByDescending { it.addedAt }
             if (genreEntries.isNotEmpty()) {
@@ -1336,6 +1462,36 @@ private fun buildLibraryShelves(
     }
     return shelves
 }
+
+/** How the "All titles" grid is ordered. */
+internal enum class TitlesSort { RecentlyAdded, TitleAZ, Year }
+
+/**
+ * Every title once, as one poster each (a show's episodes together), narrowed to [type] ("all", "movie" or "tv") and sorted.
+ * A show counts as its newest episode for "recently added" and as its earliest year for "year"; unknown years go last. Ties fall
+ * back to the title, then the id, so the order never flickers.
+ */
+private fun allTitlesEntries(videos: List<Video>, type: String, sort: TitlesSort): List<LibraryEntry> {
+    val typed = when (type) {
+        "tv" -> videos.filter { it.mediaType == "tv" }
+        "movie" -> videos.filter { it.mediaType != "tv" }
+        else -> videos
+    }
+    fun LibraryEntry.year(): Int = when (this) {
+        is MovieEntry -> video.releaseYear
+        is ShowEntry -> show.episodes.mapNotNull { it.releaseYear }.minOrNull()
+    } ?: Int.MIN_VALUE
+    val order: Comparator<LibraryEntry> = when (sort) {
+        TitlesSort.RecentlyAdded -> compareByDescending<LibraryEntry> { it.addedAt }
+        TitlesSort.TitleAZ -> compareBy<LibraryEntry> { it.title.lowercase() }
+        TitlesSort.Year -> compareByDescending<LibraryEntry> { it.year() }
+    }
+    return toLibraryEntries(typed).sortedWith(order.then(compareBy<LibraryEntry>({ it.title.lowercase() }, { it.id })))
+}
+
+/** The ids of the "All titles" grid in order (for tests). */
+internal fun summarizeAllTitles(videos: List<Video>, type: String = "all", sort: TitlesSort = TitlesSort.RecentlyAdded): List<String> =
+    allTitlesEntries(videos, type, sort).map { it.id }
 
 private fun toLibraryEntries(videos: List<Video>): List<LibraryEntry> {
     val shows = videos.filter { it.mediaType == "tv" }

@@ -297,4 +297,8 @@
     <string name="ui_return_to_cablegram_e2e1d7" formatted="false">"Return to Cablegram"</string>
     <string name="ui_this_tv_cannot_keep_up_with_this_video_96ad4c" formatted="false">"This TV cannot keep up with this video"</string>
     <string name="ui_the_sound_plays_but_the_pictures_arrive_too_late_to_sh_a95878" formatted="false">"The sound plays, but the pictures arrive too late to show. Close other apps on the TV, or play a different version of this video."</string>
+    <string name="tv_all_titles">"All titles"</string>
+    <string name="tv_sort">"Sort: %1$s"</string>
+    <string name="tv_sort_title">"Title A–Z"</string>
+    <string name="tv_sort_year">"Year"</string>
 </resources>
