@@ -7,8 +7,12 @@ import "./telegram-env";
 import { SourceError, TelegramRpcError, TelegramSource } from "tv-media";
 import type { TelegramFileApi } from "tv-media";
 import bigInt from "big-integer";
-import { Api, TelegramClient, errors } from "telegram";
+import { Api, TelegramClient, errors, helpers } from "telegram";
 import { StringSession } from "telegram/sessions";
+import { fastModExp } from "./telegram-modpow";
+
+// Accelerate MTProto auth-key exchange (2048-bit Diffie-Hellman) on slow CPUs / Chromium 63
+(helpers as Record<string, unknown>)["modExp"] = fastModExp;
 import { peerOf } from "./telegram-identity";
 import type { TelegramRef } from "./telegram-identity";
 import { loginLink } from "./telegram-link";
