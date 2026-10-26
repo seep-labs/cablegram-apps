@@ -656,8 +656,10 @@ class CatalogClient(
 
         override suspend fun rename(id: String, name: String): CollectionCall<RemoteCollection> {
             val answer = call("/api/catalog/collections/$id", "PATCH", buildJsonObject { put("name", name) })
-            // 405 (and a 404 from a server older than the rename route) must not look like "deleted elsewhere".
-            val kind = if (answer?.first == 405) CallOutcome.Failed else outcome(answer?.first)
+            // A server older than the rename route answers 405, or 404 with "Route PATCH:… not found". Only the server's own
+            // `collection_not_found` means the collection is gone; anything else keeps the rename pending.
+            val gone = answer?.first == 404 && answer.second.contains("collection_not_found")
+            val kind = if (answer?.first == 405 || (answer?.first == 404 && !gone)) CallOutcome.Failed else outcome(answer?.first)
             return CollectionCall(kind, answer?.takeIf { it.first in 200..299 }?.let { collection(it.second) })
         }
 

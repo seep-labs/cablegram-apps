@@ -326,10 +326,16 @@ extension Network {
     }
 
     @Test func answersMapToOutcomesAndAnOlderServerWithoutTheRenameRouteKeepsTheRenamePending() async {
-        MockHTTP.enqueue(409); MockHTTP.enqueue(404); MockHTTP.enqueue(405); MockHTTP.enqueue(404); MockHTTP.enqueue(500)
+        MockHTTP.enqueue(409)
+        MockHTTP.enqueue(404, #"{"error":"collection_not_found"}"#)   // rename: gone
+        MockHTTP.enqueue(405)                                         // rename: no such route
+        MockHTTP.enqueue(404, #"{"message":"Route PATCH:/api/catalog/collections/c1 not found","error":"Not Found","statusCode":404}"#) // an older server
+        MockHTTP.enqueue(404)                                         // delete: already gone
+        MockHTTP.enqueue(500)
         let api = collectionsClient().collectionsAPI(token: "token")
         #expect(await api.create("Kids").outcome == .conflict)
         #expect(await api.rename("c1", "Family").outcome == .notFound)
+        #expect(await api.rename("c1", "Family").outcome == .failed)
         #expect(await api.rename("c1", "Family").outcome == .failed)
         #expect(await api.delete("c1").outcome == .notFound)
         #expect(await api.setMember(collectionId: "c1", itemId: "i1", present: true).outcome == .failed)

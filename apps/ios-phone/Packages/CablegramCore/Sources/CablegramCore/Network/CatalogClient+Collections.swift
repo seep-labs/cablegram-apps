@@ -37,8 +37,11 @@ private struct RemoteCollectionsAPI: CollectionsAPI {
 
     func rename(_ id: String, _ name: String) async -> CollectionCall<RemoteCollection> {
         let reply = await client.send("PATCH", "/api/catalog/collections/\(id)", token: token, json: ["name": name])
-        // A 405 (a server without the rename route) must not look like "deleted elsewhere": the rename stays pending.
-        return CollectionCall(reply.status == 405 ? .failed : outcome(reply.status), collection(reply))
+        // A server older than the rename route answers 405, or 404 with "Route PATCH:… not found". Only the server's own
+        // `collection_not_found` means the collection is gone; anything else keeps the rename pending.
+        let gone = reply.status == 404 && reply.errorCode == "collection_not_found"
+        let routeMissing = reply.status == 405 || (reply.status == 404 && !gone)
+        return CollectionCall(routeMissing ? .failed : outcome(reply.status), collection(reply))
     }
 
     func delete(_ id: String) async -> CollectionCall<Void> {

@@ -45,14 +45,16 @@ class CatalogClientCollectionsTest {
         MockWebServer().use { server ->
             server.start()
             server.enqueue(MockResponse().setResponseCode(409))   // create: name taken
-            server.enqueue(MockResponse().setResponseCode(404))   // rename: gone
+            server.enqueue(MockResponse().setResponseCode(404).setBody("""{"error":"collection_not_found"}"""))   // rename: gone
             server.enqueue(MockResponse().setResponseCode(405))   // rename: no such route
+            server.enqueue(MockResponse().setResponseCode(404).setBody("""{"message":"Route PATCH:/api/catalog/collections/c1 not found","error":"Not Found","statusCode":404}"""))   // rename: an older server
             server.enqueue(MockResponse().setResponseCode(404))   // delete: already gone
             server.enqueue(MockResponse().setResponseCode(500))   // member: server trouble
             val client = api(server)
             runBlocking {
                 assertEquals(CallOutcome.Conflict, client.create("Kids").outcome)
                 assertEquals(CallOutcome.NotFound, client.rename("c1", "Family").outcome)
+                assertEquals(CallOutcome.Failed, client.rename("c1", "Family").outcome)
                 assertEquals(CallOutcome.Failed, client.rename("c1", "Family").outcome)
                 assertEquals(CallOutcome.NotFound, client.delete("c1").outcome)
                 assertEquals(CallOutcome.Failed, client.setMember("c1", "i1", true).outcome)

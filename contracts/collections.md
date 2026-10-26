@@ -20,7 +20,7 @@ All routes need a phone token (`scope=phone`); the catalog list also answers TVs
 name, or only changing its case, is fine. `PATCH` refuses other fields. The catalog list (`GET /api/catalog/items`) gives every title a
 `collections: [{ "id", "name" }]` array, and accepts `?collection_id=` to list one collection.
 
-`PATCH` is new in this version. A server without it answers 404 or 405; clients keep the local name and retry on a later sync.
+`PATCH` is new in this version. A server without it answers 405, or 404 with a `Route PATCH:… not found` message (not the `collection_not_found` of a missing collection); clients keep the local name and retry on a later sync.
 
 ## What the phones do
 
@@ -31,7 +31,8 @@ are made locally first and reconciled with the server during the library sync, a
   name (ignoring case), the phone uses that one instead of creating a second: **merge by name**. Titles in the local collection move to the
   server's collection id.
 - **Rename:** the new name is *dirty* until `PATCH` succeeds. A 409 (name taken) gives the server's name back; a 404 (deleted elsewhere)
-  makes the collection again under the new name. A 405 (a server without the rename route) leaves the rename pending.
+  makes the collection again under the new name. Only a 404 whose body says `collection_not_found` means that; a 405, or a 404 saying
+  `Route PATCH:… not found` (a server older than the rename route), leaves the rename pending and the collection as it is.
 - **Delete:** the id of a synced collection is remembered until `DELETE` succeeds (a 404 counts as done). Titles keep everything else.
 - **Membership:** editing a title's collections marks the title *pending*. The sync sends the difference with `PUT … present` for each
   collection that changed, then clears the mark. A title that is not pending takes the server's list, so changes made on another phone arrive.
