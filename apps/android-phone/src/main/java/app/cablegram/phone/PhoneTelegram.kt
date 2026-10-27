@@ -89,10 +89,16 @@ object PhoneTelegram {
         TelegramDatabaseKey(context.applicationContext).wipe()
     }
 
+    /** Phone-only video discovery (spec 008) on the same TDLib client as [session]; null until the session exists. */
+    @Volatile var discoveryTransport: app.cablegram.discovery.DiscoveryTransport? = null
+        private set
+
     private fun create(context: Context): TelegramSession {
         val keys = TelegramDatabaseKey(context)
+        val client = dev.g000sha256.tdl.TdlClient.create()
+        discoveryTransport = app.cablegram.discovery.TdlibDiscoveryTransport(client)
         return TelegramSession(
-            api = TdlibTelegramApi(),
+            api = TdlibTelegramApi(client),
             role = TelegramRole.Phone,
             parameters = {
                 closing?.join()

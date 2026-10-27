@@ -6,6 +6,8 @@ package app.cablegram.discovery
  */
 class ScanPermit internal constructor() {
     @Volatile private var live = true
+    /** Chats this scan listed; only these may be counted under this permit. */
+    internal val listed: MutableSet<Long> = java.util.concurrent.ConcurrentHashMap.newKeySet()
     val isLive get() = live
     fun revoke() { live = false }
 }
