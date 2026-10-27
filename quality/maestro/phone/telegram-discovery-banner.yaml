@@ -1,0 +1,63 @@
+# Spec 008 (US4 acceptance 2, FR-011). Preconditions: authenticated main UI, a linked Telegram test account and a
+# saved chat choice whose chats hold more than 50 videos. Adds nothing: it only opens the picker, pages through it
+# and reads the banner and How this works, so it can run again and again.
+appId: app.cablegram.phone
+tags:
+  - telegram
+---
+- launchApp
+- tapOn:
+    id: nav_browse
+- scrollUntilVisible:
+    element:
+      id: telegram_add_from_chats
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: telegram_add_from_chats
+- tapOn:
+    id: discovery_pick
+- extendedWaitUntil:
+    visible:
+      id: picker_grid
+    timeout: 30000
+
+# Visible on open, and still visible after paging through the grid.
+- assertVisible:
+    id: picker_banner
+- assertVisible: "Browsing on this phone only.*"
+- scrollUntilVisible:
+    element:
+      id: picker_more
+    direction: DOWN
+    timeout: 30000
+- tapOn:
+    id: picker_more
+- scrollUntilVisible:
+    element:
+      id: picker_more
+    direction: DOWN
+    timeout: 30000
+- assertVisible:
+    id: picker_banner
+
+# How this works names the module and the surface test.
+- tapOn:
+    id: picker_how
+- assertVisible:
+    id: picker_how_page
+- assertVisible: ".*app.cablegram.discovery.*"
+- assertVisible: ".*TelegramApiSurfaceTest.*"
+- tapOn: "Done"
+
+# Shown again on the next open.
+- tapOn:
+    id: picker_done
+- tapOn:
+    id: telegram_add_from_chats
+- tapOn:
+    id: discovery_pick
+- extendedWaitUntil:
+    visible:
+      id: picker_banner
+    timeout: 30000

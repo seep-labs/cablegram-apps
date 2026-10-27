@@ -60,4 +60,10 @@
         <item quantity="one">"%1$d ویدیو اضافه شد. به‌زودی در کتابخانه‌ات دیده می‌شود."</item>
         <item quantity="other">"%1$d ویدیو اضافه شد. به‌زودی در کتابخانه‌ات دیده می‌شوند."</item>
     </plurals>
+    <string name="picker_banner" formatted="false">"🔒 فقط روی همین گوشی مرور می‌شود. چیزی از این به Cablegram فرستاده نمی‌شود."</string>
+    <string name="picker_banner_personal" formatted="false">"🔒 فقط روی همین گوشی مرور می‌شود، از جمله گفتگوهای شخصی. چیزی از این به Cablegram فرستاده نمی‌شود."</string>
+    <string name="picker_how" formatted="false">"چطور کار می‌کند"</string>
+    <string name="how_title" formatted="false">"چطور کار می‌کند"</string>
+    <string name="how_body" formatted="false">"Cablegram روی این گوشی مثل Telegram Desktop وارد تلگرام شده است. کدی که گفتگوهایت را می‌بیند فقط در یک جا است: بستهٔ app.cablegram.discovery در برنامهٔ گوشی، و آزمون متن‌باز برنامه (TelegramApiSurfaceTest) هر درخواستی را که اجازه دارد به تلگرام بفرستد فهرست می‌کند. نام گفتگوها، شمارش‌ها، پیام‌ها و تصاویر بندانگشتی روی همین گوشی می‌مانند. فقط ویدیوهایی که اضافه می‌کنی به «Cablegram library» هدایت می‌شوند."</string>
+    <string name="how_link" formatted="false">"دیدن آزمون در GitHub"</string>
 </resources>

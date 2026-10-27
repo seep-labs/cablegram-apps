@@ -60,4 +60,10 @@
         <item quantity="one">"Added %1$d video. It appears in your library shortly."</item>
         <item quantity="other">"Added %1$d videos. They appear in your library shortly."</item>
     </plurals>
+    <string name="picker_banner" formatted="false">"🔒 Browsing on this phone only. Nothing here is sent to Cablegram."</string>
+    <string name="picker_banner_personal" formatted="false">"🔒 Browsing on this phone only, including personal chats. Nothing here is sent to Cablegram."</string>
+    <string name="picker_how" formatted="false">"How this works"</string>
+    <string name="how_title" formatted="false">"How this works"</string>
+    <string name="how_body" formatted="false">"Cablegram is signed in to Telegram on this phone, like Telegram Desktop. The code that looks at your chats lives in one place, the app.cablegram.discovery package of the phone app, and the app's open-source test (TelegramApiSurfaceTest) lists every Telegram call it is allowed to make. Chat names, counts, messages and thumbnails stay on this phone. Only the videos you add are forwarded into \"Cablegram library\"."</string>
+    <string name="how_link" formatted="false">"See the test on GitHub"</string>
 </resources>

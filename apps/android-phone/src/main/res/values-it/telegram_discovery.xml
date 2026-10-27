@@ -60,4 +60,10 @@
         <item quantity="one">"Aggiunto %1$d video. Apparirà a breve nella tua libreria."</item>
         <item quantity="other">"Aggiunti %1$d video. Appariranno a breve nella tua libreria."</item>
     </plurals>
+    <string name="picker_banner" formatted="false">"🔒 Navighi solo su questo telefono. Niente di tutto questo viene inviato a Cablegram."</string>
+    <string name="picker_banner_personal" formatted="false">"🔒 Navighi solo su questo telefono, comprese le chat personali. Niente di tutto questo viene inviato a Cablegram."</string>
+    <string name="picker_how" formatted="false">"Come funziona"</string>
+    <string name="how_title" formatted="false">"Come funziona"</string>
+    <string name="how_body" formatted="false">"Cablegram ha effettuato l'accesso a Telegram su questo telefono, come Telegram Desktop. Il codice che guarda le tue chat sta in un solo posto, il pacchetto app.cablegram.discovery dell'app del telefono, e il test open source dell'app (TelegramApiSurfaceTest) elenca ogni chiamata a Telegram che può fare. Nomi delle chat, conteggi, messaggi e anteprime restano su questo telefono. Solo i video che aggiungi vengono inoltrati a \"Cablegram library\"."</string>
+    <string name="how_link" formatted="false">"Vedi il test su GitHub"</string>
 </resources>

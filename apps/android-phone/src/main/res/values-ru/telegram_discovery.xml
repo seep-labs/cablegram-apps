@@ -72,4 +72,10 @@
         <item quantity="many">"Добавлено видео: %1$d. Скоро они появятся в библиотеке."</item>
         <item quantity="other">"Добавлено видео: %1$d. Скоро они появятся в библиотеке."</item>
     </plurals>
+    <string name="picker_banner" formatted="false">"🔒 Просмотр только на этом телефоне. Ничего из этого не отправляется в Cablegram."</string>
+    <string name="picker_banner_personal" formatted="false">"🔒 Просмотр только на этом телефоне, включая личные чаты. Ничего из этого не отправляется в Cablegram."</string>
+    <string name="picker_how" formatted="false">"Как это работает"</string>
+    <string name="how_title" formatted="false">"Как это работает"</string>
+    <string name="how_body" formatted="false">"Cablegram вошёл в Telegram на этом телефоне, как Telegram Desktop. Код, который смотрит ваши чаты, находится в одном месте: в пакете app.cablegram.discovery приложения для телефона, а открытый тест приложения (TelegramApiSurfaceTest) перечисляет каждый запрос к Telegram, который ему разрешён. Названия чатов, количество, сообщения и миниатюры остаются на этом телефоне. В «Cablegram library» пересылаются только добавленные вами видео."</string>
+    <string name="how_link" formatted="false">"Посмотреть тест на GitHub"</string>
 </resources>

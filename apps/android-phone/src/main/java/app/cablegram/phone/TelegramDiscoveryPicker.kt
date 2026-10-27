@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import app.cablegram.discovery.ChatKind
 import app.cablegram.discovery.DiscoveryChatId
 import app.cablegram.discovery.DiscoveryGraph
 import app.cablegram.discovery.DiscoveryVideo
@@ -216,6 +217,7 @@ private fun PickerScreen(model: PickerModel, inLibrary: Set<String>, onClose: ()
             Text(ui.getString(R.string.picker_title), color = Color.White, fontSize = 22.sp, modifier = Modifier.weight(1f))
             TextButton(onClick = onClose, modifier = Modifier.maestro(MaestroIds.PICKER_DONE)) { Text(ui.getString(R.string.picker_done)) }
         }
+        PrivacyBanner(personal = model.chats.any { it.kind == ChatKind.Personal || it.kind == ChatKind.SavedMessages }, ui)
         if (model.chats.size > 1) {
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 item { FilterChip(selected = model.filter == null, onClick = { model.show(null) }, label = { Text(ui.getString(R.string.picker_all)) }) }
@@ -330,3 +332,30 @@ private fun duration(seconds: Int): String {
     val s = seconds % 60
     return if (h > 0) "%d:%02d:%02d".format(h, m, s) else "%d:%02d".format(m, s)
 }
+
+/** US4: shown every time the picker opens, above the grid, with no way to dismiss it (FR-011). */
+@Composable
+private fun PrivacyBanner(personal: Boolean, ui: android.content.res.Resources) {
+    var how by remember { mutableStateOf(false) }
+    Column(
+        Modifier.fillMaxWidth().background(Color(0xFF1C1E24), RoundedCornerShape(12.dp)).padding(12.dp).maestro(MaestroIds.PICKER_BANNER),
+        verticalArrangement = Arrangement.spacedBy(2.dp),
+    ) {
+        Text(ui.getString(if (personal) R.string.picker_banner_personal else R.string.picker_banner), color = Color.White, fontSize = 13.sp)
+        TextButton(onClick = { how = true }, modifier = Modifier.maestro(MaestroIds.PICKER_HOW)) { Text(ui.getString(R.string.picker_how)) }
+    }
+    if (how) {
+        val uri = androidx.compose.ui.platform.LocalUriHandler.current
+        AlertDialog(
+            onDismissRequest = { how = false },
+            title = { Text(ui.getString(R.string.how_title)) },
+            text = { Text(ui.getString(R.string.how_body), modifier = Modifier.maestro(MaestroIds.PICKER_HOW_PAGE)) },
+            confirmButton = { TextButton(onClick = { uri.openUri(SURFACE_TEST_URL) }) { Text(ui.getString(R.string.how_link)) } },
+            dismissButton = { TextButton(onClick = { how = false }) { Text(ui.getString(R.string.picker_done)) } },
+            modifier = Modifier.maestroRoot(),
+        )
+    }
+}
+
+private const val SURFACE_TEST_URL =
+    "https://github.com/seep-labs/cablegram-apps/blob/main/apps/android-phone/src/test/java/app/cablegram/telegram/TelegramApiSurfaceTest.kt"
