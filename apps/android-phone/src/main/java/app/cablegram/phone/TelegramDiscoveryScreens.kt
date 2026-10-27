@@ -133,7 +133,7 @@ internal fun FindVideosDialog(graph: DiscoveryGraph, onClose: () -> Unit) {
     val model = remember(graph) { FindVideosModel(graph, scope) }
     DisposableEffect(model) { onDispose { model.dispose() } }
     Dialog(onDismissRequest = onClose, properties = DialogProperties(usePlatformDefaultWidth = false)) {
-        Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+        Surface(Modifier.fillMaxSize().maestroRoot(), color = MaterialTheme.colorScheme.background) {
             FindVideosScreen(model, onClose)
         }
     }
