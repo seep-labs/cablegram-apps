@@ -44,4 +44,13 @@
         <item quantity="many">"حوالي %1$d ملف قد يكون فيديو"</item>
         <item quantity="other">"حوالي %1$d ملف قد يكون فيديو"</item>
     </plurals>
+    <string name="discovery_manage" formatted="false">"إدارة المحادثات"</string>
+    <plurals name="discovery_use_chats">
+        <item quantity="zero">"استخدام %1$d محادثة"</item>
+        <item quantity="one">"استخدام %1$d محادثة"</item>
+        <item quantity="two">"استخدام %1$d محادثة"</item>
+        <item quantity="few">"استخدام %1$d محادثة"</item>
+        <item quantity="many">"استخدام %1$d محادثة"</item>
+        <item quantity="other">"استخدام %1$d محادثة"</item>
+    </plurals>
 </resources>

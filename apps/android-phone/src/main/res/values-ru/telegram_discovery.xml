@@ -38,4 +38,11 @@
         <item quantity="many">"около %1$d файлов, которые могут быть видео"</item>
         <item quantity="other">"около %1$d файла, которые могут быть видео"</item>
     </plurals>
+    <string name="discovery_manage" formatted="false">"Управление чатами"</string>
+    <plurals name="discovery_use_chats">
+        <item quantity="one">"Использовать чат: %1$d"</item>
+        <item quantity="few">"Использовать чатов: %1$d"</item>
+        <item quantity="many">"Использовать чатов: %1$d"</item>
+        <item quantity="other">"Использовать чатов: %1$d"</item>
+    </plurals>
 </resources>

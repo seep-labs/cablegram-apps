@@ -32,4 +32,9 @@
         <item quantity="one">"حدود %1$d فایل که شاید ویدیو باشد"</item>
         <item quantity="other">"حدود %1$d فایل که شاید ویدیو باشند"</item>
     </plurals>
+    <string name="discovery_manage" formatted="false">"مدیریت گفتگوها"</string>
+    <plurals name="discovery_use_chats">
+        <item quantity="one">"استفاده از %1$d گفتگو"</item>
+        <item quantity="other">"استفاده از %1$d گفتگو"</item>
+    </plurals>
 </resources>

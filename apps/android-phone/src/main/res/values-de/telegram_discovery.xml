@@ -32,4 +32,9 @@
         <item quantity="one">"etwa %1$d Datei, die ein Video sein könnte"</item>
         <item quantity="other">"etwa %1$d Dateien, die Videos sein könnten"</item>
     </plurals>
+    <string name="discovery_manage" formatted="false">"Chats verwalten"</string>
+    <plurals name="discovery_use_chats">
+        <item quantity="one">"%1$d Chat verwenden"</item>
+        <item quantity="other">"%1$d Chats verwenden"</item>
+    </plurals>
 </resources>

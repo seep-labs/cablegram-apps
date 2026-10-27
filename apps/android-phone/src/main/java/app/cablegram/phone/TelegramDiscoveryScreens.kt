@@ -1,16 +1,20 @@
 package app.cablegram.phone
 
 import android.content.res.Resources
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
@@ -33,6 +37,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import app.cablegram.discovery.ChatKind
+import app.cablegram.discovery.DiscoveryChat
+import app.cablegram.discovery.DiscoveryChatId
 import app.cablegram.discovery.DiscoveryGraph
 import app.cablegram.discovery.StoredScanRow
 import app.cablegram.telegram.TelegramState
@@ -47,7 +53,7 @@ import kotlinx.coroutines.withTimeout
 
 /** Everything the Find videos screen shows; the scan itself runs here, never in a composable. */
 internal class FindVideosModel(private val graph: DiscoveryGraph, private val scope: CoroutineScope) {
-    enum class Phase { Asking, Scanning, Done, Failed }
+    enum class Phase { Asking, Scanning, Done, Failed, Managing }
 
     var phase by mutableStateOf(Phase.Asking); private set
     var checked by mutableStateOf(0); private set
@@ -55,7 +61,24 @@ internal class FindVideosModel(private val graph: DiscoveryGraph, private val sc
     var pausedSeconds by mutableStateOf<Int?>(null); private set
     var showEmpty by mutableStateOf(false)
     val rows = mutableStateListOf<StoredScanRow>().also { it += graph.store.snapshot().scan }
+    /** Every box starts unticked; only a saved choice is ticked when the list is reopened (FR-008). */
+    val ticked = mutableStateListOf<Long>().also { it += graph.store.choice() }
+    val hasChoice get() = graph.store.choice().isNotEmpty()
     private var job: Job? = null
+
+    /** **Manage chats** reads only what is already stored on the phone, so it asks for nothing. */
+    fun manage() { phase = Phase.Managing }
+
+    fun toggle(chatId: Long) { if (!ticked.remove(chatId)) ticked += chatId }
+
+    /** **Use N chats**: saves the choice and purges whatever was unticked. */
+    fun useChats(onSaved: () -> Unit) {
+        val chosen = rows.filter { it.chatId in ticked }.map { DiscoveryChat(DiscoveryChatId(it.chatId), it.kind, it.title, it.protectedContent) }
+        scope.launch {
+            graph.controller.useChats(chosen)
+            onSaved()
+        }
+    }
 
     /** Only the prompt's **Look for videos** calls this, and it asks the controller for a fresh permit each time (FR-003). */
     fun look() {
@@ -69,7 +92,7 @@ internal class FindVideosModel(private val graph: DiscoveryGraph, private val sc
                 val resume = graph.store.snapshot().let { !it.scanCompleted && it.scanned.isNotEmpty() }
                 if (!resume) { graph.store.restartScan() }
                 val done = graph.store.snapshot().scanned.toSet()
-                val chats = mutableListOf<app.cablegram.discovery.DiscoveryChat>()
+                val chats = mutableListOf<DiscoveryChat>()
                 graph.discovery.discoveryChats(permit, graph.store.switches()).collect { chats += it }
                 total = chats.size
                 checked = chats.count { it.id.raw in done }
@@ -119,7 +142,7 @@ internal fun FindVideosDialog(graph: DiscoveryGraph, onClose: () -> Unit) {
 @Composable
 private fun FindVideosScreen(model: FindVideosModel, onClose: () -> Unit) {
     val ui = LocalContext.current.resources
-    Column(Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column(Modifier.fillMaxSize().navigationBarsPadding().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(ui.getString(R.string.discovery_title), color = Color.White, fontSize = 22.sp)
         if (model.phase == FindVideosModel.Phase.Asking || model.phase == FindVideosModel.Phase.Failed) {
             OnThisPhonePrompt(
@@ -127,13 +150,25 @@ private fun FindVideosScreen(model: FindVideosModel, onClose: () -> Unit) {
                 onLook = model::look,
                 onNotNow = { model.decline(); onClose() },
             )
+            if (model.phase == FindVideosModel.Phase.Asking && model.hasChoice) {
+                OutlinedButton(onClick = model::manage, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp).maestro(MaestroIds.DISCOVERY_MANAGE)) {
+                    Text(ui.getString(R.string.discovery_manage))
+                }
+            }
         }
         if (model.phase == FindVideosModel.Phase.Scanning || model.phase == FindVideosModel.Phase.Done) {
             ScanProgress(model, onClose)
         }
         // Until the owner says "Look for videos", nothing from an earlier scan is shown either.
-        if (model.phase == FindVideosModel.Phase.Scanning || model.phase == FindVideosModel.Phase.Done) {
-            ScanResults(model, ui)
+        if (model.phase == FindVideosModel.Phase.Scanning || model.phase == FindVideosModel.Phase.Done || model.phase == FindVideosModel.Phase.Managing) {
+            Box(Modifier.weight(1f)) { ScanResults(model, ui) }
+            if (model.phase != FindVideosModel.Phase.Scanning) {
+                Button(
+                    onClick = { model.useChats(onClose) },
+                    enabled = model.ticked.isNotEmpty() || model.hasChoice,
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 56.dp).heightIn(min = 52.dp).maestro(MaestroIds.DISCOVERY_USE),
+                ) { Text(ui.getQuantityString(R.plurals.discovery_use_chats, model.ticked.size, model.ticked.size)) }
+            }
         }
     }
 }
@@ -183,21 +218,23 @@ private fun ScanResults(model: FindVideosModel, ui: Resources) {
     val withVideos = model.rows.filter { it.videos + it.files > 0 }.sortedByDescending { it.videos + it.files }
     val empty = model.rows.filter { it.videos + it.files == 0 }
     LazyColumn(Modifier.fillMaxWidth().maestro(MaestroIds.DISCOVERY_RESULTS), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(withVideos, key = { it.chatId }) { ScanRow(it, ui) }
+        items(withVideos, key = { it.chatId }) { ScanRow(it, it.chatId in model.ticked, { model.toggle(it.chatId) }, ui) }
         if (empty.isNotEmpty()) {
             item {
                 TextButton(onClick = { model.showEmpty = !model.showEmpty }) {
                     Text(if (model.showEmpty) ui.getString(R.string.discovery_hide_empty) else ui.getString(R.string.discovery_show_empty, empty.size))
                 }
             }
-            if (model.showEmpty) items(empty, key = { it.chatId }) { ScanRow(it, ui) }
+            if (model.showEmpty) items(empty, key = { it.chatId }) { ScanRow(it, it.chatId in model.ticked, { model.toggle(it.chatId) }, ui) }
         }
     }
 }
 
 @Composable
-private fun ScanRow(row: StoredScanRow, ui: Resources) {
-    Column(Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+private fun ScanRow(row: StoredScanRow, ticked: Boolean, onToggle: () -> Unit, ui: Resources) {
+    Row(Modifier.fillMaxWidth().clickable(onClick = onToggle).padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+    Checkbox(checked = ticked, onCheckedChange = { onToggle() }, modifier = Modifier.maestro(MaestroIds.DISCOVERY_CHAT_CHECK))
+    Column(Modifier.weight(1f)) {
         Text(row.title, color = Color.White, maxLines = 1)
         val kind = if (row.kind == ChatKind.Channel) ui.getString(R.string.discovery_kind_channel) else ui.getString(R.string.discovery_kind_group)
         val count = when {
@@ -206,5 +243,6 @@ private fun ScanRow(row: StoredScanRow, ui: Resources) {
             else -> ui.getQuantityString(R.plurals.discovery_videos, row.videos, row.videos)
         }
         Text("$kind · $count" + if (row.protectedContent) " · " + ui.getString(R.string.discovery_protected) else "", color = VlcMuted, fontSize = 12.sp)
+    }
     }
 }
