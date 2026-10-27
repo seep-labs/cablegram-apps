@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Spec 008: add videos from your Telegram chats. -->
+    <string name="discovery_add_button" formatted="false">"إضافة من محادثات تيليجرام"</string>
+    <string name="discovery_notice_title" formatted="false">"يحدث هذا على هاتفك."</string>
+    <string name="discovery_notice_body" formatted="false">"كابلغرام مسجّل الدخول إلى تيليجرام على هذا الهاتف، مثل تيليجرام لسطح المكتب. يطّلع على محادثاتك هنا، على هذا الهاتف. لا تُرسل أسماء المحادثات أو الأعداد أو الرسائل أو الصور المصغّرة إلى خوادم كابلغرام أبدًا. فقط مقاطع الفيديو التي تضيفها تنتقل إلى «Cablegram library»."</string>
+    <string name="discovery_ask_title" formatted="false">"البحث عن مقاطع فيديو في قنواتك ومجموعاتك؟"</string>
+    <string name="discovery_ask_body" formatted="false">"يعدّ كابلغرام مقاطع الفيديو في كل قناة ومجموعة لديك. لا يفتح رسائلك، ولا يبحث في المحادثات الشخصية أو الرسائل المحفوظة."</string>
+    <string name="discovery_look" formatted="false">"البحث عن مقاطع فيديو"</string>
+    <string name="discovery_not_now" formatted="false">"ليس الآن"</string>
+    <string name="discovery_title" formatted="false">"العثور على مقاطع فيديو"</string>
+    <string name="discovery_listing" formatted="false">"جارٍ الاطلاع على محادثاتك…"</string>
+    <string name="discovery_checked" formatted="false">"تم فحص %1$d من %2$d محادثة"</string>
+    <string name="discovery_stop" formatted="false">"إيقاف"</string>
+    <string name="discovery_kind_channel" formatted="false">"قناة"</string>
+    <string name="discovery_kind_group" formatted="false">"مجموعة"</string>
+    <string name="discovery_counting" formatted="false">"جارٍ العدّ…"</string>
+    <string name="discovery_show_empty" formatted="false">"عرض %1$d محادثة بلا مقاطع فيديو"</string>
+    <string name="discovery_hide_empty" formatted="false">"إخفاء المحادثات بلا مقاطع فيديو"</string>
+    <string name="discovery_paused" formatted="false">"طلب تيليجرام الانتظار %1$d ثانية. سيستمر الفحص بعدها."</string>
+    <string name="discovery_protected" formatted="false">"لا يسمح بالحفظ"</string>
+    <string name="discovery_failed" formatted="false">"تعذّر الاطلاع على محادثاتك. حاول مرة أخرى."</string>
+    <plurals name="discovery_videos">
+        <item quantity="zero">"%1$d مقطع فيديو"</item>
+        <item quantity="one">"%1$d مقطع فيديو"</item>
+        <item quantity="two">"%1$d مقطع فيديو"</item>
+        <item quantity="few">"%1$d مقطع فيديو"</item>
+        <item quantity="many">"%1$d مقطع فيديو"</item>
+        <item quantity="other">"%1$d مقطع فيديو"</item>
+    </plurals>
+    <plurals name="discovery_videos_about">
+        <item quantity="zero">"حوالي %1$d مقطع فيديو"</item>
+        <item quantity="one">"حوالي %1$d مقطع فيديو"</item>
+        <item quantity="two">"حوالي %1$d مقطع فيديو"</item>
+        <item quantity="few">"حوالي %1$d مقطع فيديو"</item>
+        <item quantity="many">"حوالي %1$d مقطع فيديو"</item>
+        <item quantity="other">"حوالي %1$d مقطع فيديو"</item>
+    </plurals>
+    <plurals name="discovery_files_maybe">
+        <item quantity="zero">"حوالي %1$d ملف قد يكون فيديو"</item>
+        <item quantity="one">"حوالي %1$d ملف قد يكون فيديو"</item>
+        <item quantity="two">"حوالي %1$d ملف قد يكون فيديو"</item>
+        <item quantity="few">"حوالي %1$d ملف قد يكون فيديو"</item>
+        <item quantity="many">"حوالي %1$d ملف قد يكون فيديو"</item>
+        <item quantity="other">"حوالي %1$d ملف قد يكون فيديو"</item>
+    </plurals>
+</resources>

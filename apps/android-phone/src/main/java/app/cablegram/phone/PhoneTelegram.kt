@@ -85,6 +85,7 @@ object PhoneTelegram {
     /** After log-out: drop the session and delete its database, pieces and key. */
     fun forget(context: Context) = synchronized(this) {
         current = null
+        graph = null
         // Spec 008: the discovery choice, counts, switches and thumbnail ledger go with the account.
         // The thumbnails themselves are in the TDLib files directory that TelegramDatabaseKey.wipe() removes.
         app.cablegram.discovery.DiscoveryStore(app.cablegram.discovery.KeystoreDiscoveryStorage(context.applicationContext)).clear()
@@ -95,6 +96,17 @@ object PhoneTelegram {
     /** Phone-only video discovery (spec 008) on the same TDLib client as [session]; null until the session exists. */
     @Volatile var discoveryTransport: app.cablegram.discovery.DiscoveryTransport? = null
         private set
+
+    @Volatile private var graph: Pair<Long, app.cablegram.discovery.DiscoveryGraph>? = null
+
+    /** Video discovery for this library channel (spec 008); null until the Telegram session exists. */
+    fun discovery(context: Context, libraryChatId: Long): app.cablegram.discovery.DiscoveryGraph? = synchronized(this) {
+        graph?.takeIf { it.first == libraryChatId }?.let { return it.second }
+        val transport = discoveryTransport ?: return null
+        app.cablegram.discovery.DiscoveryGraph.create(
+            transport, app.cablegram.discovery.KeystoreDiscoveryStorage(context.applicationContext), libraryChatId,
+        ).also { graph = libraryChatId to it }
+    }
 
     private fun create(context: Context): TelegramSession {
         val keys = TelegramDatabaseKey(context)

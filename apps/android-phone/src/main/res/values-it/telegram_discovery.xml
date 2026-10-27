@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Spec 008: add videos from your Telegram chats. -->
+    <string name="discovery_add_button" formatted="false">"Aggiungi dalle tue chat Telegram"</string>
+    <string name="discovery_notice_title" formatted="false">"Questo avviene sul tuo telefono."</string>
+    <string name="discovery_notice_body" formatted="false">"Cablegram ha effettuato l'accesso a Telegram su questo telefono, come Telegram Desktop. Guarda le tue chat qui, su questo telefono. Nomi delle chat, conteggi, messaggi e miniature non vengono mai inviati ai server di Cablegram. Solo i video che aggiungi vanno in «Cablegram library»."</string>
+    <string name="discovery_ask_title" formatted="false">"Cercare video nei tuoi canali e gruppi?"</string>
+    <string name="discovery_ask_body" formatted="false">"Cablegram conta i video di ciascuno dei tuoi canali e gruppi. Non apre i tuoi messaggi e non guarda nelle chat personali né nei Messaggi salvati."</string>
+    <string name="discovery_look" formatted="false">"Cerca video"</string>
+    <string name="discovery_not_now" formatted="false">"Non ora"</string>
+    <string name="discovery_title" formatted="false">"Trova video"</string>
+    <string name="discovery_listing" formatted="false">"Sto guardando le tue chat…"</string>
+    <string name="discovery_checked" formatted="false">"Controllate %1$d chat su %2$d"</string>
+    <string name="discovery_stop" formatted="false">"Interrompi"</string>
+    <string name="discovery_kind_channel" formatted="false">"Canale"</string>
+    <string name="discovery_kind_group" formatted="false">"Gruppo"</string>
+    <string name="discovery_counting" formatted="false">"conteggio…"</string>
+    <string name="discovery_show_empty" formatted="false">"Mostra %1$d chat senza video"</string>
+    <string name="discovery_hide_empty" formatted="false">"Nascondi le chat senza video"</string>
+    <string name="discovery_paused" formatted="false">"Telegram ci chiede di attendere %1$d secondi. La ricerca continuerà."</string>
+    <string name="discovery_protected" formatted="false">"Non consente il salvataggio"</string>
+    <string name="discovery_failed" formatted="false">"Impossibile guardare le tue chat. Riprova."</string>
+    <plurals name="discovery_videos">
+        <item quantity="one">"%1$d video"</item>
+        <item quantity="other">"%1$d video"</item>
+    </plurals>
+    <plurals name="discovery_videos_about">
+        <item quantity="one">"circa %1$d video"</item>
+        <item quantity="other">"circa %1$d video"</item>
+    </plurals>
+    <plurals name="discovery_files_maybe">
+        <item quantity="one">"circa %1$d file che potrebbe essere un video"</item>
+        <item quantity="other">"circa %1$d file che potrebbero essere video"</item>
+    </plurals>
+</resources>

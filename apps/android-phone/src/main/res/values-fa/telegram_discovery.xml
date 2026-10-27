@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Spec 008: add videos from your Telegram chats. -->
+    <string name="discovery_add_button" formatted="false">"افزودن از گفتگوهای تلگرام"</string>
+    <string name="discovery_notice_title" formatted="false">"این کار روی گوشی شما انجام می‌شود."</string>
+    <string name="discovery_notice_body" formatted="false">"کیبل‌گرام روی این گوشی به تلگرام وارد شده است، مثل تلگرام دسکتاپ. گفتگوهای شما را همین‌جا، روی همین گوشی بررسی می‌کند. نام گفتگوها، شمارش‌ها، پیام‌ها و تصاویر بندانگشتی هرگز به سرورهای کیبل‌گرام فرستاده نمی‌شوند. فقط ویدیوهایی که اضافه می‌کنید به «Cablegram library» می‌روند."</string>
+    <string name="discovery_ask_title" formatted="false">"در کانال‌ها و گروه‌هایتان دنبال ویدیو بگردیم؟"</string>
+    <string name="discovery_ask_body" formatted="false">"کیبل‌گرام تعداد ویدیوها را در هر کانال و گروه شما می‌شمارد. پیام‌های شما را باز نمی‌کند و در گفتگوهای شخصی یا پیام‌های ذخیره‌شده نمی‌گردد."</string>
+    <string name="discovery_look" formatted="false">"جست‌وجوی ویدیو"</string>
+    <string name="discovery_not_now" formatted="false">"فعلاً نه"</string>
+    <string name="discovery_title" formatted="false">"یافتن ویدیوها"</string>
+    <string name="discovery_listing" formatted="false">"در حال بررسی گفتگوهای شما…"</string>
+    <string name="discovery_checked" formatted="false">"%1$d از %2$d گفتگو بررسی شد"</string>
+    <string name="discovery_stop" formatted="false">"توقف"</string>
+    <string name="discovery_kind_channel" formatted="false">"کانال"</string>
+    <string name="discovery_kind_group" formatted="false">"گروه"</string>
+    <string name="discovery_counting" formatted="false">"در حال شمارش…"</string>
+    <string name="discovery_show_empty" formatted="false">"نمایش %1$d گفتگو بدون ویدیو"</string>
+    <string name="discovery_hide_empty" formatted="false">"پنهان کردن گفتگوهای بدون ویدیو"</string>
+    <string name="discovery_paused" formatted="false">"تلگرام خواست %1$d ثانیه صبر کنیم. بررسی ادامه پیدا می‌کند."</string>
+    <string name="discovery_protected" formatted="false">"ذخیره کردن مجاز نیست"</string>
+    <string name="discovery_failed" formatted="false">"بررسی گفتگوهای شما ممکن نشد. دوباره تلاش کنید."</string>
+    <plurals name="discovery_videos">
+        <item quantity="one">"%1$d ویدیو"</item>
+        <item quantity="other">"%1$d ویدیو"</item>
+    </plurals>
+    <plurals name="discovery_videos_about">
+        <item quantity="one">"حدود %1$d ویدیو"</item>
+        <item quantity="other">"حدود %1$d ویدیو"</item>
+    </plurals>
+    <plurals name="discovery_files_maybe">
+        <item quantity="one">"حدود %1$d فایل که شاید ویدیو باشد"</item>
+        <item quantity="other">"حدود %1$d فایل که شاید ویدیو باشند"</item>
+    </plurals>
+</resources>
