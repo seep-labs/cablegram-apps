@@ -106,8 +106,8 @@ class TdlibDiscoveryTransport(private val client: TdlClient) : DiscoveryTranspor
         }
     }
 
-    override suspend fun downloadThumbnail(fileId: Int): Long =
-        client.downloadFile(fileId, 1, 0, 0, true).ok().local.downloadedSize
+    override suspend fun downloadThumbnail(fileId: Int): String =
+        client.downloadFile(fileId, 1, 0, 0, true).ok().local.let { if (it.isDownloadingCompleted) it.path else "" }
 
     override suspend fun deleteFile(fileId: Int) {
         client.deleteFile(fileId).ok()

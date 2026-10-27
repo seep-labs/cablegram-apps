@@ -37,4 +37,27 @@
         <item quantity="one">"استفاده از %1$d گفتگو"</item>
         <item quantity="other">"استفاده از %1$d گفتگو"</item>
     </plurals>
+    <string name="picker_title" formatted="false">"افزودن ویدیو"</string>
+    <string name="picker_all" formatted="false">"همه گفتگوها"</string>
+    <string name="picker_in_library" formatted="false">"در کتابخانه"</string>
+    <string name="picker_deleting" formatted="false">"در حال حذف"</string>
+    <string name="picker_more" formatted="false">"نمایش بیشتر"</string>
+    <string name="picker_empty" formatted="false">"هنوز ویدیویی در گفتگوهای انتخاب‌شده نیست."</string>
+    <string name="picker_adding" formatted="false">"افزودن %1$d از %2$d…"</string>
+    <string name="picker_failed" formatted="false">"%1$d مورد انجام نشد."</string>
+    <string name="picker_try_again" formatted="false">"تلاش دوباره"</string>
+    <string name="picker_readd_title" formatted="false">"دوباره اضافه شود؟"</string>
+    <string name="picker_readd_body" formatted="false">"%1$d مورد از این‌ها قبلاً از کتابخانه‌ات حذف شده بود. دوباره اضافه شوند؟"</string>
+    <string name="picker_readd_confirm" formatted="false">"افزودن دوباره"</string>
+    <string name="picker_cancel" formatted="false">"انصراف"</string>
+    <string name="picker_done" formatted="false">"تمام"</string>
+    <string name="discovery_pick" formatted="false">"انتخاب ویدیو"</string>
+    <plurals name="picker_add">
+        <item quantity="one">"افزودن %1$d به کتابخانه"</item>
+        <item quantity="other">"افزودن %1$d به کتابخانه"</item>
+    </plurals>
+    <plurals name="picker_added">
+        <item quantity="one">"%1$d ویدیو اضافه شد. به‌زودی در کتابخانه‌ات دیده می‌شود."</item>
+        <item quantity="other">"%1$d ویدیو اضافه شد. به‌زودی در کتابخانه‌ات دیده می‌شوند."</item>
+    </plurals>
 </resources>

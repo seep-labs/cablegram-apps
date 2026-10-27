@@ -53,4 +53,35 @@
         <item quantity="many">"استخدام %1$d محادثة"</item>
         <item quantity="other">"استخدام %1$d محادثة"</item>
     </plurals>
+    <string name="picker_title" formatted="false">"إضافة فيديوهات"</string>
+    <string name="picker_all" formatted="false">"كل المحادثات"</string>
+    <string name="picker_in_library" formatted="false">"في المكتبة"</string>
+    <string name="picker_deleting" formatted="false">"قيد الحذف"</string>
+    <string name="picker_more" formatted="false">"عرض المزيد"</string>
+    <string name="picker_empty" formatted="false">"لا توجد فيديوهات بعد في المحادثات المختارة."</string>
+    <string name="picker_adding" formatted="false">"جارٍ إضافة %1$d من %2$d…"</string>
+    <string name="picker_failed" formatted="false">"لم يتم إرسال %1$d."</string>
+    <string name="picker_try_again" formatted="false">"حاول مرة أخرى"</string>
+    <string name="picker_readd_title" formatted="false">"إضافة مرة أخرى؟"</string>
+    <string name="picker_readd_body" formatted="false">"تمت إزالة %1$d من هذه من مكتبتك سابقًا. هل تريد إضافتها مرة أخرى؟"</string>
+    <string name="picker_readd_confirm" formatted="false">"أضف مرة أخرى"</string>
+    <string name="picker_cancel" formatted="false">"إلغاء"</string>
+    <string name="picker_done" formatted="false">"تم"</string>
+    <string name="discovery_pick" formatted="false">"اختيار فيديوهات"</string>
+    <plurals name="picker_add">
+        <item quantity="zero">"إضافة %1$d إلى المكتبة"</item>
+        <item quantity="one">"إضافة %1$d إلى المكتبة"</item>
+        <item quantity="two">"إضافة %1$d إلى المكتبة"</item>
+        <item quantity="few">"إضافة %1$d إلى المكتبة"</item>
+        <item quantity="many">"إضافة %1$d إلى المكتبة"</item>
+        <item quantity="other">"إضافة %1$d إلى المكتبة"</item>
+    </plurals>
+    <plurals name="picker_added">
+        <item quantity="zero">"تمت إضافة %1$d فيديو. ستظهر قريبًا في مكتبتك."</item>
+        <item quantity="one">"تمت إضافة %1$d فيديو. سيظهر قريبًا في مكتبتك."</item>
+        <item quantity="two">"تمت إضافة %1$d فيديو. ستظهر قريبًا في مكتبتك."</item>
+        <item quantity="few">"تمت إضافة %1$d فيديو. ستظهر قريبًا في مكتبتك."</item>
+        <item quantity="many">"تمت إضافة %1$d فيديو. ستظهر قريبًا في مكتبتك."</item>
+        <item quantity="other">"تمت إضافة %1$d فيديو. ستظهر قريبًا في مكتبتك."</item>
+    </plurals>
 </resources>

@@ -47,8 +47,8 @@ interface DiscoveryTransport {
     suspend fun messageCount(chatId: Long, files: Boolean): Int
     suspend fun search(chatId: Long, files: Boolean, fromMessageId: Long, limit: Int): TransportPage
     suspend fun forward(toChatId: Long, fromChatId: Long, messageIds: LongArray): List<ForwardResult>
-    /** Returns the bytes now on the phone. */
-    suspend fun downloadThumbnail(fileId: Int): Long
+    /** Returns the local path of the downloaded thumbnail, or an empty string when Telegram has none. */
+    suspend fun downloadThumbnail(fileId: Int): String
     suspend fun deleteFile(fileId: Int)
     suspend fun optimizeStorage(chatIds: LongArray)
 }

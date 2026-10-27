@@ -128,19 +128,24 @@ internal class FindVideosModel(private val graph: DiscoveryGraph, private val sc
 }
 
 @Composable
-internal fun FindVideosDialog(graph: DiscoveryGraph, onClose: () -> Unit) {
+internal fun FindVideosDialog(graph: DiscoveryGraph, viewModel: PhoneViewModel, onClose: () -> Unit) {
     val scope = rememberCoroutineScope()
     val model = remember(graph) { FindVideosModel(graph, scope) }
     DisposableEffect(model) { onDispose { model.dispose() } }
+    var picking by remember { mutableStateOf(false) }
+    if (picking) {
+        PickerDialog(graph, viewModel, onClose = onClose)
+        return
+    }
     Dialog(onDismissRequest = onClose, properties = DialogProperties(usePlatformDefaultWidth = false)) {
         Surface(Modifier.fillMaxSize().maestroRoot(), color = MaterialTheme.colorScheme.background) {
-            FindVideosScreen(model, onClose)
+            FindVideosScreen(model, onClose, onPick = { picking = true })
         }
     }
 }
 
 @Composable
-private fun FindVideosScreen(model: FindVideosModel, onClose: () -> Unit) {
+private fun FindVideosScreen(model: FindVideosModel, onClose: () -> Unit, onPick: () -> Unit) {
     val ui = LocalContext.current.resources
     Column(Modifier.fillMaxSize().navigationBarsPadding().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(ui.getString(R.string.discovery_title), color = Color.White, fontSize = 22.sp)
@@ -151,6 +156,9 @@ private fun FindVideosScreen(model: FindVideosModel, onClose: () -> Unit) {
                 onNotNow = { model.decline(); onClose() },
             )
             if (model.phase == FindVideosModel.Phase.Asking && model.hasChoice) {
+                OutlinedButton(onClick = onPick, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp).maestro(MaestroIds.DISCOVERY_PICK)) {
+                    Text(ui.getString(R.string.discovery_pick))
+                }
                 OutlinedButton(onClick = model::manage, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp).maestro(MaestroIds.DISCOVERY_MANAGE)) {
                     Text(ui.getString(R.string.discovery_manage))
                 }
@@ -164,7 +172,7 @@ private fun FindVideosScreen(model: FindVideosModel, onClose: () -> Unit) {
             Box(Modifier.weight(1f)) { ScanResults(model, ui) }
             if (model.phase != FindVideosModel.Phase.Scanning) {
                 Button(
-                    onClick = { model.useChats(onClose) },
+                    onClick = { model.useChats { if (model.ticked.isNotEmpty()) onPick() else onClose() } },
                     enabled = model.ticked.isNotEmpty() || model.hasChoice,
                     modifier = Modifier.fillMaxWidth().padding(bottom = 56.dp).heightIn(min = 52.dp).maestro(MaestroIds.DISCOVERY_USE),
                 ) { Text(ui.getQuantityString(R.plurals.discovery_use_chats, model.ticked.size, model.ticked.size)) }

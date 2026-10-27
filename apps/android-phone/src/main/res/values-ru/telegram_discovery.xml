@@ -45,4 +45,31 @@
         <item quantity="many">"Использовать чатов: %1$d"</item>
         <item quantity="other">"Использовать чатов: %1$d"</item>
     </plurals>
+    <string name="picker_title" formatted="false">"Добавить видео"</string>
+    <string name="picker_all" formatted="false">"Все чаты"</string>
+    <string name="picker_in_library" formatted="false">"В библиотеке"</string>
+    <string name="picker_deleting" formatted="false">"Удаляется"</string>
+    <string name="picker_more" formatted="false">"Показать ещё"</string>
+    <string name="picker_empty" formatted="false">"В выбранных чатах пока нет видео."</string>
+    <string name="picker_adding" formatted="false">"Добавляем %1$d из %2$d…"</string>
+    <string name="picker_failed" formatted="false">"Не удалось добавить: %1$d."</string>
+    <string name="picker_try_again" formatted="false">"Повторить"</string>
+    <string name="picker_readd_title" formatted="false">"Добавить снова?"</string>
+    <string name="picker_readd_body" formatted="false">"Некоторые из них (%1$d) раньше были убраны из библиотеки. Добавить снова?"</string>
+    <string name="picker_readd_confirm" formatted="false">"Добавить снова"</string>
+    <string name="picker_cancel" formatted="false">"Отмена"</string>
+    <string name="picker_done" formatted="false">"Готово"</string>
+    <string name="discovery_pick" formatted="false">"Выбрать видео"</string>
+    <plurals name="picker_add">
+        <item quantity="one">"Добавить в библиотеку: %1$d"</item>
+        <item quantity="few">"Добавить в библиотеку: %1$d"</item>
+        <item quantity="many">"Добавить в библиотеку: %1$d"</item>
+        <item quantity="other">"Добавить в библиотеку: %1$d"</item>
+    </plurals>
+    <plurals name="picker_added">
+        <item quantity="one">"Добавлено видео: %1$d. Скоро оно появится в библиотеке."</item>
+        <item quantity="few">"Добавлено видео: %1$d. Скоро они появятся в библиотеке."</item>
+        <item quantity="many">"Добавлено видео: %1$d. Скоро они появятся в библиотеке."</item>
+        <item quantity="other">"Добавлено видео: %1$d. Скоро они появятся в библиотеке."</item>
+    </plurals>
 </resources>

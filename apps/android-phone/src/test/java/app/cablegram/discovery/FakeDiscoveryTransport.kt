@@ -34,7 +34,7 @@ class FakeDiscoveryTransport(
         return messageIds.map { if (it in failForward) ForwardResult.Failed(it, "boom") else ForwardResult.Sent(it) }
     }
 
-    override suspend fun downloadThumbnail(fileId: Int): Long = 10L.also { calls += "thumb:$fileId" }
+    override suspend fun downloadThumbnail(fileId: Int): String = "/fake/thumb-$fileId.jpg".also { calls += "thumb:$fileId" }
     override suspend fun deleteFile(fileId: Int) { deletedFiles += fileId }
     override suspend fun optimizeStorage(chatIds: LongArray) { optimized += chatIds.toList() }
 }

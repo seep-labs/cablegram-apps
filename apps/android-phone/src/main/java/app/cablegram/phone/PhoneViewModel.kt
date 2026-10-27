@@ -2725,6 +2725,26 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
         }
     }
 
+    /** Spec 008 picker: hidden or deleted Telegram titles as `tgfile:` key to state ("hidden", "deleting", ...); null when the catalog can't be reached. */
+    suspend fun telegramTombstoneStates(): Map<String, String>? {
+        val token = pairing.accountToken ?: return null
+        return catalog().telegramTombstones(token)?.associate { it.stableSourceKey to it.state }
+    }
+
+    /** Spec 008 picker: the owner confirmed adding a hidden or deleted title again. */
+    suspend fun restoreTelegramTitleByKey(stableSourceKey: String): Boolean {
+        val token = pairing.accountToken ?: return false
+        return catalog().restoreTelegramTitle(token, stableSourceKey)
+    }
+
+    /** Spec 008 picker: videos were forwarded into the library channel; bring the library up to date. */
+    fun afterDiscoveryAdd() {
+        viewModelScope.launch {
+            syncLibrary(force = true)
+            refresh()
+        }
+    }
+
     fun openHiddenVideos() {
         showHiddenVideos = true
         loadHiddenVideos()

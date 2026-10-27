@@ -179,7 +179,7 @@ internal fun TelegramStorageEntry(viewModel: PhoneViewModel, onAccountHelp: () -
         ) { Text(ui.getString(R.string.discovery_add_button)) }
         if (findVideos && libraryChatId != null) {
             val graph = remember(libraryChatId) { PhoneTelegram.session(context); PhoneTelegram.discovery(context, libraryChatId) }
-            if (graph != null) FindVideosDialog(graph, onClose = { findVideos = false }) else findVideos = false
+            if (graph != null) FindVideosDialog(graph, viewModel, onClose = { findVideos = false }) else findVideos = false
         }
         OutlinedButton(
             onClick = viewModel::checkTelegramBotHub,

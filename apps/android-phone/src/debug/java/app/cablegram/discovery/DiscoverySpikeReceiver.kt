@@ -86,7 +86,7 @@ class DiscoverySpikeReceiver : BroadcastReceiver() {
             val mimes = files.videos.groupingBy { it.mimeType.substringBefore("/") }.eachCount()
             log("chat#$chatsSeen protected=${chat.protectedContent} videos=${videos.videos.size} files=${files.videos.size} (video mime ${video}, video extension ${ext}, mime types $mimes) canBeSaved=false:$notSaveable page=${ms}ms next=${videos.nextFromMessageId != 0L}")
             val thumbs = all.mapNotNull { it.thumbnailFileId }.take(5)
-            val bytes = thumbs.sumOf { throttle.run { transport.downloadThumbnail(it) } }
+            val bytes = thumbs.sumOf { throttle.run { java.io.File(transport.downloadThumbnail(it)).length() } }
             thumbs.forEach { transport.deleteFile(it) }
             transport.optimizeStorage(longArrayOf(id))
             log("chat#$chatsSeen thumbnails=${thumbs.size} bytes=$bytes deleted and optimizeStorage ok")

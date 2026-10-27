@@ -37,4 +37,27 @@
         <item quantity="one">"%1$d Chat verwenden"</item>
         <item quantity="other">"%1$d Chats verwenden"</item>
     </plurals>
+    <string name="picker_title" formatted="false">"Videos hinzufügen"</string>
+    <string name="picker_all" formatted="false">"Alle Chats"</string>
+    <string name="picker_in_library" formatted="false">"In der Mediathek"</string>
+    <string name="picker_deleting" formatted="false">"Wird gelöscht"</string>
+    <string name="picker_more" formatted="false">"Mehr anzeigen"</string>
+    <string name="picker_empty" formatted="false">"Noch keine Videos in deinen gewählten Chats."</string>
+    <string name="picker_adding" formatted="false">"%1$d von %2$d werden hinzugefügt…"</string>
+    <string name="picker_failed" formatted="false">"%1$d sind nicht angekommen."</string>
+    <string name="picker_try_again" formatted="false">"Erneut versuchen"</string>
+    <string name="picker_readd_title" formatted="false">"Erneut hinzufügen?"</string>
+    <string name="picker_readd_body" formatted="false">"%1$d davon hast du früher aus deiner Mediathek entfernt. Wieder hinzufügen?"</string>
+    <string name="picker_readd_confirm" formatted="false">"Erneut hinzufügen"</string>
+    <string name="picker_cancel" formatted="false">"Abbrechen"</string>
+    <string name="picker_done" formatted="false">"Fertig"</string>
+    <string name="discovery_pick" formatted="false">"Videos auswählen"</string>
+    <plurals name="picker_add">
+        <item quantity="one">"%1$d zur Mediathek hinzufügen"</item>
+        <item quantity="other">"%1$d zur Mediathek hinzufügen"</item>
+    </plurals>
+    <plurals name="picker_added">
+        <item quantity="one">"%1$d Video hinzugefügt. Es erscheint gleich in deiner Mediathek."</item>
+        <item quantity="other">"%1$d Videos hinzugefügt. Sie erscheinen gleich in deiner Mediathek."</item>
+    </plurals>
 </resources>

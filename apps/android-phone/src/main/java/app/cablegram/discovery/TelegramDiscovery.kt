@@ -115,11 +115,11 @@ class TelegramDiscovery(
     }
 
     /** Downloads a thumbnail and records it so [purgeChat] can delete exactly what was fetched (FR-008). */
-    suspend fun thumbnail(video: DiscoveryVideo) {
-        val file = video.thumbnailFileId ?: return
+    suspend fun thumbnail(video: DiscoveryVideo): String? {
+        val file = video.thumbnailFileId ?: return null
         gate.requireChosen(video.chatId.raw)
         store.recordThumbnail(video.chatId.raw, file)
-        throttle.run { transport.downloadThumbnail(file) }
+        return throttle.run { transport.downloadThumbnail(file) }.takeIf { it.isNotEmpty() }
     }
 
     /** Deletes every cached thumbnail of a chat now, then forgets the chat (untick, switch off, left chat). */

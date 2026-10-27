@@ -37,4 +37,27 @@
         <item quantity="one">"Usa %1$d chat"</item>
         <item quantity="other">"Usa %1$d chat"</item>
     </plurals>
+    <string name="picker_title" formatted="false">"Aggiungi video"</string>
+    <string name="picker_all" formatted="false">"Tutte le chat"</string>
+    <string name="picker_in_library" formatted="false">"In libreria"</string>
+    <string name="picker_deleting" formatted="false">"In eliminazione"</string>
+    <string name="picker_more" formatted="false">"Mostra altri"</string>
+    <string name="picker_empty" formatted="false">"Ancora nessun video nelle chat scelte."</string>
+    <string name="picker_adding" formatted="false">"Aggiunta di %1$d su %2$d…"</string>
+    <string name="picker_failed" formatted="false">"%1$d non sono andati a buon fine."</string>
+    <string name="picker_try_again" formatted="false">"Riprova"</string>
+    <string name="picker_readd_title" formatted="false">"Aggiungere di nuovo?"</string>
+    <string name="picker_readd_body" formatted="false">"%1$d di questi erano stati rimossi dalla tua libreria. Vuoi aggiungerli di nuovo?"</string>
+    <string name="picker_readd_confirm" formatted="false">"Aggiungi di nuovo"</string>
+    <string name="picker_cancel" formatted="false">"Annulla"</string>
+    <string name="picker_done" formatted="false">"Fatto"</string>
+    <string name="discovery_pick" formatted="false">"Scegli video"</string>
+    <plurals name="picker_add">
+        <item quantity="one">"Aggiungi %1$d alla libreria"</item>
+        <item quantity="other">"Aggiungi %1$d alla libreria"</item>
+    </plurals>
+    <plurals name="picker_added">
+        <item quantity="one">"Aggiunto %1$d video. Apparirà a breve nella tua libreria."</item>
+        <item quantity="other">"Aggiunti %1$d video. Appariranno a breve nella tua libreria."</item>
+    </plurals>
 </resources>
