@@ -66,4 +66,15 @@
     <string name="how_title" formatted="false">"So funktioniert es"</string>
     <string name="how_body" formatted="false">"Cablegram ist auf diesem Handy bei Telegram angemeldet, wie Telegram Desktop. Der Code, der deine Chats ansieht, liegt an einer Stelle: im Paket app.cablegram.discovery der Handy-App. Der Open-Source-Test der App (TelegramApiSurfaceTest) listet jeden Telegram-Aufruf auf, den sie machen darf. Chatnamen, Anzahlen, Nachrichten und Vorschaubilder bleiben auf diesem Handy. Nur die Videos, die du hinzufügst, werden in die „Cablegram library“ weitergeleitet."</string>
     <string name="how_link" formatted="false">"Den Test auf GitHub ansehen"</string>
+    <string name="discovery_advanced" formatted="false">"Erweiterte Einstellungen"</string>
+    <string name="advanced_personal_title" formatted="false">"Auch in persönlichen Chats suchen"</string>
+    <string name="advanced_personal_desc" formatted="false">"Einzelchats mit Personen. Dort liegen oft private Videos."</string>
+    <string name="advanced_saved_title" formatted="false">"Auch in „Gespeicherte Nachrichten“ suchen"</string>
+    <string name="advanced_saved_desc" formatted="false">"Dein eigener Chat „Gespeicherte Nachrichten“."</string>
+    <string name="advanced_confirm_title" formatted="false">"Einschalten?"</string>
+    <string name="advanced_confirm_personal" formatted="false">"Damit kann „Videos finden“ auch deine Einzelchats mit Personen auflisten. Sie bleiben ungewählt, bis du sie auswählst, und es wird nichts angesehen, bevor du auf „Nach Videos suchen“ tippst."</string>
+    <string name="advanced_confirm_saved" formatted="false">"Damit kann „Videos finden“ auch deine „Gespeicherten Nachrichten“ auflisten. Der Chat bleibt ungewählt, bis du ihn auswählst, und es wird nichts angesehen, bevor du auf „Nach Videos suchen“ tippst."</string>
+    <string name="advanced_turn_on" formatted="false">"Einschalten"</string>
+    <string name="discovery_kind_personal" formatted="false">"Persönlicher Chat"</string>
+    <string name="discovery_kind_saved" formatted="false">"Gespeicherte Nachrichten"</string>
 </resources>

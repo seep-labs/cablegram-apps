@@ -66,4 +66,15 @@
     <string name="how_title" formatted="false">"Cómo funciona"</string>
     <string name="how_body" formatted="false">"Cablegram ha iniciado sesión en Telegram en este teléfono, como Telegram Desktop. El código que mira tus chats está en un solo sitio, el paquete app.cablegram.discovery de la app del teléfono, y la prueba de código abierto de la app (TelegramApiSurfaceTest) enumera cada llamada a Telegram que puede hacer. Los nombres de los chats, los recuentos, los mensajes y las miniaturas se quedan en este teléfono. Solo los vídeos que añades se reenvían a «Cablegram library»."</string>
     <string name="how_link" formatted="false">"Ver la prueba en GitHub"</string>
+    <string name="discovery_advanced" formatted="false">"Ajustes avanzados"</string>
+    <string name="advanced_personal_title" formatted="false">"Buscar también en chats personales"</string>
+    <string name="advanced_personal_desc" formatted="false">"Chats individuales con personas. Suelen contener vídeos personales."</string>
+    <string name="advanced_saved_title" formatted="false">"Buscar también en Mensajes guardados"</string>
+    <string name="advanced_saved_desc" formatted="false">"Tu propio chat de Mensajes guardados."</string>
+    <string name="advanced_confirm_title" formatted="false">"¿Activar?"</string>
+    <string name="advanced_confirm_personal" formatted="false">"Esto permite que Buscar vídeos también muestre tus chats individuales con personas. Quedan sin marcar hasta que los elijas, y no se mira nada hasta que pulses Buscar vídeos."</string>
+    <string name="advanced_confirm_saved" formatted="false">"Esto permite que Buscar vídeos también muestre tus Mensajes guardados. Queda sin marcar hasta que lo elijas, y no se mira nada hasta que pulses Buscar vídeos."</string>
+    <string name="advanced_turn_on" formatted="false">"Activar"</string>
+    <string name="discovery_kind_personal" formatted="false">"Chat personal"</string>
+    <string name="discovery_kind_saved" formatted="false">"Mensajes guardados"</string>
 </resources>

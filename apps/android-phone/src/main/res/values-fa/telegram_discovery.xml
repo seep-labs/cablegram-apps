@@ -66,4 +66,15 @@
     <string name="how_title" formatted="false">"چطور کار می‌کند"</string>
     <string name="how_body" formatted="false">"Cablegram روی این گوشی مثل Telegram Desktop وارد تلگرام شده است. کدی که گفتگوهایت را می‌بیند فقط در یک جا است: بستهٔ app.cablegram.discovery در برنامهٔ گوشی، و آزمون متن‌باز برنامه (TelegramApiSurfaceTest) هر درخواستی را که اجازه دارد به تلگرام بفرستد فهرست می‌کند. نام گفتگوها، شمارش‌ها، پیام‌ها و تصاویر بندانگشتی روی همین گوشی می‌مانند. فقط ویدیوهایی که اضافه می‌کنی به «Cablegram library» هدایت می‌شوند."</string>
     <string name="how_link" formatted="false">"دیدن آزمون در GitHub"</string>
+    <string name="discovery_advanced" formatted="false">"تنظیمات پیشرفته"</string>
+    <string name="advanced_personal_title" formatted="false">"در گفتگوهای شخصی هم جست‌وجو کن"</string>
+    <string name="advanced_personal_desc" formatted="false">"گفتگوهای دونفره با آدم‌ها. اغلب ویدیوهای شخصی دارند."</string>
+    <string name="advanced_saved_title" formatted="false">"در پیام‌های ذخیره‌شده هم جست‌وجو کن"</string>
+    <string name="advanced_saved_desc" formatted="false">"گفتگوی پیام‌های ذخیره‌شدهٔ خودت."</string>
+    <string name="advanced_confirm_title" formatted="false">"روشن شود؟"</string>
+    <string name="advanced_confirm_personal" formatted="false">"با این کار «یافتن ویدیو» می‌تواند گفتگوهای دونفرهٔ تو با آدم‌ها را هم فهرست کند. تا وقتی انتخابشان نکنی بی‌علامت می‌مانند و تا وقتی «جست‌وجوی ویدیو» را نزنی چیزی دیده نمی‌شود."</string>
+    <string name="advanced_confirm_saved" formatted="false">"با این کار «یافتن ویدیو» می‌تواند پیام‌های ذخیره‌شدهٔ تو را هم فهرست کند. تا وقتی انتخابش نکنی بی‌علامت می‌ماند و تا وقتی «جست‌وجوی ویدیو» را نزنی چیزی دیده نمی‌شود."</string>
+    <string name="advanced_turn_on" formatted="false">"روشن کن"</string>
+    <string name="discovery_kind_personal" formatted="false">"گفتگوی شخصی"</string>
+    <string name="discovery_kind_saved" formatted="false">"پیام‌های ذخیره‌شده"</string>
 </resources>

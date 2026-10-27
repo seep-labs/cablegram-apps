@@ -90,4 +90,15 @@
     <string name="how_title" formatted="false">"كيف يعمل هذا"</string>
     <string name="how_body" formatted="false">"Cablegram مسجّل الدخول إلى تيليجرام على هذا الهاتف، مثل Telegram Desktop. الشيفرة التي تنظر في محادثاتك موجودة في مكان واحد، هو الحزمة app.cablegram.discovery في تطبيق الهاتف، واختبار التطبيق المفتوح المصدر (TelegramApiSurfaceTest) يسرد كل استدعاء لتيليجرام يُسمح له به. تبقى أسماء المحادثات والأعداد والرسائل والصور المصغّرة على هذا الهاتف. لا يُحوَّل إلى «Cablegram library» سوى الفيديوهات التي تضيفها."</string>
     <string name="how_link" formatted="false">"عرض الاختبار على GitHub"</string>
+    <string name="discovery_advanced" formatted="false">"إعدادات متقدمة"</string>
+    <string name="advanced_personal_title" formatted="false">"ابحث أيضًا في المحادثات الشخصية"</string>
+    <string name="advanced_personal_desc" formatted="false">"محادثات فردية مع أشخاص. غالبًا ما تحتوي على فيديوهات شخصية."</string>
+    <string name="advanced_saved_title" formatted="false">"ابحث أيضًا في الرسائل المحفوظة"</string>
+    <string name="advanced_saved_desc" formatted="false">"محادثة الرسائل المحفوظة الخاصة بك."</string>
+    <string name="advanced_confirm_title" formatted="false">"تشغيل هذا؟"</string>
+    <string name="advanced_confirm_personal" formatted="false">"بذلك يمكن لخيار «البحث عن فيديوهات» أن يعرض أيضًا محادثاتك الفردية مع الأشخاص. تبقى غير محددة حتى تختارها، ولا يُنظر في شيء حتى تضغط «ابحث عن فيديوهات»."</string>
+    <string name="advanced_confirm_saved" formatted="false">"بذلك يمكن لخيار «البحث عن فيديوهات» أن يعرض أيضًا رسائلك المحفوظة. تبقى غير محددة حتى تختارها، ولا يُنظر في شيء حتى تضغط «ابحث عن فيديوهات»."</string>
+    <string name="advanced_turn_on" formatted="false">"تشغيل"</string>
+    <string name="discovery_kind_personal" formatted="false">"محادثة شخصية"</string>
+    <string name="discovery_kind_saved" formatted="false">"الرسائل المحفوظة"</string>
 </resources>

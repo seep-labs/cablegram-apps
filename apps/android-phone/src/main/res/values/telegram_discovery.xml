@@ -66,4 +66,15 @@
     <string name="how_title" formatted="false">"How this works"</string>
     <string name="how_body" formatted="false">"Cablegram is signed in to Telegram on this phone, like Telegram Desktop. The code that looks at your chats lives in one place, the app.cablegram.discovery package of the phone app, and the app's open-source test (TelegramApiSurfaceTest) lists every Telegram call it is allowed to make. Chat names, counts, messages and thumbnails stay on this phone. Only the videos you add are forwarded into \"Cablegram library\"."</string>
     <string name="how_link" formatted="false">"See the test on GitHub"</string>
+    <string name="discovery_advanced" formatted="false">"Advanced settings"</string>
+    <string name="advanced_personal_title" formatted="false">"Also look in personal chats"</string>
+    <string name="advanced_personal_desc" formatted="false">"One-to-one chats with people. These often hold personal videos."</string>
+    <string name="advanced_saved_title" formatted="false">"Also look in Saved Messages"</string>
+    <string name="advanced_saved_desc" formatted="false">"Your own Saved Messages chat."</string>
+    <string name="advanced_confirm_title" formatted="false">"Turn this on?"</string>
+    <string name="advanced_confirm_personal" formatted="false">"This adds your one-to-one chats with people to what Find videos can list. They stay unchecked until you choose them, and nothing is looked at until you tap Look for videos."</string>
+    <string name="advanced_confirm_saved" formatted="false">"This adds your Saved Messages to what Find videos can list. It stays unchecked until you choose it, and nothing is looked at until you tap Look for videos."</string>
+    <string name="advanced_turn_on" formatted="false">"Turn on"</string>
+    <string name="discovery_kind_personal" formatted="false">"Personal chat"</string>
+    <string name="discovery_kind_saved" formatted="false">"Saved Messages"</string>
 </resources>

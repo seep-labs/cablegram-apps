@@ -244,7 +244,14 @@ private fun ScanRow(row: StoredScanRow, ticked: Boolean, onToggle: () -> Unit, u
     Checkbox(checked = ticked, onCheckedChange = { onToggle() }, modifier = Modifier.maestro(MaestroIds.DISCOVERY_CHAT_CHECK))
     Column(Modifier.weight(1f)) {
         Text(row.title, color = Color.White, maxLines = 1)
-        val kind = if (row.kind == ChatKind.Channel) ui.getString(R.string.discovery_kind_channel) else ui.getString(R.string.discovery_kind_group)
+        val kind = ui.getString(
+            when (row.kind) {
+                ChatKind.Channel -> R.string.discovery_kind_channel
+                ChatKind.Group -> R.string.discovery_kind_group
+                ChatKind.Personal -> R.string.discovery_kind_personal
+                ChatKind.SavedMessages -> R.string.discovery_kind_saved
+            },
+        )
         val count = when {
             row.files > 0 && row.videos == 0 -> ui.getQuantityString(R.plurals.discovery_files_maybe, row.files, row.files)
             row.files > 0 -> ui.getQuantityString(R.plurals.discovery_videos_about, row.videos + row.files, row.videos + row.files)

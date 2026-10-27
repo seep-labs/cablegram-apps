@@ -78,4 +78,15 @@
     <string name="how_title" formatted="false">"Как это работает"</string>
     <string name="how_body" formatted="false">"Cablegram вошёл в Telegram на этом телефоне, как Telegram Desktop. Код, который смотрит ваши чаты, находится в одном месте: в пакете app.cablegram.discovery приложения для телефона, а открытый тест приложения (TelegramApiSurfaceTest) перечисляет каждый запрос к Telegram, который ему разрешён. Названия чатов, количество, сообщения и миниатюры остаются на этом телефоне. В «Cablegram library» пересылаются только добавленные вами видео."</string>
     <string name="how_link" formatted="false">"Посмотреть тест на GitHub"</string>
+    <string name="discovery_advanced" formatted="false">"Дополнительные настройки"</string>
+    <string name="advanced_personal_title" formatted="false">"Искать и в личных чатах"</string>
+    <string name="advanced_personal_desc" formatted="false">"Диалоги один на один с людьми. В них часто личные видео."</string>
+    <string name="advanced_saved_title" formatted="false">"Искать и в «Избранном»"</string>
+    <string name="advanced_saved_desc" formatted="false">"Ваш чат «Избранное»."</string>
+    <string name="advanced_confirm_title" formatted="false">"Включить?"</string>
+    <string name="advanced_confirm_personal" formatted="false">"Тогда «Найти видео» сможет показывать и ваши диалоги один на один. Они остаются без отметки, пока вы их не выберете, и ничего не просматривается, пока вы не нажмёте «Искать видео»."</string>
+    <string name="advanced_confirm_saved" formatted="false">"Тогда «Найти видео» сможет показывать и ваше «Избранное». Оно остаётся без отметки, пока вы его не выберете, и ничего не просматривается, пока вы не нажмёте «Искать видео»."</string>
+    <string name="advanced_turn_on" formatted="false">"Включить"</string>
+    <string name="discovery_kind_personal" formatted="false">"Личный чат"</string>
+    <string name="discovery_kind_saved" formatted="false">"Избранное"</string>
 </resources>
