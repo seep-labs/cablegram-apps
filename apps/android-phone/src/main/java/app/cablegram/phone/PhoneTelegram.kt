@@ -85,6 +85,9 @@ object PhoneTelegram {
     /** After log-out: drop the session and delete its database, pieces and key. */
     fun forget(context: Context) = synchronized(this) {
         current = null
+        // Spec 008: the discovery choice, counts, switches and thumbnail ledger go with the account.
+        // The thumbnails themselves are in the TDLib files directory that TelegramDatabaseKey.wipe() removes.
+        app.cablegram.discovery.DiscoveryStore(app.cablegram.discovery.KeystoreDiscoveryStorage(context.applicationContext)).clear()
         setLinked(context, false)
         TelegramDatabaseKey(context.applicationContext).wipe()
     }
