@@ -28,7 +28,7 @@ class DiscoverySpikeReceiver : BroadcastReceiver() {
                 val transport = PhoneTelegram.discoveryTransport ?: return@launch log("no transport")
                 when (intent.action) {
                     "SCAN" -> scan(transport, intent.getBooleanExtra("personal", false))
-                    "PAGE" -> page(transport)
+                    "PAGE" -> page(transport, intent.getBooleanExtra("personal", false))
                     "FORWARD" -> forward(transport, intent.getIntExtra("n", 3))
                     else -> log("unknown action ${intent.action}")
                 }
@@ -66,13 +66,13 @@ class DiscoverySpikeReceiver : BroadcastReceiver() {
     }
 
     /** Pages 20 videos and 20 files from each chat that has some; checks canBeSaved, thumbnails and the purge. */
-    private suspend fun page(transport: DiscoveryTransport) {
+    private suspend fun page(transport: DiscoveryTransport, personal: Boolean) {
         val throttle = RequestThrottle(5)
         var chatsSeen = 0
         for (id in transport.chatIds()) {
             val chat = throttle.run { transport.chat(id) } ?: continue
-            if (chat.type != TransportChatType.Channel && chat.type != TransportChatType.Group) continue
-            if (chat.title == "Cablegram library") continue
+            val ok = chat.type == TransportChatType.Channel || chat.type == TransportChatType.Group || (personal && chat.type == TransportChatType.Private)
+            if (!ok || chat.title == "Cablegram library") continue
             val started = System.currentTimeMillis()
             val videos = throttle.run { transport.search(id, false, 0, 20) }
             val files = throttle.run { transport.search(id, true, 0, 20) }
@@ -82,7 +82,9 @@ class DiscoverySpikeReceiver : BroadcastReceiver() {
             chatsSeen++
             val notSaveable = all.count { !it.canBeSaved }
             val video = files.videos.count { it.mimeType.startsWith("video/") }
-            log("chat#$chatsSeen protected=${chat.protectedContent} videos=${videos.videos.size} files=${files.videos.size} (video mime ${video}) canBeSaved=false:$notSaveable page=${ms}ms next=${videos.nextFromMessageId != 0L}")
+            val ext = files.videos.count { v -> VIDEO_EXTENSIONS.any { v.name.lowercase().endsWith(".$it") } }
+            val mimes = files.videos.groupingBy { it.mimeType.substringBefore("/") }.eachCount()
+            log("chat#$chatsSeen protected=${chat.protectedContent} videos=${videos.videos.size} files=${files.videos.size} (video mime ${video}, video extension ${ext}, mime types $mimes) canBeSaved=false:$notSaveable page=${ms}ms next=${videos.nextFromMessageId != 0L}")
             val thumbs = all.mapNotNull { it.thumbnailFileId }.take(5)
             val bytes = thumbs.sumOf { throttle.run { transport.downloadThumbnail(it) } }
             thumbs.forEach { transport.deleteFile(it) }
@@ -110,6 +112,8 @@ class DiscoverySpikeReceiver : BroadcastReceiver() {
         }
         log("no chat with $n saveable videos")
     }
+
+    private companion object { val VIDEO_EXTENSIONS = listOf("mp4", "mkv", "mov", "avi", "webm", "m4v", "ts", "m2ts", "wmv", "flv", "3gp") }
 
     private fun log(message: String) { Log.i("DiscoverySpike", message) }
 }
