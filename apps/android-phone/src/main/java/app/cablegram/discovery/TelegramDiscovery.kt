@@ -15,7 +15,11 @@ class TelegramDiscovery(
     private val gate: DiscoveryGate,
     private val throttle: RequestThrottle,
     private val libraryChatId: () -> Long?,
+    private val store: DiscoveryStore,
 ) {
+    /** Messages [VideoPager] returned in this process; only these may be forwarded (FR-010). */
+    private val served = java.util.concurrent.ConcurrentHashMap.newKeySet<Pair<Long, Long>>()
+
     /** Channels and groups (FR-005), plus personal chats and Saved Messages only if their switch is on. */
     fun discoveryChats(permit: ScanPermit, switches: DiscoverySwitches): Flow<DiscoveryChat> = flow {
         gate.requirePermit(permit)
@@ -40,6 +44,94 @@ class TelegramDiscovery(
         return VideoCount(videos, files)
     }
 
+    /** A pager over the chosen chats only. Refuses any chat outside the stored choice before touching Telegram (FR-009). */
+    fun videoPager(chatIds: Set<DiscoveryChatId>): VideoPager {
+        chatIds.forEach { gate.requireChosen(it.raw) }
+        return VideoPager(chatIds.map { it.raw })
+    }
+
+    inner class VideoPager internal constructor(chats: List<Long>) {
+        private val sources = chats.flatMap { listOf(Source(it, false), Source(it, true)) }
+        private val protectedChats = mutableMapOf<Long, Boolean>()
+
+        val exhausted get() = sources.all { it.done && it.buffer.isEmpty() }
+
+        /** The next [limit] videos, newest first across all chosen chats. An empty page ends a source (a zero cursor is not reliable). */
+        suspend fun next(limit: Int = 50): List<DiscoveryVideo> {
+            for (source in sources) while (!source.done && source.buffer.size < limit) fill(source, limit)
+            val out = ArrayList<DiscoveryVideo>(limit)
+            while (out.size < limit) {
+                val best = sources.filter { it.buffer.isNotEmpty() }.maxByOrNull { it.buffer.first().date } ?: break
+                out += best.buffer.removeFirst()
+            }
+            out.forEach { served += it.chatId.raw to it.messageId }
+            return out
+        }
+
+        private suspend fun fill(source: Source, limit: Int) {
+            gate.requireChosen(source.chatId)
+            val protectedChat = protectedChats.getOrPut(source.chatId) { throttle.run { transport.chat(source.chatId) }?.protectedContent ?: true }
+            val page = throttle.run { transport.search(source.chatId, source.files, source.from, limit) }
+            if (page.videos.isEmpty() || page.nextFromMessageId == source.from) source.done = true
+            source.from = page.nextFromMessageId
+            page.videos.filter { !source.files || it.looksLikeVideo() }.forEach {
+                source.buffer += DiscoveryVideo(
+                    DiscoveryChatId(it.chatId), it.messageId, it.uniqueId, it.caption.ifBlank { it.name },
+                    it.durationSeconds, it.sizeBytes, it.date, it.thumbnailFileId, protectedChat || !it.canBeSaved,
+                )
+            }
+        }
+    }
+
+    /**
+     * Forwards the selected videos into the library channel and nowhere else (FR-010). There is no destination
+     * parameter. Protected videos are refused here, not only in the screen.
+     */
+    suspend fun forwardToLibrary(selection: List<DiscoveryVideo>): List<ForwardOutcome> {
+        val library = libraryChatId() ?: throw DiscoveryRefused("No library channel")
+        selection.forEach {
+            gate.requireChosen(it.chatId.raw)
+            if ((it.chatId.raw to it.messageId) !in served) throw DiscoveryRefused("Message was not offered by the picker")
+        }
+        val outcomes = mutableListOf<ForwardOutcome>()
+        val (blocked, allowed) = selection.partition { it.protectedContent }
+        blocked.forEach { outcomes += ForwardOutcome.Failed(it, "This chat doesn't allow saving") }
+        for ((chat, videos) in allowed.groupBy { it.chatId.raw }) {
+            for (batch in videos.chunked(FORWARD_BATCH)) {
+                val byMessage = batch.associateBy { it.messageId }
+                val results = try {
+                    throttle.run { transport.forward(library, chat, batch.map { it.messageId }.toLongArray()) }
+                } catch (e: app.cablegram.telegram.TgException) {
+                    batch.forEach { outcomes += ForwardOutcome.Failed(it, e.name) }
+                    continue
+                }
+                for (r in results) when (r) {
+                    is ForwardResult.Sent -> byMessage[r.sourceMessageId]?.let { outcomes += ForwardOutcome.Added(it) }
+                    is ForwardResult.Failed -> byMessage[r.sourceMessageId]?.let { outcomes += ForwardOutcome.Failed(it, r.reason) }
+                }
+            }
+        }
+        return outcomes
+    }
+
+    /** Downloads a thumbnail and records it so [purgeChat] can delete exactly what was fetched (FR-008). */
+    suspend fun thumbnail(video: DiscoveryVideo) {
+        val file = video.thumbnailFileId ?: return
+        gate.requireChosen(video.chatId.raw)
+        store.recordThumbnail(video.chatId.raw, file)
+        throttle.run { transport.downloadThumbnail(file) }
+    }
+
+    /** Deletes every cached thumbnail of a chat now, then forgets the chat (untick, switch off, left chat). */
+    suspend fun purgeChat(chatId: Long) {
+        store.thumbnailsOf(chatId).forEach { runCatching { transport.deleteFile(it) } }
+        runCatching { transport.optimizeStorage(longArrayOf(chatId)) }
+        store.dropChat(chatId)
+    }
+
+    private fun TransportVideo.looksLikeVideo() =
+        mimeType.startsWith("video/") || VIDEO_EXTENSIONS.any { name.lowercase().endsWith(".$it") }
+
     private suspend fun classify(chat: TransportChat, me: Long, switches: DiscoverySwitches): ChatKind? = when (chat.type) {
         TransportChatType.Channel -> ChatKind.Channel
         TransportChatType.Group -> ChatKind.Group
@@ -55,5 +147,9 @@ class TelegramDiscovery(
 
     private companion object {
         const val TELEGRAM_SERVICE_USER = 777000L
+        const val FORWARD_BATCH = 100
+        val VIDEO_EXTENSIONS = listOf("mp4", "mkv", "mov", "avi", "webm", "m4v", "ts", "m2ts", "wmv", "flv", "3gp")
     }
 }
+
+private class Source(val chatId: Long, val files: Boolean, var from: Long = 0, var done: Boolean = false, val buffer: ArrayDeque<DiscoveryVideo> = ArrayDeque())

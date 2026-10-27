@@ -46,7 +46,7 @@ class DiscoverySpikeReceiver : BroadcastReceiver() {
         val watcher = throttle.pauses.onEach { pauses += it; log("FLOOD_WAIT ${it}s") }.launchIn(CoroutineScope(Dispatchers.IO))
         val permits = ScanPermits()
         val library = transport.chatIds().firstOrNull { transport.chat(it)?.title == "Cablegram library" }
-        val discovery = TelegramDiscovery(transport, DiscoveryGate({ emptySet() }, { library }), throttle) { library }
+        val discovery = TelegramDiscovery(transport, DiscoveryGate({ emptySet() }, { library }), throttle, { library }, DiscoveryStore(object : DiscoveryStorage { override fun read(): String? = null; override fun write(json: String) = Unit; override fun clear() = Unit }))
         val permit = permits.grantScan()
         val started = System.currentTimeMillis()
         val chats = mutableListOf<DiscoveryChat>()

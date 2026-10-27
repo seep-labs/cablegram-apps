@@ -23,7 +23,7 @@ class TelegramDiscoveryTest {
     )
 
     private fun TestScopeHolder.discovery(t: FakeDiscoveryTransport) =
-        TelegramDiscovery(t, DiscoveryGate({ emptySet() }, { LIBRARY }), RequestThrottle(5, now), { LIBRARY })
+        TelegramDiscovery(t, DiscoveryGate({ emptySet() }, { LIBRARY }), RequestThrottle(5, now), { LIBRARY }, DiscoveryStore(MemoryDiscoveryStorage()))
 
     private class TestScopeHolder(val now: () -> Long)
 
@@ -58,7 +58,7 @@ class TelegramDiscoveryTest {
     fun `a scan without a live permit reads nothing`() = runTest {
         val t = FakeDiscoveryTransport(all, ME)
         val permit = ScanPermits().grantScan().also { it.revoke() }
-        val d = TelegramDiscovery(t, DiscoveryGate({ emptySet() }, { LIBRARY }), RequestThrottle(5) { currentTime }, { LIBRARY })
+        val d = TelegramDiscovery(t, DiscoveryGate({ emptySet() }, { LIBRARY }), RequestThrottle(5) { currentTime }, { LIBRARY }, DiscoveryStore(MemoryDiscoveryStorage()))
         assertThrows(DiscoveryRefused::class.java) { kotlinx.coroutines.runBlocking { d.discoveryChats(permit, DiscoverySwitches()).toList() } }
         assertEquals(emptyList<String>(), t.calls)
     }
@@ -66,7 +66,7 @@ class TelegramDiscoveryTest {
     @Test
     fun `only chats listed by this scan can be counted, files make the count approximate`() = runTest {
         val t = FakeDiscoveryTransport(all, ME, counts = mapOf((10L to false) to 214, (10L to true) to 3, (12L to false) to 5))
-        val d = TelegramDiscovery(t, DiscoveryGate({ emptySet() }, { LIBRARY }), RequestThrottle(5) { currentTime }, { LIBRARY })
+        val d = TelegramDiscovery(t, DiscoveryGate({ emptySet() }, { LIBRARY }), RequestThrottle(5) { currentTime }, { LIBRARY }, DiscoveryStore(MemoryDiscoveryStorage()))
         val permit = ScanPermits().grantScan()
         d.discoveryChats(permit, DiscoverySwitches()).toList()
         val count = d.chatVideoCount(permit, DiscoveryChatId(10))
