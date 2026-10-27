@@ -16,7 +16,7 @@ class FakeDiscoveryTransport(
     override suspend fun messageCount(chatId: Long, files: Boolean): Int = (counts[chatId to files] ?: 0).also { calls += "count:$chatId:$files" }
     override suspend fun search(chatId: Long, files: Boolean, fromMessageId: Long, limit: Int): TransportPage = error("not yet")
     override suspend fun forward(toChatId: Long, fromChatId: Long, messageIds: LongArray): List<ForwardResult> = error("not yet")
-    override suspend fun downloadThumbnail(fileId: Int) = Unit
+    override suspend fun downloadThumbnail(fileId: Int): Long = 0
     override suspend fun deleteFile(fileId: Int) = Unit
     override suspend fun optimizeStorage(chatIds: LongArray) = Unit
 }

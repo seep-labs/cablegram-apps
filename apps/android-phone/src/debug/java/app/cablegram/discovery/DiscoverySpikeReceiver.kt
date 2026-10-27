@@ -28,6 +28,8 @@ class DiscoverySpikeReceiver : BroadcastReceiver() {
                 val transport = PhoneTelegram.discoveryTransport ?: return@launch log("no transport")
                 when (intent.action) {
                     "SCAN" -> scan(transport, intent.getBooleanExtra("personal", false))
+                    "PAGE" -> page(transport)
+                    "FORWARD" -> forward(transport, intent.getIntExtra("n", 3))
                     else -> log("unknown action ${intent.action}")
                 }
             } catch (e: Throwable) {
@@ -61,6 +63,52 @@ class DiscoverySpikeReceiver : BroadcastReceiver() {
         }
         log("done: ${chats.size} chats, $withVideos with videos or files, $approximate approximate, videos=$totalVideos files=$totalFiles, pauses=$pauses, total ${System.currentTimeMillis() - started}ms")
         watcher.cancel()
+    }
+
+    /** Pages 20 videos and 20 files from each chat that has some; checks canBeSaved, thumbnails and the purge. */
+    private suspend fun page(transport: DiscoveryTransport) {
+        val throttle = RequestThrottle(5)
+        var chatsSeen = 0
+        for (id in transport.chatIds()) {
+            val chat = throttle.run { transport.chat(id) } ?: continue
+            if (chat.type != TransportChatType.Channel && chat.type != TransportChatType.Group) continue
+            if (chat.title == "Cablegram library") continue
+            val started = System.currentTimeMillis()
+            val videos = throttle.run { transport.search(id, false, 0, 20) }
+            val files = throttle.run { transport.search(id, true, 0, 20) }
+            val ms = System.currentTimeMillis() - started
+            val all = videos.videos + files.videos
+            if (all.isEmpty()) continue
+            chatsSeen++
+            val notSaveable = all.count { !it.canBeSaved }
+            val video = files.videos.count { it.mimeType.startsWith("video/") }
+            log("chat#$chatsSeen protected=${chat.protectedContent} videos=${videos.videos.size} files=${files.videos.size} (video mime ${video}) canBeSaved=false:$notSaveable page=${ms}ms next=${videos.nextFromMessageId != 0L}")
+            val thumbs = all.mapNotNull { it.thumbnailFileId }.take(5)
+            val bytes = thumbs.sumOf { throttle.run { transport.downloadThumbnail(it) } }
+            thumbs.forEach { transport.deleteFile(it) }
+            transport.optimizeStorage(longArrayOf(id))
+            log("chat#$chatsSeen thumbnails=${thumbs.size} bytes=$bytes deleted and optimizeStorage ok")
+        }
+        log("page done, $chatsSeen chats with videos")
+    }
+
+    /** Forwards the first n saveable videos of the first suitable chat into the test account's library channel. */
+    private suspend fun forward(transport: DiscoveryTransport, n: Int) {
+        val throttle = RequestThrottle(5)
+        var library: Long? = null
+        for (id in transport.chatIds()) if (transport.chat(id)?.title == "Cablegram library") library = id
+        library ?: return log("no library channel")
+        for (id in transport.chatIds()) {
+            val chat = transport.chat(id) ?: continue
+            if (id == library || (chat.type != TransportChatType.Channel && chat.type != TransportChatType.Group)) continue
+            val ids = throttle.run { transport.search(id, false, 0, 20) }.videos.filter { it.canBeSaved }.take(n).map { it.messageId }
+            if (ids.size < n) continue
+            val started = System.currentTimeMillis()
+            val results = throttle.run { transport.forward(library, id, ids.toLongArray()) }
+            log("forwarded ${results.size}: sent=${results.count { it is ForwardResult.Sent }} failed=${results.count { it is ForwardResult.Failed }} in ${System.currentTimeMillis() - started}ms")
+            return
+        }
+        log("no chat with $n saveable videos")
     }
 
     private fun log(message: String) { Log.i("DiscoverySpike", message) }

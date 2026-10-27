@@ -47,7 +47,8 @@ interface DiscoveryTransport {
     suspend fun messageCount(chatId: Long, files: Boolean): Int
     suspend fun search(chatId: Long, files: Boolean, fromMessageId: Long, limit: Int): TransportPage
     suspend fun forward(toChatId: Long, fromChatId: Long, messageIds: LongArray): List<ForwardResult>
-    suspend fun downloadThumbnail(fileId: Int)
+    /** Returns the bytes now on the phone. */
+    suspend fun downloadThumbnail(fileId: Int): Long
     suspend fun deleteFile(fileId: Int)
     suspend fun optimizeStorage(chatIds: LongArray)
 }

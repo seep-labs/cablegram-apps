@@ -75,6 +75,8 @@ class TdlibDiscoveryTransport(private val client: TdlClient) : DiscoveryTranspor
     }
 
     override suspend fun forward(toChatId: Long, fromChatId: Long, messageIds: LongArray): List<ForwardResult> = coroutineScope {
+        // Telegram wants ids in strictly increasing order; searches return newest first.
+        val ordered = messageIds.sortedArray()
         // Updates are hot: listen before sending, so a fast result cannot be missed (as uploadVideo does).
         val outcomes = ConcurrentHashMap<Long, ForwardResult>()
         val pending = ConcurrentHashMap<Long, Long>()
@@ -91,10 +93,10 @@ class TdlibDiscoveryTransport(private val client: TdlClient) : DiscoveryTranspor
             },
         )
         try {
-            val sent = client.forwardMessages(toChatId, null, fromChatId, messageIds, null, false, false).ok().messages
+            val sent = client.forwardMessages(toChatId, null, fromChatId, ordered, null, false, false).ok().messages
             val results = mutableListOf<ForwardResult>()
             sent.forEachIndexed { i, m ->
-                val source = messageIds.getOrNull(i) ?: 0L
+                val source = ordered.getOrNull(i) ?: 0L
                 if (m == null) results += ForwardResult.Failed(source, "not forwarded") else pending[m.id] = source
             }
             if (pending.isNotEmpty()) { finish(); done.await() }
@@ -104,9 +106,8 @@ class TdlibDiscoveryTransport(private val client: TdlClient) : DiscoveryTranspor
         }
     }
 
-    override suspend fun downloadThumbnail(fileId: Int) {
-        client.downloadFile(fileId, 1, 0, 0, true).ok()
-    }
+    override suspend fun downloadThumbnail(fileId: Int): Long =
+        client.downloadFile(fileId, 1, 0, 0, true).ok().local.downloadedSize
 
     override suspend fun deleteFile(fileId: Int) {
         client.deleteFile(fileId).ok()
