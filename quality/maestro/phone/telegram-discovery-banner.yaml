@@ -25,7 +25,7 @@ tags:
 # Visible on open, and still visible after paging through the grid.
 - assertVisible:
     id: picker_banner
-- assertVisible: "Browsing on this phone only.*"
+- assertVisible: ".*Browsing on this phone only.*"
 - scrollUntilVisible:
     element:
       id: picker_more
