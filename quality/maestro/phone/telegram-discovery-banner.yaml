@@ -1,0 +1,67 @@
+# Spec 008 (US4 acceptance 2, FR-011). Preconditions: authenticated main UI, a linked Telegram test account with a chat
+# named ${CHAT} that holds more than 50 videos of 10 minutes or more. Adds nothing: it only opens
+# the picker, pages through it and reads the banner and How this works, so it can run again and again.
+appId: app.cablegram.phone
+env:
+  CHAT: Algotic Ai
+tags:
+  - telegram
+---
+- launchApp
+- tapOn:
+    id: nav_browse
+- runFlow:
+    file: common/telegram-discovery-choose.yaml
+- extendedWaitUntil:
+    visible:
+      id: picker_grid
+    timeout: 30000
+# Other chats may already be chosen (real use leaves a choice): look at the chat under test only.
+- tapOn:
+    text: ${CHAT}
+    optional: true
+- waitForAnimationToEnd
+
+# Visible on open, and still visible after paging through the grid.
+- assertVisible:
+    id: picker_banner
+- assertVisible: ".*Browsing on this phone only.*"
+- scrollUntilVisible:
+    element:
+      id: picker_more
+    direction: DOWN
+    timeout: 30000
+- tapOn:
+    id: picker_more
+# The next 50 load below; scroll through them (the id stays on the button, but the button may now be off screen
+# or already gone when the chat has no more), then the banner must still be there.
+- waitForAnimationToEnd
+- scroll
+- scroll
+- assertVisible:
+    id: picker_banner
+
+# How this works names the module and the surface test.
+- tapOn:
+    id: picker_how
+- assertVisible:
+    id: picker_how_page
+- assertVisible: ".*app.cablegram.discovery.*"
+- assertVisible: ".*TelegramApiSurfaceTest.*"
+- tapOn: "Done"
+
+# Shown again on the next open.
+- tapOn:
+    id: picker_done
+- tapOn:
+    id: telegram_add_from_chats
+- tapOn:
+    id: discovery_pick
+- extendedWaitUntil:
+    visible:
+      id: picker_banner
+    timeout: 30000
+
+# Leave no choice behind.
+- runFlow:
+    file: common/telegram-discovery-clear.yaml

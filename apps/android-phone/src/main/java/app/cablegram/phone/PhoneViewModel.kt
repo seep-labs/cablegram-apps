@@ -601,6 +601,14 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
         refreshPendingApprovals()
         // One poller serves the notification and this list: ApprovalWatcher, in LanLibraryService.
         viewModelScope.launch { PrivateApprovals.pending.collect { pendingApprovals = it } }
+        // After the library channel was scanned (a newly connected account, say) bring this list in step with the household.
+        viewModelScope.launch {
+            PhoneTelegram.libraryScanned.collect {
+                delay(1_500)
+                syncLibrary(force = true)
+                refresh()
+            }
+        }
         // CAB-51: redraw when anything writes the library, e.g. a background save that started and finished between
         // two polls. collectLatest with a short pause folds the progress writes of a running save into one redraw.
         viewModelScope.launch {
@@ -1767,6 +1775,10 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
 
     /** Logs this phone out of Telegram and deletes the local TDLib database, files and key. */
     private fun wipeTelegramLocally() {
+        // The titles belong to the account that was just disconnected: they must not stay in this list, even if a
+        // different Telegram account is connected next.
+        store.pruneTelegram(emptySet())
+        refresh()
         clearTelegramRecommendations()
         PhoneTelegram.existing()?.logOut()
         PhoneTelegram.forget(getApplication())
@@ -2722,6 +2734,26 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
             } finally {
                 telegramDeletionMutex.unlock()
             }
+        }
+    }
+
+    /** Spec 008 picker: hidden or deleted Telegram titles as `tgfile:` key to state ("hidden", "deleting", ...); null when the catalog can't be reached. */
+    suspend fun telegramTombstoneStates(): Map<String, String>? {
+        val token = pairing.accountToken ?: return null
+        return catalog().telegramTombstones(token)?.associate { it.stableSourceKey to it.state }
+    }
+
+    /** Spec 008 picker: the owner confirmed adding a hidden or deleted title again. */
+    suspend fun restoreTelegramTitleByKey(stableSourceKey: String): Boolean {
+        val token = pairing.accountToken ?: return false
+        return catalog().restoreTelegramTitle(token, stableSourceKey)
+    }
+
+    /** Spec 008 picker: videos were forwarded into the library channel; bring the library up to date. */
+    fun afterDiscoveryAdd() {
+        viewModelScope.launch {
+            syncLibrary(force = true)
+            refresh()
         }
     }
 

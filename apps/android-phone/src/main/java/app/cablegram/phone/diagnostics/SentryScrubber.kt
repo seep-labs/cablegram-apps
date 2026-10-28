@@ -71,6 +71,13 @@ object SentryScrubber {
         return cleaned
     }
 
+    // Telegram chat ids (spec 008 FR-002): supergroup and channel ids start with -100, and "chat_id: 123" style pairs.
+    private val CHANNEL_ID_REGEX = Regex("-100\\d{6,}")
+    private val CHAT_ID_PAIR_REGEX = Regex("(?i)\\bchat[_ ]?id\\s*[=:]\\s*-?\\d+")
+
+    fun scrubChatIds(text: String): String =
+        CHAT_ID_PAIR_REGEX.replace(CHANNEL_ID_REGEX.replace(text, "[CHAT_ID_REDACTED]"), "chat_id: [CHAT_ID_REDACTED]")
+
     // HTTP/HTTPS URL regex to find URLs inside arbitrary text
     private val HTTP_URL_REGEX = Regex("(?i)https?://[^\r\n\\s\"'<>\\[\\]{}]+(?<=\\S)")
 
@@ -130,6 +137,7 @@ object SentryScrubber {
     fun scrubMessage(message: String): String {
         if (message.isBlank()) return message
         var cleaned = scrubKnownNames(message)
+        cleaned = scrubChatIds(cleaned)
 
         // 1. Scrub tg:// links anywhere in message
         cleaned = TG_LINK_REGEX.replace(cleaned, "tg://[REDACTED]")

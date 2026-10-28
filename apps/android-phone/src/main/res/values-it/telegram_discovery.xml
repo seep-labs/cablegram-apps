@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Spec 008: add videos from your Telegram chats. -->
+    <string name="discovery_add_button" formatted="false">"Aggiungi dalle tue chat Telegram"</string>
+    <string name="discovery_notice_title" formatted="false">"Questo avviene sul tuo telefono."</string>
+    <string name="discovery_notice_body" formatted="false">"Cablegram ha effettuato l'accesso a Telegram su questo telefono, come Telegram Desktop. Guarda le tue chat qui, su questo telefono. Nomi delle chat, conteggi, messaggi e miniature non vengono mai inviati ai server di Cablegram. Solo i video che aggiungi vanno in «Cablegram library»."</string>
+    <string name="discovery_ask_title" formatted="false">"Cercare video nei tuoi canali e gruppi?"</string>
+    <string name="discovery_ask_body" formatted="false">"Cablegram controlla, su questo telefono, gli ultimi 100 video e file di ciascuno dei tuoi canali e gruppi e conta tra questi i video lunghi. Salta le clip brevi, a meno che tu non lo cambi in «Impostazioni avanzate». Non controlla nelle chat personali, in «Messaggi salvati» né nelle chat con i bot, a meno che tu non lo attivi."</string>
+    <string name="discovery_look" formatted="false">"Cerca video"</string>
+    <string name="discovery_not_now" formatted="false">"Non ora"</string>
+    <string name="discovery_title" formatted="false">"Trova video"</string>
+    <string name="discovery_listing" formatted="false">"Controllo delle tue chat in corso…"</string>
+    <string name="discovery_checked" formatted="false">"Controllate %1$d chat su %2$d"</string>
+    <string name="discovery_stop" formatted="false">"Interrompi"</string>
+    <string name="discovery_kind_channel" formatted="false">"Canale"</string>
+    <string name="discovery_kind_group" formatted="false">"Gruppo"</string>
+    <string name="discovery_counting" formatted="false">"conteggio…"</string>
+    <string name="discovery_show_empty" formatted="false">"Mostra %1$d chat senza video"</string>
+    <string name="discovery_hide_empty" formatted="false">"Nascondi le chat senza video"</string>
+    <string name="discovery_paused" formatted="false">"Telegram ci chiede di attendere %1$d secondi. La ricerca continuerà."</string>
+    <string name="discovery_protected" formatted="false">"Non consente il salvataggio"</string>
+    <string name="discovery_failed" formatted="false">"Impossibile controllare le tue chat. Riprova."</string>
+    <plurals name="discovery_videos">
+        <item quantity="one">"%1$d video tra gli ultimi 100"</item>
+        <item quantity="other">"%1$d video tra gli ultimi 100"</item>
+    </plurals>
+    <plurals name="discovery_videos_about">
+        <item quantity="one">"circa %1$d video tra gli ultimi 100"</item>
+        <item quantity="other">"circa %1$d video tra gli ultimi 100"</item>
+    </plurals>
+    <plurals name="discovery_files_maybe">
+        <item quantity="one">"circa %1$d file di grandi dimensioni che potrebbe essere un video tra gli ultimi 100"</item>
+        <item quantity="other">"circa %1$d file di grandi dimensioni che potrebbero essere video tra gli ultimi 100"</item>
+    </plurals>
+    <string name="discovery_manage" formatted="false">"Gestisci chat"</string>
+    <plurals name="discovery_use_chats">
+        <item quantity="one">"Usa %1$d chat"</item>
+        <item quantity="other">"Usa %1$d chat"</item>
+    </plurals>
+    <string name="picker_title" formatted="false">"Aggiungi video"</string>
+    <string name="picker_all" formatted="false">"Tutte le chat"</string>
+    <string name="picker_in_library" formatted="false">"Nella libreria"</string>
+    <string name="picker_deleting" formatted="false">"In eliminazione"</string>
+    <string name="picker_more" formatted="false">"Mostra altri"</string>
+    <string name="picker_empty" formatted="false">"Ancora nessun video nelle chat scelte."</string>
+    <string name="picker_adding" formatted="false">"Aggiunta di %1$d su %2$d…"</string>
+    <string name="picker_failed" formatted="false">"%1$d non sono andati a buon fine."</string>
+    <string name="picker_try_again" formatted="false">"Riprova"</string>
+    <string name="picker_readd_title" formatted="false">"Aggiungere di nuovo?"</string>
+    <string name="picker_readd_body" formatted="false">"%1$d di questi erano stati rimossi dalla tua libreria. Vuoi aggiungerli di nuovo?"</string>
+    <string name="picker_readd_confirm" formatted="false">"Aggiungi di nuovo"</string>
+    <string name="picker_cancel" formatted="false">"Annulla"</string>
+    <string name="picker_done" formatted="false">"Fatto"</string>
+    <string name="discovery_pick" formatted="false">"Scegli video"</string>
+    <plurals name="picker_add">
+        <item quantity="one">"Aggiungi %1$d alla libreria"</item>
+        <item quantity="other">"Aggiungi %1$d alla libreria"</item>
+    </plurals>
+    <plurals name="picker_added">
+        <item quantity="one">"Aggiunto %1$d video. Apparirà a breve nella tua libreria."</item>
+        <item quantity="other">"Aggiunti %1$d video. Appariranno a breve nella tua libreria."</item>
+    </plurals>
+    <string name="picker_banner" formatted="false">"🔒 Consultazione solo su questo telefono. Niente di tutto questo viene inviato a Cablegram."</string>
+    <string name="picker_banner_personal" formatted="false">"🔒 Consultazione solo su questo telefono, comprese le chat personali. Niente di tutto questo viene inviato a Cablegram."</string>
+    <string name="picker_how" formatted="false">"Come funziona"</string>
+    <string name="how_title" formatted="false">"Come funziona"</string>
+    <string name="how_body" formatted="false">"Cablegram ha effettuato l'accesso a Telegram su questo telefono, come Telegram Desktop. Il codice che guarda le tue chat si trova in un solo posto, il pacchetto app.cablegram.discovery dell'app del telefono, e il test open source dell'app (TelegramApiSurfaceTest) elenca ogni chiamata a Telegram che è autorizzato a fare. Nomi delle chat, conteggi, messaggi e miniature restano su questo telefono. Solo i video che aggiungi vengono inoltrati a «Cablegram library»."</string>
+    <string name="how_link" formatted="false">"Vedi il test su GitHub"</string>
+    <string name="discovery_advanced" formatted="false">"Impostazioni avanzate"</string>
+    <string name="advanced_personal_title" formatted="false">"Cerca anche nelle chat personali"</string>
+    <string name="advanced_personal_desc" formatted="false">"Chat individuali con altre persone. Spesso contengono video personali."</string>
+    <string name="advanced_saved_title" formatted="false">"Cerca anche nei Messaggi salvati"</string>
+    <string name="advanced_saved_desc" formatted="false">"La tua chat Messaggi salvati."</string>
+    <string name="advanced_confirm_title" formatted="false">"Attivare?"</string>
+    <string name="advanced_confirm_personal" formatted="false">"Così «Trova video» può elencare anche le tue chat individuali con altre persone. Restano deselezionate finché non le scegli e non viene controllato nulla finché non tocchi «Cerca video»."</string>
+    <string name="advanced_confirm_saved" formatted="false">"Così «Trova video» può elencare anche i tuoi «Messaggi salvati». La chat resta deselezionata finché non la scegli e non viene controllato nulla finché non tocchi «Cerca video»."</string>
+    <string name="advanced_turn_on" formatted="false">"Attiva"</string>
+    <string name="discovery_kind_personal" formatted="false">"Chat personale"</string>
+    <string name="discovery_kind_saved" formatted="false">"Messaggi salvati"</string>
+    <plurals name="picker_dropped">
+        <item quantity="one">"%1$d chat che hai scelto non è più disponibile ed è stata rimossa."</item>
+        <item quantity="other">"%1$d chat che hai scelto non sono più disponibili e sono state rimosse."</item>
+    </plurals>
+    <string name="advanced_min_title" formatted="false">"Durata minima dei video"</string>
+    <string name="advanced_min_desc" formatted="false">"Le clip più brevi vengono escluse dalla ricerca e dalla selezione."</string>
+    <string name="advanced_min_option" formatted="false">"%1$d min"</string>
+    <string name="advanced_min_any" formatted="false">"Qualsiasi durata"</string>
+    <string name="discovery_search_hint" formatted="false">"Cerca chat per nome"</string>
+    <string name="discovery_no_match" formatted="false">"Nessuna chat trovata."</string>
+    <plurals name="discovery_unchanged">
+        <item quantity="one">"%1$d chat non aveva nuovi messaggi dall'ultima volta e non è stata controllata di nuovo."</item>
+        <item quantity="other">"%1$d chat non avevano nuovi messaggi dall'ultima volta e non sono state controllate di nuovo."</item>
+    </plurals>
+    <string name="discovery_bots_switch" formatted="false">"Cerca anche nelle chat con i bot"</string>
+    <string name="discovery_bots_hint" formatted="false">"Include i bot per scaricare e salvare. Controlla solo video e file, su questo telefono."</string>
+    <string name="discovery_bots_title" formatted="false">"Cercare anche nelle chat con i bot?"</string>
+    <string name="discovery_bots_body" formatted="false">"Cablegram controllerà anche, su questo telefono, gli ultimi 100 video e file delle tue chat con i bot. Niente di tutto questo viene inviato a Cablegram. Succede solo quando tocchi il pulsante qui sotto e puoi disattivarlo in qualsiasi momento."</string>
+    <string name="discovery_kind_bot" formatted="false">"Chat con un bot"</string>
+    <string name="picker_banner_bots" formatted="false">"🔒 Consultazione solo su questo telefono, comprese le chat con i bot. Niente di tutto questo viene inviato a Cablegram."</string>
+    <string name="picker_banner_personal_bots" formatted="false">"🔒 Consultazione solo su questo telefono, comprese le chat personali e le chat con i bot. Niente di tutto questo viene inviato a Cablegram."</string>
+    <string name="discovery_ask_body_more" formatted="false">"Cablegram controlla, su questo telefono, gli ultimi 100 video e file di ciascuno dei tuoi canali e gruppi e degli altri tipi di chat che hai attivato, e conta tra questi i video lunghi. Salta le clip brevi, a meno che tu non lo cambi in «Impostazioni avanzate»."</string>
+</resources>

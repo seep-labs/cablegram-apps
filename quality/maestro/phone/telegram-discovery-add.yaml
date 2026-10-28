@@ -1,0 +1,44 @@
+# Spec 008 (US3). Preconditions: authenticated main UI, a linked and healthy Telegram test account with a chat
+# named ${CHAT} that holds at least four videos of 10 minutes or more which are not in the library yet. Adding is real: it forwards two videos into that account's library channel, so a second run needs those two
+# titles removed from the library first (the picker marks videos already in the library and cannot select them).
+appId: app.cablegram.phone
+env:
+  CHAT: CableGramAppGroup1
+tags:
+  - telegram
+---
+- launchApp
+- tapOn:
+    id: nav_browse
+- runFlow:
+    file: common/telegram-discovery-choose.yaml
+- extendedWaitUntil:
+    visible:
+      id: picker_grid
+    timeout: 30000
+# Other chats may already be chosen (real use leaves a choice): look at the chat under test only.
+- tapOn:
+    text: ${CHAT}
+    optional: true
+- waitForAnimationToEnd
+- assertVisible:
+    id: picker_item
+# Nothing is ticked, so Add stays off until the owner picks.
+- assertVisible: "Add 0 to library"
+- tapOn:
+    id: picker_item
+    index: 2
+- tapOn:
+    id: picker_item
+    index: 3
+- assertVisible: "Add 2 to library"
+- tapOn:
+    id: picker_add
+- extendedWaitUntil:
+    visible: "Added 2 videos.*"
+    timeout: 60000
+- assertVisible:
+    id: picker_in_library
+# Leave no choice behind.
+- runFlow:
+    file: common/telegram-discovery-clear.yaml

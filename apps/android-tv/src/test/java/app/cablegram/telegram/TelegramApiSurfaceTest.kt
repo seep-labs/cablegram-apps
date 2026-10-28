@@ -4,6 +4,8 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 // Shared by apps/android-phone and apps/android-tv tests (spec 004). Keep both copies identical.
+// Video discovery (spec 008, phone only) is NOT in TelegramApi: it lives in app.cablegram.discovery, pinned by the phone's
+// DiscoverySurfaceTest and proven absent on the TV by app.cablegram.NoDiscoveryTest.
 
 /**
  * Pins the Telegram surface to library management, device sign-in, and joining the fixed Cablegram

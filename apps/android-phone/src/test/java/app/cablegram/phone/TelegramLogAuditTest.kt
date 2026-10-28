@@ -20,19 +20,27 @@ class TelegramLogAuditTest {
         "../android-tv/src/main/java/app/cablegram/TvTelegram.kt",
         "../android-tv/src/main/java/app/cablegram/TelegramStreamServer.kt",
     )
+    // Spec 008 T023: the discovery code logs counts at most, never which chat or which video.
+    private val discoveryRoots = listOf(
+        "src/main/java/app/cablegram/discovery",
+        "src/main/java/app/cablegram/phone/TelegramDiscoveryScreens.kt",
+        "src/main/java/app/cablegram/phone/TelegramDiscoveryPicker.kt",
+        "src/main/java/app/cablegram/phone/TelegramDiscoveryAdvanced.kt",
+    )
+    private val identity = Regex("""(?i)\b(chatId|title|caption|fileName|chatTitle|name)\b""")
     private val logCall = Regex("""(PairLog\.[iwe]|Log\.[diwev]|println|Timber\.\w)\(""")
     private val secret = Regex("""(?i)\b(loginLink|login_link|link|code|password|token|secret|apiHash|databaseKey|capability|\bpass\b)\b""")
 
     private val literal = Regex(""""(?:[^"\\]|\\.)*"""")
     private val interpolation = Regex("""\$\{[^}]*}|\$\w+""")
 
-    private fun kotlinFiles(): List<File> = roots.map(::File).filter { it.exists() }.flatMap { root ->
+    private fun kotlinFiles(roots: List<String> = this.roots): List<File> = roots.map(::File).filter { it.exists() }.flatMap { root ->
         if (root.isFile) listOf(root) else root.walkTopDown().filter { it.extension == "kt" }.toList()
     }
 
     @Test
     fun `no log line in the Telegram code mentions a secret`() {
-        val files = kotlinFiles()
+        val files = kotlinFiles(roots + discoveryRoots)
         assertTrue("audit found no files: run from the app module", files.isNotEmpty())
         val offenders = files.flatMap { file ->
             file.readLines().mapIndexedNotNull { index, line ->
@@ -44,5 +52,20 @@ class TelegramLogAuditTest {
             }
         }
         assertTrue("Secrets in log lines:\n" + offenders.joinToString("\n"), offenders.isEmpty())
+    }
+
+    @Test
+    fun `no log line in the discovery code mentions a chat id, title, caption or file name`() {
+        val files = kotlinFiles(discoveryRoots)
+        assertTrue("audit found no discovery files: run from the app module", files.size >= 10)
+        val offenders = files.flatMap { file ->
+            file.readLines().mapIndexedNotNull { index, line ->
+                val logged = line.substringAfter("(", "").replace(literal) { m ->
+                    interpolation.findAll(m.value).joinToString(" ") { it.value }
+                }
+                if (logCall.containsMatchIn(line) && identity.containsMatchIn(logged)) "${file.name}:${index + 1}: ${line.trim()}" else null
+            }
+        }
+        assertTrue("Chat identities in log lines:\n" + offenders.joinToString("\n"), offenders.isEmpty())
     }
 }

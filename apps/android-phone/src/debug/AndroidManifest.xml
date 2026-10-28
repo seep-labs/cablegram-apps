@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <!-- Debug builds only (spec 008 T001): measures Telegram's behaviour; logs numbers, never chat names or ids. -->
+        <receiver android:name="app.cablegram.discovery.DiscoverySpikeReceiver" android:exported="true" />
+    </application>
+</manifest>

@@ -1,0 +1,61 @@
+# Spec 008 (US5, chats with bots). Preconditions: authenticated main UI, a linked and healthy Telegram test account
+# that has a chat with a bot named ${BOT} (Latin name, so the search box can be typed into) and the bots switch off.
+# Asserts that bot chats are not listed by default, that turning the switch on asks first (and Cancel changes
+# nothing), that confirming scans again and lists the bot chat, and that turning it off removes it again.
+# Leaves nothing behind: the switch is off at the end.
+appId: app.cablegram.phone
+env:
+  BOT: Alpha Save Message
+tags:
+  - telegram
+---
+- launchApp
+- tapOn:
+    id: nav_browse
+- scrollUntilVisible:
+    element:
+      id: telegram_add_from_chats
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: telegram_add_from_chats
+- tapOn:
+    id: discovery_look
+- extendedWaitUntil:
+    visible:
+      id: discovery_scan_done
+    timeout: 240000
+
+# By default a chat with a bot is not listed.
+- tapOn:
+    id: discovery_search
+- inputText: ${BOT}
+- hideKeyboard
+- assertVisible: "No chats match."
+
+# The switch asks first; Cancel leaves it off and reads nothing.
+- tapOn:
+    id: discovery_bots_switch
+- assertVisible:
+    id: discovery_bots_confirm
+- tapOn: "Cancel"
+- assertNotVisible:
+    id: discovery_bots_confirm
+- assertVisible: "No chats match."
+
+# Confirming scans again and lists the bot chat, labelled as such.
+- tapOn:
+    id: discovery_bots_switch
+- tapOn:
+    id: discovery_bots_confirm
+- extendedWaitUntil:
+    visible:
+      id: discovery_scan_done
+    timeout: 240000
+- assertVisible: ${BOT}
+- assertVisible: "Chat with a bot.*"
+
+# Turning the switch off removes the bot chats from the results at once.
+- tapOn:
+    id: discovery_bots_switch
+- assertVisible: "No chats match."

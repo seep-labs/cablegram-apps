@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Spec 008: add videos from your Telegram chats. -->
+    <string name="discovery_add_button" formatted="false">"إضافة من محادثاتك في Telegram"</string>
+    <string name="discovery_notice_title" formatted="false">"يحدث هذا على هاتفك."</string>
+    <string name="discovery_notice_body" formatted="false">"سجّل Cablegram الدخول إلى Telegram على هذا الهاتف، مثل Telegram Desktop. وهو يطّلع على محادثاتك هنا، على هذا الهاتف. لا تُرسل أسماء المحادثات أو الأعداد أو الرسائل أو الصور المصغّرة إلى خوادم Cablegram أبدًا. فقط مقاطع الفيديو التي تضيفها تنتقل إلى «Cablegram library»."</string>
+    <string name="discovery_ask_title" formatted="false">"هل تريد البحث عن مقاطع فيديو في قنواتك ومجموعاتك؟"</string>
+    <string name="discovery_ask_body" formatted="false">"يطّلع Cablegram على هذا الهاتف على آخر 100 مقطع فيديو وملف في كل قناة ومجموعة لديك، ويحصي مقاطع الفيديو الطويلة من بينها. ويتجاهل المقاطع القصيرة ما لم تغيّر ذلك من «الإعدادات المتقدمة». ولا يطّلع على المحادثات الشخصية أو «الرسائل المحفوظة» أو المحادثات مع البوتات ما لم تفعّل ذلك."</string>
+    <string name="discovery_look" formatted="false">"البحث عن مقاطع فيديو"</string>
+    <string name="discovery_not_now" formatted="false">"ليس الآن"</string>
+    <string name="discovery_title" formatted="false">"العثور على مقاطع فيديو"</string>
+    <string name="discovery_listing" formatted="false">"جارٍ الاطلاع على محادثاتك…"</string>
+    <string name="discovery_checked" formatted="false">"تم فحص %1$d من %2$d محادثة"</string>
+    <string name="discovery_stop" formatted="false">"إيقاف"</string>
+    <string name="discovery_kind_channel" formatted="false">"قناة"</string>
+    <string name="discovery_kind_group" formatted="false">"مجموعة"</string>
+    <string name="discovery_counting" formatted="false">"جارٍ العدّ…"</string>
+    <string name="discovery_show_empty" formatted="false">"عرض %1$d محادثة بلا مقاطع فيديو"</string>
+    <string name="discovery_hide_empty" formatted="false">"إخفاء المحادثات الخالية من مقاطع الفيديو"</string>
+    <string name="discovery_paused" formatted="false">"طلب Telegram الانتظار لمدة %1$d ثانية. سيستمر الفحص بعد ذلك."</string>
+    <string name="discovery_protected" formatted="false">"الحفظ غير مسموح به"</string>
+    <string name="discovery_failed" formatted="false">"تعذّر الاطلاع على محادثاتك. حاول مرة أخرى."</string>
+    <plurals name="discovery_videos">
+        <item quantity="zero">"%1$d مقطع فيديو ضمن آخر 100"</item>
+        <item quantity="one">"مقطع فيديو واحد (%1$d) ضمن آخر 100"</item>
+        <item quantity="two">"مقطعا فيديو (%1$d) ضمن آخر 100"</item>
+        <item quantity="few">"%1$d مقاطع فيديو ضمن آخر 100"</item>
+        <item quantity="many">"%1$d مقطع فيديو ضمن آخر 100"</item>
+        <item quantity="other">"%1$d مقطع فيديو ضمن آخر 100"</item>
+    </plurals>
+    <plurals name="discovery_videos_about">
+        <item quantity="zero">"حوالي %1$d مقطع فيديو ضمن آخر 100"</item>
+        <item quantity="one">"حوالي مقطع فيديو واحد (%1$d) ضمن آخر 100"</item>
+        <item quantity="two">"حوالي مقطعي فيديو (%1$d) ضمن آخر 100"</item>
+        <item quantity="few">"حوالي %1$d مقاطع فيديو ضمن آخر 100"</item>
+        <item quantity="many">"حوالي %1$d مقطع فيديو ضمن آخر 100"</item>
+        <item quantity="other">"حوالي %1$d مقطع فيديو ضمن آخر 100"</item>
+    </plurals>
+    <plurals name="discovery_files_maybe">
+        <item quantity="zero">"حوالي %1$d ملف كبير قد يكون فيديو ضمن آخر 100"</item>
+        <item quantity="one">"حوالي ملف كبير واحد (%1$d) قد يكون فيديو ضمن آخر 100"</item>
+        <item quantity="two">"حوالي ملفين كبيرين (%1$d) قد يكونان فيديو ضمن آخر 100"</item>
+        <item quantity="few">"حوالي %1$d ملفات كبيرة قد تكون فيديو ضمن آخر 100"</item>
+        <item quantity="many">"حوالي %1$d ملفًا كبيرًا قد تكون فيديو ضمن آخر 100"</item>
+        <item quantity="other">"حوالي %1$d ملف كبير قد يكون فيديو ضمن آخر 100"</item>
+    </plurals>
+    <string name="discovery_manage" formatted="false">"إدارة المحادثات"</string>
+    <plurals name="discovery_use_chats">
+        <item quantity="zero">"استخدام %1$d محادثة"</item>
+        <item quantity="one">"استخدام محادثة واحدة (%1$d)"</item>
+        <item quantity="two">"استخدام محادثتين (%1$d)"</item>
+        <item quantity="few">"استخدام %1$d محادثات"</item>
+        <item quantity="many">"استخدام %1$d محادثة"</item>
+        <item quantity="other">"استخدام %1$d محادثة"</item>
+    </plurals>
+    <string name="picker_title" formatted="false">"إضافة مقاطع فيديو"</string>
+    <string name="picker_all" formatted="false">"جميع المحادثات"</string>
+    <string name="picker_in_library" formatted="false">"في المكتبة"</string>
+    <string name="picker_deleting" formatted="false">"جارٍ الحذف"</string>
+    <string name="picker_more" formatted="false">"عرض المزيد"</string>
+    <string name="picker_empty" formatted="false">"لا توجد مقاطع فيديو في المحادثات المختارة حتى الآن."</string>
+    <string name="picker_adding" formatted="false">"جارٍ إضافة %1$d من %2$d…"</string>
+    <string name="picker_failed" formatted="false">"تعذّرت إضافة %1$d."</string>
+    <string name="picker_try_again" formatted="false">"إعادة المحاولة"</string>
+    <string name="picker_readd_title" formatted="false">"هل تريد الإضافة مرة أخرى؟"</string>
+    <string name="picker_readd_body" formatted="false">"تمت إزالة %1$d من هذه من مكتبتك سابقًا. هل تريد إضافتها مرة أخرى؟"</string>
+    <string name="picker_readd_confirm" formatted="false">"إضافة مرة أخرى"</string>
+    <string name="picker_cancel" formatted="false">"إلغاء"</string>
+    <string name="picker_done" formatted="false">"تم"</string>
+    <string name="discovery_pick" formatted="false">"اختيار مقاطع فيديو"</string>
+    <plurals name="picker_add">
+        <item quantity="zero">"إضافة %1$d إلى المكتبة"</item>
+        <item quantity="one">"إضافة %1$d إلى المكتبة"</item>
+        <item quantity="two">"إضافة %1$d إلى المكتبة"</item>
+        <item quantity="few">"إضافة %1$d إلى المكتبة"</item>
+        <item quantity="many">"إضافة %1$d إلى المكتبة"</item>
+        <item quantity="other">"إضافة %1$d إلى المكتبة"</item>
+    </plurals>
+    <plurals name="picker_added">
+        <item quantity="zero">"تمت إضافة %1$d مقطع فيديو. ستظهر قريبًا في مكتبتك."</item>
+        <item quantity="one">"تمت إضافة مقطع فيديو واحد (%1$d). سيظهر قريبًا في مكتبتك."</item>
+        <item quantity="two">"تمت إضافة مقطعي فيديو (%1$d). سيظهران قريبًا في مكتبتك."</item>
+        <item quantity="few">"تمت إضافة %1$d مقاطع فيديو. ستظهر قريبًا في مكتبتك."</item>
+        <item quantity="many">"تمت إضافة %1$d مقطع فيديو. ستظهر قريبًا في مكتبتك."</item>
+        <item quantity="other">"تمت إضافة %1$d مقطع فيديو. ستظهر قريبًا في مكتبتك."</item>
+    </plurals>
+    <string name="picker_banner" formatted="false">"🔒 التصفح على هذا الهاتف فقط. لا يُرسل أي شيء من هنا إلى Cablegram."</string>
+    <string name="picker_banner_personal" formatted="false">"🔒 التصفح على هذا الهاتف فقط، بما في ذلك المحادثات الشخصية. لا يُرسل أي شيء من هنا إلى Cablegram."</string>
+    <string name="picker_how" formatted="false">"كيف يعمل هذا"</string>
+    <string name="how_title" formatted="false">"كيف يعمل هذا"</string>
+    <string name="how_body" formatted="false">"سجّل Cablegram الدخول إلى Telegram على هذا الهاتف، مثل Telegram Desktop. الشيفرة التي تطّلع على محادثاتك موجودة في مكان واحد، هو الحزمة app.cablegram.discovery في تطبيق الهاتف، واختبار التطبيق المفتوح المصدر (TelegramApiSurfaceTest) يسرد كل استدعاء لـ Telegram يُسمح له بإجرائه. تبقى أسماء المحادثات والأعداد والرسائل والصور المصغّرة على هذا الهاتف. ولا يُحوَّل إلى «Cablegram library» سوى مقاطع الفيديو التي تضيفها."</string>
+    <string name="how_link" formatted="false">"عرض الاختبار على GitHub"</string>
+    <string name="discovery_advanced" formatted="false">"الإعدادات المتقدمة"</string>
+    <string name="advanced_personal_title" formatted="false">"البحث أيضًا في المحادثات الشخصية"</string>
+    <string name="advanced_personal_desc" formatted="false">"محادثات فردية مع أشخاص. غالبًا ما تحتوي على مقاطع فيديو شخصية."</string>
+    <string name="advanced_saved_title" formatted="false">"البحث أيضًا في الرسائل المحفوظة"</string>
+    <string name="advanced_saved_desc" formatted="false">"محادثة الرسائل المحفوظة الخاصة بك."</string>
+    <string name="advanced_confirm_title" formatted="false">"هل تريد تفعيل هذا الخيار؟"</string>
+    <string name="advanced_confirm_personal" formatted="false">"يتيح هذا لميزة «العثور على مقاطع فيديو» عرض محادثاتك الفردية مع الأشخاص أيضًا. وتبقى غير محددة حتى تختارها، ولا يُطّلع على أي شيء حتى تضغط على «البحث عن مقاطع فيديو»."</string>
+    <string name="advanced_confirm_saved" formatted="false">"يتيح هذا لميزة «العثور على مقاطع فيديو» عرض «الرسائل المحفوظة» أيضًا. وتبقى غير محددة حتى تختارها، ولا يُطّلع على أي شيء حتى تضغط على «البحث عن مقاطع فيديو»."</string>
+    <string name="advanced_turn_on" formatted="false">"تفعيل"</string>
+    <string name="discovery_kind_personal" formatted="false">"محادثة شخصية"</string>
+    <string name="discovery_kind_saved" formatted="false">"الرسائل المحفوظة"</string>
+    <plurals name="picker_dropped">
+        <item quantity="zero">"لم تعد %1$d محادثة اخترتها متاحة وتمت إزالتها."</item>
+        <item quantity="one">"لم تعد محادثة واحدة (%1$d) اخترتها متاحة وتمت إزالتها."</item>
+        <item quantity="two">"لم تعد محادثتان (%1$d) اخترتهما متاحتين وتمت إزالتهما."</item>
+        <item quantity="few">"لم تعد %1$d محادثات اخترتها متاحة وتمت إزالتها."</item>
+        <item quantity="many">"لم تعد %1$d محادثة اخترتها متاحة وتمت إزالتها."</item>
+        <item quantity="other">"لم تعد %1$d محادثة اخترتها متاحة وتمت إزالتها."</item>
+    </plurals>
+    <string name="advanced_min_title" formatted="false">"أقصر مدة فيديو تُحتسب"</string>
+    <string name="advanced_min_desc" formatted="false">"تُستبعد المقاطع الأقصر من الفحص ومن شاشة الاختيار."</string>
+    <string name="advanced_min_option" formatted="false">"%1$d د"</string>
+    <string name="advanced_min_any" formatted="false">"أي مدة"</string>
+    <string name="discovery_search_hint" formatted="false">"البحث في المحادثات بالاسم"</string>
+    <string name="discovery_no_match" formatted="false">"لا توجد محادثات مطابقة."</string>
+    <plurals name="discovery_unchanged">
+        <item quantity="zero">"لم تكن في %1$d محادثة أي رسائل جديدة منذ آخر مرة، لذا لم تُفحص مجددًا."</item>
+        <item quantity="one">"لم تكن في محادثة واحدة (%1$d) أي رسائل جديدة منذ آخر مرة، لذا لم تُفحص مجددًا."</item>
+        <item quantity="two">"لم تكن في محادثتين (%1$d) أي رسائل جديدة منذ آخر مرة، لذا لم تُفحصا مجددًا."</item>
+        <item quantity="few">"لم تكن في %1$d محادثات أي رسائل جديدة منذ آخر مرة، لذا لم تُفحص مجددًا."</item>
+        <item quantity="many">"لم تكن في %1$d محادثة أي رسائل جديدة منذ آخر مرة، لذا لم تُفحص مجددًا."</item>
+        <item quantity="other">"لم تكن في %1$d محادثة أي رسائل جديدة منذ آخر مرة، لذا لم تُفحص مجددًا."</item>
+    </plurals>
+    <string name="discovery_bots_switch" formatted="false">"ابحث أيضًا في المحادثات مع البوتات"</string>
+    <string name="discovery_bots_hint" formatted="false">"يشمل بوتات التنزيل والحفظ. يطّلع على مقاطع الفيديو والملفات فقط، على هذا الهاتف."</string>
+    <string name="discovery_bots_title" formatted="false">"هل تريد البحث أيضًا في المحادثات مع البوتات؟"</string>
+    <string name="discovery_bots_body" formatted="false">"سيطّلع Cablegram على هذا الهاتف أيضًا على آخر 100 مقطع فيديو وملف في محادثاتك مع البوتات. لا يُرسل أي شيء من ذلك إلى Cablegram. ولا يحدث ذلك إلا بعد الضغط على الزر أدناه، ويمكنك إيقافه في أي وقت."</string>
+    <string name="discovery_kind_bot" formatted="false">"محادثة مع بوت"</string>
+    <string name="picker_banner_bots" formatted="false">"🔒 التصفح على هذا الهاتف فقط، بما في ذلك المحادثات مع البوتات. لا يُرسل أي شيء من هنا إلى Cablegram."</string>
+    <string name="picker_banner_personal_bots" formatted="false">"🔒 التصفح على هذا الهاتف فقط، بما في ذلك المحادثات الشخصية والمحادثات مع البوتات. لا يُرسل أي شيء من هنا إلى Cablegram."</string>
+    <string name="discovery_ask_body_more" formatted="false">"يطّلع Cablegram على هذا الهاتف على آخر 100 مقطع فيديو وملف في كل قناة ومجموعة لديك وفي الأنواع الأخرى من المحادثات التي فعّلتها، ويحصي مقاطع الفيديو الطويلة من بينها. ويتجاهل المقاطع القصيرة ما لم تغيّر ذلك من «الإعدادات المتقدمة»."</string>
+</resources>

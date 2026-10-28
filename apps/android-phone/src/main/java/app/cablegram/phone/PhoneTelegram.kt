@@ -11,6 +11,8 @@ import app.cablegram.telegram.TgParameters
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -20,6 +22,13 @@ import kotlinx.coroutines.launch
  * people who never use Telegram never load it.
  */
 object PhoneTelegram {
+    /**
+     * Fires when the phone's scan of the library channel changed what the household sees (videos registered,
+     * or titles of another channel marked unavailable). The view model listens and refreshes the library, so
+     * titles of a previous Telegram account do not linger after connecting a different one.
+     */
+    val libraryScanned = MutableSharedFlow<Unit>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+
     /** How this phone appears in Telegram → Settings → Devices. */
     val deviceModel: String get() = "${Build.MANUFACTURER} ${Build.MODEL}".trim()
 
@@ -85,14 +94,39 @@ object PhoneTelegram {
     /** After log-out: drop the session and delete its database, pieces and key. */
     fun forget(context: Context) = synchronized(this) {
         current = null
+        // Spec 008: the discovery choice, counts, switches and thumbnail ledger go with the account.
+        // The thumbnails themselves are in the TDLib files directory that TelegramDatabaseKey.wipe() removes.
+        // A scan or screen still running holds the live store: stop its permit and retire that store, so it cannot write the data back.
+        graph?.third?.let { it.controller.endScan(); it.store.retire() }
+        graph = null
+        app.cablegram.discovery.DiscoveryStore(app.cablegram.discovery.KeystoreDiscoveryStorage(context.applicationContext)).clear()
         setLinked(context, false)
         TelegramDatabaseKey(context.applicationContext).wipe()
     }
 
+    /** Phone-only video discovery (spec 008) on the same TDLib client as [session]; null until the session exists. */
+    @Volatile var discoveryTransport: app.cablegram.discovery.DiscoveryTransport? = null
+        private set
+
+    /** Library chat id, the transport (so a new client never reuses the old one's graph) and the graph. */
+    @Volatile private var graph: Triple<Long, app.cablegram.discovery.DiscoveryTransport, app.cablegram.discovery.DiscoveryGraph>? = null
+
+    /** Video discovery for this library channel (spec 008); null until the Telegram session exists. */
+    fun discovery(context: Context, libraryChatId: Long): app.cablegram.discovery.DiscoveryGraph? = synchronized(this) {
+        val transport = discoveryTransport ?: return null
+        graph?.takeIf { it.first == libraryChatId && it.second === transport }?.let { return it.third }
+        graph?.let { it.third.controller.endScan() }
+        app.cablegram.discovery.DiscoveryGraph.create(
+            transport, app.cablegram.discovery.KeystoreDiscoveryStorage(context.applicationContext), libraryChatId,
+        ).also { graph = Triple(libraryChatId, transport, it) }
+    }
+
     private fun create(context: Context): TelegramSession {
         val keys = TelegramDatabaseKey(context)
+        val client = dev.g000sha256.tdl.TdlClient.create()
+        discoveryTransport = app.cablegram.discovery.TdlibDiscoveryTransport(client)
         return TelegramSession(
-            api = TdlibTelegramApi(),
+            api = TdlibTelegramApi(client),
             role = TelegramRole.Phone,
             parameters = {
                 closing?.join()

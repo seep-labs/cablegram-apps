@@ -170,6 +170,21 @@ internal fun TelegramStorageEntry(viewModel: PhoneViewModel, onAccountHelp: () -
         }
     }
     if (linked && health == TelegramHealth.Ok && PhoneTelegram.wasLinked(context)) {
+        var findVideos by remember { mutableStateOf(false) }
+        val libraryChatId = link?.chatId
+        OutlinedButton(
+            onClick = { findVideos = true },
+            enabled = libraryChatId != null,
+            modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp).maestro(MaestroIds.TELEGRAM_ADD_FROM_CHATS),
+        ) { Text(ui.getString(R.string.discovery_add_button)) }
+        if (findVideos && libraryChatId != null) {
+            val graph = remember(libraryChatId) { PhoneTelegram.session(context); PhoneTelegram.discovery(context, libraryChatId) }
+            if (graph != null) FindVideosDialog(graph, viewModel, onClose = { findVideos = false }) else findVideos = false
+        }
+        if (libraryChatId != null) {
+            val advancedGraph = remember(libraryChatId) { PhoneTelegram.session(context); PhoneTelegram.discovery(context, libraryChatId) }
+            if (advancedGraph != null) DiscoveryAdvanced(advancedGraph)
+        }
         OutlinedButton(
             onClick = viewModel::checkTelegramBotHub,
             modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp).maestro(MaestroIds.TELEGRAM_CHECK_BOT_HUB),

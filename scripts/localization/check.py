@@ -25,6 +25,7 @@ SAME_AS_ENGLISH = {
     "ui_normal_a7248e": {"de", "es"}, "ui_opensubtitles_optional_4070ca": {"de"}, "ui_password_e7cf3e": {"it"},
     "ui_pause_858e4b": {"de"}, "ui_server_1_s_dfe9cc": {"de", "it"}, "ui_telegram_4bdd3a": {"ar", "ru", "es", "it"}, "ui_video_d534be": {"de", "it"},
     "ui_volume_b10fb9": {"it"},
+    "advanced_min_option": {"es", "it"},
 }
 
 

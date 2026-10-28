@@ -1,0 +1,41 @@
+# Helper, not a test: run it from another flow with `runFlow` (it is in a subfolder so a folder run skips it).
+# Starts on the Import tab. Opens Find videos, answers the "On this phone" prompt with Look for videos, waits for
+# the scan, finds the chat named ${CHAT} with the search box, ticks it (if it is not ticked already) and taps Use. The picker opens afterwards.
+# A scan that has run before skips quiet chats, so this is fast after the first time.
+appId: app.cablegram.phone
+---
+- scrollUntilVisible:
+    element:
+      id: telegram_add_from_chats
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: telegram_add_from_chats
+- assertVisible:
+    id: discovery_prompt
+- tapOn:
+    id: discovery_look
+- extendedWaitUntil:
+    visible:
+      id: discovery_scan_done
+    timeout: 240000
+- tapOn:
+    id: discovery_search
+- inputText: ${CHAT}
+- hideKeyboard
+- assertVisible: ${CHAT}
+# The chat may already be ticked (a saved choice from an earlier run): tapping it then would untick it.
+- runFlow:
+    when:
+      notVisible:
+        id: discovery_chat_check
+        checked: true
+    commands:
+      - tapOn:
+          id: discovery_chat_check
+          index: 0
+- assertVisible:
+    id: discovery_chat_check
+    checked: true
+- tapOn:
+    id: discovery_use

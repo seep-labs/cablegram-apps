@@ -19,6 +19,18 @@ for (const [a, b] of pairs) {
     else if (readFileSync(pa, "utf8") !== readFileSync(pb, "utf8")) problems.push(`${name}: differs between ${a} and ${b}`);
   }
 }
+// Video discovery (spec 008) is phone only: TVs never scan, list or browse other chats (FR-001).
+function walk(dir) {
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(dir, e.name)) : [join(dir, e.name)]));
+}
+const tvMain = "apps/android-tv/src/main";
+if (existsSync(join(root, tvMain, "java/app/cablegram/discovery"))) problems.push("the TV app must not contain app/cablegram/discovery (spec 008 FR-001)");
+for (const file of walk(join(root, tvMain)).filter((f) => f.endsWith(".kt"))) {
+  const text = readFileSync(file, "utf8");
+  for (const call of ["forwardMessages", "getChatMessageCount", "searchChatMessages"])
+    if (text.includes(call)) problems.push(`${file.slice(root.length)}: the TV must not call ${call} (spec 008 FR-001)`);
+}
 // The iPhone app keeps its own copy of the allowed Telegram surface (Swift cannot reflect over a protocol): it must name exactly the
 // members of the Android allowlist, with Kotlin's `getX` property accessors written as `x`.
 function allowlist(file, pattern) {

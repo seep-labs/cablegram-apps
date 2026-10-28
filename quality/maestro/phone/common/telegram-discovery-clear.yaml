@@ -1,0 +1,31 @@
+# Helper, not a test: leaves no saved choice behind. Starts with Find videos or the picker open on the chat ${CHAT}.
+# Closes the picker, reopens Find videos, opens Manage chats (the saved choice, nothing is scanned or read),
+# unticks ${CHAT} and saves an empty choice.
+appId: app.cablegram.phone
+---
+- tapOn:
+    id: picker_done
+- scrollUntilVisible:
+    element:
+      id: telegram_add_from_chats
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: telegram_add_from_chats
+- assertVisible:
+    id: discovery_prompt
+- tapOn:
+    id: discovery_manage
+- tapOn:
+    id: discovery_search
+- inputText: ${CHAT}
+- hideKeyboard
+- tapOn:
+    id: discovery_chat_check
+    checked: true
+- tapOn:
+    id: discovery_use
+# If another chat is still chosen, Use opens the picker: close it.
+- tapOn:
+    id: picker_done
+    optional: true

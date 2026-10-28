@@ -1,0 +1,121 @@
+# Spec 008 (US5, FR-005, FR-006, FR-008). Preconditions: authenticated main UI, a linked Telegram test account that has
+# at least one one-to-one chat holding videos of 10 minutes or more, both Advanced switches off, and the shortest-video
+# setting at its default of 10 minutes. Chats already chosen in real use are left alone. The first scan with personal chats on reads every
+# personal chat once, so it can take several minutes on an account with hundreds of them.
+# Checks the shortest-video setting (default, change, survives a restart), then turns personal chats on, picks one,
+# and turns the switch off again to check the chat left the choice. Leaves the defaults restored.
+appId: app.cablegram.phone
+tags:
+  - telegram
+---
+- launchApp
+- tapOn:
+    id: nav_browse
+- scrollUntilVisible:
+    element:
+      id: discovery_advanced
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: discovery_advanced
+- scrollUntilVisible:
+    element:
+      id: advanced_min_600
+    direction: DOWN
+    timeout: 20000
+
+# The shortest video to count: 10 minutes by default, and a change survives an app restart.
+- assertVisible:
+    id: advanced_min_600
+    checked: true
+- tapOn:
+    id: advanced_min_900
+- assertVisible:
+    id: advanced_min_900
+    checked: true
+- stopApp
+- launchApp
+- tapOn:
+    id: nav_browse
+- scrollUntilVisible:
+    element:
+      id: discovery_advanced
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: discovery_advanced
+- scrollUntilVisible:
+    element:
+      id: advanced_min_900
+    direction: DOWN
+    timeout: 20000
+- assertVisible:
+    id: advanced_min_900
+    checked: true
+- tapOn:
+    id: advanced_min_600
+- assertVisible:
+    id: advanced_min_600
+    checked: true
+- scrollUntilVisible:
+    element:
+      id: advanced_personal
+    direction: UP
+    timeout: 20000
+
+# Off by default; turning on shows a confirmation that repeats the notice, and starts no scan.
+- tapOn:
+    id: advanced_personal
+- assertVisible:
+    id: advanced_confirm
+- assertVisible: ".*signed in to Telegram on this phone.*"
+- tapOn:
+    id: advanced_confirm
+
+# The next scan lists personal chats, unticked.
+- tapOn:
+    id: telegram_add_from_chats
+- assertVisible:
+    id: discovery_prompt
+- tapOn:
+    id: discovery_look
+- extendedWaitUntil:
+    visible:
+      id: discovery_scan_done
+    timeout: 900000
+- scrollUntilVisible:
+    element: ".*Personal chat.*"
+    direction: DOWN
+    timeout: 120000
+- assertNotVisible:
+    id: discovery_chat_check
+    checked: true
+
+# Pick one: the picker banner says personal chats are included.
+- tapOn: ".*Personal chat.*"
+- assertVisible:
+    id: discovery_chat_check
+    checked: true
+- tapOn:
+    id: discovery_use
+- extendedWaitUntil:
+    visible:
+      id: picker_banner
+    timeout: 60000
+- assertVisible: ".*including personal chats.*"
+- tapOn:
+    id: picker_done
+
+# Turning the switch off removes the personal chats from the choice and the results at once.
+- tapOn:
+    id: advanced_personal
+- tapOn:
+    id: telegram_add_from_chats
+- assertVisible:
+    id: discovery_prompt
+# Manage chats (when some other chat is still chosen) lists no personal chat any more.
+- tapOn:
+    id: discovery_manage
+    optional: true
+- assertNotVisible: ".*Personal chat.*"
+- back

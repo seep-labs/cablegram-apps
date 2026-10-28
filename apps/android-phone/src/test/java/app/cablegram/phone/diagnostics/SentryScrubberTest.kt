@@ -222,4 +222,28 @@ class SentryScrubberTest {
         assertEquals(0L, done.count)
         assertFalse(io.sentry.Sentry.isEnabled())
     }
+
+    @Test
+    fun `Telegram chat ids and chat_id pairs are masked`() {
+        val text = "forward failed for -1009999999001 and chat_id: 123456 and chat id=-42, library -100123456789"
+        val scrubbed = SentryScrubber.scrubMessage(text)
+        assertFalse(scrubbed.contains("1009999999001"))
+        assertFalse(scrubbed.contains("123456789"))
+        assertFalse(scrubbed.contains("chat_id: 123456"))
+        assertTrue(scrubbed.contains("[CHAT_ID_REDACTED]"))
+    }
+
+    @Test
+    fun `a report built after a discovery session carries no canary chat id or title`() {
+        SentryScrubber.rememberName("CANARY-7f3a-one")
+        val report = ProblemReportData(
+            appVersion = "1", versionCode = 1, manufacturer = "m", model = "m", androidVersion = 34,
+            description = "Scan of CANARY-7f3a-one (-1009999999001) failed, chat_id=-1009999999002",
+            playbackState = "chat -1009999999002",
+        ).toJson()
+        assertFalse(report.contains("CANARY-7f3a"))
+        assertFalse(report.contains("1009999999001"))
+        assertFalse(report.contains("1009999999002"))
+        SentryScrubber.forgetNames()
+    }
 }
