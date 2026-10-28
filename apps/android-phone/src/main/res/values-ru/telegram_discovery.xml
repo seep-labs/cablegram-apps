@@ -89,4 +89,10 @@
     <string name="advanced_turn_on" formatted="false">"Включить"</string>
     <string name="discovery_kind_personal" formatted="false">"Личный чат"</string>
     <string name="discovery_kind_saved" formatted="false">"Избранное"</string>
+    <plurals name="picker_dropped">
+        <item quantity="one">"%1$d выбранный вами чат больше недоступен и был убран."</item>
+        <item quantity="few">"%1$d выбранных вами чатов больше недоступны, они были убраны."</item>
+        <item quantity="many">"%1$d выбранных вами чатов больше недоступны, они были убраны."</item>
+        <item quantity="other">"%1$d выбранных вами чатов больше недоступны, они были убраны."</item>
+    </plurals>
 </resources>

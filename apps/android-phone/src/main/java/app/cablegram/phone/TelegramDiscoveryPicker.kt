@@ -83,7 +83,9 @@ internal class PickerModel(private val graph: DiscoveryGraph, private val hooks:
         data class Finished(val added: Int, val failed: List<DiscoveryVideo>) : Adding
     }
 
-    val chats = graph.store.snapshot().choice
+    var chats by mutableStateOf(graph.store.snapshot().choice); private set
+    /** Chats dropped from the choice because the owner left them or lost access (one-line note). */
+    var dropped by mutableStateOf(0); private set
     var filter by mutableStateOf<Long?>(null); private set
     val videos = mutableStateListOf<DiscoveryVideo>()
     val thumbs = mutableStateMapOf<Pair<Long, Long>, String>()
@@ -100,7 +102,12 @@ internal class PickerModel(private val graph: DiscoveryGraph, private val hooks:
 
     init {
         scope.launch { hooks.tombstones()?.let { tombstones = it } }
-        show(null)
+        scope.launch {
+            // A chat the owner left, or lost access to, leaves the choice before anything is read from it.
+            dropped = runCatching { graph.controller.dropUnreadable { graph.discovery.isReadable(it) } }.getOrDefault(0)
+            chats = graph.store.snapshot().choice
+            show(null)
+        }
     }
 
     fun show(chatId: Long?) {
@@ -218,6 +225,7 @@ private fun PickerScreen(model: PickerModel, inLibrary: Set<String>, onClose: ()
             Text(ui.getString(R.string.picker_title), color = Color.White, fontSize = 22.sp, modifier = Modifier.weight(1f))
             TextButton(onClick = onClose, modifier = Modifier.maestro(MaestroIds.PICKER_DONE)) { Text(ui.getString(R.string.picker_done)) }
         }
+        if (model.dropped > 0) Text(ui.getQuantityString(R.plurals.picker_dropped, model.dropped, model.dropped), color = VlcOrange, fontSize = 13.sp)
         PrivacyBanner(personal = model.chats.any { it.kind == ChatKind.Personal || it.kind == ChatKind.SavedMessages }, ui)
         if (model.chats.size > 1) {
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {

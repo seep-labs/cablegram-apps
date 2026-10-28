@@ -59,7 +59,21 @@ class TdlibDiscoveryTransport(private val client: TdlClient) : DiscoveryTranspor
             is ChatTypeSecret -> type.userId
             else -> 0L
         }
-        return TransportChat(chat.id, kind, userId, chat.title, chat.hasProtectedContent)
+        return TransportChat(chat.id, kind, userId, chat.title, chat.hasProtectedContent, isMember(type))
+    }
+
+    /** Left, banned and restricted-out members can no longer read a chat as a member (spec 008 edge case). */
+    private suspend fun isMember(type: dev.g000sha256.tdl.dto.ChatType): Boolean {
+        val status = when (type) {
+            is ChatTypeSupergroup -> (client.getSupergroup(type.supergroupId) as? TdlResult.Success)?.result?.status
+            is ChatTypeBasicGroup -> (client.getBasicGroup(type.basicGroupId) as? TdlResult.Success)?.result?.status
+            else -> return true
+        } ?: return true
+        return when (status) {
+            is dev.g000sha256.tdl.dto.ChatMemberStatusLeft, is dev.g000sha256.tdl.dto.ChatMemberStatusBanned -> false
+            is dev.g000sha256.tdl.dto.ChatMemberStatusRestricted -> status.isMember
+            else -> true
+        }
     }
 
     override suspend fun isBot(userId: Long): Boolean =

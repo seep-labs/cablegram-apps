@@ -77,4 +77,8 @@
     <string name="advanced_turn_on" formatted="false">"روشن کن"</string>
     <string name="discovery_kind_personal" formatted="false">"گفتگوی شخصی"</string>
     <string name="discovery_kind_saved" formatted="false">"پیام‌های ذخیره‌شده"</string>
+    <plurals name="picker_dropped">
+        <item quantity="one">"%1$d گفتگوی انتخاب‌شده دیگر در دسترس نیست و حذف شد."</item>
+        <item quantity="other">"%1$d گفتگوی انتخاب‌شده دیگر در دسترس نیستند و حذف شدند."</item>
+    </plurals>
 </resources>

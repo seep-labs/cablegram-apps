@@ -77,4 +77,8 @@
     <string name="advanced_turn_on" formatted="false">"Activar"</string>
     <string name="discovery_kind_personal" formatted="false">"Chat personal"</string>
     <string name="discovery_kind_saved" formatted="false">"Mensajes guardados"</string>
+    <plurals name="picker_dropped">
+        <item quantity="one">"%1$d chat que elegiste ya no está disponible y se quitó."</item>
+        <item quantity="other">"%1$d chats que elegiste ya no están disponibles y se quitaron."</item>
+    </plurals>
 </resources>

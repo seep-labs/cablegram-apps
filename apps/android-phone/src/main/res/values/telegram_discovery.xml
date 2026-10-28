@@ -77,4 +77,8 @@
     <string name="advanced_turn_on" formatted="false">"Turn on"</string>
     <string name="discovery_kind_personal" formatted="false">"Personal chat"</string>
     <string name="discovery_kind_saved" formatted="false">"Saved Messages"</string>
+    <plurals name="picker_dropped">
+        <item quantity="one">"%1$d chat you chose is no longer available and was removed."</item>
+        <item quantity="other">"%1$d chats you chose are no longer available and were removed."</item>
+    </plurals>
 </resources>

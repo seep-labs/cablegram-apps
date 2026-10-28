@@ -77,4 +77,8 @@
     <string name="advanced_turn_on" formatted="false">"Einschalten"</string>
     <string name="discovery_kind_personal" formatted="false">"Persönlicher Chat"</string>
     <string name="discovery_kind_saved" formatted="false">"Gespeicherte Nachrichten"</string>
+    <plurals name="picker_dropped">
+        <item quantity="one">"%1$d von Ihnen gewählter Chat ist nicht mehr verfügbar und wurde entfernt."</item>
+        <item quantity="other">"%1$d von Ihnen gewählte Chats sind nicht mehr verfügbar und wurden entfernt."</item>
+    </plurals>
 </resources>

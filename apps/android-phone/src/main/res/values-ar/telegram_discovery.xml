@@ -101,4 +101,12 @@
     <string name="advanced_turn_on" formatted="false">"تشغيل"</string>
     <string name="discovery_kind_personal" formatted="false">"محادثة شخصية"</string>
     <string name="discovery_kind_saved" formatted="false">"الرسائل المحفوظة"</string>
+    <plurals name="picker_dropped">
+        <item quantity="zero">"%1$d محادثة اخترتها لم تعد متاحة وتمت إزالتها."</item>
+        <item quantity="one">"%1$d محادثة اخترتها لم تعد متاحة وتمت إزالتها."</item>
+        <item quantity="two">"%1$d محادثة اخترتها لم تعد متاحة وتمت إزالتها."</item>
+        <item quantity="few">"%1$d محادثات اخترتها لم تعد متاحة وتمت إزالتها."</item>
+        <item quantity="many">"%1$d محادثات اخترتها لم تعد متاحة وتمت إزالتها."</item>
+        <item quantity="other">"%1$d محادثات اخترتها لم تعد متاحة وتمت إزالتها."</item>
+    </plurals>
 </resources>

@@ -10,6 +10,8 @@ data class TransportChat(
     val userId: Long,
     val title: String,
     val protectedContent: Boolean,
+    /** False once the owner left, was banned from or lost access to a channel or group. */
+    val isMember: Boolean = true,
 )
 
 enum class TransportChatType { Channel, Group, Private, Secret }

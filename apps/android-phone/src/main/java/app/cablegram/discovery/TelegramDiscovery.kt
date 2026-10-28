@@ -50,6 +50,12 @@ class TelegramDiscovery(
         }
     }
 
+    /** Whether a chosen chat can still be read: the owner is still a member of it. Looks at the chosen chat only. */
+    suspend fun isReadable(chatId: Long): Boolean {
+        gate.requireChosen(chatId)
+        return transport.chat(chatId)?.isMember == true
+    }
+
     /** A pager over the chosen chats only. Refuses any chat outside the stored choice before touching Telegram (FR-009). */
     fun videoPager(chatIds: Set<DiscoveryChatId>): VideoPager {
         chatIds.forEach { gate.requireChosen(it.raw) }

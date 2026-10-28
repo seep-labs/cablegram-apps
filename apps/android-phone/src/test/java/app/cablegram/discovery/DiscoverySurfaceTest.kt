@@ -18,7 +18,8 @@ class DiscoverySurfaceTest {
     @Test
     fun `discovery exposes only the four calls and their helpers`() {
         assertEquals(
-            setOf("discoveryChats", "chatVideoCount", "videoPager", "forwardToLibrary", "thumbnail", "purgeChat"),
+            // isReadable asks only whether the owner is still a member of a chat they chose.
+            setOf("discoveryChats", "chatVideoCount", "videoPager", "forwardToLibrary", "thumbnail", "purgeChat", "isReadable"),
             methods(TelegramDiscovery::class.java),
         )
     }
@@ -39,7 +40,8 @@ class DiscoverySurfaceTest {
             setOf("chatId", "messageId", "uniqueId", "title", "durationSeconds", "sizeBytes", "date", "thumbnailFileId", "protectedContent"),
             fields(DiscoveryVideo::class.java),
         )
-        assertEquals(setOf("id", "type", "userId", "title", "protectedContent"), fields(TransportChat::class.java))
+        // isMember: whether the owner has left or lost access to the chat; no message or member list.
+        assertEquals(setOf("id", "type", "userId", "title", "protectedContent", "isMember"), fields(TransportChat::class.java))
     }
 
     @Test
