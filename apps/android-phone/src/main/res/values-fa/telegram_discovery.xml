@@ -5,7 +5,7 @@
     <string name="discovery_notice_title" formatted="false">"این کار روی گوشی شما انجام می‌شود."</string>
     <string name="discovery_notice_body" formatted="false">"Cablegram روی این گوشی وارد Telegram شده است، درست مثل Telegram Desktop. گفتگوهای شما را همین‌جا، روی همین گوشی بررسی می‌کند. نام گفتگوها، تعدادها، پیام‌ها و پیش‌نمایش‌ها هرگز به سرورهای Cablegram فرستاده نمی‌شوند. فقط ویدیوهایی که اضافه می‌کنید به «Cablegram library» می‌روند."</string>
     <string name="discovery_ask_title" formatted="false">"جست‌وجوی ویدیو در کانال‌ها و گروه‌های شما؟"</string>
-    <string name="discovery_ask_body" formatted="false">"Cablegram روی همین گوشی، ۱۰۰ ویدیو و فایل اخیر در هر یک از کانال‌ها و گروه‌های شما را بررسی می‌کند و ویدیوهای طولانی را در میان آن‌ها می‌شمارد. کلیپ‌های کوتاه را نادیده می‌گیرد، مگر اینکه این مورد را در «تنظیمات پیشرفته» تغییر دهید. در گفتگوهای شخصی یا «پیام‌های ذخیره‌شده» جست‌وجو نمی‌کند."</string>
+    <string name="discovery_ask_body" formatted="false">"Cablegram روی همین گوشی، ۱۰۰ ویدیو و فایل اخیر در هر یک از کانال‌ها و گروه‌های شما را بررسی می‌کند و ویدیوهای طولانی را در میان آن‌ها می‌شمارد. کلیپ‌های کوتاه را نادیده می‌گیرد، مگر اینکه این مورد را در «تنظیمات پیشرفته» تغییر دهید. در گفتگوهای شخصی، «پیام‌های ذخیره‌شده» یا گفتگوهای با ربات‌ها جست‌وجو نمی‌کند، مگر اینکه آن را روشن کنید."</string>
     <string name="discovery_look" formatted="false">"جست‌وجوی ویدیو"</string>
     <string name="discovery_not_now" formatted="false">"فعلاً نه"</string>
     <string name="discovery_title" formatted="false">"یافتن ویدیوها"</string>
@@ -91,4 +91,12 @@
         <item quantity="one">"%1$d گفتگو از آخرین بررسی شما پیام جدیدی نداشت و دوباره بررسی نشد."</item>
         <item quantity="other">"%1$d گفتگو از آخرین بررسی شما پیام جدیدی نداشت و دوباره بررسی نشد."</item>
     </plurals>
+    <string name="discovery_bots_switch" formatted="false">"در گفتگوهای با ربات‌ها هم جست‌وجو کن"</string>
+    <string name="discovery_bots_hint" formatted="false">"شامل ربات‌های دانلود و ذخیره است. فقط ویدیوها و فایل‌ها را روی همین گوشی بررسی می‌کند."</string>
+    <string name="discovery_bots_title" formatted="false">"در گفتگوهای با ربات‌ها هم جست‌وجو شود؟"</string>
+    <string name="discovery_bots_body" formatted="false">"Cablegram روی همین گوشی، ۱۰۰ ویدیو و فایل اخیر در گفتگوهای شما با ربات‌ها را هم بررسی می‌کند. هیچ‌یک از این‌ها به Cablegram فرستاده نمی‌شود. این کار فقط پس از زدن دکمهٔ زیر انجام می‌شود و هر زمان بخواهید می‌توانید آن را خاموش کنید."</string>
+    <string name="discovery_kind_bot" formatted="false">"گفتگو با یک ربات"</string>
+    <string name="picker_banner_bots" formatted="false">"🔒 مرور فقط روی همین گوشی انجام می‌شود، از جمله گفتگوهای با ربات‌ها. هیچ‌چیز از اینجا به Cablegram فرستاده نمی‌شود."</string>
+    <string name="picker_banner_personal_bots" formatted="false">"🔒 مرور فقط روی همین گوشی انجام می‌شود، از جمله گفتگوهای شخصی و گفتگوهای با ربات‌ها. هیچ‌چیز از اینجا به Cablegram فرستاده نمی‌شود."</string>
+    <string name="discovery_ask_body_more" formatted="false">"Cablegram روی همین گوشی، ۱۰۰ ویدیو و فایل اخیر در هر یک از کانال‌ها و گروه‌های شما و در انواع دیگر گفتگوهایی که روشن کرده‌اید را بررسی می‌کند و ویدیوهای طولانی را در میان آن‌ها می‌شمارد. کلیپ‌های کوتاه را نادیده می‌گیرد، مگر اینکه این مورد را در «تنظیمات پیشرفته» تغییر دهید."</string>
 </resources>

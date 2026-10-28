@@ -5,7 +5,7 @@
     <string name="discovery_notice_title" formatted="false">"Это происходит на вашем телефоне."</string>
     <string name="discovery_notice_body" formatted="false">"Cablegram авторизован в Telegram на этом телефоне, как Telegram Desktop. Он просматривает ваши чаты здесь, на этом телефоне. Названия чатов, количество видео, сообщения и миниатюры никогда не отправляются на серверы Cablegram. В «Cablegram library» попадают только добавленные вами видео."</string>
     <string name="discovery_ask_title" formatted="false">"Искать видео в ваших каналах и группах?"</string>
-    <string name="discovery_ask_body" formatted="false">"Cablegram просматривает на этом телефоне последние 100 видео и файлов в каждом вашем канале и группе и подсчитывает среди них длинные видео. Короткие ролики пропускаются, если не изменить это в «Дополнительных настройках». Личные чаты и «Избранное» не просматриваются."</string>
+    <string name="discovery_ask_body" formatted="false">"Cablegram просматривает на этом телефоне последние 100 видео и файлов в каждом вашем канале и группе и подсчитывает среди них длинные видео. Короткие ролики пропускаются, если не изменить это в «Дополнительных настройках». Личные чаты, «Избранное» и чаты с ботами не просматриваются, пока вы это не включите."</string>
     <string name="discovery_look" formatted="false">"Искать видео"</string>
     <string name="discovery_not_now" formatted="false">"Не сейчас"</string>
     <string name="discovery_title" formatted="false">"Поиск видео"</string>
@@ -107,4 +107,12 @@
         <item quantity="many">"В %1$d чатах не было новых сообщений с прошлого раза, поэтому их не проверяли снова."</item>
         <item quantity="other">"В %1$d чатах не было новых сообщений с прошлого раза, поэтому их не проверяли снова."</item>
     </plurals>
+    <string name="discovery_bots_switch" formatted="false">"Искать также в чатах с ботами"</string>
+    <string name="discovery_bots_hint" formatted="false">"Включая ботов для скачивания и сохранения. Просматриваются только видео и файлы, на этом телефоне."</string>
+    <string name="discovery_bots_title" formatted="false">"Искать также в чатах с ботами?"</string>
+    <string name="discovery_bots_body" formatted="false">"Cablegram также просмотрит на этом телефоне последние 100 видео и файлов в ваших чатах с ботами. Ничего из этого не отправляется в Cablegram. Это произойдёт только после нажатия кнопки ниже, и вы можете отключить это в любой момент."</string>
+    <string name="discovery_kind_bot" formatted="false">"Чат с ботом"</string>
+    <string name="picker_banner_bots" formatted="false">"🔒 Просмотр только на этом телефоне, включая чаты с ботами. Ничего из этого не отправляется в Cablegram."</string>
+    <string name="picker_banner_personal_bots" formatted="false">"🔒 Просмотр только на этом телефоне, включая личные чаты и чаты с ботами. Ничего из этого не отправляется в Cablegram."</string>
+    <string name="discovery_ask_body_more" formatted="false">"Cablegram просматривает на этом телефоне последние 100 видео и файлов в каждом вашем канале и группе, а также в других типах чатов, которые вы включили, и подсчитывает среди них длинные видео. Короткие ролики пропускаются, если не изменить это в «Дополнительных настройках»."</string>
 </resources>

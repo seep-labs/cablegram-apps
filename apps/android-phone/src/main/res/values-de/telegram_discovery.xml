@@ -5,7 +5,7 @@
     <string name="discovery_notice_title" formatted="false">"Das passiert auf deinem Handy."</string>
     <string name="discovery_notice_body" formatted="false">"Cablegram ist auf diesem Handy bei Telegram angemeldet, wie Telegram Desktop. Es sieht sich deine Chats hier auf diesem Handy an. Chatnamen, Anzahlen, Nachrichten und Vorschaubilder werden nie an die Server von Cablegram gesendet. Nur die Videos, die du hinzufügst, landen in „Cablegram library“."</string>
     <string name="discovery_ask_title" formatted="false">"In deinen Kanälen und Gruppen nach Videos suchen?"</string>
-    <string name="discovery_ask_body" formatted="false">"Cablegram durchsucht auf diesem Handy die letzten 100 Videos und Dateien in jedem deiner Kanäle und in jeder deiner Gruppen und zählt darunter die langen Videos. Kurze Clips werden übersprungen, solange du das nicht in den „Erweiterten Einstellungen“ änderst. Persönliche Chats und „Gespeicherte Nachrichten“ werden nicht durchsucht."</string>
+    <string name="discovery_ask_body" formatted="false">"Cablegram durchsucht auf diesem Handy die letzten 100 Videos und Dateien in jedem deiner Kanäle und in jeder deiner Gruppen und zählt darunter die langen Videos. Kurze Clips werden übersprungen, solange du das nicht in den „Erweiterten Einstellungen“ änderst. Persönliche Chats, „Gespeicherte Nachrichten“ und Chats mit Bots werden nicht durchsucht, solange du das nicht einschaltest."</string>
     <string name="discovery_look" formatted="false">"Nach Videos suchen"</string>
     <string name="discovery_not_now" formatted="false">"Jetzt nicht"</string>
     <string name="discovery_title" formatted="false">"Videos finden"</string>
@@ -91,4 +91,12 @@
         <item quantity="one">"%1$d Chat hatte seit der letzten Suche keine neuen Nachrichten und wurde nicht erneut geprüft."</item>
         <item quantity="other">"%1$d Chats hatten seit der letzten Suche keine neuen Nachrichten und wurden nicht erneut geprüft."</item>
     </plurals>
+    <string name="discovery_bots_switch" formatted="false">"Auch in Chats mit Bots suchen"</string>
+    <string name="discovery_bots_hint" formatted="false">"Dazu zählen Download- und Speicher-Bots. Es werden nur Videos und Dateien angesehen, auf diesem Handy."</string>
+    <string name="discovery_bots_title" formatted="false">"Auch in Chats mit Bots suchen?"</string>
+    <string name="discovery_bots_body" formatted="false">"Cablegram sieht sich dann auch die letzten 100 Videos und Dateien in deinen Chats mit Bots an, auf diesem Handy. Nichts davon wird an Cablegram gesendet. Das geschieht erst, wenn du unten auf die Schaltfläche tippst, und du kannst es jederzeit wieder ausschalten."</string>
+    <string name="discovery_kind_bot" formatted="false">"Chat mit einem Bot"</string>
+    <string name="picker_banner_bots" formatted="false">"🔒 Durchsuchen nur auf diesem Handy, einschließlich Chats mit Bots. Nichts hiervon wird an Cablegram gesendet."</string>
+    <string name="picker_banner_personal_bots" formatted="false">"🔒 Durchsuchen nur auf diesem Handy, einschließlich persönlicher Chats und Chats mit Bots. Nichts hiervon wird an Cablegram gesendet."</string>
+    <string name="discovery_ask_body_more" formatted="false">"Cablegram durchsucht auf diesem Handy die letzten 100 Videos und Dateien in jedem deiner Kanäle und in jeder deiner Gruppen sowie in den weiteren Chat-Arten, die du eingeschaltet hast, und zählt darunter die langen Videos. Kurze Clips werden übersprungen, solange du das nicht in den „Erweiterten Einstellungen“ änderst."</string>
 </resources>

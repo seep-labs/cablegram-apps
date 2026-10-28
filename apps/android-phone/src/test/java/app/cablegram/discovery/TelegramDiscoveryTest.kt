@@ -48,6 +48,22 @@ class TelegramDiscoveryTest {
     }
 
     @Test
+    fun `chats with bots appear only with their own switch, and then personal chats still need theirs`() = runTest {
+        val t = FakeDiscoveryTransport(all, ME, bots = setOf(600))
+        val botsOnly = scan(DiscoverySwitches(includeBotChats = true), t) { currentTime }.map { it.kind }
+        assertEquals(listOf(ChatKind.Channel, ChatKind.Group, ChatKind.Bot), botsOnly)
+        val both = scan(DiscoverySwitches(includePersonalChats = true, includeBotChats = true), t) { currentTime }.map { it.kind }
+        assertEquals(listOf(ChatKind.Channel, ChatKind.Group, ChatKind.Personal, ChatKind.Bot), both)
+    }
+
+    @Test
+    fun `the service account is never listed, even with every switch on`() = runTest {
+        val t = FakeDiscoveryTransport(all, ME, bots = setOf(600))
+        val every = DiscoverySwitches(includePersonalChats = true, includeSavedMessages = true, includeBotChats = true)
+        assertTrue(scan(every, t) { currentTime }.none { it.id.raw == 16L })
+    }
+
+    @Test
     fun `saved messages appear only with their switch`() = runTest {
         val t = FakeDiscoveryTransport(all, ME)
         val kinds = scan(DiscoverySwitches(includeSavedMessages = true), t) { currentTime }.map { it.kind }

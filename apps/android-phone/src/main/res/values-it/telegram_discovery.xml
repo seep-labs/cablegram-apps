@@ -5,7 +5,7 @@
     <string name="discovery_notice_title" formatted="false">"Questo avviene sul tuo telefono."</string>
     <string name="discovery_notice_body" formatted="false">"Cablegram ha effettuato l'accesso a Telegram su questo telefono, come Telegram Desktop. Guarda le tue chat qui, su questo telefono. Nomi delle chat, conteggi, messaggi e miniature non vengono mai inviati ai server di Cablegram. Solo i video che aggiungi vanno in «Cablegram library»."</string>
     <string name="discovery_ask_title" formatted="false">"Cercare video nei tuoi canali e gruppi?"</string>
-    <string name="discovery_ask_body" formatted="false">"Cablegram controlla, su questo telefono, gli ultimi 100 video e file di ciascuno dei tuoi canali e gruppi e conta tra questi i video lunghi. Salta le clip brevi, a meno che tu non lo cambi in «Impostazioni avanzate». Non controlla nelle chat personali né in «Messaggi salvati»."</string>
+    <string name="discovery_ask_body" formatted="false">"Cablegram controlla, su questo telefono, gli ultimi 100 video e file di ciascuno dei tuoi canali e gruppi e conta tra questi i video lunghi. Salta le clip brevi, a meno che tu non lo cambi in «Impostazioni avanzate». Non controlla nelle chat personali, in «Messaggi salvati» né nelle chat con i bot, a meno che tu non lo attivi."</string>
     <string name="discovery_look" formatted="false">"Cerca video"</string>
     <string name="discovery_not_now" formatted="false">"Non ora"</string>
     <string name="discovery_title" formatted="false">"Trova video"</string>
@@ -91,4 +91,12 @@
         <item quantity="one">"%1$d chat non aveva nuovi messaggi dall'ultima volta e non è stata controllata di nuovo."</item>
         <item quantity="other">"%1$d chat non avevano nuovi messaggi dall'ultima volta e non sono state controllate di nuovo."</item>
     </plurals>
+    <string name="discovery_bots_switch" formatted="false">"Cerca anche nelle chat con i bot"</string>
+    <string name="discovery_bots_hint" formatted="false">"Include i bot per scaricare e salvare. Controlla solo video e file, su questo telefono."</string>
+    <string name="discovery_bots_title" formatted="false">"Cercare anche nelle chat con i bot?"</string>
+    <string name="discovery_bots_body" formatted="false">"Cablegram controllerà anche, su questo telefono, gli ultimi 100 video e file delle tue chat con i bot. Niente di tutto questo viene inviato a Cablegram. Succede solo quando tocchi il pulsante qui sotto e puoi disattivarlo in qualsiasi momento."</string>
+    <string name="discovery_kind_bot" formatted="false">"Chat con un bot"</string>
+    <string name="picker_banner_bots" formatted="false">"🔒 Consultazione solo su questo telefono, comprese le chat con i bot. Niente di tutto questo viene inviato a Cablegram."</string>
+    <string name="picker_banner_personal_bots" formatted="false">"🔒 Consultazione solo su questo telefono, comprese le chat personali e le chat con i bot. Niente di tutto questo viene inviato a Cablegram."</string>
+    <string name="discovery_ask_body_more" formatted="false">"Cablegram controlla, su questo telefono, gli ultimi 100 video e file di ciascuno dei tuoi canali e gruppi e degli altri tipi di chat che hai attivato, e conta tra questi i video lunghi. Salta le clip brevi, a meno che tu non lo cambi in «Impostazioni avanzate»."</string>
 </resources>

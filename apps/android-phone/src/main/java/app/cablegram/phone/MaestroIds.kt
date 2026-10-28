@@ -49,6 +49,8 @@ object MaestroIds {
     const val DISCOVERY_CHAT_CHECK = "discovery_chat_check"
     const val DISCOVERY_PICK = "discovery_pick"
     const val DISCOVERY_SEARCH = "discovery_search"
+    const val DISCOVERY_BOTS_SWITCH = "discovery_bots_switch"
+    const val DISCOVERY_BOTS_CONFIRM = "discovery_bots_confirm"
     /** The OK button of a finished or stopped scan: the signal that the scan is over (Use is available while it runs). */
     const val DISCOVERY_SCAN_DONE = "discovery_scan_done"
     const val PICKER_GRID = "picker_grid"

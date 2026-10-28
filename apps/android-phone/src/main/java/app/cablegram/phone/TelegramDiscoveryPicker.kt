@@ -226,7 +226,11 @@ private fun PickerScreen(model: PickerModel, inLibrary: Set<String>, onClose: ()
             TextButton(onClick = onClose, modifier = Modifier.maestro(MaestroIds.PICKER_DONE)) { Text(ui.getString(R.string.picker_done)) }
         }
         if (model.dropped > 0) Text(ui.getQuantityString(R.plurals.picker_dropped, model.dropped, model.dropped), color = VlcOrange, fontSize = 13.sp)
-        PrivacyBanner(personal = model.chats.any { it.kind == ChatKind.Personal || it.kind == ChatKind.SavedMessages }, ui)
+        PrivacyBanner(
+            personal = model.chats.any { it.kind == ChatKind.Personal || it.kind == ChatKind.SavedMessages },
+            bots = model.chats.any { it.kind == ChatKind.Bot },
+            ui = ui,
+        )
         if (model.chats.size > 1) {
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 item { FilterChip(selected = model.filter == null, onClick = { model.show(null) }, label = { Text(ui.getString(R.string.picker_all)) }) }
@@ -344,13 +348,22 @@ private fun duration(seconds: Int): String {
 
 /** US4: shown every time the picker opens, above the grid, with no way to dismiss it (FR-011). */
 @Composable
-private fun PrivacyBanner(personal: Boolean, ui: android.content.res.Resources) {
+private fun PrivacyBanner(personal: Boolean, bots: Boolean, ui: android.content.res.Resources) {
     var how by remember { mutableStateOf(false) }
     Column(
         Modifier.fillMaxWidth().background(Color(0xFF1C1E24), RoundedCornerShape(12.dp)).padding(12.dp).maestro(MaestroIds.PICKER_BANNER),
         verticalArrangement = Arrangement.spacedBy(2.dp),
     ) {
-        Text(ui.getString(if (personal) R.string.picker_banner_personal else R.string.picker_banner), color = Color.White, fontSize = 13.sp)
+        Text(
+            ui.getString(
+                when {
+                    personal && bots -> R.string.picker_banner_personal_bots
+                    bots -> R.string.picker_banner_bots
+                    personal -> R.string.picker_banner_personal
+                    else -> R.string.picker_banner
+                },
+            ),
+            color = Color.White, fontSize = 13.sp)
         TextButton(onClick = { how = true }, modifier = Modifier.maestro(MaestroIds.PICKER_HOW)) { Text(ui.getString(R.string.picker_how)) }
     }
     if (how) {

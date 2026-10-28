@@ -5,7 +5,7 @@
     <string name="discovery_notice_title" formatted="false">"This happens on your phone."</string>
     <string name="discovery_notice_body" formatted="false">"Cablegram is signed in to Telegram on this phone, like Telegram Desktop. It looks at your chats here, on this phone. Chat names, counts, messages and thumbnails are never sent to Cablegram's servers. Only the videos you add go into “Cablegram library”."</string>
     <string name="discovery_ask_title" formatted="false">"Look for videos in your channels and groups?"</string>
-    <string name="discovery_ask_body" formatted="false">"Cablegram looks at the latest 100 videos and files in each of your channels and groups, on this phone, and counts the long videos among them. It skips short clips unless you change that in Advanced settings. It does not look in personal chats or Saved Messages."</string>
+    <string name="discovery_ask_body" formatted="false">"Cablegram looks at the latest 100 videos and files in each of your channels and groups, on this phone, and counts the long videos among them. It skips short clips unless you change that in Advanced settings. It does not look in personal chats, Saved Messages or chats with bots unless you switch that on."</string>
     <string name="discovery_look" formatted="false">"Look for videos"</string>
     <string name="discovery_not_now" formatted="false">"Not now"</string>
     <string name="discovery_title" formatted="false">"Find videos"</string>
@@ -91,4 +91,12 @@
         <item quantity="one">"%1$d chat had no new messages since your last look and was not read again."</item>
         <item quantity="other">"%1$d chats had no new messages since your last look and were not read again."</item>
     </plurals>
+    <string name="discovery_bots_switch" formatted="false">"Also look in chats with bots"</string>
+    <string name="discovery_bots_hint" formatted="false">"Includes download and saver bots. Looks only at videos and files, on this phone."</string>
+    <string name="discovery_bots_title" formatted="false">"Look in chats with bots too?"</string>
+    <string name="discovery_bots_body" formatted="false">"Cablegram will also look at the latest 100 videos and files in your chats with bots, on this phone. None of it is sent to Cablegram. It only happens after you press the button below, and you can switch it off at any time."</string>
+    <string name="discovery_kind_bot" formatted="false">"Chat with a bot"</string>
+    <string name="picker_banner_bots" formatted="false">"🔒 Browsing on this phone only, including chats with bots. Nothing here is sent to Cablegram."</string>
+    <string name="picker_banner_personal_bots" formatted="false">"🔒 Browsing on this phone only, including personal chats and chats with bots. Nothing here is sent to Cablegram."</string>
+    <string name="discovery_ask_body_more" formatted="false">"Cablegram looks at the latest 100 videos and files in each of your channels and groups, and in the other kinds of chats you switched on, on this phone, and counts the long videos among them. It skips short clips unless you change that in Advanced settings."</string>
 </resources>

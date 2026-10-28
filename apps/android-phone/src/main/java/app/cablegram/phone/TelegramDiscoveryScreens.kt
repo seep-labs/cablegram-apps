@@ -16,9 +16,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -78,6 +80,35 @@ internal class FindVideosModel(private val graph: DiscoveryGraph, private val sc
     val ticked = mutableStateListOf<Long>().also { it += graph.store.choice() }
     val hasChoice get() = graph.store.choice().isNotEmpty()
     private var job: Job? = null
+    /** The switch under the search box; chats with bots are left out until the owner turns it on and confirms. */
+    var includeBots by mutableStateOf(graph.store.switches().includeBotChats); private set
+    var askingBots by mutableStateOf(false); private set
+    val extraKinds get() = graph.store.switches().any
+
+    fun askBots() { askingBots = true }
+    fun cancelBots() { askingBots = false }
+
+    /** The confirmation is the permission for this look: it saves the switch and scans again, with a fresh permit. */
+    fun lookInBots() {
+        askingBots = false
+        scope.launch {
+            job?.cancelAndJoin()
+            graph.controller.setSwitches(graph.store.switches().copy(includeBotChats = true))
+            includeBots = true
+            look()
+        }
+    }
+
+    fun stopBots() {
+        scope.launch {
+            job?.cancelAndJoin()
+            graph.controller.setSwitches(graph.store.switches().copy(includeBotChats = false))
+            includeBots = false
+            rows.removeAll { it.kind == ChatKind.Bot }
+            ticked.retainAll(rows.map { it.chatId }.toSet())
+            if (phase == Phase.Scanning) phase = Phase.Done
+        }
+    }
 
     /** **Manage chats** reads only what is already stored on the phone, so it asks for nothing. */
     fun manage() { phase = Phase.Managing }
@@ -185,6 +216,7 @@ private fun FindVideosScreen(model: FindVideosModel, onClose: () -> Unit, onPick
         if (model.phase == FindVideosModel.Phase.Asking || model.phase == FindVideosModel.Phase.Failed) {
             OnThisPhonePrompt(
                 failed = model.phase == FindVideosModel.Phase.Failed,
+                moreKinds = model.extraKinds,
                 onLook = model::look,
                 onNotNow = { model.decline(); onClose() },
             )
@@ -208,6 +240,32 @@ private fun FindVideosScreen(model: FindVideosModel, onClose: () -> Unit, onPick
                 placeholder = { Text(ui.getString(R.string.discovery_search_hint)) },
                 modifier = Modifier.fillMaxWidth().maestro(MaestroIds.DISCOVERY_SEARCH),
             )
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.weight(1f)) {
+                    Text(ui.getString(R.string.discovery_bots_switch), color = Color.White)
+                    Text(ui.getString(R.string.discovery_bots_hint), color = VlcMuted, fontSize = 12.sp)
+                }
+                Switch(
+                    checked = model.includeBots,
+                    onCheckedChange = { if (it) model.askBots() else model.stopBots() },
+                    modifier = Modifier.maestro(MaestroIds.DISCOVERY_BOTS_SWITCH),
+                )
+            }
+        }
+        if (model.askingBots) {
+            AlertDialog(
+                onDismissRequest = model::cancelBots,
+                title = { Text(ui.getString(R.string.discovery_bots_title)) },
+                text = {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(ui.getString(R.string.discovery_notice_body))
+                        Text(ui.getString(R.string.discovery_bots_body))
+                    }
+                },
+                confirmButton = { TextButton(onClick = model::lookInBots, modifier = Modifier.maestro(MaestroIds.DISCOVERY_BOTS_CONFIRM)) { Text(ui.getString(R.string.discovery_look)) } },
+                dismissButton = { TextButton(onClick = model::cancelBots) { Text(ui.getString(R.string.picker_cancel)) } },
+                modifier = Modifier.maestroRoot(),
+            )
         }
         // Until the owner says "Look for videos", nothing from an earlier scan is shown either.
         if (model.phase == FindVideosModel.Phase.Scanning || model.phase == FindVideosModel.Phase.Done || model.phase == FindVideosModel.Phase.Managing) {
@@ -224,13 +282,13 @@ private fun FindVideosScreen(model: FindVideosModel, onClose: () -> Unit, onPick
 
 /** The permission prompt (FR-003, US4): shown before every scan, with no "don't ask again". */
 @Composable
-internal fun OnThisPhonePrompt(failed: Boolean, onLook: () -> Unit, onNotNow: () -> Unit) {
+internal fun OnThisPhonePrompt(failed: Boolean, moreKinds: Boolean, onLook: () -> Unit, onNotNow: () -> Unit) {
     val ui = LocalContext.current.resources
     Column(Modifier.maestro(MaestroIds.DISCOVERY_PROMPT), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text(ui.getString(R.string.discovery_notice_title), color = Color.White, fontSize = 18.sp)
         Text(ui.getString(R.string.discovery_notice_body), color = VlcMuted)
         Text(ui.getString(R.string.discovery_ask_title), color = Color.White, fontSize = 16.sp)
-        Text(ui.getString(R.string.discovery_ask_body), color = VlcMuted)
+        Text(ui.getString(if (moreKinds) R.string.discovery_ask_body_more else R.string.discovery_ask_body), color = VlcMuted)
         if (failed) Text(ui.getString(R.string.discovery_failed), color = VlcOrange)
         Button(onClick = onLook, modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp).maestro(MaestroIds.DISCOVERY_LOOK)) {
             Text(ui.getString(R.string.discovery_look))
@@ -300,6 +358,7 @@ private fun ScanRow(row: StoredScanRow, ticked: Boolean, onToggle: () -> Unit, u
                 ChatKind.Group -> R.string.discovery_kind_group
                 ChatKind.Personal -> R.string.discovery_kind_personal
                 ChatKind.SavedMessages -> R.string.discovery_kind_saved
+                ChatKind.Bot -> R.string.discovery_kind_bot
             },
         )
         val count = when {

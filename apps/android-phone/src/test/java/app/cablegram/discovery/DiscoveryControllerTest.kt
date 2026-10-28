@@ -43,6 +43,15 @@ class DiscoveryControllerTest {
     }
 
     @Test
+    fun `turning chats with bots off removes them from the choice and the results`() = runTest {
+        val s = setup()
+        s.controller.setSwitches(DiscoverySwitches(includeBotChats = true))
+        s.controller.useChats(listOf(chat(10, ChatKind.Channel), chat(15, ChatKind.Bot)))
+        s.controller.setSwitches(DiscoverySwitches())
+        assertEquals(setOf(10L), s.store.choice())
+    }
+
+    @Test
     fun `turning a switch on chooses nothing`() = runTest {
         val s = setup()
         s.controller.setSwitches(DiscoverySwitches(includeSavedMessages = true))

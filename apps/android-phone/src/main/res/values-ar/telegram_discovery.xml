@@ -5,7 +5,7 @@
     <string name="discovery_notice_title" formatted="false">"يحدث هذا على هاتفك."</string>
     <string name="discovery_notice_body" formatted="false">"سجّل Cablegram الدخول إلى Telegram على هذا الهاتف، مثل Telegram Desktop. وهو يطّلع على محادثاتك هنا، على هذا الهاتف. لا تُرسل أسماء المحادثات أو الأعداد أو الرسائل أو الصور المصغّرة إلى خوادم Cablegram أبدًا. فقط مقاطع الفيديو التي تضيفها تنتقل إلى «Cablegram library»."</string>
     <string name="discovery_ask_title" formatted="false">"هل تريد البحث عن مقاطع فيديو في قنواتك ومجموعاتك؟"</string>
-    <string name="discovery_ask_body" formatted="false">"يطّلع Cablegram على هذا الهاتف على آخر 100 مقطع فيديو وملف في كل قناة ومجموعة لديك، ويحصي مقاطع الفيديو الطويلة من بينها. ويتجاهل المقاطع القصيرة ما لم تغيّر ذلك من «الإعدادات المتقدمة». ولا يطّلع على المحادثات الشخصية أو «الرسائل المحفوظة»."</string>
+    <string name="discovery_ask_body" formatted="false">"يطّلع Cablegram على هذا الهاتف على آخر 100 مقطع فيديو وملف في كل قناة ومجموعة لديك، ويحصي مقاطع الفيديو الطويلة من بينها. ويتجاهل المقاطع القصيرة ما لم تغيّر ذلك من «الإعدادات المتقدمة». ولا يطّلع على المحادثات الشخصية أو «الرسائل المحفوظة» أو المحادثات مع البوتات ما لم تفعّل ذلك."</string>
     <string name="discovery_look" formatted="false">"البحث عن مقاطع فيديو"</string>
     <string name="discovery_not_now" formatted="false">"ليس الآن"</string>
     <string name="discovery_title" formatted="false">"العثور على مقاطع فيديو"</string>
@@ -123,4 +123,12 @@
         <item quantity="many">"لم تكن في %1$d محادثة أي رسائل جديدة منذ آخر مرة، لذا لم تُفحص مجددًا."</item>
         <item quantity="other">"لم تكن في %1$d محادثة أي رسائل جديدة منذ آخر مرة، لذا لم تُفحص مجددًا."</item>
     </plurals>
+    <string name="discovery_bots_switch" formatted="false">"ابحث أيضًا في المحادثات مع البوتات"</string>
+    <string name="discovery_bots_hint" formatted="false">"يشمل بوتات التنزيل والحفظ. يطّلع على مقاطع الفيديو والملفات فقط، على هذا الهاتف."</string>
+    <string name="discovery_bots_title" formatted="false">"هل تريد البحث أيضًا في المحادثات مع البوتات؟"</string>
+    <string name="discovery_bots_body" formatted="false">"سيطّلع Cablegram على هذا الهاتف أيضًا على آخر 100 مقطع فيديو وملف في محادثاتك مع البوتات. لا يُرسل أي شيء من ذلك إلى Cablegram. ولا يحدث ذلك إلا بعد الضغط على الزر أدناه، ويمكنك إيقافه في أي وقت."</string>
+    <string name="discovery_kind_bot" formatted="false">"محادثة مع بوت"</string>
+    <string name="picker_banner_bots" formatted="false">"🔒 التصفح على هذا الهاتف فقط، بما في ذلك المحادثات مع البوتات. لا يُرسل أي شيء من هنا إلى Cablegram."</string>
+    <string name="picker_banner_personal_bots" formatted="false">"🔒 التصفح على هذا الهاتف فقط، بما في ذلك المحادثات الشخصية والمحادثات مع البوتات. لا يُرسل أي شيء من هنا إلى Cablegram."</string>
+    <string name="discovery_ask_body_more" formatted="false">"يطّلع Cablegram على هذا الهاتف على آخر 100 مقطع فيديو وملف في كل قناة ومجموعة لديك وفي الأنواع الأخرى من المحادثات التي فعّلتها، ويحصي مقاطع الفيديو الطويلة من بينها. ويتجاهل المقاطع القصيرة ما لم تغيّر ذلك من «الإعدادات المتقدمة»."</string>
 </resources>

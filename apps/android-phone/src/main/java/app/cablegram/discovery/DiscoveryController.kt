@@ -33,6 +33,7 @@ class DiscoveryController(
         store.setSwitches(switches)
         if (old.includePersonalChats && !switches.includePersonalChats) purgeKind(ChatKind.Personal)
         if (old.includeSavedMessages && !switches.includeSavedMessages) purgeKind(ChatKind.SavedMessages)
+        if (old.includeBotChats && !switches.includeBotChats) purgeKind(ChatKind.Bot)
     }
 
     /** When the picker opens: chats the owner left, or can no longer read, leave the choice. Returns how many were dropped. */

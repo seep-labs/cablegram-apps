@@ -4,7 +4,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 /** Switches from Telegram → Advanced settings (US5). Both are off until the owner turns them on. */
-data class DiscoverySwitches(val includePersonalChats: Boolean = false, val includeSavedMessages: Boolean = false)
+data class DiscoverySwitches(
+    val includePersonalChats: Boolean = false,
+    val includeSavedMessages: Boolean = false,
+    /** Chats with bots (often download bots that send videos into the chat). Switched on from the scan results. */
+    val includeBotChats: Boolean = false,
+) {
+    /** Whether a scan looks at anything beyond channels and groups. */
+    val any get() = includePersonalChats || includeSavedMessages || includeBotChats
+}
 
 /**
  * Phone-only video discovery (spec 008). Every rule that keeps the promise lives here, not in the screens:
@@ -165,10 +173,11 @@ class TelegramDiscovery(
         TransportChatType.Private -> when {
             chat.userId == me -> ChatKind.SavedMessages.takeIf { switches.includeSavedMessages }
             chat.userId == TELEGRAM_SERVICE_USER -> null
-            !switches.includePersonalChats -> null
+            // With both switches off a one-to-one chat is never looked at, not even to ask whether it is a bot.
+            !switches.includePersonalChats && !switches.includeBotChats -> null
             // getUser reads TDLib's local database (an offline method), so it needs no throttle.
-            transport.isBot(chat.userId) -> null
-            else -> ChatKind.Personal
+            transport.isBot(chat.userId) -> ChatKind.Bot.takeIf { switches.includeBotChats }
+            else -> ChatKind.Personal.takeIf { switches.includePersonalChats }
         }
     }
 

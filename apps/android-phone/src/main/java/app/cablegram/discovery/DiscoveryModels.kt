@@ -10,7 +10,7 @@ value class DiscoveryChatId(val raw: Long) {
 }
 
 @kotlinx.serialization.Serializable
-enum class ChatKind { Channel, Group, Personal, SavedMessages }
+enum class ChatKind { Channel, Group, Personal, SavedMessages, Bot }
 
 /** A chat the scan may list. Deliberately has no last message, photo bytes or members. */
 data class DiscoveryChat(
