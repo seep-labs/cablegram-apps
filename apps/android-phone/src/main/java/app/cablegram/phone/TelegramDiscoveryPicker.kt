@@ -112,6 +112,7 @@ internal class PickerModel(private val graph: DiscoveryGraph, private val hooks:
 
     fun show(chatId: Long?) {
         loadJob?.cancel()
+        loading = false
         filter = chatId
         videos.clear(); selected.clear(); exhausted = false
         val ids = (if (chatId == null) chats.map { it.chatId } else listOf(chatId)).map { DiscoveryChatId(it) }.toSet()
@@ -130,7 +131,12 @@ internal class PickerModel(private val graph: DiscoveryGraph, private val hooks:
                 videos += page
                 page.forEach { app.cablegram.phone.diagnostics.SentryScrubber.rememberName(it.title) }
                 exhausted = p.exhausted
-                for (v in page) launch { graph.discovery.thumbnail(v)?.let { thumbs[key(v)] = it } }
+                // One thumbnail failing (expired file reference, chat just removed) leaves a placeholder; it must not end the picker.
+                for (v in page) launch {
+                    try { graph.discovery.thumbnail(v)?.let { thumbs[key(v)] = it } }
+                    catch (e: kotlinx.coroutines.CancellationException) { throw e }
+                    catch (e: Exception) { }
+                }
             } catch (e: kotlinx.coroutines.CancellationException) {
                 throw e
             } catch (e: Exception) {

@@ -24,16 +24,18 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 
 /** [DiscoveryTransport] over the phone's one TDLib client (the same one [app.cablegram.telegram.TdlibTelegramApi] uses). */
 class TdlibDiscoveryTransport(private val client: TdlClient) : DiscoveryTransport {
     override suspend fun myUserId(): Long = client.getMe().ok().id
 
-    override suspend fun chatIds(): List<Long> {
+    override suspend fun chatIds(beforeEachRequest: suspend () -> Unit): List<Long> {
         val ids = LinkedHashSet<Long>()
         for (list in listOf(ChatListMain(), ChatListArchive())) {
             // loadChats answers 404 once every chat of the list is loaded.
             while (true) {
+                beforeEachRequest()
                 when (val r = client.loadChats(list, 100)) {
                     is TdlResult.Success -> Unit
                     is TdlResult.Failure -> if (r.code == 404) break else throw TgException(r.code, r.message)
@@ -89,11 +91,12 @@ class TdlibDiscoveryTransport(private val client: TdlClient) : DiscoveryTranspor
      * TDLib wrapper throw on its receiver thread, which ends the app.
      */
     override suspend fun recent(chatId: Long, fromMessageId: Long, limit: Int): RecentPage {
-        val found = listOf(false, true).flatMap { files ->
-            client.searchChatMessages(chatId, null, "", null, fromMessageId, 0, limit, filter(files)).ok().messages.filterNotNull()
-        }.sortedByDescending { it.date }.take(limit)
+        val answers = listOf(false, true).map { files -> client.searchChatMessages(chatId, null, "", null, fromMessageId, 0, limit, filter(files)).ok() }
+        val found = answers.flatMap { it.messages.filterNotNull() }.sortedByDescending { it.date }.take(limit)
         recentCalls.addAndGet(2); recentMessages.addAndGet(found.size)
-        return RecentPage(found.size, found.mapNotNull { toVideo(it) }, if (found.size < limit) 0L else found.minOf { it.id })
+        // A short answer does not mean the end (TDLib may return fewer than asked): only a zero cursor from both searches does.
+        val more = answers.any { it.nextFromMessageId != 0L }
+        return RecentPage(found.size, found.mapNotNull { toVideo(it) }, if (!more || found.isEmpty()) 0L else found.minOf { it.id })
     }
 
     override suspend fun search(chatId: Long, files: Boolean, fromMessageId: Long, limit: Int): TransportPage {
@@ -127,8 +130,9 @@ class TdlibDiscoveryTransport(private val client: TdlClient) : DiscoveryTranspor
                 val source = ordered.getOrNull(i) ?: 0L
                 if (m == null) results += ForwardResult.Failed(source, "not forwarded") else pending[m.id] = source
             }
-            if (pending.isNotEmpty()) { finish(); done.await() }
-            results + pending.map { (temporary, source) -> outcomes.getValue(temporary).withSource(source) }
+            if (pending.isNotEmpty()) { finish(); withTimeoutOrNull(FORWARD_TIMEOUT_MS) { done.await() } }
+            // A message whose result never arrived (network dropped) counts as failed, so the picker never hangs.
+            results + pending.map { (temporary, source) -> (outcomes[temporary] ?: ForwardResult.Failed(source, "no answer from Telegram")).withSource(source) }
         } finally {
             listeners.forEach { it.cancel() }
         }
@@ -166,6 +170,8 @@ class TdlibDiscoveryTransport(private val client: TdlClient) : DiscoveryTranspor
     }
 
     private companion object {
+        const val FORWARD_TIMEOUT_MS = 60_000L
+
         fun <T> TdlResult<T>.ok(): T = when (this) {
             is TdlResult.Success -> result
             is TdlResult.Failure -> throw TgException(code, message)

@@ -22,9 +22,10 @@ class RequestThrottle(
     private val interval = 1000L / perSecond
     private var nextStart = 0L
 
-    suspend fun <T> run(block: suspend () -> T): T {
+    /** [requests] is how many Telegram requests [block] sends: each one takes its own slot. */
+    suspend fun <T> run(requests: Int = 1, block: suspend () -> T): T {
         while (true) {
-            wait()
+            repeat(requests) { wait() }
             try {
                 return block()
             } catch (e: TgException) {
@@ -34,6 +35,9 @@ class RequestThrottle(
             }
         }
     }
+
+    /** Takes one slot, for a caller that sends several requests inside one [run] (it paces each one after the first). */
+    suspend fun pace() = wait()
 
     private suspend fun wait() {
         val sleep = lock.withLock {

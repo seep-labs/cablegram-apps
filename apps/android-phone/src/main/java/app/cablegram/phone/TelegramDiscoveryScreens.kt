@@ -50,6 +50,7 @@ import app.cablegram.telegram.TelegramState
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
@@ -157,7 +158,10 @@ internal class FindVideosModel(private val graph: DiscoveryGraph, private val sc
                                 return@launch
                             }
                             atOnce.withPermit {
-                                val count = graph.discovery.chatVideoCount(permit, chat.id)
+                                // One chat that cannot be read (private again, admin only) is skipped; the rest are still counted.
+                                val count = try { graph.discovery.chatVideoCount(permit, chat.id) }
+                                catch (e: CancellationException) { throw e }
+                                catch (e: app.cablegram.telegram.TgException) { checked++; return@withPermit }
                                 val row = StoredScanRow(chat.id.raw, chat.kind, chat.title, chat.protectedContent, count.videos, count.files, System.currentTimeMillis(), chat.lastMessageId)
                                 graph.store.addScanRow(row)
                                 // A chat keeps its place in the list: rows must not jump while the owner is ticking.
@@ -174,6 +178,9 @@ internal class FindVideosModel(private val graph: DiscoveryGraph, private val sc
                 rows.removeAll { it.chatId !in listed }
                 graph.store.finishScan(true)
                 phase = Phase.Done
+            } catch (e: TimeoutCancellationException) {
+                // Telegram was not ready in time: say so, with a way to try again.
+                phase = Phase.Failed
             } catch (e: CancellationException) {
                 phase = Phase.Done
                 throw e

@@ -14,7 +14,7 @@ class FakeDiscoveryTransport(
     val optimized = mutableListOf<List<Long>>()
 
     override suspend fun myUserId(): Long = me.also { calls += "me" }
-    override suspend fun chatIds(): List<Long> = chats.map { it.id }.also { calls += "chatIds" }
+    override suspend fun chatIds(beforeEachRequest: suspend () -> Unit): List<Long> = chats.map { it.id }.also { calls += "chatIds" }
     override suspend fun chat(chatId: Long): TransportChat? = chats.firstOrNull { it.id == chatId }.also { calls += "chat" }
     override suspend fun isBot(userId: Long): Boolean = (userId in bots).also { calls += "isBot" }
     /** The newest videos and files of a chat, newest first (a real chat has other messages too; they are never asked for). */

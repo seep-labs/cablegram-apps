@@ -94,9 +94,11 @@ object PhoneTelegram {
     /** After log-out: drop the session and delete its database, pieces and key. */
     fun forget(context: Context) = synchronized(this) {
         current = null
-        graph = null
         // Spec 008: the discovery choice, counts, switches and thumbnail ledger go with the account.
         // The thumbnails themselves are in the TDLib files directory that TelegramDatabaseKey.wipe() removes.
+        // A scan or screen still running holds the live store: stop its permit and retire that store, so it cannot write the data back.
+        graph?.third?.let { it.controller.endScan(); it.store.retire() }
+        graph = null
         app.cablegram.discovery.DiscoveryStore(app.cablegram.discovery.KeystoreDiscoveryStorage(context.applicationContext)).clear()
         setLinked(context, false)
         TelegramDatabaseKey(context.applicationContext).wipe()
@@ -106,15 +108,17 @@ object PhoneTelegram {
     @Volatile var discoveryTransport: app.cablegram.discovery.DiscoveryTransport? = null
         private set
 
-    @Volatile private var graph: Pair<Long, app.cablegram.discovery.DiscoveryGraph>? = null
+    /** Library chat id, the transport (so a new client never reuses the old one's graph) and the graph. */
+    @Volatile private var graph: Triple<Long, app.cablegram.discovery.DiscoveryTransport, app.cablegram.discovery.DiscoveryGraph>? = null
 
     /** Video discovery for this library channel (spec 008); null until the Telegram session exists. */
     fun discovery(context: Context, libraryChatId: Long): app.cablegram.discovery.DiscoveryGraph? = synchronized(this) {
-        graph?.takeIf { it.first == libraryChatId }?.let { return it.second }
         val transport = discoveryTransport ?: return null
+        graph?.takeIf { it.first == libraryChatId && it.second === transport }?.let { return it.third }
+        graph?.let { it.third.controller.endScan() }
         app.cablegram.discovery.DiscoveryGraph.create(
             transport, app.cablegram.discovery.KeystoreDiscoveryStorage(context.applicationContext), libraryChatId,
-        ).also { graph = libraryChatId to it }
+        ).also { graph = Triple(libraryChatId, transport, it) }
     }
 
     private fun create(context: Context): TelegramSession {

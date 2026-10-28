@@ -51,7 +51,7 @@ sealed interface ForwardResult {
 interface DiscoveryTransport {
     suspend fun myUserId(): Long
     /** Chat ids of the main list and the archive, loaded as far as Telegram has them. */
-    suspend fun chatIds(): List<Long>
+    suspend fun chatIds(beforeEachRequest: suspend () -> Unit = {}): List<Long>
     suspend fun chat(chatId: Long): TransportChat?
     suspend fun isBot(userId: Long): Boolean
     /** The newest [limit] videos and files of a chat from [fromMessageId] (0 = newest), for the scan's count. Never a whole history. */

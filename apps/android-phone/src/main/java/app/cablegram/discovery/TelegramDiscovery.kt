@@ -33,7 +33,7 @@ class TelegramDiscovery(
         gate.requirePermit(permit)
         // getMe and getChat read TDLib's local database, so only the network calls are throttled (FR-007).
         val me = transport.myUserId()
-        val ids = throttle.run { transport.chatIds() }
+        val ids = throttle.run { transport.chatIds { throttle.pace() } }
         for (id in ids) {
             gate.requirePermit(permit)
             if (id == libraryChatId()) continue
@@ -47,7 +47,7 @@ class TelegramDiscovery(
     /**
      * The long videos among a chat's newest [RECENT_WINDOW] videos and files (FR-004, FR-006). Videos shorter than the owner's
      * minimum length are left out. A document has no length, so a video-type document counts when it is large
-     * (about a film rather than a clip); files make the total "about". Each page is one throttled request (FR-007).
+     * (about a film rather than a clip); files make the total "about". Each request takes a throttle slot (FR-007): a page is two (videos, then files).
      */
     suspend fun chatVideoCount(permit: ScanPermit, chatId: DiscoveryChatId): VideoCount {
         gate.requirePermit(permit)
@@ -59,7 +59,7 @@ class TelegramDiscovery(
         var files = 0
         while (seen < RECENT_WINDOW) {
             gate.requirePermit(permit)
-            val page = throttle.run { transport.recent(chatId.raw, from, RECENT_WINDOW - seen) }
+            val page = throttle.run(requests = 2) { transport.recent(chatId.raw, from, RECENT_WINDOW - seen) }
             if (page.messages == 0) break
             seen += page.messages
             for (v in page.candidates) {

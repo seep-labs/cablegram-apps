@@ -47,24 +47,26 @@ internal fun DiscoveryAdvanced(graph: DiscoveryGraph) {
     var confirming by remember { mutableStateOf<Kind?>(null) }
     var minSeconds by remember { mutableStateOf(graph.store.minVideoSeconds()) }
 
-    fun apply(next: DiscoverySwitches) {
+    // Every change starts from what is stored now: the bots switch lives on another screen and may have changed since this one opened.
+    fun apply(change: (DiscoverySwitches) -> DiscoverySwitches) {
+        val next = change(graph.store.switches())
         switches = next
         scope.launch { graph.controller.setSwitches(next) }
     }
 
     OutlinedButton(
-        onClick = { open = !open },
+        onClick = { open = !open; switches = graph.store.switches() },
         modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp).maestro(MaestroIds.DISCOVERY_ADVANCED),
     ) { Text(ui.getString(R.string.discovery_advanced)) }
     if (open) {
         SwitchRow(
             ui.getString(R.string.advanced_personal_title), ui.getString(R.string.advanced_personal_desc), switches.includePersonalChats,
             MaestroIds.ADVANCED_PERSONAL,
-        ) { on -> if (on) confirming = Kind.Personal else apply(switches.copy(includePersonalChats = false)) }
+        ) { on -> if (on) confirming = Kind.Personal else apply { it.copy(includePersonalChats = false) } }
         SwitchRow(
             ui.getString(R.string.advanced_saved_title), ui.getString(R.string.advanced_saved_desc), switches.includeSavedMessages,
             MaestroIds.ADVANCED_SAVED,
-        ) { on -> if (on) confirming = Kind.Saved else apply(switches.copy(includeSavedMessages = false)) }
+        ) { on -> if (on) confirming = Kind.Saved else apply { it.copy(includeSavedMessages = false) } }
         Column(Modifier.fillMaxWidth().padding(horizontal = 8.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             Text(ui.getString(R.string.advanced_min_title), color = Color.White)
             Text(ui.getString(R.string.advanced_min_desc), color = VlcMuted, fontSize = 12.sp)
@@ -93,7 +95,7 @@ internal fun DiscoveryAdvanced(graph: DiscoveryGraph) {
             confirmButton = {
                 TextButton(
                     onClick = {
-                        apply(if (kind == Kind.Personal) switches.copy(includePersonalChats = true) else switches.copy(includeSavedMessages = true))
+                        apply { if (kind == Kind.Personal) it.copy(includePersonalChats = true) else it.copy(includeSavedMessages = true) }
                         confirming = null
                     },
                     modifier = Modifier.maestro(MaestroIds.ADVANCED_CONFIRM),

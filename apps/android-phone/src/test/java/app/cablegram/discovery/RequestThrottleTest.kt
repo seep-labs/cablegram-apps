@@ -20,6 +20,13 @@ class RequestThrottleTest {
     }
 
     @Test
+    fun `a call that sends two requests takes two slots`() = runTest {
+        val throttle = RequestThrottle(5) { currentTime }
+        (1..10).map { async { throttle.run(requests = 2) { currentTime } } }.awaitAll()
+        assertTrue("10 two-request calls are 20 requests: about 3.8 s", currentTime >= 3800)
+    }
+
+    @Test
     fun `flood wait pauses everything and then retries the same request`() = runTest {
         val throttle = RequestThrottle(5) { currentTime }
         var calls = 0

@@ -55,6 +55,18 @@ class DiscoveryStoreTest {
     }
 
     @Test
+    fun `a retired store cannot write the cleared data back`() {
+        val storage = MemoryDiscoveryStorage()
+        val s = DiscoveryStore(storage)
+        s.setChoice(listOf(StoredChoice(10, ChatKind.Channel, "A", 1)))
+        s.retire()
+        storage.clear()
+        s.setChoice(listOf(StoredChoice(11, ChatKind.Channel, "B", 1)))
+        assertNull(storage.text)
+        assertTrue(s.choice().isEmpty())
+    }
+
+    @Test
     fun `a damaged document falls back to empty defaults`() {
         assertTrue(DiscoveryStore(MemoryDiscoveryStorage("not json")).choice().isEmpty())
     }

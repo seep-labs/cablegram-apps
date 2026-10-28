@@ -50,7 +50,10 @@ class DiscoveryStore(private val storage: DiscoveryStorage) {
 
     private fun load(): DiscoveryState = runCatching { storage.read()?.let { json.decodeFromString<DiscoveryState>(it) } }.getOrNull() ?: DiscoveryState()
 
+    private var retired = false
+
     @Synchronized private fun update(change: (DiscoveryState) -> DiscoveryState) {
+        if (retired) return
         state = change(state)
         storage.write(json.encodeToString(state))
     }
@@ -91,6 +94,9 @@ class DiscoveryStore(private val storage: DiscoveryStorage) {
             thumbnails = it.thumbnails - chatId,
         )
     }
+
+    /** After a disconnect: whoever still holds this store can no longer write to the phone's storage. */
+    @Synchronized fun retire() { retired = true; state = DiscoveryState() }
 
     /** Disconnect Telegram: the choice, the switches, the counts and the ledger all go (spec edge cases). */
     fun clear() {
