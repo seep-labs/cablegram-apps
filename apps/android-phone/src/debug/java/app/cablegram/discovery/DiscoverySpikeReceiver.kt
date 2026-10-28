@@ -32,6 +32,7 @@ class DiscoverySpikeReceiver : BroadcastReceiver() {
                     "SCAN" -> scan(transport, intent.getBooleanExtra("personal", false), intent.getIntExtra("rate", SCAN_REQUESTS_PER_SECOND))
                     "PAGE" -> page(transport, intent.getBooleanExtra("personal", false))
                     "FORWARD" -> forward(transport, intent.getIntExtra("n", 3))
+                    "WHY" -> why(transport, intent.getStringExtra("name").orEmpty())
                     else -> log("unknown action ${intent.action}")
                 }
             } catch (e: Throwable) {
@@ -128,6 +129,36 @@ class DiscoverySpikeReceiver : BroadcastReceiver() {
     }
 
     private companion object { val VIDEO_EXTENSIONS = listOf("mp4", "mkv", "mov", "avi", "webm", "m4v", "ts", "m2ts", "wmv", "flv", "3gp") }
+
+    /**
+     * Debug only: says why a chat the owner names is, or is not, in a scan. It looks at the chat list the scan uses
+     * (main and archive) and reports each match's type and the flags the scan filters on.
+     */
+    private suspend fun why(transport: DiscoveryTransport, name: String) {
+        if (name.isBlank()) return log("WHY needs --es name <part of the chat name>")
+        val ids = transport.chatIds()
+        val me = transport.myUserId()
+        log("WHY: chat list holds ${ids.size} chats (main and archive)")
+        val library = ids.firstOrNull { transport.chat(it)?.title == "Cablegram library" }
+        var found = 0
+        for (id in ids) {
+            val chat = transport.chat(id) ?: continue
+            if (!chat.title.contains(name, ignoreCase = true)) continue
+            found++
+            val bot = chat.type == TransportChatType.Private && chat.userId != 0L && transport.isBot(chat.userId)
+            val verdict = when {
+                id == library -> "excluded: this is the Cablegram library channel"
+                chat.type == TransportChatType.Secret -> "excluded: secret chat"
+                chat.type == TransportChatType.Private && chat.userId == me -> "Saved Messages: only with its switch on"
+                chat.type == TransportChatType.Private && bot -> "excluded: a bot"
+                chat.type == TransportChatType.Private -> "personal chat: only with its switch on"
+                !chat.isMember -> "left or lost access"
+                else -> "listed by a scan (channel or group)"
+            }
+            log("WHY: match #$found for \"$name\" type=${chat.type} member=${chat.isMember} protected=${chat.protectedContent} bot=$bot -> $verdict")
+        }
+        if (found == 0) log("WHY: no chat in the main or archive list has a title containing \"$name\"")
+    }
 
     private fun log(message: String) { Log.i("DiscoverySpike", message) }
 }
