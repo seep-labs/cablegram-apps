@@ -49,7 +49,7 @@ class DiscoveryDefaultsTest {
         d.forwardToLibrary(page.take(2))
 
         for (id in excluded) {
-            assertFalse("no read of recent messages for $id", t.calls.any { it == "recent:$id" })
+            assertFalse("no read of recent videos for $id", t.calls.any { it == "recent:$id" })
             assertFalse("no search for $id", t.calls.any { it.startsWith("search:$id:") })
             assertTrue("no forward from $id", t.forwards.none { it.second == id })
         }

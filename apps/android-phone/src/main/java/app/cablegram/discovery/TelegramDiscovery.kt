@@ -37,7 +37,7 @@ class TelegramDiscovery(
     }
 
     /**
-     * The videos among a chat's newest [RECENT_WINDOW] messages (FR-004, FR-006). Videos shorter than the owner's
+     * The long videos among a chat's newest [RECENT_WINDOW] videos and files (FR-004, FR-006). Videos shorter than the owner's
      * minimum length are left out. A document has no length, so a video-type document counts when it is large
      * (about a film rather than a clip); files make the total "about". Each page is one throttled request (FR-007).
      */
@@ -166,7 +166,8 @@ class TelegramDiscovery(
             chat.userId == me -> ChatKind.SavedMessages.takeIf { switches.includeSavedMessages }
             chat.userId == TELEGRAM_SERVICE_USER -> null
             !switches.includePersonalChats -> null
-            throttle.run { transport.isBot(chat.userId) } -> null
+            // getUser reads TDLib's local database (an offline method), so it needs no throttle.
+            transport.isBot(chat.userId) -> null
             else -> ChatKind.Personal
         }
     }
@@ -174,7 +175,7 @@ class TelegramDiscovery(
     private companion object {
         const val TELEGRAM_SERVICE_USER = 777000L
         const val FORWARD_BATCH = 100
-        /** The scan looks at this many of a chat's newest messages (any kind). */
+        /** The scan looks at this many of a chat's newest videos and files. */
         const val RECENT_WINDOW = 100
         /** A video-type document at least this big counts as a long video; with "any length" every one counts. */
         const val DOCUMENT_MIN_BYTES = 100L * 1024 * 1024

@@ -83,10 +83,17 @@ class TdlibDiscoveryTransport(private val client: TdlClient) : DiscoveryTranspor
     val recentCalls = java.util.concurrent.atomic.AtomicInteger()
     val recentMessages = java.util.concurrent.atomic.AtomicInteger()
 
+    /**
+     * The newest videos and documents of a chat, newest first (at most [limit]). Only those two kinds are asked for:
+     * reading a whole history also delivers service messages, and one of them (a changed chat background) makes the
+     * TDLib wrapper throw on its receiver thread, which ends the app.
+     */
     override suspend fun recent(chatId: Long, fromMessageId: Long, limit: Int): RecentPage {
-        val messages = client.getChatHistory(chatId, fromMessageId, 0, limit, false).ok().messages.filterNotNull()
-        recentCalls.incrementAndGet(); recentMessages.addAndGet(messages.size)
-        return RecentPage(messages.size, messages.mapNotNull { toVideo(it) }, messages.lastOrNull()?.id ?: 0L)
+        val found = listOf(false, true).flatMap { files ->
+            client.searchChatMessages(chatId, null, "", null, fromMessageId, 0, limit, filter(files)).ok().messages.filterNotNull()
+        }.sortedByDescending { it.date }.take(limit)
+        recentCalls.addAndGet(2); recentMessages.addAndGet(found.size)
+        return RecentPage(found.size, found.mapNotNull { toVideo(it) }, if (found.size < limit) 0L else found.minOf { it.id })
     }
 
     override suspend fun search(chatId: Long, files: Boolean, fromMessageId: Long, limit: Int): TransportPage {

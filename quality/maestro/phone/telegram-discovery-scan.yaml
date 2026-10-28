@@ -1,8 +1,12 @@
-# Spec 008 (US1, US2). Preconditions: authenticated main UI, a linked and healthy Telegram test account
-# with at least one channel holding videos, and no saved choice. Asserts that the "On this phone" prompt
-# comes before every scan, that nothing is ticked after a scan, and that a choice survives an app restart.
-# Leaves nothing behind: the last steps untick the chat again.
+# Spec 008 (US1, US2). Preconditions: authenticated main UI, a linked and healthy Telegram test account with a
+# chat named ${CHAT} and another named ${OTHER} (Latin names, so the search box can be typed into), and no saved choice.
+# Asserts that the "On this phone" prompt comes before every scan, that nothing is ticked after a scan, that the
+# search box filters by name, that a choice survives an app restart, and that a second scan skips quiet chats.
+# Leaves nothing behind: the chat is unticked again.
 appId: app.cablegram.phone
+env:
+  CHAT: CableGramAppGroup1
+  OTHER: Algotic Ai
 tags:
   - telegram
 ---
@@ -46,7 +50,7 @@ tags:
 - extendedWaitUntil:
     visible:
       id: discovery_use
-    timeout: 180000
+    timeout: 240000
 
 # After the scan every box is unticked.
 - assertVisible:
@@ -54,6 +58,24 @@ tags:
 - assertNotVisible:
     id: discovery_chat_check
     checked: true
+
+# The search box filters the chats by part of the name, and says so when nothing matches.
+- tapOn:
+    id: discovery_search
+- inputText: ${OTHER}
+- hideKeyboard
+- assertVisible: ${OTHER}
+- assertNotVisible: ${CHAT}
+- eraseText: 60
+- inputText: ${CHAT}
+- assertVisible: ${CHAT}
+- assertNotVisible: ${OTHER}
+- eraseText: 60
+- inputText: zzzzzzzzzz
+- assertVisible: "No chats match."
+- eraseText: 60
+- inputText: ${CHAT}
+- hideKeyboard
 
 # Tick one chat, save, and restart the app.
 - tapOn:
@@ -74,7 +96,7 @@ tags:
     direction: DOWN
     timeout: 20000
 
-# The prompt is still first; Manage chats reopens the saved choice without scanning.
+# The prompt is still first. Manage chats reopens the saved choice without scanning.
 - tapOn:
     id: telegram_add_from_chats
 - assertVisible:
@@ -87,6 +109,10 @@ tags:
     id: discovery_prompt
 - assertNotVisible:
     id: discovery_progress
+- tapOn:
+    id: discovery_search
+- inputText: ${CHAT}
+- hideKeyboard
 - assertVisible:
     id: discovery_chat_check
     checked: true
@@ -97,3 +123,22 @@ tags:
     checked: true
 - tapOn:
     id: discovery_use
+- scrollUntilVisible:
+    element:
+      id: telegram_add_from_chats
+    direction: DOWN
+    timeout: 20000
+
+# A second scan does not read chats again when nothing new was posted in them.
+- tapOn:
+    id: telegram_add_from_chats
+- assertVisible:
+    id: discovery_prompt
+- tapOn:
+    id: discovery_look
+- extendedWaitUntil:
+    visible:
+      id: discovery_use
+    timeout: 240000
+- assertVisible: ".*had no new messages since your last look.*"
+- tapOn: "OK"

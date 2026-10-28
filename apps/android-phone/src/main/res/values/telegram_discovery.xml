@@ -5,7 +5,7 @@
     <string name="discovery_notice_title" formatted="false">"This happens on your phone."</string>
     <string name="discovery_notice_body" formatted="false">"Cablegram is signed in to Telegram on this phone, like Telegram Desktop. It looks at your chats here, on this phone. Chat names, counts, messages and thumbnails are never sent to Cablegram's servers. Only the videos you add go into “Cablegram library”."</string>
     <string name="discovery_ask_title" formatted="false">"Look for videos in your channels and groups?"</string>
-    <string name="discovery_ask_body" formatted="false">"Cablegram looks at the latest 100 messages in each of your channels and groups, on this phone, and counts the videos in them. It skips short clips unless you change that in Advanced settings. It does not look in personal chats or Saved Messages."</string>
+    <string name="discovery_ask_body" formatted="false">"Cablegram looks at the latest 100 videos and files in each of your channels and groups, on this phone, and counts the long videos among them. It skips short clips unless you change that in Advanced settings. It does not look in personal chats or Saved Messages."</string>
     <string name="discovery_look" formatted="false">"Look for videos"</string>
     <string name="discovery_not_now" formatted="false">"Not now"</string>
     <string name="discovery_title" formatted="false">"Find videos"</string>
@@ -21,16 +21,16 @@
     <string name="discovery_protected" formatted="false">"Doesn't allow saving"</string>
     <string name="discovery_failed" formatted="false">"Couldn't look at your chats. Try again."</string>
     <plurals name="discovery_videos">
-        <item quantity="one">"%1$d video in the latest 100 messages"</item>
-        <item quantity="other">"%1$d videos in the latest 100 messages"</item>
+        <item quantity="one">"%1$d video among the latest 100"</item>
+        <item quantity="other">"%1$d videos among the latest 100"</item>
     </plurals>
     <plurals name="discovery_videos_about">
-        <item quantity="one">"about %1$d video in the latest 100 messages"</item>
-        <item quantity="other">"about %1$d videos in the latest 100 messages"</item>
+        <item quantity="one">"about %1$d video among the latest 100"</item>
+        <item quantity="other">"about %1$d videos among the latest 100"</item>
     </plurals>
     <plurals name="discovery_files_maybe">
-        <item quantity="one">"about %1$d large file that may be a video in the latest 100 messages"</item>
-        <item quantity="other">"about %1$d large files that may be videos in the latest 100 messages"</item>
+        <item quantity="one">"about %1$d large file that may be a video among the latest 100"</item>
+        <item quantity="other">"about %1$d large files that may be videos among the latest 100"</item>
     </plurals>
     <string name="discovery_manage" formatted="false">"Manage chats"</string>
     <plurals name="discovery_use_chats">

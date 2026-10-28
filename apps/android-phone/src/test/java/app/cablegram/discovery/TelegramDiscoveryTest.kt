@@ -113,7 +113,7 @@ class TelegramDiscoveryTest {
     }
 
     @Test
-    fun `only the newest 100 messages of a chat are looked at`() = runTest {
+    fun `only the newest 100 videos and files of a chat are looked at`() = runTest {
         val videos = (1L..150L).map { video(10, it, 1200) }
         val t = FakeDiscoveryTransport(all, ME, videos = videos)
         val d = TestScopeHolder { currentTime }.counter(t)

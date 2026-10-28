@@ -5,7 +5,7 @@
     <string name="discovery_notice_title" formatted="false">"Questo avviene sul tuo telefono."</string>
     <string name="discovery_notice_body" formatted="false">"Cablegram ha effettuato l'accesso a Telegram su questo telefono, come Telegram Desktop. Guarda le tue chat qui, su questo telefono. Nomi delle chat, conteggi, messaggi e miniature non vengono mai inviati ai server di Cablegram. Solo i video che aggiungi vanno in «Cablegram library»."</string>
     <string name="discovery_ask_title" formatted="false">"Cercare video nei tuoi canali e gruppi?"</string>
-    <string name="discovery_ask_body" formatted="false">"Cablegram guarda, su questo telefono, gli ultimi 100 messaggi di ciascuno dei tuoi canali e gruppi e conta i video che contengono. Salta le clip brevi, a meno che tu non lo cambi nelle Impostazioni avanzate. Non guarda nelle chat personali né nei Messaggi salvati."</string>
+    <string name="discovery_ask_body" formatted="false">"Cablegram guarda, su questo telefono, gli ultimi 100 video e file di ciascuno dei tuoi canali e gruppi e conta tra questi i video lunghi. Salta le clip brevi, a meno che tu non lo cambi nelle Impostazioni avanzate. Non guarda nelle chat personali né nei Messaggi salvati."</string>
     <string name="discovery_look" formatted="false">"Cerca video"</string>
     <string name="discovery_not_now" formatted="false">"Non ora"</string>
     <string name="discovery_title" formatted="false">"Trova video"</string>
@@ -21,16 +21,16 @@
     <string name="discovery_protected" formatted="false">"Non consente il salvataggio"</string>
     <string name="discovery_failed" formatted="false">"Impossibile controllare le tue chat. Riprova."</string>
     <plurals name="discovery_videos">
-        <item quantity="one">"%1$d video negli ultimi 100 messaggi"</item>
-        <item quantity="other">"%1$d video negli ultimi 100 messaggi"</item>
+        <item quantity="one">"%1$d video tra gli ultimi 100"</item>
+        <item quantity="other">"%1$d video tra gli ultimi 100"</item>
     </plurals>
     <plurals name="discovery_videos_about">
-        <item quantity="one">"circa %1$d video negli ultimi 100 messaggi"</item>
-        <item quantity="other">"circa %1$d video negli ultimi 100 messaggi"</item>
+        <item quantity="one">"circa %1$d video tra gli ultimi 100"</item>
+        <item quantity="other">"circa %1$d video tra gli ultimi 100"</item>
     </plurals>
     <plurals name="discovery_files_maybe">
-        <item quantity="one">"circa %1$d file grande che potrebbe essere un video negli ultimi 100 messaggi"</item>
-        <item quantity="other">"circa %1$d file grandi che potrebbero essere video negli ultimi 100 messaggi"</item>
+        <item quantity="one">"circa %1$d file grande che potrebbe essere un video tra gli ultimi 100"</item>
+        <item quantity="other">"circa %1$d file grandi che potrebbero essere video tra gli ultimi 100"</item>
     </plurals>
     <string name="discovery_manage" formatted="false">"Gestisci chat"</string>
     <plurals name="discovery_use_chats">

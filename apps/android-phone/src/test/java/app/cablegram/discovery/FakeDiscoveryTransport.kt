@@ -17,7 +17,7 @@ class FakeDiscoveryTransport(
     override suspend fun chatIds(): List<Long> = chats.map { it.id }.also { calls += "chatIds" }
     override suspend fun chat(chatId: Long): TransportChat? = chats.firstOrNull { it.id == chatId }.also { calls += "chat" }
     override suspend fun isBot(userId: Long): Boolean = (userId in bots).also { calls += "isBot" }
-    /** The newest messages of a chat are its [videos], newest first; every video is one message. */
+    /** The newest videos and files of a chat, newest first (a real chat has other messages too; they are never asked for). */
     override suspend fun recent(chatId: Long, fromMessageId: Long, limit: Int): RecentPage {
         calls += "recent:$chatId"
         val all = videos.filter { it.chatId == chatId && (fromMessageId == 0L || it.messageId < fromMessageId) }

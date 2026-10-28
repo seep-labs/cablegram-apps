@@ -54,7 +54,7 @@ interface DiscoveryTransport {
     suspend fun chatIds(): List<Long>
     suspend fun chat(chatId: Long): TransportChat?
     suspend fun isBot(userId: Long): Boolean
-    /** The newest [limit] messages of a chat from [fromMessageId] (0 = newest), for the scan's count of recent videos. */
+    /** The newest [limit] videos and files of a chat from [fromMessageId] (0 = newest), for the scan's count. Never a whole history. */
     suspend fun recent(chatId: Long, fromMessageId: Long, limit: Int): RecentPage
     suspend fun search(chatId: Long, files: Boolean, fromMessageId: Long, limit: Int): TransportPage
     suspend fun forward(toChatId: Long, fromChatId: Long, messageIds: LongArray): List<ForwardResult>

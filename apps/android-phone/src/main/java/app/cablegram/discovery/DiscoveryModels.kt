@@ -33,7 +33,7 @@ fun isUnchangedSinceLastLook(row: StoredScanRow?, chat: DiscoveryChat): Boolean 
 const val SCAN_REQUESTS_PER_SECOND = 10
 
 /**
- * How many chats a scan reads at once. Each chat's recent messages take a round trip or two, so one chat after the
+ * How many chats a scan reads at once. Each chat's recent videos and files take a round trip or two, so one chat after the
  * other would be slow; the throttle still keeps every request within 5 per second (FR-007).
  */
 const val SCAN_PARALLEL_CHATS = 8

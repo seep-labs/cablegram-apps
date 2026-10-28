@@ -40,8 +40,8 @@ channels and groups and forward them into "Cablegram library".
 
 - It never reads your chats without your permission. An "On this phone" notice asks before every scan, with no
   "don't ask again".
-- A scan looks at the newest 100 messages in each of your channels and groups, on your phone, and counts the
-  videos in them. It skips clips shorter than 10 minutes unless you change that under **Advanced settings**.
+- A scan looks at the newest 100 videos and files in each of your channels and groups, on your phone, and
+  counts the long videos among them. It skips clips shorter than 10 minutes unless you change that under **Advanced settings**.
   Personal chats and Saved Messages stay off unless you turn them on there too. Secret chats and bots are never
   included.
 - The picker loads messages only from the chats you tick, 50 at a time, and downloads only thumbnails. It never
