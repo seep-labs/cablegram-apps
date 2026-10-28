@@ -134,6 +134,7 @@ class TelegramTvApprovalWatcher(private val context: Context, private val scope:
                     chatId = chatId,
                     register = { video -> store.accountToken?.let { client.registerTelegramVideo(it, video) } },
                     reconcile = { keys -> store.accountToken?.let { client.reconcileTelegramVideos(it, keys) } },
+                    onChanged = { PhoneTelegram.libraryScanned.tryEmit(Unit) },
                     hints = { found ->
                         store.accountToken?.let { client.postTelegramHints(it, found) }
                         PairLog.i("Telegram channel: ${found.size} TMDB reference(s) sent")

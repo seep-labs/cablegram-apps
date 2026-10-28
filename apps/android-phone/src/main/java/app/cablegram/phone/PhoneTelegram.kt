@@ -11,6 +11,8 @@ import app.cablegram.telegram.TgParameters
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -20,6 +22,13 @@ import kotlinx.coroutines.launch
  * people who never use Telegram never load it.
  */
 object PhoneTelegram {
+    /**
+     * Fires when the phone's scan of the library channel changed what the household sees (videos registered,
+     * or titles of another channel marked unavailable). The view model listens and refreshes the library, so
+     * titles of a previous Telegram account do not linger after connecting a different one.
+     */
+    val libraryScanned = MutableSharedFlow<Unit>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+
     /** How this phone appears in Telegram → Settings → Devices. */
     val deviceModel: String get() = "${Build.MANUFACTURER} ${Build.MODEL}".trim()
 
