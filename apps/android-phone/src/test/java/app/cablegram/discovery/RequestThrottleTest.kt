@@ -44,6 +44,21 @@ class RequestThrottleTest {
     }
 
     @Test
+    fun `a flood wait on one chat holds back every other chat, including requests already queued`() = runTest {
+        val throttle = RequestThrottle(5) { currentTime }
+        var first = true
+        val starts = (1..8).map { i ->
+            async {
+                throttle.run {
+                    if (i == 1 && first) { first = false; throw TgException(420, "FLOOD_WAIT_30") }
+                    currentTime
+                }
+            }
+        }.awaitAll()
+        assertTrue("no request starts inside the 30 s pause: $starts", starts.all { it >= 30_000 })
+    }
+
+    @Test
     fun `other errors are not retried`() = runTest {
         val throttle = RequestThrottle(5) { currentTime }
         var calls = 0

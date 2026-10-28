@@ -21,6 +21,8 @@ class RequestThrottle(
     private val lock = Mutex()
     private val interval = 1000L / perSecond
     private var nextStart = 0L
+    /** No request may start before this moment: set by a FLOOD_WAIT answer, whichever chat received it. */
+    private var pausedUntil = 0L
 
     /** [requests] is how many Telegram requests [block] sends: each one takes its own slot. */
     suspend fun <T> run(requests: Int = 1, block: suspend () -> T): T {
@@ -31,7 +33,7 @@ class RequestThrottle(
             } catch (e: TgException) {
                 val seconds = e.retryAfterSeconds ?: throw e
                 pauses.tryEmit(seconds)
-                lock.withLock { nextStart = maxOf(nextStart, now() + seconds * 1000L) }
+                lock.withLock { pausedUntil = maxOf(pausedUntil, now() + seconds * 1000L) }
             }
         }
     }
@@ -40,11 +42,16 @@ class RequestThrottle(
     suspend fun pace() = wait()
 
     private suspend fun wait() {
-        val sleep = lock.withLock {
-            val start = maxOf(now(), nextStart)
-            nextStart = start + interval
-            start - now()
+        while (true) {
+            var start = 0L
+            val sleep = lock.withLock {
+                start = maxOf(now(), nextStart, pausedUntil)
+                nextStart = start + interval
+                start - now()
+            }
+            if (sleep > 0) delay(sleep)
+            // A slot reserved before a FLOOD_WAIT arrived must not fire during the pause: take a new one.
+            if (lock.withLock { pausedUntil } <= start) return
         }
-        if (sleep > 0) delay(sleep)
     }
 }

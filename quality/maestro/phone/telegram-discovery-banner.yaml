@@ -33,11 +33,11 @@ tags:
     timeout: 30000
 - tapOn:
     id: picker_more
-- scrollUntilVisible:
-    element:
-      id: picker_more
-    direction: DOWN
-    timeout: 30000
+# The next 50 load below; scroll through them (the id stays on the button, but the button may now be off screen
+# or already gone when the chat has no more), then the banner must still be there.
+- waitForAnimationToEnd
+- scroll
+- scroll
 - assertVisible:
     id: picker_banner
 

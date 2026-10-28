@@ -27,10 +27,12 @@ fun isUnchangedSinceLastLook(row: StoredScanRow?, chat: DiscoveryChat): Boolean 
     row != null && row.lastMessageId != 0L && row.lastMessageId == chat.lastMessageId
 
 /**
- * Requests per second the scan may send to Telegram, all chats together. A 302-chat account ran at 10 per second
- * without a single FLOOD_WAIT (2026-10-28); if Telegram does ask us to wait, the scan pauses and says so.
+ * Requests per second the scan may send to Telegram, all chats together; every request takes its own slot (FR-007).
+ * 20 per second is what the first scan really sent, counting both searches of a page, on a 302-chat and a 775-chat
+ * account (2026-10-28) without a single FLOOD_WAIT. Telegram's limits differ by account and change, so a FLOOD_WAIT
+ * pauses every chat for the time Telegram names and then retries (RequestThrottle); the scan says so.
  */
-const val SCAN_REQUESTS_PER_SECOND = 10
+const val SCAN_REQUESTS_PER_SECOND = 20
 
 /**
  * How many chats a scan reads at once. Each chat's recent videos and files take a round trip or two, so one chat after the
