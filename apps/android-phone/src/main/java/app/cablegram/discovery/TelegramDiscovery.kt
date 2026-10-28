@@ -32,7 +32,7 @@ class TelegramDiscovery(
             val chat = transport.chat(id) ?: continue
             val kind = classify(chat, me, switches) ?: continue
             permit.listed += id
-            emit(DiscoveryChat(DiscoveryChatId(id), kind, chat.title, chat.protectedContent))
+            emit(DiscoveryChat(DiscoveryChatId(id), kind, chat.title, chat.protectedContent, chat.lastMessageId))
         }
     }
 

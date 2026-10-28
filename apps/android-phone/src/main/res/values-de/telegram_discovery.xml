@@ -85,4 +85,10 @@
     <string name="advanced_min_desc" formatted="false">"Kürzere Clips bleiben bei der Suche und in der Auswahl außen vor."</string>
     <string name="advanced_min_option" formatted="false">"%1$d Min."</string>
     <string name="advanced_min_any" formatted="false">"Beliebige Länge"</string>
+    <string name="discovery_search_hint" formatted="false">"Chats nach Namen suchen"</string>
+    <string name="discovery_no_match" formatted="false">"Kein Chat passt."</string>
+    <plurals name="discovery_unchanged">
+        <item quantity="one">"%1$d Chat hatte seit deinem letzten Mal keine neuen Nachrichten und wurde nicht erneut gelesen."</item>
+        <item quantity="other">"%1$d Chats hatten seit deinem letzten Mal keine neuen Nachrichten und wurden nicht erneut gelesen."</item>
+    </plurals>
 </resources>

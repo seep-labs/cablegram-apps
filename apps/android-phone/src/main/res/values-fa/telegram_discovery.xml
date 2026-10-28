@@ -85,4 +85,10 @@
     <string name="advanced_min_desc" formatted="false">"کلیپ‌های کوتاه‌تر از جست‌وجو و فهرست انتخاب کنار گذاشته می‌شوند."</string>
     <string name="advanced_min_option" formatted="false">"%1$d دقیقه"</string>
     <string name="advanced_min_any" formatted="false">"هر مدتی"</string>
+    <string name="discovery_search_hint" formatted="false">"جست‌وجوی گفتگو با نام"</string>
+    <string name="discovery_no_match" formatted="false">"هیچ گفتگویی مطابقت ندارد."</string>
+    <plurals name="discovery_unchanged">
+        <item quantity="one">"%1$d گفتگو از آخرین بار پیام تازه‌ای نداشت و دوباره خوانده نشد."</item>
+        <item quantity="other">"%1$d گفتگو از آخرین بار پیام تازه‌ای نداشتند و دوباره خوانده نشدند."</item>
+    </plurals>
 </resources>

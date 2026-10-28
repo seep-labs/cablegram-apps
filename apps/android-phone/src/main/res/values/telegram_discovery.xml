@@ -85,4 +85,10 @@
     <string name="advanced_min_desc" formatted="false">"Shorter clips are left out of the scan and the picker."</string>
     <string name="advanced_min_option" formatted="false">"%1$d min"</string>
     <string name="advanced_min_any" formatted="false">"Any length"</string>
+    <string name="discovery_search_hint" formatted="false">"Search chats by name"</string>
+    <string name="discovery_no_match" formatted="false">"No chats match."</string>
+    <plurals name="discovery_unchanged">
+        <item quantity="one">"%1$d chat had no new messages since your last look and was not read again."</item>
+        <item quantity="other">"%1$d chats had no new messages since your last look and were not read again."</item>
+    </plurals>
 </resources>

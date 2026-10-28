@@ -59,7 +59,7 @@ class TdlibDiscoveryTransport(private val client: TdlClient) : DiscoveryTranspor
             is ChatTypeSecret -> type.userId
             else -> 0L
         }
-        return TransportChat(chat.id, kind, userId, chat.title, chat.hasProtectedContent, isMember(type))
+        return TransportChat(chat.id, kind, userId, chat.title, chat.hasProtectedContent, isMember(type), chat.lastMessage?.id ?: 0L)
     }
 
     /** Left, banned and restricted-out members can no longer read a chat as a member (spec 008 edge case). */

@@ -17,6 +17,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -41,6 +42,7 @@ import app.cablegram.discovery.DiscoveryChat
 import app.cablegram.discovery.DiscoveryChatId
 import app.cablegram.discovery.DiscoveryGraph
 import app.cablegram.discovery.SCAN_PARALLEL_CHATS
+import app.cablegram.discovery.isUnchangedSinceLastLook
 import app.cablegram.discovery.StoredScanRow
 import app.cablegram.telegram.TelegramState
 import kotlinx.coroutines.CancellationException
@@ -64,7 +66,12 @@ internal class FindVideosModel(private val graph: DiscoveryGraph, private val sc
     var checked by mutableStateOf(0); private set
     var total by mutableStateOf(0); private set
     var pausedSeconds by mutableStateOf<Int?>(null); private set
+    /** Chats the last scan did not read again because nothing new was posted in them. */
+    var unchanged by mutableStateOf(0); private set
     var showEmpty by mutableStateOf(false)
+    /** Part of a chat name the owner typed; the list shows only chats whose name contains it. */
+    var query by mutableStateOf("")
+    fun matches(title: String) = query.isBlank() || title.contains(query.trim(), ignoreCase = true)
     val rows = mutableStateListOf<StoredScanRow>().also { it += graph.store.snapshot().scan }
     /** Every box starts unticked; only a saved choice is ticked when the list is reopened (FR-008). */
     val ticked = mutableStateListOf<Long>().also { it += graph.store.choice() }
@@ -90,6 +97,7 @@ internal class FindVideosModel(private val graph: DiscoveryGraph, private val sc
         val permit = graph.controller.grantScan()
         phase = Phase.Scanning
         pausedSeconds = null
+        unchanged = 0
         job = scope.launch {
             val pauses = launch { graph.throttle.pauses.collect { pausedSeconds = it } }
             try {
@@ -102,12 +110,21 @@ internal class FindVideosModel(private val graph: DiscoveryGraph, private val sc
                 total = chats.size
                 checked = chats.count { it.id.raw in done }
                 val atOnce = Semaphore(SCAN_PARALLEL_CHATS)
+                val before = graph.store.snapshot().scan.associateBy { it.chatId }
                 coroutineScope {
                     chats.filter { it.id.raw !in done }.map { chat ->
                         launch {
+                            // Quiet chats keep the counts of the last look: no request, so dead channels cost nothing.
+                            val known = before[chat.id.raw]
+                            if (isUnchangedSinceLastLook(known, chat)) {
+                                graph.store.addScanRow(known!!.copy(title = chat.title, protectedContent = chat.protectedContent))
+                                unchanged++
+                                checked++
+                                return@launch
+                            }
                             atOnce.withPermit {
                                 val count = graph.discovery.chatVideoCount(permit, chat.id)
-                                val row = StoredScanRow(chat.id.raw, chat.kind, chat.title, chat.protectedContent, count.videos, count.files, System.currentTimeMillis())
+                                val row = StoredScanRow(chat.id.raw, chat.kind, chat.title, chat.protectedContent, count.videos, count.files, System.currentTimeMillis(), chat.lastMessageId)
                                 graph.store.addScanRow(row)
                                 rows.removeAll { it.chatId == row.chatId }
                                 rows += row
@@ -179,6 +196,15 @@ private fun FindVideosScreen(model: FindVideosModel, onClose: () -> Unit, onPick
         if (model.phase == FindVideosModel.Phase.Scanning || model.phase == FindVideosModel.Phase.Done) {
             ScanProgress(model, onClose)
         }
+        if (model.phase == FindVideosModel.Phase.Scanning || model.phase == FindVideosModel.Phase.Done || model.phase == FindVideosModel.Phase.Managing) {
+            OutlinedTextField(
+                value = model.query,
+                onValueChange = { model.query = it },
+                singleLine = true,
+                placeholder = { Text(ui.getString(R.string.discovery_search_hint)) },
+                modifier = Modifier.fillMaxWidth().maestro(MaestroIds.DISCOVERY_SEARCH),
+            )
+        }
         // Until the owner says "Look for videos", nothing from an earlier scan is shown either.
         if (model.phase == FindVideosModel.Phase.Scanning || model.phase == FindVideosModel.Phase.Done || model.phase == FindVideosModel.Phase.Managing) {
             Box(Modifier.weight(1f)) { ScanResults(model, ui) }
@@ -224,6 +250,7 @@ private fun ScanProgress(model: FindVideosModel, onClose: () -> Unit) {
                 modifier = Modifier.maestro(MaestroIds.DISCOVERY_PROGRESS),
             )
             model.pausedSeconds?.let { Text(ui.getString(R.string.discovery_paused, it), color = VlcOrange, fontSize = 12.sp) }
+            if (model.unchanged > 0) Text(ui.getQuantityString(R.plurals.discovery_unchanged, model.unchanged, model.unchanged), color = VlcMuted, fontSize = 12.sp)
         }
         if (model.phase == FindVideosModel.Phase.Scanning) {
             TextButton(onClick = model::stop, modifier = Modifier.maestro(MaestroIds.DISCOVERY_STOP)) { Text(ui.getString(R.string.discovery_stop)) }
@@ -235,11 +262,16 @@ private fun ScanProgress(model: FindVideosModel, onClose: () -> Unit) {
 
 @Composable
 private fun ScanResults(model: FindVideosModel, ui: Resources) {
-    val withVideos = model.rows.filter { it.videos + it.files > 0 }.sortedByDescending { it.videos + it.files }
-    val empty = model.rows.filter { it.videos + it.files == 0 }
+    val matching = model.rows.filter { model.matches(it.title) }
+    val withVideos = matching.filter { it.videos + it.files > 0 }.sortedByDescending { it.videos + it.files }
+    val empty = matching.filter { it.videos + it.files == 0 }
+    val searching = model.query.isNotBlank()
     LazyColumn(Modifier.fillMaxWidth().maestro(MaestroIds.DISCOVERY_RESULTS), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        if (searching && matching.isEmpty()) item { Text(ui.getString(R.string.discovery_no_match), color = VlcMuted) }
         items(withVideos, key = { it.chatId }) { ScanRow(it, it.chatId in model.ticked, { model.toggle(it.chatId) }, ui) }
-        if (empty.isNotEmpty()) {
+        // While searching, every match is listed, with or without videos.
+        if (searching) items(empty, key = { it.chatId }) { ScanRow(it, it.chatId in model.ticked, { model.toggle(it.chatId) }, ui) }
+        else if (empty.isNotEmpty()) {
             item {
                 TextButton(onClick = { model.showEmpty = !model.showEmpty }) {
                     Text(if (model.showEmpty) ui.getString(R.string.discovery_hide_empty) else ui.getString(R.string.discovery_show_empty, empty.size))

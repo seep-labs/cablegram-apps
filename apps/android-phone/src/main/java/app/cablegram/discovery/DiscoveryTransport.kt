@@ -12,6 +12,8 @@ data class TransportChat(
     val protectedContent: Boolean,
     /** False once the owner left, was banned from or lost access to a channel or group. */
     val isMember: Boolean = true,
+    /** Id of the chat's newest message from the local chat list; 0 when there is none. */
+    val lastMessageId: Long = 0,
 )
 
 enum class TransportChatType { Channel, Group, Private, Secret }

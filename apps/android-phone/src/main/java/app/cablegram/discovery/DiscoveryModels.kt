@@ -13,7 +13,18 @@ value class DiscoveryChatId(val raw: Long) {
 enum class ChatKind { Channel, Group, Personal, SavedMessages }
 
 /** A chat the scan may list. Deliberately has no last message, photo bytes or members. */
-data class DiscoveryChat(val id: DiscoveryChatId, val kind: ChatKind, val title: String, val protectedContent: Boolean)
+data class DiscoveryChat(
+    val id: DiscoveryChatId,
+    val kind: ChatKind,
+    val title: String,
+    val protectedContent: Boolean,
+    /** Id of the chat's newest message, read from the chat list (no request); 0 when unknown. Tells a rescan the chat is quiet. */
+    val lastMessageId: Long = 0,
+)
+
+/** A rescan does not read a chat again when its newest message is the one seen last time (nothing new to count). */
+fun isUnchangedSinceLastLook(row: StoredScanRow?, chat: DiscoveryChat): Boolean =
+    row != null && row.lastMessageId != 0L && row.lastMessageId == chat.lastMessageId
 
 /**
  * Requests per second the scan may send to Telegram, all chats together. A 302-chat account ran at 10 per second

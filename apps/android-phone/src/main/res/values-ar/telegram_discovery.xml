@@ -113,4 +113,14 @@
     <string name="advanced_min_desc" formatted="false">"المقاطع الأقصر تُستبعد من البحث ومن الاختيار."</string>
     <string name="advanced_min_option" formatted="false">"%1$d د"</string>
     <string name="advanced_min_any" formatted="false">"أي مدة"</string>
+    <string name="discovery_search_hint" formatted="false">"ابحث عن المحادثات بالاسم"</string>
+    <string name="discovery_no_match" formatted="false">"لا توجد محادثة مطابقة."</string>
+    <plurals name="discovery_unchanged">
+        <item quantity="zero">"لم تكن في %1$d محادثة رسائل جديدة منذ آخر مرة، فلم تُقرأ مجددًا."</item>
+        <item quantity="one">"لم تكن في %1$d محادثة رسائل جديدة منذ آخر مرة، فلم تُقرأ مجددًا."</item>
+        <item quantity="two">"لم تكن في %1$d محادثة رسائل جديدة منذ آخر مرة، فلم تُقرأ مجددًا."</item>
+        <item quantity="few">"لم تكن في %1$d محادثات رسائل جديدة منذ آخر مرة، فلم تُقرأ مجددًا."</item>
+        <item quantity="many">"لم تكن في %1$d محادثات رسائل جديدة منذ آخر مرة، فلم تُقرأ مجددًا."</item>
+        <item quantity="other">"لم تكن في %1$d محادثات رسائل جديدة منذ آخر مرة، فلم تُقرأ مجددًا."</item>
+    </plurals>
 </resources>

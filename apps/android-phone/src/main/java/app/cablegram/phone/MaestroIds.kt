@@ -48,6 +48,7 @@ object MaestroIds {
     const val DISCOVERY_MANAGE = "discovery_manage"
     const val DISCOVERY_CHAT_CHECK = "discovery_chat_check"
     const val DISCOVERY_PICK = "discovery_pick"
+    const val DISCOVERY_SEARCH = "discovery_search"
     const val PICKER_GRID = "picker_grid"
     const val PICKER_ITEM = "picker_item"
     const val PICKER_IN_LIBRARY = "picker_in_library"

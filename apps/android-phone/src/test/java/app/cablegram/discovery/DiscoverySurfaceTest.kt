@@ -36,13 +36,14 @@ class DiscoverySurfaceTest {
     @Test
     fun `the models carry no message text beyond a caption or file name`() {
         fun fields(c: Class<*>) = c.declaredFields.filter { !Modifier.isStatic(it.modifiers) }.map { it.name }.toSet()
-        assertEquals(setOf("id", "kind", "title", "protectedContent"), fields(DiscoveryChat::class.java))
+        // lastMessageId is only a message id from the chat list, used to skip quiet chats on a rescan; no text.
+        assertEquals(setOf("id", "kind", "title", "protectedContent", "lastMessageId"), fields(DiscoveryChat::class.java))
         assertEquals(
             setOf("chatId", "messageId", "uniqueId", "title", "durationSeconds", "sizeBytes", "date", "thumbnailFileId", "protectedContent"),
             fields(DiscoveryVideo::class.java),
         )
         // isMember: whether the owner has left or lost access to the chat; no message or member list.
-        assertEquals(setOf("id", "type", "userId", "title", "protectedContent", "isMember"), fields(TransportChat::class.java))
+        assertEquals(setOf("id", "type", "userId", "title", "protectedContent", "isMember", "lastMessageId"), fields(TransportChat::class.java))
     }
 
     @Test

@@ -22,7 +22,10 @@ interface DiscoveryStorage {
     val protectedContent: Boolean,
     val videos: Int,
     val files: Int,
+    /** When this chat was last read. */
     val scannedAt: Long,
+    /** Newest message id of the chat when it was read; a rescan skips the chat while it is unchanged. */
+    val lastMessageId: Long = 0,
 )
 
 @Serializable data class DiscoveryState(
