@@ -48,6 +48,7 @@ import app.cablegram.telegram.TelegramState
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.joinAll
@@ -87,6 +88,8 @@ internal class FindVideosModel(private val graph: DiscoveryGraph, private val sc
     fun useChats(onSaved: () -> Unit) {
         val chosen = rows.filter { it.chatId in ticked }.map { DiscoveryChat(DiscoveryChatId(it.chatId), it.kind, it.title, it.protectedContent) }
         scope.launch {
+            // The owner need not wait for the scan: Use stops it, and what it read stays for the next Look (US1 acceptance 5).
+            job?.cancelAndJoin()
             graph.controller.useChats(chosen)
             onSaved()
         }
@@ -126,8 +129,9 @@ internal class FindVideosModel(private val graph: DiscoveryGraph, private val sc
                                 val count = graph.discovery.chatVideoCount(permit, chat.id)
                                 val row = StoredScanRow(chat.id.raw, chat.kind, chat.title, chat.protectedContent, count.videos, count.files, System.currentTimeMillis(), chat.lastMessageId)
                                 graph.store.addScanRow(row)
-                                rows.removeAll { it.chatId == row.chatId }
-                                rows += row
+                                // A chat keeps its place in the list: rows must not jump while the owner is ticking.
+                                val at = rows.indexOfFirst { it.chatId == row.chatId }
+                                if (at >= 0) rows[at] = row else rows += row
                                 checked++
                                 pausedSeconds = null
                             }
@@ -208,13 +212,12 @@ private fun FindVideosScreen(model: FindVideosModel, onClose: () -> Unit, onPick
         // Until the owner says "Look for videos", nothing from an earlier scan is shown either.
         if (model.phase == FindVideosModel.Phase.Scanning || model.phase == FindVideosModel.Phase.Done || model.phase == FindVideosModel.Phase.Managing) {
             Box(Modifier.weight(1f)) { ScanResults(model, ui) }
-            if (model.phase != FindVideosModel.Phase.Scanning) {
-                Button(
-                    onClick = { model.useChats { if (model.ticked.isNotEmpty()) onPick() else onClose() } },
-                    enabled = model.ticked.isNotEmpty() || model.hasChoice,
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 56.dp).heightIn(min = 52.dp).maestro(MaestroIds.DISCOVERY_USE),
-                ) { Text(ui.getQuantityString(R.plurals.discovery_use_chats, model.ticked.size, model.ticked.size)) }
-            }
+            // Available while the scan runs too: the owner need not wait for it (Use stops it).
+            Button(
+                onClick = { model.useChats { if (model.ticked.isNotEmpty()) onPick() else onClose() } },
+                enabled = model.ticked.isNotEmpty() || model.hasChoice,
+                modifier = Modifier.fillMaxWidth().padding(bottom = 56.dp).heightIn(min = 52.dp).maestro(MaestroIds.DISCOVERY_USE),
+            ) { Text(ui.getQuantityString(R.plurals.discovery_use_chats, model.ticked.size, model.ticked.size)) }
         }
     }
 }
@@ -255,7 +258,7 @@ private fun ScanProgress(model: FindVideosModel, onClose: () -> Unit) {
         if (model.phase == FindVideosModel.Phase.Scanning) {
             TextButton(onClick = model::stop, modifier = Modifier.maestro(MaestroIds.DISCOVERY_STOP)) { Text(ui.getString(R.string.discovery_stop)) }
         } else {
-            TextButton(onClick = onClose) { Text(ui.getString(android.R.string.ok)) }
+            TextButton(onClick = onClose, modifier = Modifier.maestro(MaestroIds.DISCOVERY_SCAN_DONE)) { Text(ui.getString(android.R.string.ok)) }
         }
     }
 }
@@ -263,7 +266,10 @@ private fun ScanProgress(model: FindVideosModel, onClose: () -> Unit) {
 @Composable
 private fun ScanResults(model: FindVideosModel, ui: Resources) {
     val matching = model.rows.filter { model.matches(it.title) }
-    val withVideos = matching.filter { it.videos + it.files > 0 }.sortedByDescending { it.videos + it.files }
+    // While the scan runs the list keeps its order, so a row does not move as the owner taps it; the biggest chats come first once it is done.
+    val withVideos = matching.filter { it.videos + it.files > 0 }.let { list ->
+        if (model.phase == FindVideosModel.Phase.Scanning) list else list.sortedByDescending { it.videos + it.files }
+    }
     val empty = matching.filter { it.videos + it.files == 0 }
     val searching = model.query.isNotBlank()
     LazyColumn(Modifier.fillMaxWidth().maestro(MaestroIds.DISCOVERY_RESULTS), verticalArrangement = Arrangement.spacedBy(8.dp)) {

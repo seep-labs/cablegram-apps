@@ -17,7 +17,7 @@ appId: app.cablegram.phone
     id: discovery_look
 - extendedWaitUntil:
     visible:
-      id: discovery_use
+      id: discovery_scan_done
     timeout: 240000
 - tapOn:
     id: discovery_search

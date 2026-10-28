@@ -50,7 +50,7 @@ tags:
     id: discovery_progress
 - extendedWaitUntil:
     visible:
-      id: discovery_use
+      id: discovery_scan_done
     timeout: 240000
 
 - assertVisible:
@@ -142,7 +142,7 @@ tags:
     id: discovery_look
 - extendedWaitUntil:
     visible:
-      id: discovery_use
+      id: discovery_scan_done
     timeout: 240000
 - assertVisible: ".*had no new messages since your last look.*"
 - tapOn: "OK"
