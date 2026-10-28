@@ -1,40 +1,33 @@
-# Spec 008 (US3). Preconditions: authenticated main UI, a linked and healthy Telegram test account, and a chosen
-# chat (run telegram-discovery-scan.yaml's first half, or tick one chat by hand) whose 3rd and 4th videos are not
-# in the library yet. Adding is real: it forwards two videos into the test account's library channel, so a second
-# run needs those two titles removed from the library first.
+# Spec 008 (US3). Preconditions: authenticated main UI, a linked and healthy Telegram test account with a chat
+# named ${CHAT} that holds at least four videos of 10 minutes or more which are not in the library yet, and no saved
+# choice. Adding is real: it forwards two videos into that account's library channel, so a second run needs those two
+# titles removed from the library first (the picker marks videos already in the library and cannot select them).
 appId: app.cablegram.phone
+env:
+  CHAT: CableGramAppGroup1
 tags:
   - telegram
 ---
 - launchApp
 - tapOn:
     id: nav_browse
-- scrollUntilVisible:
-    element:
-      id: telegram_add_from_chats
-    direction: DOWN
-    timeout: 20000
-- tapOn:
-    id: telegram_add_from_chats
-- assertVisible:
-    id: discovery_prompt
-- tapOn:
-    id: discovery_pick
+- runFlow:
+    file: common/telegram-discovery-choose.yaml
 - extendedWaitUntil:
     visible:
       id: picker_grid
     timeout: 30000
 - assertVisible:
     id: picker_item
-- assertVisible:
-    id: picker_add
 # Nothing is ticked, so Add stays off until the owner picks.
+- assertVisible: "Add 0 to library"
 - tapOn:
     id: picker_item
     index: 2
 - tapOn:
     id: picker_item
     index: 3
+- assertVisible: "Add 2 to library"
 - tapOn:
     id: picker_add
 - extendedWaitUntil:
@@ -42,12 +35,6 @@ tags:
     timeout: 60000
 - assertVisible:
     id: picker_in_library
-# The two videos are in the library.
-- tapOn:
-    id: picker_done
-- tapOn:
-    id: nav_library
-- extendedWaitUntil:
-    visible:
-      id: library_title
-    timeout: 20000
+# Leave no choice behind.
+- runFlow:
+    file: common/telegram-discovery-clear.yaml

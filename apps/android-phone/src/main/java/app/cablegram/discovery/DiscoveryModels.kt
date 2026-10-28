@@ -36,7 +36,7 @@ const val SCAN_REQUESTS_PER_SECOND = 10
  * How many chats a scan reads at once. Each chat's recent videos and files take a round trip or two, so one chat after the
  * other would be slow; the throttle still keeps every request within 5 per second (FR-007).
  */
-const val SCAN_PARALLEL_CHATS = 8
+const val SCAN_PARALLEL_CHATS = 16
 
 /** The shortest video the scan and the picker look for, until the owner changes it in Advanced settings. */
 const val DEFAULT_MIN_VIDEO_SECONDS = 600

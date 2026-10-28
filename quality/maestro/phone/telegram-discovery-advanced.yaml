@@ -1,6 +1,9 @@
-# Spec 008 (US5, FR-005, FR-008). Preconditions: authenticated main UI, a linked Telegram test account that has a
-# one-to-one chat named "Masoud" holding videos, both Advanced switches off, and no saved chat choice.
-# Turns personal chats on, picks that chat, then turns the switch off and checks the chat left the choice.
+# Spec 008 (US5, FR-005, FR-006, FR-008). Preconditions: authenticated main UI, a linked Telegram test account that has
+# at least one one-to-one chat holding videos of 10 minutes or more, both Advanced switches off, the shortest-video
+# setting at its default of 10 minutes, and no saved chat choice. The first scan with personal chats on reads every
+# personal chat once, so it can take several minutes on an account with hundreds of them.
+# Checks the shortest-video setting (default, change, survives a restart), then turns personal chats on, picks one,
+# and turns the switch off again to check the chat left the choice. Leaves the defaults restored.
 appId: app.cablegram.phone
 tags:
   - telegram
@@ -16,12 +19,41 @@ tags:
 - tapOn:
     id: discovery_advanced
 
+# The shortest video to count: 10 minutes by default, and a change survives an app restart.
+- assertVisible:
+    id: advanced_min_600
+    selected: true
+- tapOn:
+    id: advanced_min_900
+- assertVisible:
+    id: advanced_min_900
+    selected: true
+- stopApp
+- launchApp
+- tapOn:
+    id: nav_browse
+- scrollUntilVisible:
+    element:
+      id: discovery_advanced
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: discovery_advanced
+- assertVisible:
+    id: advanced_min_900
+    selected: true
+- tapOn:
+    id: advanced_min_600
+- assertVisible:
+    id: advanced_min_600
+    selected: true
+
 # Off by default; turning on shows a confirmation that repeats the notice, and starts no scan.
 - tapOn:
     id: advanced_personal
 - assertVisible:
     id: advanced_confirm
-- assertVisible: ".*This happens on your phone.*|.*signed in to Telegram on this phone.*"
+- assertVisible: ".*signed in to Telegram on this phone.*"
 - tapOn:
     id: advanced_confirm
 
@@ -35,20 +67,26 @@ tags:
 - extendedWaitUntil:
     visible:
       id: discovery_use
-    timeout: 180000
-- assertVisible: ".*Personal chat.*"
+    timeout: 900000
+- scrollUntilVisible:
+    element: ".*Personal chat.*"
+    direction: DOWN
+    timeout: 120000
 - assertNotVisible:
     id: discovery_chat_check
     checked: true
 
-# Pick it: the picker banner says personal chats are included.
-- tapOn: "Masoud"
+# Pick one: the picker banner says personal chats are included.
+- tapOn: ".*Personal chat.*"
+- assertVisible:
+    id: discovery_chat_check
+    checked: true
 - tapOn:
     id: discovery_use
 - extendedWaitUntil:
     visible:
       id: picker_banner
-    timeout: 30000
+    timeout: 60000
 - assertVisible: ".*including personal chats.*"
 - tapOn:
     id: picker_done

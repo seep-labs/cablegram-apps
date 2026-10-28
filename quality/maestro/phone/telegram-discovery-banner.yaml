@@ -1,22 +1,17 @@
-# Spec 008 (US4 acceptance 2, FR-011). Preconditions: authenticated main UI, a linked Telegram test account and a
-# saved chat choice whose chats hold more than 50 videos. Adds nothing: it only opens the picker, pages through it
-# and reads the banner and How this works, so it can run again and again.
+# Spec 008 (US4 acceptance 2, FR-011). Preconditions: authenticated main UI, a linked Telegram test account with a chat
+# named ${CHAT} that holds more than 50 videos of 10 minutes or more, and no saved choice. Adds nothing: it only opens
+# the picker, pages through it and reads the banner and How this works, so it can run again and again.
 appId: app.cablegram.phone
+env:
+  CHAT: Algotic Ai
 tags:
   - telegram
 ---
 - launchApp
 - tapOn:
     id: nav_browse
-- scrollUntilVisible:
-    element:
-      id: telegram_add_from_chats
-    direction: DOWN
-    timeout: 20000
-- tapOn:
-    id: telegram_add_from_chats
-- tapOn:
-    id: discovery_pick
+- runFlow:
+    file: common/telegram-discovery-choose.yaml
 - extendedWaitUntil:
     visible:
       id: picker_grid
@@ -61,3 +56,7 @@ tags:
     visible:
       id: picker_banner
     timeout: 30000
+
+# Leave no choice behind.
+- runFlow:
+    file: common/telegram-discovery-clear.yaml
