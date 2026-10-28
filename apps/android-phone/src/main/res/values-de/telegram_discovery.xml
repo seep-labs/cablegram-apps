@@ -5,7 +5,7 @@
     <string name="discovery_notice_title" formatted="false">"Das passiert auf deinem Handy."</string>
     <string name="discovery_notice_body" formatted="false">"Cablegram ist auf diesem Handy bei Telegram angemeldet, wie Telegram Desktop. Es sieht sich deine Chats hier auf diesem Handy an. Chatnamen, Anzahlen, Nachrichten und Vorschaubilder werden nie an die Server von Cablegram gesendet. Nur die Videos, die du hinzufügst, landen in „Cablegram library“."</string>
     <string name="discovery_ask_title" formatted="false">"In deinen Kanälen und Gruppen nach Videos suchen?"</string>
-    <string name="discovery_ask_body" formatted="false">"Cablegram sieht sich auf diesem Handy die letzten 100 Videos und Dateien in jedem deiner Kanäle und Gruppen an und zählt darunter die langen Videos. Kurze Clips werden übersprungen, solange du das nicht in den erweiterten Einstellungen änderst. Persönliche Chats und „Gespeicherte Nachrichten“ werden nicht angesehen."</string>
+    <string name="discovery_ask_body" formatted="false">"Cablegram durchsucht auf diesem Handy die letzten 100 Videos und Dateien in jedem deiner Kanäle und Gruppen und zählt darunter die langen Videos. Kurze Clips werden übersprungen, solange du das nicht in den erweiterten Einstellungen änderst. Persönliche Chats und „Gespeicherte Nachrichten“ werden nicht durchsucht."</string>
     <string name="discovery_look" formatted="false">"Nach Videos suchen"</string>
     <string name="discovery_not_now" formatted="false">"Jetzt nicht"</string>
     <string name="discovery_title" formatted="false">"Videos finden"</string>
@@ -88,7 +88,7 @@
     <string name="discovery_search_hint" formatted="false">"Chats nach Namen suchen"</string>
     <string name="discovery_no_match" formatted="false">"Kein Chat passt."</string>
     <plurals name="discovery_unchanged">
-        <item quantity="one">"%1$d Chat hatte seit deinem letzten Mal keine neuen Nachrichten und wurde nicht erneut gelesen."</item>
-        <item quantity="other">"%1$d Chats hatten seit deinem letzten Mal keine neuen Nachrichten und wurden nicht erneut gelesen."</item>
+        <item quantity="one">"%1$d Chat hatte seit deinem letzten Mal keine neuen Nachrichten und wurde nicht erneut durchsucht."</item>
+        <item quantity="other">"%1$d Chats hatten seit deinem letzten Mal keine neuen Nachrichten und wurden nicht erneut durchsucht."</item>
     </plurals>
 </resources>

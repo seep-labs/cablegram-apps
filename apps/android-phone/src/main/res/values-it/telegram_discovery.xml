@@ -88,7 +88,7 @@
     <string name="discovery_search_hint" formatted="false">"Cerca chat per nome"</string>
     <string name="discovery_no_match" formatted="false">"Nessuna chat corrisponde."</string>
     <plurals name="discovery_unchanged">
-        <item quantity="one">"%1$d chat non aveva nuovi messaggi dall'ultima volta e non è stata riletta."</item>
-        <item quantity="other">"%1$d chat non avevano nuovi messaggi dall'ultima volta e non sono state rilette."</item>
+        <item quantity="one">"%1$d chat non aveva nuovi messaggi dall'ultima volta e non è stata controllata di nuovo."</item>
+        <item quantity="other">"%1$d chat non avevano nuovi messaggi dall'ultima volta e non sono state controllate di nuovo."</item>
     </plurals>
 </resources>

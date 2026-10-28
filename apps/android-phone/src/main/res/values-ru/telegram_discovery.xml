@@ -102,9 +102,9 @@
     <string name="discovery_search_hint" formatted="false">"Поиск чатов по названию"</string>
     <string name="discovery_no_match" formatted="false">"Подходящих чатов нет."</string>
     <plurals name="discovery_unchanged">
-        <item quantity="one">"В %1$d чате не было новых сообщений с прошлого раза, его не читали снова."</item>
-        <item quantity="few">"В %1$d чатах не было новых сообщений с прошлого раза, их не читали снова."</item>
-        <item quantity="many">"В %1$d чатах не было новых сообщений с прошлого раза, их не читали снова."</item>
-        <item quantity="other">"В %1$d чатах не было новых сообщений с прошлого раза, их не читали снова."</item>
+        <item quantity="one">"В %1$d чате не было новых сообщений с прошлого раза, поэтому его не проверяли снова."</item>
+        <item quantity="few">"В %1$d чатах не было новых сообщений с прошлого раза, поэтому их не проверяли снова."</item>
+        <item quantity="many">"В %1$d чатах не было новых сообщений с прошлого раза, поэтому их не проверяли снова."</item>
+        <item quantity="other">"В %1$d чатах не было новых сообщений с прошлого раза, поэтому их не проверяли снова."</item>
     </plurals>
 </resources>
