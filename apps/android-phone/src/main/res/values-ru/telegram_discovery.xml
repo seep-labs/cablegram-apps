@@ -5,7 +5,7 @@
     <string name="discovery_notice_title" formatted="false">"Это происходит на вашем телефоне."</string>
     <string name="discovery_notice_body" formatted="false">"Cablegram авторизован в Telegram на этом телефоне, как Telegram Desktop. Он просматривает ваши чаты здесь, на этом телефоне. Названия чатов, количество видео, сообщения и миниатюры никогда не отправляются на серверы Cablegram. В «Cablegram library» попадают только добавленные вами видео."</string>
     <string name="discovery_ask_title" formatted="false">"Искать видео в ваших каналах и группах?"</string>
-    <string name="discovery_ask_body" formatted="false">"Cablegram подсчитывает видео в каждом вашем канале и группе. Он не открывает ваши сообщения и не просматривает личные чаты или «Избранное»."</string>
+    <string name="discovery_ask_body" formatted="false">"Cablegram просматривает на этом телефоне последние 100 сообщений в каждом из ваших каналов и групп и считает в них видео. Короткие ролики пропускаются, если не изменить это в расширенных настройках. Личные чаты и «Избранное» не просматриваются."</string>
     <string name="discovery_look" formatted="false">"Искать видео"</string>
     <string name="discovery_not_now" formatted="false">"Не сейчас"</string>
     <string name="discovery_title" formatted="false">"Поиск видео"</string>
@@ -21,22 +21,22 @@
     <string name="discovery_protected" formatted="false">"Сохранение запрещено"</string>
     <string name="discovery_failed" formatted="false">"Не удалось просмотреть чаты. Попробуйте ещё раз."</string>
     <plurals name="discovery_videos">
-        <item quantity="one">"%1$d видео"</item>
-        <item quantity="few">"%1$d видео"</item>
-        <item quantity="many">"%1$d видео"</item>
-        <item quantity="other">"%1$d видео"</item>
+        <item quantity="one">"%1$d видео в последних 100 сообщениях"</item>
+        <item quantity="few">"%1$d видео в последних 100 сообщениях"</item>
+        <item quantity="many">"%1$d видео в последних 100 сообщениях"</item>
+        <item quantity="other">"%1$d видео в последних 100 сообщениях"</item>
     </plurals>
     <plurals name="discovery_videos_about">
-        <item quantity="one">"около %1$d видео"</item>
-        <item quantity="few">"около %1$d видео"</item>
-        <item quantity="many">"около %1$d видео"</item>
-        <item quantity="other">"около %1$d видео"</item>
+        <item quantity="one">"около %1$d видео в последних 100 сообщениях"</item>
+        <item quantity="few">"около %1$d видео в последних 100 сообщениях"</item>
+        <item quantity="many">"около %1$d видео в последних 100 сообщениях"</item>
+        <item quantity="other">"около %1$d видео в последних 100 сообщениях"</item>
     </plurals>
     <plurals name="discovery_files_maybe">
-        <item quantity="one">"около %1$d файла, который может быть видео"</item>
-        <item quantity="few">"около %1$d файлов, которые могут быть видео"</item>
-        <item quantity="many">"около %1$d файлов, которые могут быть видео"</item>
-        <item quantity="other">"около %1$d файлов, которые могут быть видео"</item>
+        <item quantity="one">"около %1$d крупного файла, который может быть видео, в последних 100 сообщениях"</item>
+        <item quantity="few">"около %1$d крупных файлов, которые могут быть видео, в последних 100 сообщениях"</item>
+        <item quantity="many">"около %1$d крупных файлов, которые могут быть видео, в последних 100 сообщениях"</item>
+        <item quantity="other">"около %1$d крупных файлов, которые могут быть видео, в последних 100 сообщениях"</item>
     </plurals>
     <string name="discovery_manage" formatted="false">"Управление чатами"</string>
     <plurals name="discovery_use_chats">
@@ -95,4 +95,8 @@
         <item quantity="many">"%1$d выбранных вами чатов больше недоступны и были убраны."</item>
         <item quantity="other">"%1$d выбранных вами чатов больше недоступны и были убраны."</item>
     </plurals>
+    <string name="advanced_min_title" formatted="false">"Самое короткое видео для подсчёта"</string>
+    <string name="advanced_min_desc" formatted="false">"Более короткие ролики не попадают ни в поиск, ни в выбор."</string>
+    <string name="advanced_min_option" formatted="false">"%1$d мин"</string>
+    <string name="advanced_min_any" formatted="false">"Любая длина"</string>
 </resources>

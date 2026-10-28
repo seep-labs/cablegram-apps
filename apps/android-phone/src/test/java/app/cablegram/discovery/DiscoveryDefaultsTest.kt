@@ -29,12 +29,12 @@ class DiscoveryDefaultsTest {
         TransportChat(bot, TransportChatType.Private, 600, "Bot", false),
     )
     private val full = (chats.map { it.id }).flatMap { id ->
-        (1..3).map { TransportVideo(id, it * 10L, "u-$id-$it", "f$it.mp4", "c$it", 60, 1_000, 100 + it, false, "video/mp4", null, true) }
+        (1..3).map { TransportVideo(id, it * 10L, "u-$id-$it", "f$it.mp4", "c$it", 3_600, 1_000, 100 + it, false, "video/mp4", null, true) }
     }
 
     @Test
     fun `the default scan, picker and forward never touch personal chats, Saved Messages, secret chats or bots`() = runTest {
-        val t = FakeDiscoveryTransport(chats, me, bots = setOf(600), counts = chats.associate { (it.id to false) to 3 }, videos = full)
+        val t = FakeDiscoveryTransport(chats, me, bots = setOf(600), videos = full)
         val store = DiscoveryStore(MemoryDiscoveryStorage())
         val d = TelegramDiscovery(t, DiscoveryGate({ store.choice() }, { library }), RequestThrottle(5) { currentTime }, { library }, store)
 
@@ -49,7 +49,7 @@ class DiscoveryDefaultsTest {
         d.forwardToLibrary(page.take(2))
 
         for (id in excluded) {
-            assertFalse("no count for $id", t.calls.any { it.startsWith("count:$id:") })
+            assertFalse("no read of recent messages for $id", t.calls.any { it == "recent:$id" })
             assertFalse("no search for $id", t.calls.any { it.startsWith("search:$id:") })
             assertTrue("no forward from $id", t.forwards.none { it.second == id })
         }
@@ -58,7 +58,7 @@ class DiscoveryDefaultsTest {
 
     @Test
     fun `a secret chat is never listed whatever the switches say`() = runTest {
-        val t = FakeDiscoveryTransport(chats, me, bots = setOf(600), counts = emptyMap(), videos = full)
+        val t = FakeDiscoveryTransport(chats, me, bots = setOf(600), videos = full)
         val store = DiscoveryStore(MemoryDiscoveryStorage())
         val d = TelegramDiscovery(t, DiscoveryGate({ store.choice() }, { library }), RequestThrottle(5) { currentTime }, { library }, store)
         val listed = d.discoveryChats(ScanPermits().grantScan(), DiscoverySwitches(includePersonalChats = true, includeSavedMessages = true)).toList()

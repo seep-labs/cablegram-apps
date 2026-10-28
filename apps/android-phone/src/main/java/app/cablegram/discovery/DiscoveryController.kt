@@ -24,6 +24,9 @@ class DiscoveryController(
         store.setChoice(ticked.map { before[it.id.raw] ?: StoredChoice(it.id.raw, it.kind, it.title, now()) })
     }
 
+    /** A new shortest length makes the old counts wrong, so the results are cleared and the next scan starts afresh. */
+    fun setMinVideoSeconds(seconds: Int) = store.setMinVideoSeconds(seconds)
+
     /** Turning a switch on starts nothing; turning one off removes those chats from the choice with their thumbnails. */
     suspend fun setSwitches(switches: DiscoverySwitches) {
         val old = store.switches()

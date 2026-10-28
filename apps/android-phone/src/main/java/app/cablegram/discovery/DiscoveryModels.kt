@@ -15,6 +15,21 @@ enum class ChatKind { Channel, Group, Personal, SavedMessages }
 /** A chat the scan may list. Deliberately has no last message, photo bytes or members. */
 data class DiscoveryChat(val id: DiscoveryChatId, val kind: ChatKind, val title: String, val protectedContent: Boolean)
 
+/**
+ * Requests per second the scan may send to Telegram, all chats together. A 302-chat account ran at 10 per second
+ * without a single FLOOD_WAIT (2026-10-28); if Telegram does ask us to wait, the scan pauses and says so.
+ */
+const val SCAN_REQUESTS_PER_SECOND = 10
+
+/**
+ * How many chats a scan reads at once. Each chat's recent messages take a round trip or two, so one chat after the
+ * other would be slow; the throttle still keeps every request within 5 per second (FR-007).
+ */
+const val SCAN_PARALLEL_CHATS = 8
+
+/** The shortest video the scan and the picker look for, until the owner changes it in Advanced settings. */
+const val DEFAULT_MIN_VIDEO_SECONDS = 600
+
 /** Counts for one chat. [approximate] is true when files are included, because a file is only known to be a video once listed. */
 data class VideoCount(val videos: Int, val files: Int) {
     val approximate get() = files > 0

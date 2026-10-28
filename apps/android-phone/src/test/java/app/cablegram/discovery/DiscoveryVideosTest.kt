@@ -20,7 +20,7 @@ class DiscoveryVideosTest {
         TransportVideo(chat, id, "u$id", name, "", 60, 1000, date, file, mime, 5, save)
 
     private fun TestScope2.build(t: FakeDiscoveryTransport, choice: Set<Long>) =
-        TelegramDiscovery(t, DiscoveryGate({ choice }, { LIBRARY }), RequestThrottle(5, now), { LIBRARY }, DiscoveryStore(MemoryDiscoveryStorage()))
+        TelegramDiscovery(t, DiscoveryGate({ choice }, { LIBRARY }), RequestThrottle(5, now), { LIBRARY }, DiscoveryStore(MemoryDiscoveryStorage()).also { it.setMinVideoSeconds(0) })
 
     private class TestScope2(val now: () -> Long)
 
@@ -81,7 +81,7 @@ class DiscoveryVideosTest {
     @Test
     fun `purging a chat deletes exactly the thumbnails it downloaded and forgets it`() = runTest {
         val t = FakeDiscoveryTransport(chats, videos = listOf(video(10, 1, 100)))
-        val store = DiscoveryStore(MemoryDiscoveryStorage())
+        val store = DiscoveryStore(MemoryDiscoveryStorage()).also { it.setMinVideoSeconds(0) }
         val d = TelegramDiscovery(t, DiscoveryGate({ setOf(10) }, { LIBRARY }), RequestThrottle(5) { currentTime }, { LIBRARY }, store)
         val v = d.videoPager(setOf(DiscoveryChatId(10))).next(5).single()
         d.thumbnail(v)

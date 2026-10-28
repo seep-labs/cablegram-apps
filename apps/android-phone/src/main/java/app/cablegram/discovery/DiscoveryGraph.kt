@@ -10,7 +10,7 @@ class DiscoveryGraph(
     companion object {
         fun create(transport: DiscoveryTransport, storage: DiscoveryStorage, libraryChatId: Long): DiscoveryGraph {
             val store = DiscoveryStore(storage)
-            val throttle = RequestThrottle()
+            val throttle = RequestThrottle(SCAN_REQUESTS_PER_SECOND)
             val gate = DiscoveryGate({ store.choice() }, { libraryChatId })
             val discovery = TelegramDiscovery(transport, gate, throttle, { libraryChatId }, store)
             return DiscoveryGraph(store, throttle, discovery, DiscoveryController(store, discovery))

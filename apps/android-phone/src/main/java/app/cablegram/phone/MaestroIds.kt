@@ -61,6 +61,8 @@ object MaestroIds {
     const val ADVANCED_PERSONAL = "advanced_personal"
     const val ADVANCED_SAVED = "advanced_saved"
     const val ADVANCED_CONFIRM = "advanced_confirm"
+    /** Followed by the length in seconds, e.g. advanced_min_600; 0 is any length. */
+    const val ADVANCED_MIN_PREFIX = "advanced_min_"
     const val PICKER_BANNER = "picker_banner"
     const val PICKER_HOW = "picker_how"
     const val PICKER_HOW_PAGE = "picker_how_page"

@@ -35,6 +35,12 @@ data class TransportVideo(
 
 data class TransportPage(val videos: List<TransportVideo>, val nextFromMessageId: Long)
 
+/**
+ * One page of a chat's newest messages, newest first: how many messages it held, which of them are videos or
+ * documents, and where the next page starts (0 when the chat has no older message).
+ */
+data class RecentPage(val messages: Int, val candidates: List<TransportVideo>, val nextFromMessageId: Long)
+
 sealed interface ForwardResult {
     data class Sent(val sourceMessageId: Long) : ForwardResult
     data class Failed(val sourceMessageId: Long, val reason: String) : ForwardResult
@@ -46,7 +52,8 @@ interface DiscoveryTransport {
     suspend fun chatIds(): List<Long>
     suspend fun chat(chatId: Long): TransportChat?
     suspend fun isBot(userId: Long): Boolean
-    suspend fun messageCount(chatId: Long, files: Boolean): Int
+    /** The newest [limit] messages of a chat from [fromMessageId] (0 = newest), for the scan's count of recent videos. */
+    suspend fun recent(chatId: Long, fromMessageId: Long, limit: Int): RecentPage
     suspend fun search(chatId: Long, files: Boolean, fromMessageId: Long, limit: Int): TransportPage
     suspend fun forward(toChatId: Long, fromChatId: Long, messageIds: LongArray): List<ForwardResult>
     /** Returns the local path of the downloaded thumbnail, or an empty string when Telegram has none. */

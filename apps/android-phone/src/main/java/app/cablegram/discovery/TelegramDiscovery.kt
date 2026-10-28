@@ -1,7 +1,5 @@
 package app.cablegram.discovery
 
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -38,16 +36,32 @@ class TelegramDiscovery(
         }
     }
 
-    /** Videos plus files, counted separately; files make the total "about" (FR-006). */
+    /**
+     * The videos among a chat's newest [RECENT_WINDOW] messages (FR-004, FR-006). Videos shorter than the owner's
+     * minimum length are left out. A document has no length, so a video-type document counts when it is large
+     * (about a film rather than a clip); files make the total "about". Each page is one throttled request (FR-007).
+     */
     suspend fun chatVideoCount(permit: ScanPermit, chatId: DiscoveryChatId): VideoCount {
         gate.requirePermit(permit)
         if (chatId.raw !in permit.listed) throw DiscoveryRefused("Chat was not listed by this scan")
-        // Both counts go out together; the throttle still spaces every request (FR-007).
-        return coroutineScope {
-            val videos = async { throttle.run { transport.messageCount(chatId.raw, files = false) } }
-            val files = async { throttle.run { transport.messageCount(chatId.raw, files = true) } }
-            VideoCount(videos.await(), files.await())
+        val minSeconds = store.minVideoSeconds()
+        var from = 0L
+        var seen = 0
+        var videos = 0
+        var files = 0
+        while (seen < RECENT_WINDOW) {
+            gate.requirePermit(permit)
+            val page = throttle.run { transport.recent(chatId.raw, from, RECENT_WINDOW - seen) }
+            if (page.messages == 0) break
+            seen += page.messages
+            for (v in page.candidates) {
+                if (!v.isFile) { if (v.durationSeconds >= minSeconds) videos++ }
+                else if (v.looksLikeVideo() && v.sizeBytes >= documentMinBytes(minSeconds)) files++
+            }
+            if (page.nextFromMessageId == 0L || page.nextFromMessageId == from) break
+            from = page.nextFromMessageId
         }
+        return VideoCount(videos, files)
     }
 
     /** Whether a chosen chat can still be read: the owner is still a member of it. Looks at the chosen chat only. */
@@ -59,10 +73,10 @@ class TelegramDiscovery(
     /** A pager over the chosen chats only. Refuses any chat outside the stored choice before touching Telegram (FR-009). */
     fun videoPager(chatIds: Set<DiscoveryChatId>): VideoPager {
         chatIds.forEach { gate.requireChosen(it.raw) }
-        return VideoPager(chatIds.map { it.raw })
+        return VideoPager(chatIds.map { it.raw }, store.minVideoSeconds())
     }
 
-    inner class VideoPager internal constructor(chats: List<Long>) {
+    inner class VideoPager internal constructor(chats: List<Long>, private val minSeconds: Int) {
         private val sources = chats.flatMap { listOf(Source(it, false), Source(it, true)) }
         private val protectedChats = mutableMapOf<Long, Boolean>()
 
@@ -86,7 +100,7 @@ class TelegramDiscovery(
             val page = throttle.run { transport.search(source.chatId, source.files, source.from, limit) }
             if (page.videos.isEmpty() || page.nextFromMessageId == source.from) source.done = true
             source.from = page.nextFromMessageId
-            page.videos.filter { !source.files || it.looksLikeVideo() }.forEach {
+            page.videos.filter { if (source.files) it.looksLikeVideo() && it.sizeBytes >= documentMinBytes(minSeconds) else it.durationSeconds >= minSeconds }.forEach {
                 source.buffer += DiscoveryVideo(
                     DiscoveryChatId(it.chatId), it.messageId, it.uniqueId, it.caption.ifBlank { it.name },
                     it.durationSeconds, it.sizeBytes, it.date, it.thumbnailFileId, protectedChat || !it.canBeSaved,
@@ -160,6 +174,11 @@ class TelegramDiscovery(
     private companion object {
         const val TELEGRAM_SERVICE_USER = 777000L
         const val FORWARD_BATCH = 100
+        /** The scan looks at this many of a chat's newest messages (any kind). */
+        const val RECENT_WINDOW = 100
+        /** A video-type document at least this big counts as a long video; with "any length" every one counts. */
+        const val DOCUMENT_MIN_BYTES = 100L * 1024 * 1024
+        fun documentMinBytes(minSeconds: Int): Long = if (minSeconds <= 0) 0L else DOCUMENT_MIN_BYTES
         val VIDEO_EXTENSIONS = listOf("mp4", "mkv", "mov", "avi", "webm", "m4v", "ts", "m2ts", "wmv", "flv", "3gp")
     }
 }

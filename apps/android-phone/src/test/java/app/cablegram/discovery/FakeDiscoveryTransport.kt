@@ -5,7 +5,6 @@ class FakeDiscoveryTransport(
     private val chats: List<TransportChat> = emptyList(),
     private val me: Long = 1L,
     private val bots: Set<Long> = emptySet(),
-    private val counts: Map<Pair<Long, Boolean>, Int> = emptyMap(),
     private val videos: List<TransportVideo> = emptyList(),
     private val failForward: Set<Long> = emptySet(),
 ) : DiscoveryTransport {
@@ -18,7 +17,13 @@ class FakeDiscoveryTransport(
     override suspend fun chatIds(): List<Long> = chats.map { it.id }.also { calls += "chatIds" }
     override suspend fun chat(chatId: Long): TransportChat? = chats.firstOrNull { it.id == chatId }.also { calls += "chat" }
     override suspend fun isBot(userId: Long): Boolean = (userId in bots).also { calls += "isBot" }
-    override suspend fun messageCount(chatId: Long, files: Boolean): Int = (counts[chatId to files] ?: 0).also { calls += "count:$chatId:$files" }
+    /** The newest messages of a chat are its [videos], newest first; every video is one message. */
+    override suspend fun recent(chatId: Long, fromMessageId: Long, limit: Int): RecentPage {
+        calls += "recent:$chatId"
+        val all = videos.filter { it.chatId == chatId && (fromMessageId == 0L || it.messageId < fromMessageId) }
+            .sortedByDescending { it.messageId }.take(limit)
+        return RecentPage(all.size, all, if (all.size < limit) 0L else all.last().messageId)
+    }
 
     override suspend fun search(chatId: Long, files: Boolean, fromMessageId: Long, limit: Int): TransportPage {
         calls += "search:$chatId:$files"

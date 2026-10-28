@@ -5,7 +5,7 @@
     <string name="discovery_notice_title" formatted="false">"Das passiert auf deinem Handy."</string>
     <string name="discovery_notice_body" formatted="false">"Cablegram ist auf diesem Handy bei Telegram angemeldet, wie Telegram Desktop. Es sieht sich deine Chats hier auf diesem Handy an. Chatnamen, Anzahlen, Nachrichten und Vorschaubilder werden nie an die Server von Cablegram gesendet. Nur die Videos, die du hinzufügst, landen in „Cablegram library“."</string>
     <string name="discovery_ask_title" formatted="false">"In deinen Kanälen und Gruppen nach Videos suchen?"</string>
-    <string name="discovery_ask_body" formatted="false">"Cablegram zählt die Videos in jedem deiner Kanäle und in jeder deiner Gruppen. Es öffnet deine Nachrichten nicht und sieht weder in persönliche Chats noch in „Gespeicherte Nachrichten“."</string>
+    <string name="discovery_ask_body" formatted="false">"Cablegram sieht sich auf diesem Handy die letzten 100 Nachrichten in jedem deiner Kanäle und Gruppen an und zählt die Videos darin. Kurze Clips werden übersprungen, solange du das nicht in den erweiterten Einstellungen änderst. Persönliche Chats und „Gespeicherte Nachrichten“ werden nicht angesehen."</string>
     <string name="discovery_look" formatted="false">"Nach Videos suchen"</string>
     <string name="discovery_not_now" formatted="false">"Jetzt nicht"</string>
     <string name="discovery_title" formatted="false">"Videos finden"</string>
@@ -21,16 +21,16 @@
     <string name="discovery_protected" formatted="false">"Speichern nicht erlaubt"</string>
     <string name="discovery_failed" formatted="false">"Deine Chats konnten nicht geladen werden. Versuch es noch einmal."</string>
     <plurals name="discovery_videos">
-        <item quantity="one">"%1$d Video"</item>
-        <item quantity="other">"%1$d Videos"</item>
+        <item quantity="one">"%1$d Video in den letzten 100 Nachrichten"</item>
+        <item quantity="other">"%1$d Videos in den letzten 100 Nachrichten"</item>
     </plurals>
     <plurals name="discovery_videos_about">
-        <item quantity="one">"etwa %1$d Video"</item>
-        <item quantity="other">"etwa %1$d Videos"</item>
+        <item quantity="one">"etwa %1$d Video in den letzten 100 Nachrichten"</item>
+        <item quantity="other">"etwa %1$d Videos in den letzten 100 Nachrichten"</item>
     </plurals>
     <plurals name="discovery_files_maybe">
-        <item quantity="one">"etwa %1$d Datei, die ein Video sein könnte"</item>
-        <item quantity="other">"etwa %1$d Dateien, die Videos sein könnten"</item>
+        <item quantity="one">"etwa %1$d große Datei, die ein Video sein könnte, in den letzten 100 Nachrichten"</item>
+        <item quantity="other">"etwa %1$d große Dateien, die Videos sein könnten, in den letzten 100 Nachrichten"</item>
     </plurals>
     <string name="discovery_manage" formatted="false">"Chats verwalten"</string>
     <plurals name="discovery_use_chats">
@@ -81,4 +81,8 @@
         <item quantity="one">"%1$d von dir ausgewählter Chat ist nicht mehr verfügbar und wurde entfernt."</item>
         <item quantity="other">"%1$d von dir ausgewählte Chats sind nicht mehr verfügbar und wurden entfernt."</item>
     </plurals>
+    <string name="advanced_min_title" formatted="false">"Kürzestes Video, das gezählt wird"</string>
+    <string name="advanced_min_desc" formatted="false">"Kürzere Clips bleiben bei der Suche und in der Auswahl außen vor."</string>
+    <string name="advanced_min_option" formatted="false">"%1$d Min."</string>
+    <string name="advanced_min_any" formatted="false">"Beliebige Länge"</string>
 </resources>

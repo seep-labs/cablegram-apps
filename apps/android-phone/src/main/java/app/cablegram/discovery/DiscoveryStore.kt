@@ -34,6 +34,8 @@ interface DiscoveryStorage {
     val scanCompleted: Boolean = false,
     val includePersonalChats: Boolean = false,
     val includeSavedMessages: Boolean = false,
+    /** Videos shorter than this are left out of the scan and the picker; 0 means any length. */
+    val minVideoSeconds: Int = DEFAULT_MIN_VIDEO_SECONDS,
     /** TDLib file ids of thumbnails and photos downloaded for a chat, so unticking can delete exactly those. */
     val thumbnails: Map<Long, List<Int>> = emptyMap(),
 )
@@ -52,6 +54,13 @@ class DiscoveryStore(private val storage: DiscoveryStorage) {
     @Synchronized fun snapshot(): DiscoveryState = state
     fun choice(): Set<Long> = snapshot().choice.map { it.chatId }.toSet()
     fun switches() = snapshot().let { DiscoverySwitches(it.includePersonalChats, it.includeSavedMessages) }
+
+    fun minVideoSeconds(): Int = snapshot().minVideoSeconds
+
+    /** The counts depend on this length, so a change clears the scan results (the chosen chats stay). */
+    fun setMinVideoSeconds(seconds: Int) = update {
+        it.copy(minVideoSeconds = seconds, scan = emptyList(), scanned = emptyList(), scanCompleted = false)
+    }
 
     fun setChoice(chosen: List<StoredChoice>) = update { it.copy(choice = chosen) }
     fun setSwitches(switches: DiscoverySwitches) = update {

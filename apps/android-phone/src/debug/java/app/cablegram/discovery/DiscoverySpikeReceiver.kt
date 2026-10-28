@@ -11,7 +11,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.withPermit
 
 /**
  * Debug only, spec 008 T001. `adb shell am broadcast -n app.cablegram.phone/app.cablegram.discovery.DiscoverySpikeReceiver -a SCAN`
@@ -27,21 +29,21 @@ class DiscoverySpikeReceiver : BroadcastReceiver() {
                 PhoneTelegram.session(context)
                 val transport = PhoneTelegram.discoveryTransport ?: return@launch log("no transport")
                 when (intent.action) {
-                    "SCAN" -> scan(transport, intent.getBooleanExtra("personal", false))
+                    "SCAN" -> scan(transport, intent.getBooleanExtra("personal", false), intent.getIntExtra("rate", SCAN_REQUESTS_PER_SECOND))
                     "PAGE" -> page(transport, intent.getBooleanExtra("personal", false))
                     "FORWARD" -> forward(transport, intent.getIntExtra("n", 3))
                     else -> log("unknown action ${intent.action}")
                 }
             } catch (e: Throwable) {
                 log("failed: ${e::class.java.simpleName} ${(e as? TgException)?.name ?: ""}")
-            } finally {
-                pending.finish()
             }
         }
+        // A scan takes minutes; ending the broadcast now keeps Android from reporting the app as not responding.
+        pending.finish()
     }
 
-    private suspend fun scan(transport: DiscoveryTransport, personal: Boolean) {
-        val throttle = RequestThrottle(5)
+    private suspend fun scan(transport: DiscoveryTransport, personal: Boolean, perSecond: Int = SCAN_REQUESTS_PER_SECOND) {
+        val throttle = RequestThrottle(perSecond)
         val pauses = mutableListOf<Int>()
         val watcher = throttle.pauses.onEach { pauses += it; log("FLOOD_WAIT ${it}s") }.launchIn(CoroutineScope(Dispatchers.IO))
         val permits = ScanPermits()
@@ -54,13 +56,25 @@ class DiscoverySpikeReceiver : BroadcastReceiver() {
         val listedMs = System.currentTimeMillis() - started
         log("listed ${chats.size} chats in ${listedMs}ms; protected=${chats.count { it.protectedContent }}")
         var withVideos = 0; var approximate = 0; var totalVideos = 0; var totalFiles = 0
-        for ((i, chat) in chats.withIndex()) {
-            val count = try { discovery.chatVideoCount(permit, chat.id) } catch (e: TgException) { log("count failed ${e.name}"); continue }
-            totalVideos += count.videos; totalFiles += count.files
-            if (count.total > 0) withVideos++
-            if (count.approximate) approximate++
-            if ((i + 1) % 25 == 0) log("counted ${i + 1}/${chats.size} at ${System.currentTimeMillis() - started}ms")
+        val atOnce = kotlinx.coroutines.sync.Semaphore(SCAN_PARALLEL_CHATS)
+        val counted = java.util.concurrent.atomic.AtomicInteger()
+        kotlinx.coroutines.coroutineScope {
+            chats.map { chat ->
+                launch {
+                    atOnce.withPermit {
+                        val count = try { discovery.chatVideoCount(permit, chat.id) } catch (e: TgException) { log("count failed ${e.name}"); return@withPermit }
+                        synchronized(this@DiscoverySpikeReceiver) {
+                            totalVideos += count.videos; totalFiles += count.files
+                            if (count.total > 0) withVideos++
+                            if (count.approximate) approximate++
+                        }
+                        val n = counted.incrementAndGet()
+                        if (n % 25 == 0) log("counted $n/${chats.size} at ${System.currentTimeMillis() - started}ms")
+                    }
+                }
+            }.joinAll()
         }
+        (transport as? TdlibDiscoveryTransport)?.let { log("recent calls=${it.recentCalls.get()} messages=${it.recentMessages.get()} per chat: ${it.recentCalls.get().toDouble() / chats.size} calls, ${it.recentMessages.get().toDouble() / chats.size} messages") }
         log("done: ${chats.size} chats, $withVideos with videos or files, $approximate approximate, videos=$totalVideos files=$totalFiles, pauses=$pauses, total ${System.currentTimeMillis() - started}ms")
         watcher.cancel()
     }

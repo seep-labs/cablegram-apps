@@ -5,7 +5,7 @@
     <string name="discovery_notice_title" formatted="false">"يحدث هذا على هاتفك."</string>
     <string name="discovery_notice_body" formatted="false">"سجّل Cablegram الدخول إلى Telegram على هذا الهاتف، مثل Telegram Desktop. وهو يطّلع على محادثاتك هنا، على هذا الهاتف. لا تُرسل أسماء المحادثات أو الأعداد أو الرسائل أو الصور المصغّرة إلى خوادم Cablegram أبدًا. فقط مقاطع الفيديو التي تضيفها تنتقل إلى «Cablegram library»."</string>
     <string name="discovery_ask_title" formatted="false">"هل تريد البحث عن مقاطع فيديو في قنواتك ومجموعاتك؟"</string>
-    <string name="discovery_ask_body" formatted="false">"يحصي Cablegram مقاطع الفيديو في كل قناة ومجموعة لديك. ولا يفتح رسائلك، ولا يبحث في المحادثات الشخصية أو «الرسائل المحفوظة»."</string>
+    <string name="discovery_ask_body" formatted="false">"يطّلع Cablegram على هذا الهاتف على آخر 100 رسالة في كل قناة ومجموعة لديك ويعدّ الفيديوهات فيها. يتجاهل المقاطع القصيرة ما لم تغيّر ذلك من الإعدادات المتقدمة. لا يطّلع على المحادثات الشخصية ولا على الرسائل المحفوظة."</string>
     <string name="discovery_look" formatted="false">"البحث عن مقاطع فيديو"</string>
     <string name="discovery_not_now" formatted="false">"ليس الآن"</string>
     <string name="discovery_title" formatted="false">"العثور على مقاطع فيديو"</string>
@@ -21,28 +21,28 @@
     <string name="discovery_protected" formatted="false">"الحفظ غير مسموح به"</string>
     <string name="discovery_failed" formatted="false">"تعذّر الاطلاع على محادثاتك. حاول مرة أخرى."</string>
     <plurals name="discovery_videos">
-        <item quantity="zero">"%1$d مقطع فيديو"</item>
-        <item quantity="one">"مقطع فيديو واحد (%1$d)"</item>
-        <item quantity="two">"مقطعا فيديو (%1$d)"</item>
-        <item quantity="few">"%1$d مقاطع فيديو"</item>
-        <item quantity="many">"%1$d مقطع فيديو"</item>
-        <item quantity="other">"%1$d مقطع فيديو"</item>
+        <item quantity="zero">"%1$d فيديو في آخر 100 رسالة"</item>
+        <item quantity="one">"%1$d فيديو في آخر 100 رسالة"</item>
+        <item quantity="two">"%1$d فيديو في آخر 100 رسالة"</item>
+        <item quantity="few">"%1$d فيديو في آخر 100 رسالة"</item>
+        <item quantity="many">"%1$d فيديو في آخر 100 رسالة"</item>
+        <item quantity="other">"%1$d فيديو في آخر 100 رسالة"</item>
     </plurals>
     <plurals name="discovery_videos_about">
-        <item quantity="zero">"حوالي %1$d مقطع فيديو"</item>
-        <item quantity="one">"حوالي مقطع فيديو واحد (%1$d)"</item>
-        <item quantity="two">"حوالي مقطعي فيديو (%1$d)"</item>
-        <item quantity="few">"حوالي %1$d مقاطع فيديو"</item>
-        <item quantity="many">"حوالي %1$d مقطع فيديو"</item>
-        <item quantity="other">"حوالي %1$d مقطع فيديو"</item>
+        <item quantity="zero">"حوالي %1$d فيديو في آخر 100 رسالة"</item>
+        <item quantity="one">"حوالي %1$d فيديو في آخر 100 رسالة"</item>
+        <item quantity="two">"حوالي %1$d فيديو في آخر 100 رسالة"</item>
+        <item quantity="few">"حوالي %1$d فيديو في آخر 100 رسالة"</item>
+        <item quantity="many">"حوالي %1$d فيديو في آخر 100 رسالة"</item>
+        <item quantity="other">"حوالي %1$d فيديو في آخر 100 رسالة"</item>
     </plurals>
     <plurals name="discovery_files_maybe">
-        <item quantity="zero">"حوالي %1$d ملف قد يكون فيديو"</item>
-        <item quantity="one">"حوالي ملف واحد (%1$d) قد يكون فيديو"</item>
-        <item quantity="two">"حوالي ملفين (%1$d) قد يكونان فيديو"</item>
-        <item quantity="few">"حوالي %1$d ملفات قد تكون فيديو"</item>
-        <item quantity="many">"حوالي %1$d ملفًا قد تكون فيديو"</item>
-        <item quantity="other">"حوالي %1$d ملف قد يكون فيديو"</item>
+        <item quantity="zero">"حوالي %1$d ملف كبير قد يكون فيديو في آخر 100 رسالة"</item>
+        <item quantity="one">"حوالي %1$d ملف كبير قد يكون فيديو في آخر 100 رسالة"</item>
+        <item quantity="two">"حوالي %1$d ملف كبير قد يكون فيديو في آخر 100 رسالة"</item>
+        <item quantity="few">"حوالي %1$d ملف كبير قد يكون فيديو في آخر 100 رسالة"</item>
+        <item quantity="many">"حوالي %1$d ملف كبير قد يكون فيديو في آخر 100 رسالة"</item>
+        <item quantity="other">"حوالي %1$d ملف كبير قد يكون فيديو في آخر 100 رسالة"</item>
     </plurals>
     <string name="discovery_manage" formatted="false">"إدارة المحادثات"</string>
     <plurals name="discovery_use_chats">
@@ -109,4 +109,8 @@
         <item quantity="many">"لم تعد %1$d محادثة اخترتها متاحة وتمت إزالتها."</item>
         <item quantity="other">"لم تعد %1$d محادثة اخترتها متاحة وتمت إزالتها."</item>
     </plurals>
+    <string name="advanced_min_title" formatted="false">"أقصر فيديو يُحتسب"</string>
+    <string name="advanced_min_desc" formatted="false">"المقاطع الأقصر تُستبعد من البحث ومن الاختيار."</string>
+    <string name="advanced_min_option" formatted="false">"%1$d د"</string>
+    <string name="advanced_min_any" formatted="false">"أي مدة"</string>
 </resources>

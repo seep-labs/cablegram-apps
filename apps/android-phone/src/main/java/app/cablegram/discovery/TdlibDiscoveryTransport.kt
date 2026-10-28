@@ -79,8 +79,15 @@ class TdlibDiscoveryTransport(private val client: TdlClient) : DiscoveryTranspor
     override suspend fun isBot(userId: Long): Boolean =
         (client.getUser(userId) as? TdlResult.Success)?.result?.type is UserTypeBot
 
-    override suspend fun messageCount(chatId: Long, files: Boolean): Int =
-        client.getChatMessageCount(chatId, null, filter(files), false).ok().count
+    /** Calls and messages seen by [recent], so a debug scan can report how many requests a chat really costs. */
+    val recentCalls = java.util.concurrent.atomic.AtomicInteger()
+    val recentMessages = java.util.concurrent.atomic.AtomicInteger()
+
+    override suspend fun recent(chatId: Long, fromMessageId: Long, limit: Int): RecentPage {
+        val messages = client.getChatHistory(chatId, fromMessageId, 0, limit, false).ok().messages.filterNotNull()
+        recentCalls.incrementAndGet(); recentMessages.addAndGet(messages.size)
+        return RecentPage(messages.size, messages.mapNotNull { toVideo(it) }, messages.lastOrNull()?.id ?: 0L)
+    }
 
     override suspend fun search(chatId: Long, files: Boolean, fromMessageId: Long, limit: Int): TransportPage {
         val found = client.searchChatMessages(chatId, null, "", null, fromMessageId, 0, limit, filter(files)).ok()

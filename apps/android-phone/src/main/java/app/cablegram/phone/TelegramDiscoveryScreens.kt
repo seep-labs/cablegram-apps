@@ -40,12 +40,17 @@ import app.cablegram.discovery.ChatKind
 import app.cablegram.discovery.DiscoveryChat
 import app.cablegram.discovery.DiscoveryChatId
 import app.cablegram.discovery.DiscoveryGraph
+import app.cablegram.discovery.SCAN_PARALLEL_CHATS
 import app.cablegram.discovery.StoredScanRow
 import app.cablegram.telegram.TelegramState
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 
@@ -96,14 +101,21 @@ internal class FindVideosModel(private val graph: DiscoveryGraph, private val sc
                 graph.discovery.discoveryChats(permit, graph.store.switches()).collect { chats += it; app.cablegram.phone.diagnostics.SentryScrubber.rememberName(it.title) }
                 total = chats.size
                 checked = chats.count { it.id.raw in done }
-                for (chat in chats.filter { it.id.raw !in done }) {
-                    val count = graph.discovery.chatVideoCount(permit, chat.id)
-                    val row = StoredScanRow(chat.id.raw, chat.kind, chat.title, chat.protectedContent, count.videos, count.files, System.currentTimeMillis())
-                    graph.store.addScanRow(row)
-                    rows.removeAll { it.chatId == row.chatId }
-                    rows += row
-                    checked++
-                    pausedSeconds = null
+                val atOnce = Semaphore(SCAN_PARALLEL_CHATS)
+                coroutineScope {
+                    chats.filter { it.id.raw !in done }.map { chat ->
+                        launch {
+                            atOnce.withPermit {
+                                val count = graph.discovery.chatVideoCount(permit, chat.id)
+                                val row = StoredScanRow(chat.id.raw, chat.kind, chat.title, chat.protectedContent, count.videos, count.files, System.currentTimeMillis())
+                                graph.store.addScanRow(row)
+                                rows.removeAll { it.chatId == row.chatId }
+                                rows += row
+                                checked++
+                                pausedSeconds = null
+                            }
+                        }
+                    }.joinAll()
                 }
                 // Chats no longer listed leave the results (a finished scan refreshes in place).
                 val listed = chats.map { it.id.raw }.toSet()

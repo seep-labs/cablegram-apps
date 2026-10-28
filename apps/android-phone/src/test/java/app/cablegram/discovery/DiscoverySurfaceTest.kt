@@ -27,7 +27,8 @@ class DiscoverySurfaceTest {
     @Test
     fun `the transport is the only list of TDLib calls discovery makes`() {
         assertEquals(
-            setOf("myUserId", "chatIds", "chat", "isBot", "messageCount", "search", "forward", "downloadThumbnail", "deleteFile", "optimizeStorage"),
+            // recent: the newest 100 messages of a chat the owner agreed to scan (spec 008, amended 2026-10-28); it replaced the message counts.
+            setOf("myUserId", "chatIds", "chat", "isBot", "recent", "search", "forward", "downloadThumbnail", "deleteFile", "optimizeStorage"),
             methods(DiscoveryTransport::class.java),
         )
     }

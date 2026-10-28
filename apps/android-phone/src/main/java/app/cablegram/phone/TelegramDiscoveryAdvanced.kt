@@ -1,12 +1,15 @@
 package app.cablegram.phone
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -31,6 +34,9 @@ import kotlinx.coroutines.launch
 
 private enum class Kind { Personal, Saved }
 
+/** Shortest-video choices in seconds; 0 is any length. */
+private val MIN_LENGTHS = listOf(300, 600, 900, 1800, 0)
+
 /** **Advanced settings** under Telegram: a collapsible section with the two switches. */
 @Composable
 internal fun DiscoveryAdvanced(graph: DiscoveryGraph) {
@@ -39,6 +45,7 @@ internal fun DiscoveryAdvanced(graph: DiscoveryGraph) {
     var open by remember { mutableStateOf(false) }
     var switches by remember { mutableStateOf(graph.store.switches()) }
     var confirming by remember { mutableStateOf<Kind?>(null) }
+    var minSeconds by remember { mutableStateOf(graph.store.minVideoSeconds()) }
 
     fun apply(next: DiscoverySwitches) {
         switches = next
@@ -58,6 +65,20 @@ internal fun DiscoveryAdvanced(graph: DiscoveryGraph) {
             ui.getString(R.string.advanced_saved_title), ui.getString(R.string.advanced_saved_desc), switches.includeSavedMessages,
             MaestroIds.ADVANCED_SAVED,
         ) { on -> if (on) confirming = Kind.Saved else apply(switches.copy(includeSavedMessages = false)) }
+        Column(Modifier.fillMaxWidth().padding(horizontal = 8.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Text(ui.getString(R.string.advanced_min_title), color = Color.White)
+            Text(ui.getString(R.string.advanced_min_desc), color = VlcMuted, fontSize = 12.sp)
+            Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                for (seconds in MIN_LENGTHS) {
+                    FilterChip(
+                        selected = minSeconds == seconds,
+                        onClick = { minSeconds = seconds; graph.controller.setMinVideoSeconds(seconds) },
+                        label = { Text(if (seconds == 0) ui.getString(R.string.advanced_min_any) else ui.getString(R.string.advanced_min_option, seconds / 60)) },
+                        modifier = Modifier.maestro(MaestroIds.ADVANCED_MIN_PREFIX + seconds),
+                    )
+                }
+            }
+        }
     }
     confirming?.let { kind ->
         AlertDialog(

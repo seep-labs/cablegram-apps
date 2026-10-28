@@ -61,10 +61,10 @@ class DiscoveryPrivacyContractTest {
         val chats = canaryIds.zip(canaryTitles).map { (id, title) -> TransportChat(id, TransportChatType.Channel, 0, title, false) }
         val videos = canaryIds.flatMapIndexed { c, id ->
             (1..3).map { n ->
-                TransportVideo(id, n * 10L, "uid-$c-$n", "clip $c-$n.mp4", "clip $c-$n", 60, 1_000_000, 100 + n, false, "video/mp4", null, true)
+                TransportVideo(id, n * 10L, "uid-$c-$n", "clip $c-$n.mp4", "clip $c-$n", 3_600, 1_000_000, 100 + n, false, "video/mp4", null, true)
             }
         }
-        val transport = FakeDiscoveryTransport(chats, 1L, counts = canaryIds.associate { (it to false) to 3 }, videos = videos)
+        val transport = FakeDiscoveryTransport(chats, 1L, videos = videos)
         val store = DiscoveryStore(MemoryDiscoveryStorage())
         val discovery = TelegramDiscovery(transport, DiscoveryGate({ store.choice() }, { library }), RequestThrottle(1000), { library }, store)
 

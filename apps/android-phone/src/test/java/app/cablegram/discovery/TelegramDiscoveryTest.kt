@@ -63,16 +63,72 @@ class TelegramDiscoveryTest {
         assertEquals(emptyList<String>(), t.calls)
     }
 
+    private fun video(chat: Long, id: Long, seconds: Int, size: Long = 50_000_000, file: Boolean = false, mime: String = "video/mp4", name: String = "f$id.mp4") =
+        TransportVideo(chat, id, "u-$chat-$id", name, "", seconds, size, 100 + id.toInt(), file, mime, null, true)
+
+    private fun TestScopeHolder.counter(t: FakeDiscoveryTransport, store: DiscoveryStore = DiscoveryStore(MemoryDiscoveryStorage())) =
+        TelegramDiscovery(t, DiscoveryGate({ emptySet() }, { LIBRARY }), RequestThrottle(5, now), { LIBRARY }, store)
+
     @Test
-    fun `only chats listed by this scan can be counted, files make the count approximate`() = runTest {
-        val t = FakeDiscoveryTransport(all, ME, counts = mapOf((10L to false) to 214, (10L to true) to 3, (12L to false) to 5))
-        val d = TelegramDiscovery(t, DiscoveryGate({ emptySet() }, { LIBRARY }), RequestThrottle(5) { currentTime }, { LIBRARY }, DiscoveryStore(MemoryDiscoveryStorage()))
+    fun `only chats listed by this scan can be counted`() = runTest {
+        val t = FakeDiscoveryTransport(all, ME, videos = listOf(video(10, 1, 1200)))
+        val d = TestScopeHolder { currentTime }.counter(t)
+        val permit = ScanPermits().grantScan()
+        d.discoveryChats(permit, DiscoverySwitches()).toList()
+        assertEquals(1, d.chatVideoCount(permit, DiscoveryChatId(10)).videos)
+        val before = t.calls.size
+        assertThrows(DiscoveryRefused::class.java) { kotlinx.coroutines.runBlocking { d.chatVideoCount(permit, DiscoveryChatId(12)) } }
+        assertEquals("no read for a chat the scan did not list", before, t.calls.size)
+    }
+
+    @Test
+    fun `videos shorter than the minimum are not counted, and a big video document counts as about`() = runTest {
+        val videos = listOf(
+            video(10, 1, 1200), video(10, 2, 700), video(10, 3, 650),      // three of 10 minutes or more
+            video(10, 4, 90), video(10, 5, 30),                              // short clips
+            video(10, 6, 0, size = 900_000_000, file = true, mime = "application/x-matroska", name = "film.mkv"), // a film sent as a file
+            video(10, 7, 0, size = 4_000_000, file = true, name = "clip.mp4"),                                      // a small file
+        )
+        val t = FakeDiscoveryTransport(all, ME, videos = videos)
+        val d = TestScopeHolder { currentTime }.counter(t)
         val permit = ScanPermits().grantScan()
         d.discoveryChats(permit, DiscoverySwitches()).toList()
         val count = d.chatVideoCount(permit, DiscoveryChatId(10))
-        assertEquals(214, count.videos); assertEquals(3, count.files); assertTrue(count.approximate)
-        val before = t.calls.size
-        assertThrows(DiscoveryRefused::class.java) { kotlinx.coroutines.runBlocking { d.chatVideoCount(permit, DiscoveryChatId(12)) } }
-        assertEquals("no count call for a chat the scan did not list", before, t.calls.size)
+        assertEquals(3, count.videos)
+        assertEquals(1, count.files)
+        assertTrue(count.approximate)
+    }
+
+    @Test
+    fun `any length counts every video and every video document`() = runTest {
+        val videos = listOf(video(10, 1, 1200), video(10, 4, 90), video(10, 7, 0, size = 4_000_000, file = true))
+        val t = FakeDiscoveryTransport(all, ME, videos = videos)
+        val store = DiscoveryStore(MemoryDiscoveryStorage()).also { it.setMinVideoSeconds(0) }
+        val d = TestScopeHolder { currentTime }.counter(t, store)
+        val permit = ScanPermits().grantScan()
+        d.discoveryChats(permit, DiscoverySwitches()).toList()
+        val count = d.chatVideoCount(permit, DiscoveryChatId(10))
+        assertEquals(2, count.videos)
+        assertEquals(1, count.files)
+    }
+
+    @Test
+    fun `only the newest 100 messages of a chat are looked at`() = runTest {
+        val videos = (1L..150L).map { video(10, it, 1200) }
+        val t = FakeDiscoveryTransport(all, ME, videos = videos)
+        val d = TestScopeHolder { currentTime }.counter(t)
+        val permit = ScanPermits().grantScan()
+        d.discoveryChats(permit, DiscoverySwitches()).toList()
+        assertEquals(100, d.chatVideoCount(permit, DiscoveryChatId(10)).videos)
+    }
+
+    @Test
+    fun `the picker leaves out short videos too`() = runTest {
+        val videos = listOf(video(10, 1, 1200), video(10, 2, 90), video(10, 3, 700))
+        val t = FakeDiscoveryTransport(all, ME, videos = videos)
+        val store = DiscoveryStore(MemoryDiscoveryStorage()).also { it.setChoice(listOf(StoredChoice(10, ChatKind.Channel, "Channel", 0))) }
+        val d = TelegramDiscovery(t, DiscoveryGate({ store.choice() }, { LIBRARY }), RequestThrottle(5) { currentTime }, { LIBRARY }, store)
+        val page = d.videoPager(setOf(DiscoveryChatId(10))).next(50)
+        assertEquals(listOf(3L, 1L), page.map { it.messageId })
     }
 }
