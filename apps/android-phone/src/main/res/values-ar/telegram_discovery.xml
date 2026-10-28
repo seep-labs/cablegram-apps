@@ -5,7 +5,7 @@
     <string name="discovery_notice_title" formatted="false">"يحدث هذا على هاتفك."</string>
     <string name="discovery_notice_body" formatted="false">"سجّل Cablegram الدخول إلى Telegram على هذا الهاتف، مثل Telegram Desktop. وهو يطّلع على محادثاتك هنا، على هذا الهاتف. لا تُرسل أسماء المحادثات أو الأعداد أو الرسائل أو الصور المصغّرة إلى خوادم Cablegram أبدًا. فقط مقاطع الفيديو التي تضيفها تنتقل إلى «Cablegram library»."</string>
     <string name="discovery_ask_title" formatted="false">"هل تريد البحث عن مقاطع فيديو في قنواتك ومجموعاتك؟"</string>
-    <string name="discovery_ask_body" formatted="false">"يطّلع Cablegram على هذا الهاتف على آخر 100 فيديو وملف في كل قناة ومجموعة لديك ويعدّ بينها الفيديوهات الطويلة. يتجاهل المقاطع القصيرة ما لم تغيّر ذلك من الإعدادات المتقدمة. لا يطّلع على المحادثات الشخصية ولا على الرسائل المحفوظة."</string>
+    <string name="discovery_ask_body" formatted="false">"يطّلع Cablegram على هذا الهاتف على آخر 100 مقطع فيديو وملف في كل قناة ومجموعة لديك، ويحصي مقاطع الفيديو الطويلة من بينها. ويتجاهل المقاطع القصيرة ما لم تغيّر ذلك من «الإعدادات المتقدمة». ولا يطّلع على المحادثات الشخصية أو «الرسائل المحفوظة»."</string>
     <string name="discovery_look" formatted="false">"البحث عن مقاطع فيديو"</string>
     <string name="discovery_not_now" formatted="false">"ليس الآن"</string>
     <string name="discovery_title" formatted="false">"العثور على مقاطع فيديو"</string>
@@ -21,27 +21,27 @@
     <string name="discovery_protected" formatted="false">"الحفظ غير مسموح به"</string>
     <string name="discovery_failed" formatted="false">"تعذّر الاطلاع على محادثاتك. حاول مرة أخرى."</string>
     <plurals name="discovery_videos">
-        <item quantity="zero">"%1$d فيديو ضمن آخر 100"</item>
-        <item quantity="one">"%1$d فيديو ضمن آخر 100"</item>
-        <item quantity="two">"%1$d فيديو ضمن آخر 100"</item>
-        <item quantity="few">"%1$d فيديو ضمن آخر 100"</item>
-        <item quantity="many">"%1$d فيديو ضمن آخر 100"</item>
-        <item quantity="other">"%1$d فيديو ضمن آخر 100"</item>
+        <item quantity="zero">"%1$d مقطع فيديو ضمن آخر 100"</item>
+        <item quantity="one">"مقطع فيديو واحد (%1$d) ضمن آخر 100"</item>
+        <item quantity="two">"مقطعا فيديو (%1$d) ضمن آخر 100"</item>
+        <item quantity="few">"%1$d مقاطع فيديو ضمن آخر 100"</item>
+        <item quantity="many">"%1$d مقطع فيديو ضمن آخر 100"</item>
+        <item quantity="other">"%1$d مقطع فيديو ضمن آخر 100"</item>
     </plurals>
     <plurals name="discovery_videos_about">
-        <item quantity="zero">"حوالي %1$d فيديو ضمن آخر 100"</item>
-        <item quantity="one">"حوالي %1$d فيديو ضمن آخر 100"</item>
-        <item quantity="two">"حوالي %1$d فيديو ضمن آخر 100"</item>
-        <item quantity="few">"حوالي %1$d فيديو ضمن آخر 100"</item>
-        <item quantity="many">"حوالي %1$d فيديو ضمن آخر 100"</item>
-        <item quantity="other">"حوالي %1$d فيديو ضمن آخر 100"</item>
+        <item quantity="zero">"حوالي %1$d مقطع فيديو ضمن آخر 100"</item>
+        <item quantity="one">"حوالي مقطع فيديو واحد (%1$d) ضمن آخر 100"</item>
+        <item quantity="two">"حوالي مقطعي فيديو (%1$d) ضمن آخر 100"</item>
+        <item quantity="few">"حوالي %1$d مقاطع فيديو ضمن آخر 100"</item>
+        <item quantity="many">"حوالي %1$d مقطع فيديو ضمن آخر 100"</item>
+        <item quantity="other">"حوالي %1$d مقطع فيديو ضمن آخر 100"</item>
     </plurals>
     <plurals name="discovery_files_maybe">
         <item quantity="zero">"حوالي %1$d ملف كبير قد يكون فيديو ضمن آخر 100"</item>
-        <item quantity="one">"حوالي %1$d ملف كبير قد يكون فيديو ضمن آخر 100"</item>
-        <item quantity="two">"حوالي %1$d ملف كبير قد يكون فيديو ضمن آخر 100"</item>
-        <item quantity="few">"حوالي %1$d ملف كبير قد يكون فيديو ضمن آخر 100"</item>
-        <item quantity="many">"حوالي %1$d ملف كبير قد يكون فيديو ضمن آخر 100"</item>
+        <item quantity="one">"حوالي ملف كبير واحد (%1$d) قد يكون فيديو ضمن آخر 100"</item>
+        <item quantity="two">"حوالي ملفين كبيرين (%1$d) قد يكونان فيديو ضمن آخر 100"</item>
+        <item quantity="few">"حوالي %1$d ملفات كبيرة قد تكون فيديو ضمن آخر 100"</item>
+        <item quantity="many">"حوالي %1$d ملفًا كبيرًا قد تكون فيديو ضمن آخر 100"</item>
         <item quantity="other">"حوالي %1$d ملف كبير قد يكون فيديو ضمن آخر 100"</item>
     </plurals>
     <string name="discovery_manage" formatted="false">"إدارة المحادثات"</string>
@@ -109,18 +109,18 @@
         <item quantity="many">"لم تعد %1$d محادثة اخترتها متاحة وتمت إزالتها."</item>
         <item quantity="other">"لم تعد %1$d محادثة اخترتها متاحة وتمت إزالتها."</item>
     </plurals>
-    <string name="advanced_min_title" formatted="false">"أقصر فيديو يُحتسب"</string>
-    <string name="advanced_min_desc" formatted="false">"المقاطع الأقصر تُستبعد من البحث ومن الاختيار."</string>
+    <string name="advanced_min_title" formatted="false">"أقصر مدة فيديو تُحتسب"</string>
+    <string name="advanced_min_desc" formatted="false">"تُستبعد المقاطع الأقصر من الفحص ومن شاشة الاختيار."</string>
     <string name="advanced_min_option" formatted="false">"%1$d د"</string>
     <string name="advanced_min_any" formatted="false">"أي مدة"</string>
-    <string name="discovery_search_hint" formatted="false">"ابحث عن المحادثات بالاسم"</string>
-    <string name="discovery_no_match" formatted="false">"لا توجد محادثة مطابقة."</string>
+    <string name="discovery_search_hint" formatted="false">"البحث في المحادثات بالاسم"</string>
+    <string name="discovery_no_match" formatted="false">"لا توجد محادثات مطابقة."</string>
     <plurals name="discovery_unchanged">
-        <item quantity="zero">"لم تكن في %1$d محادثة رسائل جديدة منذ آخر مرة، فلم تُفحص مجددًا."</item>
-        <item quantity="one">"لم تكن في %1$d محادثة رسائل جديدة منذ آخر مرة، فلم تُفحص مجددًا."</item>
-        <item quantity="two">"لم تكن في %1$d محادثة رسائل جديدة منذ آخر مرة، فلم تُفحص مجددًا."</item>
-        <item quantity="few">"لم تكن في %1$d محادثات رسائل جديدة منذ آخر مرة، فلم تُفحص مجددًا."</item>
-        <item quantity="many">"لم تكن في %1$d محادثات رسائل جديدة منذ آخر مرة، فلم تُفحص مجددًا."</item>
-        <item quantity="other">"لم تكن في %1$d محادثات رسائل جديدة منذ آخر مرة، فلم تُفحص مجددًا."</item>
+        <item quantity="zero">"لم تكن في %1$d محادثة أي رسائل جديدة منذ آخر مرة، لذا لم تُفحص مجددًا."</item>
+        <item quantity="one">"لم تكن في محادثة واحدة (%1$d) أي رسائل جديدة منذ آخر مرة، لذا لم تُفحص مجددًا."</item>
+        <item quantity="two">"لم تكن في محادثتين (%1$d) أي رسائل جديدة منذ آخر مرة، لذا لم تُفحصا مجددًا."</item>
+        <item quantity="few">"لم تكن في %1$d محادثات أي رسائل جديدة منذ آخر مرة، لذا لم تُفحص مجددًا."</item>
+        <item quantity="many">"لم تكن في %1$d محادثة أي رسائل جديدة منذ آخر مرة، لذا لم تُفحص مجددًا."</item>
+        <item quantity="other">"لم تكن في %1$d محادثة أي رسائل جديدة منذ آخر مرة، لذا لم تُفحص مجددًا."</item>
     </plurals>
 </resources>

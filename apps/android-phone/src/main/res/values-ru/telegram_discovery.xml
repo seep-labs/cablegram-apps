@@ -5,7 +5,7 @@
     <string name="discovery_notice_title" formatted="false">"Это происходит на вашем телефоне."</string>
     <string name="discovery_notice_body" formatted="false">"Cablegram авторизован в Telegram на этом телефоне, как Telegram Desktop. Он просматривает ваши чаты здесь, на этом телефоне. Названия чатов, количество видео, сообщения и миниатюры никогда не отправляются на серверы Cablegram. В «Cablegram library» попадают только добавленные вами видео."</string>
     <string name="discovery_ask_title" formatted="false">"Искать видео в ваших каналах и группах?"</string>
-    <string name="discovery_ask_body" formatted="false">"Cablegram просматривает на этом телефоне последние 100 видео и файлов в каждом из ваших каналов и групп и считает среди них длинные видео. Короткие ролики пропускаются, если не изменить это в расширенных настройках. Личные чаты и «Избранное» не просматриваются."</string>
+    <string name="discovery_ask_body" formatted="false">"Cablegram просматривает на этом телефоне последние 100 видео и файлов в каждом вашем канале и группе и подсчитывает среди них длинные видео. Короткие ролики пропускаются, если не изменить это в «Дополнительных настройках». Личные чаты и «Избранное» не просматриваются."</string>
     <string name="discovery_look" formatted="false">"Искать видео"</string>
     <string name="discovery_not_now" formatted="false">"Не сейчас"</string>
     <string name="discovery_title" formatted="false">"Поиск видео"</string>
@@ -95,12 +95,12 @@
         <item quantity="many">"%1$d выбранных вами чатов больше недоступны и были убраны."</item>
         <item quantity="other">"%1$d выбранных вами чатов больше недоступны и были убраны."</item>
     </plurals>
-    <string name="advanced_min_title" formatted="false">"Самое короткое видео для подсчёта"</string>
-    <string name="advanced_min_desc" formatted="false">"Более короткие ролики не попадают ни в поиск, ни в выбор."</string>
+    <string name="advanced_min_title" formatted="false">"Минимальная длительность видео"</string>
+    <string name="advanced_min_desc" formatted="false">"Более короткие ролики исключаются из поиска и списка выбора."</string>
     <string name="advanced_min_option" formatted="false">"%1$d мин"</string>
-    <string name="advanced_min_any" formatted="false">"Любая длина"</string>
+    <string name="advanced_min_any" formatted="false">"Любая длительность"</string>
     <string name="discovery_search_hint" formatted="false">"Поиск чатов по названию"</string>
-    <string name="discovery_no_match" formatted="false">"Подходящих чатов нет."</string>
+    <string name="discovery_no_match" formatted="false">"Совпадений не найдено."</string>
     <plurals name="discovery_unchanged">
         <item quantity="one">"В %1$d чате не было новых сообщений с прошлого раза, поэтому его не проверяли снова."</item>
         <item quantity="few">"В %1$d чатах не было новых сообщений с прошлого раза, поэтому их не проверяли снова."</item>

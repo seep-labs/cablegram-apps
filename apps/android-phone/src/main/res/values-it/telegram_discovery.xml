@@ -5,7 +5,7 @@
     <string name="discovery_notice_title" formatted="false">"Questo avviene sul tuo telefono."</string>
     <string name="discovery_notice_body" formatted="false">"Cablegram ha effettuato l'accesso a Telegram su questo telefono, come Telegram Desktop. Guarda le tue chat qui, su questo telefono. Nomi delle chat, conteggi, messaggi e miniature non vengono mai inviati ai server di Cablegram. Solo i video che aggiungi vanno in «Cablegram library»."</string>
     <string name="discovery_ask_title" formatted="false">"Cercare video nei tuoi canali e gruppi?"</string>
-    <string name="discovery_ask_body" formatted="false">"Cablegram guarda, su questo telefono, gli ultimi 100 video e file di ciascuno dei tuoi canali e gruppi e conta tra questi i video lunghi. Salta le clip brevi, a meno che tu non lo cambi nelle Impostazioni avanzate. Non guarda nelle chat personali né nei Messaggi salvati."</string>
+    <string name="discovery_ask_body" formatted="false">"Cablegram controlla, su questo telefono, gli ultimi 100 video e file di ciascuno dei tuoi canali e gruppi e conta tra questi i video lunghi. Salta le clip brevi, a meno che tu non lo cambi in «Impostazioni avanzate». Non controlla nelle chat personali né in «Messaggi salvati»."</string>
     <string name="discovery_look" formatted="false">"Cerca video"</string>
     <string name="discovery_not_now" formatted="false">"Non ora"</string>
     <string name="discovery_title" formatted="false">"Trova video"</string>
@@ -29,8 +29,8 @@
         <item quantity="other">"circa %1$d video tra gli ultimi 100"</item>
     </plurals>
     <plurals name="discovery_files_maybe">
-        <item quantity="one">"circa %1$d file grande che potrebbe essere un video tra gli ultimi 100"</item>
-        <item quantity="other">"circa %1$d file grandi che potrebbero essere video tra gli ultimi 100"</item>
+        <item quantity="one">"circa %1$d file di grandi dimensioni che potrebbe essere un video tra gli ultimi 100"</item>
+        <item quantity="other">"circa %1$d file di grandi dimensioni che potrebbero essere video tra gli ultimi 100"</item>
     </plurals>
     <string name="discovery_manage" formatted="false">"Gestisci chat"</string>
     <plurals name="discovery_use_chats">
@@ -81,12 +81,12 @@
         <item quantity="one">"%1$d chat che hai scelto non è più disponibile ed è stata rimossa."</item>
         <item quantity="other">"%1$d chat che hai scelto non sono più disponibili e sono state rimosse."</item>
     </plurals>
-    <string name="advanced_min_title" formatted="false">"Video più breve da contare"</string>
-    <string name="advanced_min_desc" formatted="false">"Le clip più brevi restano fuori dalla ricerca e dalla selezione."</string>
+    <string name="advanced_min_title" formatted="false">"Durata minima dei video"</string>
+    <string name="advanced_min_desc" formatted="false">"Le clip più brevi vengono escluse dalla ricerca e dalla selezione."</string>
     <string name="advanced_min_option" formatted="false">"%1$d min"</string>
     <string name="advanced_min_any" formatted="false">"Qualsiasi durata"</string>
     <string name="discovery_search_hint" formatted="false">"Cerca chat per nome"</string>
-    <string name="discovery_no_match" formatted="false">"Nessuna chat corrisponde."</string>
+    <string name="discovery_no_match" formatted="false">"Nessuna chat trovata."</string>
     <plurals name="discovery_unchanged">
         <item quantity="one">"%1$d chat non aveva nuovi messaggi dall'ultima volta e non è stata controllata di nuovo."</item>
         <item quantity="other">"%1$d chat non avevano nuovi messaggi dall'ultima volta e non sono state controllate di nuovo."</item>

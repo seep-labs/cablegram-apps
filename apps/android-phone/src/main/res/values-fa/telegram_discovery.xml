@@ -5,7 +5,7 @@
     <string name="discovery_notice_title" formatted="false">"این کار روی گوشی شما انجام می‌شود."</string>
     <string name="discovery_notice_body" formatted="false">"Cablegram روی این گوشی وارد Telegram شده است، درست مثل Telegram Desktop. گفتگوهای شما را همین‌جا، روی همین گوشی بررسی می‌کند. نام گفتگوها، تعدادها، پیام‌ها و پیش‌نمایش‌ها هرگز به سرورهای Cablegram فرستاده نمی‌شوند. فقط ویدیوهایی که اضافه می‌کنید به «Cablegram library» می‌روند."</string>
     <string name="discovery_ask_title" formatted="false">"جست‌وجوی ویدیو در کانال‌ها و گروه‌های شما؟"</string>
-    <string name="discovery_ask_body" formatted="false">"Cablegram روی همین گوشی، ۱۰۰ ویدیو و فایل اخیر هر یک از کانال‌ها و گروه‌های شما را نگاه می‌کند و ویدیوهای بلند را از میان آن‌ها می‌شمارد. کلیپ‌های کوتاه را کنار می‌گذارد، مگر اینکه در تنظیمات پیشرفته تغییرش دهید. در گفتگوهای شخصی و پیام‌های ذخیره‌شده نگاه نمی‌کند."</string>
+    <string name="discovery_ask_body" formatted="false">"Cablegram روی همین گوشی، ۱۰۰ ویدیو و فایل اخیر در هر یک از کانال‌ها و گروه‌های شما را بررسی می‌کند و ویدیوهای طولانی را در میان آن‌ها می‌شمارد. کلیپ‌های کوتاه را نادیده می‌گیرد، مگر اینکه این مورد را در «تنظیمات پیشرفته» تغییر دهید. در گفتگوهای شخصی یا «پیام‌های ذخیره‌شده» جست‌وجو نمی‌کند."</string>
     <string name="discovery_look" formatted="false">"جست‌وجوی ویدیو"</string>
     <string name="discovery_not_now" formatted="false">"فعلاً نه"</string>
     <string name="discovery_title" formatted="false">"یافتن ویدیوها"</string>
@@ -29,8 +29,8 @@
         <item quantity="other">"حدود %1$d ویدیو در میان ۱۰۰ مورد اخیر"</item>
     </plurals>
     <plurals name="discovery_files_maybe">
-        <item quantity="one">"حدود %1$d فایل بزرگ که ممکن است ویدیو باشد، در میان ۱۰۰ مورد اخیر"</item>
-        <item quantity="other">"حدود %1$d فایل بزرگ که ممکن است ویدیو باشند، در میان ۱۰۰ مورد اخیر"</item>
+        <item quantity="one">"حدود %1$d فایل حجیم که شاید ویدیو باشد، در میان ۱۰۰ مورد اخیر"</item>
+        <item quantity="other">"حدود %1$d فایل حجیم که شاید ویدیو باشد، در میان ۱۰۰ مورد اخیر"</item>
     </plurals>
     <string name="discovery_manage" formatted="false">"مدیریت گفتگوها"</string>
     <plurals name="discovery_use_chats">
@@ -81,14 +81,14 @@
         <item quantity="one">"%1$d گفتگوی انتخابی شما دیگر در دسترس نیست و حذف شد."</item>
         <item quantity="other">"%1$d گفتگوی انتخابی شما دیگر در دسترس نیستند و حذف شدند."</item>
     </plurals>
-    <string name="advanced_min_title" formatted="false">"کوتاه‌ترین ویدیویی که شمرده می‌شود"</string>
+    <string name="advanced_min_title" formatted="false">"کوتاه‌ترین ویدیو برای شمارش"</string>
     <string name="advanced_min_desc" formatted="false">"کلیپ‌های کوتاه‌تر از جست‌وجو و فهرست انتخاب کنار گذاشته می‌شوند."</string>
     <string name="advanced_min_option" formatted="false">"%1$d دقیقه"</string>
-    <string name="advanced_min_any" formatted="false">"هر مدتی"</string>
-    <string name="discovery_search_hint" formatted="false">"جست‌وجوی گفتگو با نام"</string>
-    <string name="discovery_no_match" formatted="false">"هیچ گفتگویی مطابقت ندارد."</string>
+    <string name="advanced_min_any" formatted="false">"هر مدت‌زمانی"</string>
+    <string name="discovery_search_hint" formatted="false">"جست‌وجوی گفتگوها بر اساس نام"</string>
+    <string name="discovery_no_match" formatted="false">"گفتگویی یافت نشد."</string>
     <plurals name="discovery_unchanged">
-        <item quantity="one">"%1$d گفتگو از آخرین بار پیام تازه‌ای نداشت و دوباره بررسی نشد."</item>
-        <item quantity="other">"%1$d گفتگو از آخرین بار پیام تازه‌ای نداشتند و دوباره بررسی نشدند."</item>
+        <item quantity="one">"%1$d گفتگو از آخرین بررسی شما پیام جدیدی نداشت و دوباره بررسی نشد."</item>
+        <item quantity="other">"%1$d گفتگو از آخرین بررسی شما پیام جدیدی نداشت و دوباره بررسی نشد."</item>
     </plurals>
 </resources>
