@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="diagnostics_crash_reports_on" formatted="false">"Absturzberichte: An"</string>
+    <string name="diagnostics_crash_reports_off" formatted="false">"Absturzberichte: Aus"</string>
+    <string name="diagnostics_report_problem_button" formatted="false">"Problem melden"</string>
+    <string name="diagnostics_sending" formatted="false">"Wird gesendet…"</string>
+    <string name="diagnostics_report_sent" formatted="false">"Danke! Der Diagnosebericht wurde gespeichert."</string>
+    <string name="diagnostics_report_failed" formatted="false">"Der Diagnosebericht konnte nicht gespeichert werden."</string>
+</resources>

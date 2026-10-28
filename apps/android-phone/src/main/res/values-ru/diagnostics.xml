@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="diagnostics_crash_reports_title" formatted="false">"Отправлять отчёты о сбоях"</string>
+    <string name="diagnostics_crash_reports_description" formatted="false">"Отправляет диагностические данные об ошибках, чтобы помочь нам исправлять проблемы с воспроизведением и сбои. Названия видео, имена файлов и пароли не отправляются."</string>
+    <string name="diagnostics_report_problem_button" formatted="false">"Сообщить о проблеме"</string>
+    <string name="diagnostics_report_problem_title" formatted="false">"Сообщить о проблеме"</string>
+    <string name="diagnostics_report_problem_description" formatted="false">"Отправляет диагностические сведения (модель устройства, версия Android, версия приложения и недавние ошибки), чтобы помочь нам разобраться. Названия, имена файлов и пароли не отправляются."</string>
+    <string name="diagnostics_problem_description_label" formatted="false">"Что пошло не так? (необязательно)"</string>
+    <string name="diagnostics_send_report_button" formatted="false">"Отправить отчёт"</string>
+    <string name="diagnostics_sending" formatted="false">"Отправка…"</string>
+    <string name="diagnostics_report_sent" formatted="false">"Спасибо! Диагностический отчёт сохранён."</string>
+    <string name="diagnostics_report_failed" formatted="false">"Не удалось сохранить диагностический отчёт."</string>
+</resources>

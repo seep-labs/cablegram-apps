@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="diagnostics_crash_reports_title" formatted="false">"ارسال گزارش خرابی"</string>
+    <string name="diagnostics_crash_reports_description" formatted="false">"ردهای خطای تشخیصی را می‌فرستد تا به ما در رفع مشکلات پخش و خرابی‌ها کمک کند. هیچ عنوان ویدیو، نام فایل یا گذرواژه‌ای فرستاده نمی‌شود."</string>
+    <string name="diagnostics_report_problem_button" formatted="false">"گزارش مشکل"</string>
+    <string name="diagnostics_report_problem_title" formatted="false">"گزارش مشکل"</string>
+    <string name="diagnostics_report_problem_description" formatted="false">"اطلاعات تشخیصی (مدل دستگاه، نسخهٔ Android، نسخهٔ برنامه و خطاهای اخیر) را می‌فرستد تا در بررسی به ما کمک کند. هیچ عنوان رسانه، نام فایل یا گذرواژه‌ای فرستاده نمی‌شود."</string>
+    <string name="diagnostics_problem_description_label" formatted="false">"چه مشکلی پیش آمد؟ (اختیاری)"</string>
+    <string name="diagnostics_send_report_button" formatted="false">"ارسال گزارش"</string>
+    <string name="diagnostics_sending" formatted="false">"در حال ارسال…"</string>
+    <string name="diagnostics_report_sent" formatted="false">"سپاسگزاریم! گزارش تشخیصی ثبت شد."</string>
+    <string name="diagnostics_report_failed" formatted="false">"ثبت گزارش تشخیصی انجام نشد."</string>
+</resources>

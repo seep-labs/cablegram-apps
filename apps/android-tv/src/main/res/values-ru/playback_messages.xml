@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ui_connect_telegram_title" formatted="false">"Подключить Telegram"</string>
+    <string name="ui_connect_telegram_button" formatted="false">"Подключить Telegram"</string>
+    <string name="ui_telegram_not_connected_message" formatted="false">"Telegram не подключён ни на этом телевизоре, ни на вашем телефоне."</string>
+    <string name="ui_video_unavailable_title" formatted="false">"Видео недоступно"</string>
+    <string name="ui_phone_lost_file_message" formatted="false">"Этого видео нет на вашем телефоне. Добавьте видео на телефоне ещё раз."</string>
+    <string name="ui_phone_replaced_message" formatted="false">"Это видео было на предыдущей установке приложения на вашем телефоне. Добавьте видео на телефоне ещё раз."</string>
+    <string name="ui_phone_offline_title" formatted="false">"Телефон не в сети"</string>
+    <string name="ui_phone_offline_message" formatted="false">"Ваш телефон недоступен. Откройте Cablegram на телефоне и проверьте, что есть интернет."</string>
+    <string name="ui_storage_disconnected_title" formatted="false">"Хранилище отключено"</string>
+    <string name="ui_cloud_disconnected_message" formatted="false">"Ваше облачное хранилище отключено. Подключите хранилище заново на телефоне."</string>
+    <string name="ui_storage_credentials_rejected_title" formatted="false">"Требуется вход в хранилище"</string>
+    <string name="ui_cloud_credentials_rejected_message" formatted="false">"Учётные данные вашего облачного хранилища отклонены. Подключите хранилище заново на телефоне."</string>
+    <string name="ui_storage_limited_title" formatted="false">"Ограничение загрузки хранилища"</string>
+    <string name="ui_cloud_limited_message" formatted="false">"Ваше облачное хранилище ограничивает загрузку этого видео. Повторите попытку через некоторое время."</string>
+    <string name="ui_unknown_playback_failure_message" formatted="false">"Сейчас это видео нельзя воспроизвести. Повторите попытку через минуту."</string>
+</resources>

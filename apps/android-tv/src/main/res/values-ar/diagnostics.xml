@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="diagnostics_crash_reports_on" formatted="false">"تقارير الأعطال: مفعّلة"</string>
+    <string name="diagnostics_crash_reports_off" formatted="false">"تقارير الأعطال: معطّلة"</string>
+    <string name="diagnostics_report_problem_button" formatted="false">"الإبلاغ عن مشكلة"</string>
+    <string name="diagnostics_sending" formatted="false">"جارٍ الإرسال…"</string>
+    <string name="diagnostics_report_sent" formatted="false">"شكرًا لك! تم تسجيل تقرير التشخيص."</string>
+    <string name="diagnostics_report_failed" formatted="false">"تعذّر تسجيل تقرير التشخيص."</string>
+</resources>

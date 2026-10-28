@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="diagnostics_crash_reports_title" formatted="false">"Invia i report sugli arresti anomali"</string>
+    <string name="diagnostics_crash_reports_description" formatted="false">"Invia tracce di errore diagnostiche per aiutarci a risolvere problemi di riproduzione e arresti anomali. Non vengono inviati titoli dei video, nomi dei file né password."</string>
+    <string name="diagnostics_report_problem_button" formatted="false">"Segnala un problema"</string>
+    <string name="diagnostics_report_problem_title" formatted="false">"Segnala un problema"</string>
+    <string name="diagnostics_report_problem_description" formatted="false">"Invia informazioni diagnostiche (modello del dispositivo, versione di Android, versione dell'app ed errori recenti) per aiutarci a indagare. Non vengono inviati titoli, nomi dei file né password."</string>
+    <string name="diagnostics_problem_description_label" formatted="false">"Cosa è andato storto? (facoltativo)"</string>
+    <string name="diagnostics_send_report_button" formatted="false">"Invia segnalazione"</string>
+    <string name="diagnostics_sending" formatted="false">"Invio in corso…"</string>
+    <string name="diagnostics_report_sent" formatted="false">"Grazie! Report diagnostico registrato."</string>
+    <string name="diagnostics_report_failed" formatted="false">"Impossibile registrare il report diagnostico."</string>
+</resources>

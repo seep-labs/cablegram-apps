@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="diagnostics_crash_reports_on" formatted="false">"Report sugli arresti anomali: attivi"</string>
+    <string name="diagnostics_crash_reports_off" formatted="false">"Report sugli arresti anomali: disattivati"</string>
+    <string name="diagnostics_report_problem_button" formatted="false">"Segnala un problema"</string>
+    <string name="diagnostics_sending" formatted="false">"Invio in corso…"</string>
+    <string name="diagnostics_report_sent" formatted="false">"Grazie! Report diagnostico registrato."</string>
+    <string name="diagnostics_report_failed" formatted="false">"Impossibile registrare il report diagnostico."</string>
+</resources>

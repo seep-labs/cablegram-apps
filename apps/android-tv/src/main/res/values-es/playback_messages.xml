@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ui_connect_telegram_title" formatted="false">"Conectar Telegram"</string>
+    <string name="ui_connect_telegram_button" formatted="false">"Conectar Telegram"</string>
+    <string name="ui_telegram_not_connected_message" formatted="false">"Telegram no está conectado en este televisor ni en tu teléfono."</string>
+    <string name="ui_video_unavailable_title" formatted="false">"Vídeo no disponible"</string>
+    <string name="ui_phone_lost_file_message" formatted="false">"Este vídeo no está en tu teléfono. Vuelve a añadir el vídeo en tu teléfono."</string>
+    <string name="ui_phone_replaced_message" formatted="false">"Este vídeo estaba en tu instalación anterior del teléfono. Vuelve a añadir el vídeo en tu teléfono."</string>
+    <string name="ui_phone_offline_title" formatted="false">"Teléfono sin conexión"</string>
+    <string name="ui_phone_offline_message" formatted="false">"No se puede acceder a tu teléfono. Abre Cablegram en tu teléfono y comprueba que tiene internet."</string>
+    <string name="ui_storage_disconnected_title" formatted="false">"Almacenamiento desconectado"</string>
+    <string name="ui_cloud_disconnected_message" formatted="false">"Tu almacenamiento en la nube está desconectado. Vuelve a conectar tu almacenamiento en tu teléfono."</string>
+    <string name="ui_storage_credentials_rejected_title" formatted="false">"Se necesita iniciar sesión en el almacenamiento"</string>
+    <string name="ui_cloud_credentials_rejected_message" formatted="false">"Se han rechazado las credenciales de tu almacenamiento en la nube. Vuelve a conectar tu almacenamiento en tu teléfono."</string>
+    <string name="ui_storage_limited_title" formatted="false">"Límite de descarga del almacenamiento"</string>
+    <string name="ui_cloud_limited_message" formatted="false">"Tu almacenamiento en la nube está limitando las descargas de este vídeo. Inténtalo de nuevo dentro de un rato."</string>
+    <string name="ui_unknown_playback_failure_message" formatted="false">"Este vídeo no se puede reproducir ahora mismo. Inténtalo de nuevo en un momento."</string>
+</resources>

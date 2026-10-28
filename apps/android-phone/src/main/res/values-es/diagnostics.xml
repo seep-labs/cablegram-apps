@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="diagnostics_crash_reports_title" formatted="false">"Enviar informes de fallos"</string>
+    <string name="diagnostics_crash_reports_description" formatted="false">"Envía registros de errores de diagnóstico para ayudarnos a corregir problemas de reproducción y fallos. No se envían títulos de vídeos, nombres de archivos ni contraseñas."</string>
+    <string name="diagnostics_report_problem_button" formatted="false">"Informar de un problema"</string>
+    <string name="diagnostics_report_problem_title" formatted="false">"Informar de un problema"</string>
+    <string name="diagnostics_report_problem_description" formatted="false">"Envía información de diagnóstico (modelo del dispositivo, versión de Android, versión de la app y errores recientes) para ayudarnos a investigar. No se envían títulos, nombres de archivos ni contraseñas."</string>
+    <string name="diagnostics_problem_description_label" formatted="false">"¿Qué ha fallado? (opcional)"</string>
+    <string name="diagnostics_send_report_button" formatted="false">"Enviar informe"</string>
+    <string name="diagnostics_sending" formatted="false">"Enviando…"</string>
+    <string name="diagnostics_report_sent" formatted="false">"¡Gracias! Informe de diagnóstico registrado."</string>
+    <string name="diagnostics_report_failed" formatted="false">"No se pudo registrar el informe de diagnóstico."</string>
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="diagnostics_crash_reports_on" formatted="false">"Informes de fallos: activados"</string>
+    <string name="diagnostics_crash_reports_off" formatted="false">"Informes de fallos: desactivados"</string>
+    <string name="diagnostics_report_problem_button" formatted="false">"Informar de un problema"</string>
+    <string name="diagnostics_sending" formatted="false">"Enviando…"</string>
+    <string name="diagnostics_report_sent" formatted="false">"¡Gracias! Informe de diagnóstico registrado."</string>
+    <string name="diagnostics_report_failed" formatted="false">"No se pudo registrar el informe de diagnóstico."</string>
+</resources>

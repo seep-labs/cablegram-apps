@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ui_connect_telegram_title" formatted="false">"Collega Telegram"</string>
+    <string name="ui_connect_telegram_button" formatted="false">"Collega Telegram"</string>
+    <string name="ui_telegram_not_connected_message" formatted="false">"Telegram non è collegato né su questa TV né sul tuo telefono."</string>
+    <string name="ui_video_unavailable_title" formatted="false">"Video non disponibile"</string>
+    <string name="ui_phone_lost_file_message" formatted="false">"Questo video non è sul tuo telefono. Aggiungi di nuovo il video dal telefono."</string>
+    <string name="ui_phone_replaced_message" formatted="false">"Questo video era sulla tua installazione precedente sul telefono. Aggiungi di nuovo il video dal telefono."</string>
+    <string name="ui_phone_offline_title" formatted="false">"Telefono offline"</string>
+    <string name="ui_phone_offline_message" formatted="false">"Il tuo telefono non è raggiungibile. Apri Cablegram sul telefono e controlla che abbia una connessione a internet."</string>
+    <string name="ui_storage_disconnected_title" formatted="false">"Archiviazione disconnessa"</string>
+    <string name="ui_cloud_disconnected_message" formatted="false">"La tua archiviazione cloud è disconnessa. Ricollega la tua archiviazione dal telefono."</string>
+    <string name="ui_storage_credentials_rejected_title" formatted="false">"Accesso all'archiviazione richiesto"</string>
+    <string name="ui_cloud_credentials_rejected_message" formatted="false">"Le credenziali della tua archiviazione cloud sono state rifiutate. Ricollega la tua archiviazione dal telefono."</string>
+    <string name="ui_storage_limited_title" formatted="false">"Limite di download dell'archiviazione"</string>
+    <string name="ui_cloud_limited_message" formatted="false">"La tua archiviazione cloud sta limitando i download di questo video. Riprova tra un po'."</string>
+    <string name="ui_unknown_playback_failure_message" formatted="false">"Questo video non può essere riprodotto in questo momento. Riprova tra un attimo."</string>
+</resources>

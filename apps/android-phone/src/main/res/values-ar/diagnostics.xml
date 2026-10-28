@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="diagnostics_crash_reports_title" formatted="false">"إرسال تقارير الأعطال"</string>
+    <string name="diagnostics_crash_reports_description" formatted="false">"يرسل سجلات أخطاء تشخيصية لمساعدتنا في إصلاح مشكلات التشغيل والأعطال. لا تُرسل عناوين الفيديو أو أسماء الملفات أو كلمات المرور."</string>
+    <string name="diagnostics_report_problem_button" formatted="false">"الإبلاغ عن مشكلة"</string>
+    <string name="diagnostics_report_problem_title" formatted="false">"الإبلاغ عن مشكلة"</string>
+    <string name="diagnostics_report_problem_description" formatted="false">"يرسل معلومات تشخيصية (طراز الجهاز وإصدار Android وإصدار التطبيق والأخطاء الأخيرة) لمساعدتنا في التحقق. لا تُرسل عناوين الوسائط أو أسماء الملفات أو كلمات المرور."</string>
+    <string name="diagnostics_problem_description_label" formatted="false">"ما الذي حدث؟ (اختياري)"</string>
+    <string name="diagnostics_send_report_button" formatted="false">"إرسال التقرير"</string>
+    <string name="diagnostics_sending" formatted="false">"جارٍ الإرسال…"</string>
+    <string name="diagnostics_report_sent" formatted="false">"شكرًا لك! تم تسجيل تقرير التشخيص."</string>
+    <string name="diagnostics_report_failed" formatted="false">"تعذّر تسجيل تقرير التشخيص."</string>
+</resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="diagnostics_crash_reports_title" formatted="false">"Absturzberichte senden"</string>
+    <string name="diagnostics_crash_reports_description" formatted="false">"Sendet technische Fehlerspuren, damit wir Wiedergabeprobleme und Abstürze beheben können. Es werden keine Videotitel, Dateinamen oder Passwörter gesendet."</string>
+    <string name="diagnostics_report_problem_button" formatted="false">"Problem melden"</string>
+    <string name="diagnostics_report_problem_title" formatted="false">"Problem melden"</string>
+    <string name="diagnostics_report_problem_description" formatted="false">"Sendet technische Infos (Gerätemodell, Android-Version, App-Version und aktuelle Fehler), damit wir der Sache nachgehen können. Es werden keine Titel, Dateinamen oder Passwörter gesendet."</string>
+    <string name="diagnostics_problem_description_label" formatted="false">"Was ist schiefgelaufen? (optional)"</string>
+    <string name="diagnostics_send_report_button" formatted="false">"Bericht senden"</string>
+    <string name="diagnostics_sending" formatted="false">"Wird gesendet…"</string>
+    <string name="diagnostics_report_sent" formatted="false">"Danke! Der Diagnosebericht wurde gespeichert."</string>
+    <string name="diagnostics_report_failed" formatted="false">"Der Diagnosebericht konnte nicht gespeichert werden."</string>
+</resources>

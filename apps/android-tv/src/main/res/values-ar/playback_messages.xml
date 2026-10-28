@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ui_connect_telegram_title" formatted="false">"ربط Telegram"</string>
+    <string name="ui_connect_telegram_button" formatted="false">"ربط Telegram"</string>
+    <string name="ui_telegram_not_connected_message" formatted="false">"Telegram غير مربوط على هذا التلفزيون ولا على هاتفك."</string>
+    <string name="ui_video_unavailable_title" formatted="false">"الفيديو غير متاح"</string>
+    <string name="ui_phone_lost_file_message" formatted="false">"هذا الفيديو غير موجود على هاتفك. أضف الفيديو مرة أخرى من هاتفك."</string>
+    <string name="ui_phone_replaced_message" formatted="false">"كان هذا الفيديو على التثبيت السابق للتطبيق في هاتفك. أضف الفيديو مرة أخرى من هاتفك."</string>
+    <string name="ui_phone_offline_title" formatted="false">"الهاتف غير متصل"</string>
+    <string name="ui_phone_offline_message" formatted="false">"تعذّر الوصول إلى هاتفك. افتح Cablegram على هاتفك وتأكد من اتصاله بالإنترنت."</string>
+    <string name="ui_storage_disconnected_title" formatted="false">"تم قطع اتصال التخزين"</string>
+    <string name="ui_cloud_disconnected_message" formatted="false">"التخزين السحابي لديك غير متصل. أعد ربط مساحة التخزين من هاتفك."</string>
+    <string name="ui_storage_credentials_rejected_title" formatted="false">"يلزم تسجيل الدخول إلى التخزين"</string>
+    <string name="ui_cloud_credentials_rejected_message" formatted="false">"تم رفض بيانات اعتماد التخزين السحابي لديك. أعد ربط مساحة التخزين من هاتفك."</string>
+    <string name="ui_storage_limited_title" formatted="false">"حد التنزيل في التخزين"</string>
+    <string name="ui_cloud_limited_message" formatted="false">"التخزين السحابي لديك يقيّد تنزيل هذا الفيديو. حاول مرة أخرى بعد قليل."</string>
+    <string name="ui_unknown_playback_failure_message" formatted="false">"لا يمكن تشغيل هذا الفيديو الآن. حاول مرة أخرى بعد لحظة."</string>
+</resources>

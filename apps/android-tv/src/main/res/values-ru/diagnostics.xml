@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="diagnostics_crash_reports_on" formatted="false">"Отчёты о сбоях: включены"</string>
+    <string name="diagnostics_crash_reports_off" formatted="false">"Отчёты о сбоях: выключены"</string>
+    <string name="diagnostics_report_problem_button" formatted="false">"Сообщить о проблеме"</string>
+    <string name="diagnostics_sending" formatted="false">"Отправка…"</string>
+    <string name="diagnostics_report_sent" formatted="false">"Спасибо! Диагностический отчёт сохранён."</string>
+    <string name="diagnostics_report_failed" formatted="false">"Не удалось сохранить диагностический отчёт."</string>
+</resources>
