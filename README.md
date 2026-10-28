@@ -85,6 +85,13 @@ The videos shown are Blender Foundation open movies under CC BY licences; see
   for recommendations; bots are verified by Telegram and added individually only after you confirm
   their permissions and accept the disclaimer. Adding a method fails the test
   until someone changes the allowlist in review.
+- **Adding videos from your other chats is phone-only, asked every time, and kept on the phone.** The Android
+  phone has a separate module, `app.cablegram.discovery`, that counts videos in your channels and groups and
+  lists those in chats you tick. It never reads your chats without your permission: an "On this phone" notice
+  asks before every scan, personal chats are off unless you turn them on, and only videos you pick are forwarded
+  into your library channel. Its own Telegram allowlist is pinned by `DiscoverySurfaceTest`;
+  `DiscoveryPrivacyContractTest` proves no source chat id or title reaches the Cablegram server; and the TV app
+  has no discovery code (`NoDiscoveryTest`).
 - **Nothing is logged that shouldn't be.** `TelegramLogAuditTest` covers log output.
 - **Cablegram does not store the videos on your phone or in your Telegram channel.** The phone serves them over
   your local network, or through a relay that forwards bytes without keeping them
