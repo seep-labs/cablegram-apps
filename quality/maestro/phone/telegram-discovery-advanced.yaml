@@ -1,6 +1,6 @@
 # Spec 008 (US5, FR-005, FR-006, FR-008). Preconditions: authenticated main UI, a linked Telegram test account that has
-# at least one one-to-one chat holding videos of 10 minutes or more, both Advanced switches off, the shortest-video
-# setting at its default of 10 minutes, and no saved chat choice. The first scan with personal chats on reads every
+# at least one one-to-one chat holding videos of 10 minutes or more, both Advanced switches off, and the shortest-video
+# setting at its default of 10 minutes. Chats already chosen in real use are left alone. The first scan with personal chats on reads every
 # personal chat once, so it can take several minutes on an account with hundreds of them.
 # Checks the shortest-video setting (default, change, survives a restart), then turns personal chats on, picks one,
 # and turns the switch off again to check the chat left the choice. Leaves the defaults restored.
@@ -18,16 +18,21 @@ tags:
     timeout: 20000
 - tapOn:
     id: discovery_advanced
+- scrollUntilVisible:
+    element:
+      id: advanced_min_600
+    direction: DOWN
+    timeout: 20000
 
 # The shortest video to count: 10 minutes by default, and a change survives an app restart.
 - assertVisible:
     id: advanced_min_600
-    selected: true
+    checked: true
 - tapOn:
     id: advanced_min_900
 - assertVisible:
     id: advanced_min_900
-    selected: true
+    checked: true
 - stopApp
 - launchApp
 - tapOn:
@@ -39,14 +44,24 @@ tags:
     timeout: 20000
 - tapOn:
     id: discovery_advanced
+- scrollUntilVisible:
+    element:
+      id: advanced_min_900
+    direction: DOWN
+    timeout: 20000
 - assertVisible:
     id: advanced_min_900
-    selected: true
+    checked: true
 - tapOn:
     id: advanced_min_600
 - assertVisible:
     id: advanced_min_600
-    selected: true
+    checked: true
+- scrollUntilVisible:
+    element:
+      id: advanced_personal
+    direction: UP
+    timeout: 20000
 
 # Off by default; turning on shows a confirmation that repeats the notice, and starts no scan.
 - tapOn:
@@ -91,14 +106,16 @@ tags:
 - tapOn:
     id: picker_done
 
-# Turning the switch off removes the chat from the choice at once.
+# Turning the switch off removes the personal chats from the choice and the results at once.
 - tapOn:
     id: advanced_personal
 - tapOn:
     id: telegram_add_from_chats
 - assertVisible:
     id: discovery_prompt
-- assertNotVisible:
-    id: discovery_manage
+# Manage chats (when some other chat is still chosen) lists no personal chat any more.
 - tapOn:
-    id: discovery_not_now
+    id: discovery_manage
+    optional: true
+- assertNotVisible: ".*Personal chat.*"
+- back

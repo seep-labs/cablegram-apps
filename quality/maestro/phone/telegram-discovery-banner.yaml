@@ -1,5 +1,5 @@
 # Spec 008 (US4 acceptance 2, FR-011). Preconditions: authenticated main UI, a linked Telegram test account with a chat
-# named ${CHAT} that holds more than 50 videos of 10 minutes or more, and no saved choice. Adds nothing: it only opens
+# named ${CHAT} that holds more than 50 videos of 10 minutes or more. Adds nothing: it only opens
 # the picker, pages through it and reads the banner and How this works, so it can run again and again.
 appId: app.cablegram.phone
 env:
@@ -16,6 +16,11 @@ tags:
     visible:
       id: picker_grid
     timeout: 30000
+# Other chats may already be chosen (real use leaves a choice): look at the chat under test only.
+- tapOn:
+    text: ${CHAT}
+    optional: true
+- waitForAnimationToEnd
 
 # Visible on open, and still visible after paging through the grid.
 - assertVisible:

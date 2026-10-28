@@ -1,8 +1,9 @@
 # Spec 008 (US1, US2). Preconditions: authenticated main UI, a linked and healthy Telegram test account with a
-# chat named ${CHAT} and another named ${OTHER} (Latin names, so the search box can be typed into), and no saved choice.
-# Asserts that the "On this phone" prompt comes before every scan, that nothing is ticked after a scan, that the
+# chat named ${CHAT} and another named ${OTHER} (Latin names, so the search box can be typed into), where ${CHAT} is
+# not in the saved choice. Other chats may already be chosen (real use leaves a choice) and are left alone.
+# Asserts that the "On this phone" prompt comes before every scan, that ${CHAT} starts unticked after a scan, that the
 # search box filters by name, that a choice survives an app restart, and that a second scan skips quiet chats.
-# Leaves nothing behind: the chat is unticked again.
+# Leaves nothing behind: ${CHAT} is unticked again.
 appId: app.cablegram.phone
 env:
   CHAT: CableGramAppGroup1
@@ -52,12 +53,8 @@ tags:
       id: discovery_use
     timeout: 240000
 
-# After the scan every box is unticked.
 - assertVisible:
     id: discovery_chat_check
-- assertNotVisible:
-    id: discovery_chat_check
-    checked: true
 
 # The search box filters the chats by part of the name, and says so when nothing matches.
 - tapOn:
@@ -70,6 +67,10 @@ tags:
 - inputText: ${CHAT}
 - assertVisible: ${CHAT}
 - assertNotVisible: ${OTHER}
+# The chat starts unticked: nothing is chosen until the owner ticks it (FR-008).
+- assertNotVisible:
+    id: discovery_chat_check
+    checked: true
 - eraseText: 60
 - inputText: zzzzzzzzzz
 - assertVisible: "No chats match."
