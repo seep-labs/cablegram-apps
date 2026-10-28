@@ -1,5 +1,7 @@
 package app.cablegram.discovery
 
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -23,12 +25,13 @@ class TelegramDiscovery(
     /** Channels and groups (FR-005), plus personal chats and Saved Messages only if their switch is on. */
     fun discoveryChats(permit: ScanPermit, switches: DiscoverySwitches): Flow<DiscoveryChat> = flow {
         gate.requirePermit(permit)
-        val me = throttle.run { transport.myUserId() }
+        // getMe and getChat read TDLib's local database, so only the network calls are throttled (FR-007).
+        val me = transport.myUserId()
         val ids = throttle.run { transport.chatIds() }
         for (id in ids) {
             gate.requirePermit(permit)
             if (id == libraryChatId()) continue
-            val chat = throttle.run { transport.chat(id) } ?: continue
+            val chat = transport.chat(id) ?: continue
             val kind = classify(chat, me, switches) ?: continue
             permit.listed += id
             emit(DiscoveryChat(DiscoveryChatId(id), kind, chat.title, chat.protectedContent))
@@ -39,9 +42,12 @@ class TelegramDiscovery(
     suspend fun chatVideoCount(permit: ScanPermit, chatId: DiscoveryChatId): VideoCount {
         gate.requirePermit(permit)
         if (chatId.raw !in permit.listed) throw DiscoveryRefused("Chat was not listed by this scan")
-        val videos = throttle.run { transport.messageCount(chatId.raw, files = false) }
-        val files = throttle.run { transport.messageCount(chatId.raw, files = true) }
-        return VideoCount(videos, files)
+        // Both counts go out together; the throttle still spaces every request (FR-007).
+        return coroutineScope {
+            val videos = async { throttle.run { transport.messageCount(chatId.raw, files = false) } }
+            val files = async { throttle.run { transport.messageCount(chatId.raw, files = true) } }
+            VideoCount(videos.await(), files.await())
+        }
     }
 
     /** A pager over the chosen chats only. Refuses any chat outside the stored choice before touching Telegram (FR-009). */
