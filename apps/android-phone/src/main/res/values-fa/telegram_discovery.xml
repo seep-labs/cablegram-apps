@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Spec 008: add videos from your Telegram chats. -->
-    <string name="discovery_add_button" formatted="false">"افزودن از گفتگوهای تلگرام"</string>
+    <string name="discovery_add_button" formatted="false">"افزودن از گفتگوهای شما در Telegram"</string>
     <string name="discovery_notice_title" formatted="false">"این کار روی گوشی شما انجام می‌شود."</string>
-    <string name="discovery_notice_body" formatted="false">"کیبل‌گرام روی این گوشی به تلگرام وارد شده است، مثل تلگرام دسکتاپ. گفتگوهای شما را همین‌جا، روی همین گوشی بررسی می‌کند. نام گفتگوها، شمارش‌ها، پیام‌ها و تصاویر بندانگشتی هرگز به سرورهای کیبل‌گرام فرستاده نمی‌شوند. فقط ویدیوهایی که اضافه می‌کنید به «Cablegram library» می‌روند."</string>
-    <string name="discovery_ask_title" formatted="false">"در کانال‌ها و گروه‌هایتان دنبال ویدیو بگردیم؟"</string>
-    <string name="discovery_ask_body" formatted="false">"کیبل‌گرام تعداد ویدیوها را در هر کانال و گروه شما می‌شمارد. پیام‌های شما را باز نمی‌کند و در گفتگوهای شخصی یا پیام‌های ذخیره‌شده نمی‌گردد."</string>
+    <string name="discovery_notice_body" formatted="false">"Cablegram روی این گوشی وارد Telegram شده است، درست مثل Telegram Desktop. گفتگوهای شما را همین‌جا، روی همین گوشی بررسی می‌کند. نام گفتگوها، تعدادها، پیام‌ها و پیش‌نمایش‌ها هرگز به سرورهای Cablegram فرستاده نمی‌شوند. فقط ویدیوهایی که اضافه می‌کنید به «Cablegram library» می‌روند."</string>
+    <string name="discovery_ask_title" formatted="false">"جست‌وجوی ویدیو در کانال‌ها و گروه‌های شما؟"</string>
+    <string name="discovery_ask_body" formatted="false">"Cablegram تعداد ویدیوها را در هر کانال و گروه شما می‌شمارد. پیام‌های شما را باز نمی‌کند و در گفتگوهای شخصی یا «پیام‌های ذخیره‌شده» نمی‌گردد."</string>
     <string name="discovery_look" formatted="false">"جست‌وجوی ویدیو"</string>
     <string name="discovery_not_now" formatted="false">"فعلاً نه"</string>
     <string name="discovery_title" formatted="false">"یافتن ویدیوها"</string>
@@ -17,8 +17,8 @@
     <string name="discovery_counting" formatted="false">"در حال شمارش…"</string>
     <string name="discovery_show_empty" formatted="false">"نمایش %1$d گفتگو بدون ویدیو"</string>
     <string name="discovery_hide_empty" formatted="false">"پنهان کردن گفتگوهای بدون ویدیو"</string>
-    <string name="discovery_paused" formatted="false">"تلگرام خواست %1$d ثانیه صبر کنیم. بررسی ادامه پیدا می‌کند."</string>
-    <string name="discovery_protected" formatted="false">"ذخیره کردن مجاز نیست"</string>
+    <string name="discovery_paused" formatted="false">"Telegram از ما خواست %1$d ثانیه صبر کنیم. بررسی ادامه خواهد یافت."</string>
+    <string name="discovery_protected" formatted="false">"ذخیره‌سازی مجاز نیست"</string>
     <string name="discovery_failed" formatted="false">"بررسی گفتگوهای شما ممکن نشد. دوباره تلاش کنید."</string>
     <plurals name="discovery_videos">
         <item quantity="one">"%1$d ویدیو"</item>
@@ -30,55 +30,55 @@
     </plurals>
     <plurals name="discovery_files_maybe">
         <item quantity="one">"حدود %1$d فایل که شاید ویدیو باشد"</item>
-        <item quantity="other">"حدود %1$d فایل که شاید ویدیو باشند"</item>
+        <item quantity="other">"حدود %1$d فایل که شاید ویدیو باشد"</item>
     </plurals>
     <string name="discovery_manage" formatted="false">"مدیریت گفتگوها"</string>
     <plurals name="discovery_use_chats">
         <item quantity="one">"استفاده از %1$d گفتگو"</item>
         <item quantity="other">"استفاده از %1$d گفتگو"</item>
     </plurals>
-    <string name="picker_title" formatted="false">"افزودن ویدیو"</string>
-    <string name="picker_all" formatted="false">"همه گفتگوها"</string>
+    <string name="picker_title" formatted="false">"افزودن ویدیوها"</string>
+    <string name="picker_all" formatted="false">"همهٔ گفتگوها"</string>
     <string name="picker_in_library" formatted="false">"در کتابخانه"</string>
     <string name="picker_deleting" formatted="false">"در حال حذف"</string>
     <string name="picker_more" formatted="false">"نمایش بیشتر"</string>
-    <string name="picker_empty" formatted="false">"هنوز ویدیویی در گفتگوهای انتخاب‌شده نیست."</string>
-    <string name="picker_adding" formatted="false">"افزودن %1$d از %2$d…"</string>
-    <string name="picker_failed" formatted="false">"%1$d مورد انجام نشد."</string>
-    <string name="picker_try_again" formatted="false">"تلاش دوباره"</string>
+    <string name="picker_empty" formatted="false">"هنوز ویدیویی در گفتگوهای انتخابی شما وجود ندارد."</string>
+    <string name="picker_adding" formatted="false">"در حال افزودن %1$d از %2$d…"</string>
+    <string name="picker_failed" formatted="false">"%1$d مورد اضافه نشد."</string>
+    <string name="picker_try_again" formatted="false">"تلاش مجدد"</string>
     <string name="picker_readd_title" formatted="false">"دوباره اضافه شود؟"</string>
-    <string name="picker_readd_body" formatted="false">"%1$d مورد از این‌ها قبلاً از کتابخانه‌ات حذف شده بود. دوباره اضافه شوند؟"</string>
+    <string name="picker_readd_body" formatted="false">"%1$d مورد از این‌ها قبلاً از کتابخانهٔ شما حذف شده بود. دوباره اضافه شوند؟"</string>
     <string name="picker_readd_confirm" formatted="false">"افزودن دوباره"</string>
-    <string name="picker_cancel" formatted="false">"انصراف"</string>
-    <string name="picker_done" formatted="false">"تمام"</string>
-    <string name="discovery_pick" formatted="false">"انتخاب ویدیو"</string>
+    <string name="picker_cancel" formatted="false">"لغو"</string>
+    <string name="picker_done" formatted="false">"تایید"</string>
+    <string name="discovery_pick" formatted="false">"انتخاب ویدیوها"</string>
     <plurals name="picker_add">
         <item quantity="one">"افزودن %1$d به کتابخانه"</item>
         <item quantity="other">"افزودن %1$d به کتابخانه"</item>
     </plurals>
     <plurals name="picker_added">
-        <item quantity="one">"%1$d ویدیو اضافه شد. به‌زودی در کتابخانه‌ات دیده می‌شود."</item>
-        <item quantity="other">"%1$d ویدیو اضافه شد. به‌زودی در کتابخانه‌ات دیده می‌شوند."</item>
+        <item quantity="one">"%1$d ویدیو اضافه شد. به‌زودی در کتابخانهٔ شما نمایان می‌شود."</item>
+        <item quantity="other">"%1$d ویدیو اضافه شد. به‌زودی در کتابخانهٔ شما نمایان می‌شوند."</item>
     </plurals>
-    <string name="picker_banner" formatted="false">"🔒 فقط روی همین گوشی مرور می‌شود. چیزی از این به Cablegram فرستاده نمی‌شود."</string>
-    <string name="picker_banner_personal" formatted="false">"🔒 فقط روی همین گوشی مرور می‌شود، از جمله گفتگوهای شخصی. چیزی از این به Cablegram فرستاده نمی‌شود."</string>
-    <string name="picker_how" formatted="false">"چطور کار می‌کند"</string>
-    <string name="how_title" formatted="false">"چطور کار می‌کند"</string>
-    <string name="how_body" formatted="false">"Cablegram روی این گوشی مثل Telegram Desktop وارد تلگرام شده است. کدی که گفتگوهایت را می‌بیند فقط در یک جا است: بستهٔ app.cablegram.discovery در برنامهٔ گوشی، و آزمون متن‌باز برنامه (TelegramApiSurfaceTest) هر درخواستی را که اجازه دارد به تلگرام بفرستد فهرست می‌کند. نام گفتگوها، شمارش‌ها، پیام‌ها و تصاویر بندانگشتی روی همین گوشی می‌مانند. فقط ویدیوهایی که اضافه می‌کنی به «Cablegram library» هدایت می‌شوند."</string>
-    <string name="how_link" formatted="false">"دیدن آزمون در GitHub"</string>
+    <string name="picker_banner" formatted="false">"🔒 مرور فقط روی همین گوشی انجام می‌شود. هیچ‌چیز از اینجا به Cablegram فرستاده نمی‌شود."</string>
+    <string name="picker_banner_personal" formatted="false">"🔒 مرور فقط روی همین گوشی انجام می‌شود، از جمله گفتگوهای شخصی. هیچ‌چیز از اینجا به Cablegram فرستاده نمی‌شود."</string>
+    <string name="picker_how" formatted="false">"نحوهٔ کارکرد"</string>
+    <string name="how_title" formatted="false">"نحوهٔ کارکرد"</string>
+    <string name="how_body" formatted="false">"Cablegram روی این گوشی مثل Telegram Desktop وارد Telegram شده است. کدی که گفتگوهای شما را بررسی می‌کند فقط در یک جا قرار دارد: بستهٔ app.cablegram.discovery در برنامهٔ گوشی، و آزمون متن‌باز برنامه (TelegramApiSurfaceTest) تمام درخواست‌هایی را که مجاز است به Telegram بفرستد فهرست می‌کند. نام گفتگوها، تعدادها، پیام‌ها و پیش‌نمایش‌ها روی همین گوشی می‌مانند. فقط ویدیوهایی که اضافه می‌کنید به «Cablegram library» هدایت می‌شوند."</string>
+    <string name="how_link" formatted="false">"مشاهدهٔ آزمون در GitHub"</string>
     <string name="discovery_advanced" formatted="false">"تنظیمات پیشرفته"</string>
-    <string name="advanced_personal_title" formatted="false">"در گفتگوهای شخصی هم جست‌وجو کن"</string>
-    <string name="advanced_personal_desc" formatted="false">"گفتگوهای دونفره با آدم‌ها. اغلب ویدیوهای شخصی دارند."</string>
-    <string name="advanced_saved_title" formatted="false">"در پیام‌های ذخیره‌شده هم جست‌وجو کن"</string>
-    <string name="advanced_saved_desc" formatted="false">"گفتگوی پیام‌های ذخیره‌شدهٔ خودت."</string>
-    <string name="advanced_confirm_title" formatted="false">"روشن شود؟"</string>
-    <string name="advanced_confirm_personal" formatted="false">"با این کار «یافتن ویدیو» می‌تواند گفتگوهای دونفرهٔ تو با آدم‌ها را هم فهرست کند. تا وقتی انتخابشان نکنی بی‌علامت می‌مانند و تا وقتی «جست‌وجوی ویدیو» را نزنی چیزی دیده نمی‌شود."</string>
-    <string name="advanced_confirm_saved" formatted="false">"با این کار «یافتن ویدیو» می‌تواند پیام‌های ذخیره‌شدهٔ تو را هم فهرست کند. تا وقتی انتخابش نکنی بی‌علامت می‌ماند و تا وقتی «جست‌وجوی ویدیو» را نزنی چیزی دیده نمی‌شود."</string>
-    <string name="advanced_turn_on" formatted="false">"روشن کن"</string>
+    <string name="advanced_personal_title" formatted="false">"جست‌وجو در گفتگوهای شخصی"</string>
+    <string name="advanced_personal_desc" formatted="false">"گفتگوهای دونفره با افراد. این گفتگوها اغلب حاوی ویدیوهای شخصی هستند."</string>
+    <string name="advanced_saved_title" formatted="false">"جست‌وجو در پیام‌های ذخیره‌شده"</string>
+    <string name="advanced_saved_desc" formatted="false">"گفتگوی «پیام‌های ذخیره‌شده» خودتان."</string>
+    <string name="advanced_confirm_title" formatted="false">"فعال شود؟"</string>
+    <string name="advanced_confirm_personal" formatted="false">"با این کار «یافتن ویدیوها» می‌تواند گفتگوهای دونفرهٔ شما با افراد را هم فهرست کند. این گفتگوها تا وقتی انتخابشان نکنید بدون علامت می‌مانند و تا وقتی «جست‌وجوی ویدیو» را نزنید هیچ‌چیز بررسی نمی‌شود."</string>
+    <string name="advanced_confirm_saved" formatted="false">"با این کار «یافتن ویدیوها» می‌تواند «پیام‌های ذخیره‌شده» شما را هم فهرست کند. این بخش تا وقتی انتخابش نکنید بدون علامت می‌ماند و تا وقتی «جست‌وجوی ویدیو» را نزنید هیچ‌چیز بررسی نمی‌شود."</string>
+    <string name="advanced_turn_on" formatted="false">"فعال کردن"</string>
     <string name="discovery_kind_personal" formatted="false">"گفتگوی شخصی"</string>
     <string name="discovery_kind_saved" formatted="false">"پیام‌های ذخیره‌شده"</string>
     <plurals name="picker_dropped">
-        <item quantity="one">"%1$d گفتگوی انتخاب‌شده دیگر در دسترس نیست و حذف شد."</item>
-        <item quantity="other">"%1$d گفتگوی انتخاب‌شده دیگر در دسترس نیستند و حذف شدند."</item>
+        <item quantity="one">"%1$d گفتگوی انتخابی شما دیگر در دسترس نیست و حذف شد."</item>
+        <item quantity="other">"%1$d گفتگوی انتخابی شما دیگر در دسترس نیستند و حذف شدند."</item>
     </plurals>
 </resources>

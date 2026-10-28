@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Spec 008: add videos from your Telegram chats. -->
-    <string name="discovery_add_button" formatted="false">"Aus Ihren Telegram-Chats hinzufügen"</string>
-    <string name="discovery_notice_title" formatted="false">"Das passiert auf Ihrem Handy."</string>
-    <string name="discovery_notice_body" formatted="false">"Cablegram ist auf diesem Handy bei Telegram angemeldet, wie Telegram Desktop. Es sieht sich Ihre Chats hier auf diesem Handy an. Chatnamen, Anzahlen, Nachrichten und Vorschaubilder werden nie an die Server von Cablegram gesendet. Nur die Videos, die Sie hinzufügen, landen in „Cablegram library“."</string>
-    <string name="discovery_ask_title" formatted="false">"In Ihren Kanälen und Gruppen nach Videos suchen?"</string>
-    <string name="discovery_ask_body" formatted="false">"Cablegram zählt die Videos in jedem Ihrer Kanäle und Gruppen. Es öffnet Ihre Nachrichten nicht und sieht weder in persönliche Chats noch in „Gespeicherte Nachrichten“."</string>
+    <string name="discovery_add_button" formatted="false">"Aus deinen Telegram-Chats hinzufügen"</string>
+    <string name="discovery_notice_title" formatted="false">"Das passiert auf deinem Handy."</string>
+    <string name="discovery_notice_body" formatted="false">"Cablegram ist auf diesem Handy bei Telegram angemeldet, wie Telegram Desktop. Es sieht sich deine Chats hier auf diesem Handy an. Chatnamen, Anzahlen, Nachrichten und Vorschaubilder werden nie an die Server von Cablegram gesendet. Nur die Videos, die du hinzufügst, landen in „Cablegram library“."</string>
+    <string name="discovery_ask_title" formatted="false">"In deinen Kanälen und Gruppen nach Videos suchen?"</string>
+    <string name="discovery_ask_body" formatted="false">"Cablegram zählt die Videos in jedem deiner Kanäle und in jeder deiner Gruppen. Es öffnet deine Nachrichten nicht und sieht weder in persönliche Chats noch in „Gespeicherte Nachrichten“."</string>
     <string name="discovery_look" formatted="false">"Nach Videos suchen"</string>
     <string name="discovery_not_now" formatted="false">"Jetzt nicht"</string>
     <string name="discovery_title" formatted="false">"Videos finden"</string>
-    <string name="discovery_listing" formatted="false">"Ihre Chats werden angesehen …"</string>
+    <string name="discovery_listing" formatted="false">"Deine Chats werden durchsucht…"</string>
     <string name="discovery_checked" formatted="false">"%1$d von %2$d Chats geprüft"</string>
     <string name="discovery_stop" formatted="false">"Stopp"</string>
     <string name="discovery_kind_channel" formatted="false">"Kanal"</string>
     <string name="discovery_kind_group" formatted="false">"Gruppe"</string>
-    <string name="discovery_counting" formatted="false">"zählt …"</string>
+    <string name="discovery_counting" formatted="false">"wird gezählt…"</string>
     <string name="discovery_show_empty" formatted="false">"%1$d Chats ohne Videos anzeigen"</string>
     <string name="discovery_hide_empty" formatted="false">"Chats ohne Videos ausblenden"</string>
     <string name="discovery_paused" formatted="false">"Telegram bittet um %1$d Sekunden Wartezeit. Die Suche geht danach weiter."</string>
     <string name="discovery_protected" formatted="false">"Speichern nicht erlaubt"</string>
-    <string name="discovery_failed" formatted="false">"Ihre Chats konnten nicht angesehen werden. Bitte versuchen Sie es erneut."</string>
+    <string name="discovery_failed" formatted="false">"Deine Chats konnten nicht geladen werden. Versuch es noch einmal."</string>
     <plurals name="discovery_videos">
         <item quantity="one">"%1$d Video"</item>
         <item quantity="other">"%1$d Videos"</item>
@@ -39,46 +39,46 @@
     </plurals>
     <string name="picker_title" formatted="false">"Videos hinzufügen"</string>
     <string name="picker_all" formatted="false">"Alle Chats"</string>
-    <string name="picker_in_library" formatted="false">"In der Mediathek"</string>
+    <string name="picker_in_library" formatted="false">"In der Bibliothek"</string>
     <string name="picker_deleting" formatted="false">"Wird gelöscht"</string>
     <string name="picker_more" formatted="false">"Mehr anzeigen"</string>
-    <string name="picker_empty" formatted="false">"Noch keine Videos in Ihren gewählten Chats."</string>
+    <string name="picker_empty" formatted="false">"Noch keine Videos in deinen ausgewählten Chats."</string>
     <string name="picker_adding" formatted="false">"%1$d von %2$d werden hinzugefügt…"</string>
-    <string name="picker_failed" formatted="false">"%1$d sind nicht angekommen."</string>
+    <string name="picker_failed" formatted="false">"%1$d konnten nicht hinzugefügt werden."</string>
     <string name="picker_try_again" formatted="false">"Erneut versuchen"</string>
     <string name="picker_readd_title" formatted="false">"Erneut hinzufügen?"</string>
-    <string name="picker_readd_body" formatted="false">"%1$d davon haben Sie früher aus Ihrer Mediathek entfernt. Wieder hinzufügen?"</string>
+    <string name="picker_readd_body" formatted="false">"%1$d davon wurden zuvor aus deiner Bibliothek entfernt. Erneut hinzufügen?"</string>
     <string name="picker_readd_confirm" formatted="false">"Erneut hinzufügen"</string>
     <string name="picker_cancel" formatted="false">"Abbrechen"</string>
     <string name="picker_done" formatted="false">"Fertig"</string>
     <string name="discovery_pick" formatted="false">"Videos auswählen"</string>
     <plurals name="picker_add">
-        <item quantity="one">"%1$d zur Mediathek hinzufügen"</item>
-        <item quantity="other">"%1$d zur Mediathek hinzufügen"</item>
+        <item quantity="one">"%1$d zur Bibliothek hinzufügen"</item>
+        <item quantity="other">"%1$d zur Bibliothek hinzufügen"</item>
     </plurals>
     <plurals name="picker_added">
-        <item quantity="one">"%1$d Video hinzugefügt. Es erscheint gleich in Ihrer Mediathek."</item>
-        <item quantity="other">"%1$d Videos hinzugefügt. Sie erscheinen gleich in Ihrer Mediathek."</item>
+        <item quantity="one">"%1$d Video hinzugefügt. Es erscheint in Kürze in deiner Bibliothek."</item>
+        <item quantity="other">"%1$d Videos hinzugefügt. Sie erscheinen in Kürze in deiner Bibliothek."</item>
     </plurals>
-    <string name="picker_banner" formatted="false">"🔒 Sie sehen nur auf diesem Handy nach. Nichts davon wird an Cablegram gesendet."</string>
-    <string name="picker_banner_personal" formatted="false">"🔒 Sie sehen nur auf diesem Handy nach, auch in persönlichen Chats. Nichts davon wird an Cablegram gesendet."</string>
+    <string name="picker_banner" formatted="false">"🔒 Durchsuchen nur auf diesem Handy. Nichts hiervon wird an Cablegram gesendet."</string>
+    <string name="picker_banner_personal" formatted="false">"🔒 Durchsuchen nur auf diesem Handy, einschließlich persönlicher Chats. Nichts hiervon wird an Cablegram gesendet."</string>
     <string name="picker_how" formatted="false">"So funktioniert es"</string>
     <string name="how_title" formatted="false">"So funktioniert es"</string>
-    <string name="how_body" formatted="false">"Cablegram ist auf diesem Handy bei Telegram angemeldet, wie Telegram Desktop. Der Code, der Ihre Chats ansieht, liegt an einer Stelle: im Paket app.cablegram.discovery der Handy-App. Der Open-Source-Test der App (TelegramApiSurfaceTest) listet jeden Telegram-Aufruf auf, den sie machen darf. Chatnamen, Anzahlen, Nachrichten und Vorschaubilder bleiben auf diesem Handy. Nur die Videos, die Sie hinzufügen, werden in die „Cablegram library“ weitergeleitet."</string>
+    <string name="how_body" formatted="false">"Cablegram ist auf diesem Handy bei Telegram angemeldet, wie Telegram Desktop. Der Code, der deine Chats ansieht, liegt an einer einzigen Stelle: im Paket app.cablegram.discovery der Handy-App, und der Open-Source-Test der App (TelegramApiSurfaceTest) listet jeden Telegram-Aufruf auf, den sie ausführen darf. Chatnamen, Anzahlen, Nachrichten und Vorschaubilder bleiben auf diesem Handy. Nur die Videos, die du hinzufügst, werden an „Cablegram library“ weitergeleitet."</string>
     <string name="how_link" formatted="false">"Den Test auf GitHub ansehen"</string>
     <string name="discovery_advanced" formatted="false">"Erweiterte Einstellungen"</string>
     <string name="advanced_personal_title" formatted="false">"Auch in persönlichen Chats suchen"</string>
-    <string name="advanced_personal_desc" formatted="false">"Einzelchats mit Personen. Dort liegen oft private Videos."</string>
+    <string name="advanced_personal_desc" formatted="false">"Einzelchats mit Personen. Diese enthalten oft persönliche Videos."</string>
     <string name="advanced_saved_title" formatted="false">"Auch in „Gespeicherte Nachrichten“ suchen"</string>
-    <string name="advanced_saved_desc" formatted="false">"Ihr eigener Chat „Gespeicherte Nachrichten“."</string>
-    <string name="advanced_confirm_title" formatted="false">"Einschalten?"</string>
-    <string name="advanced_confirm_personal" formatted="false">"Damit kann „Videos finden“ auch Ihre Einzelchats mit Personen auflisten. Sie bleiben ungewählt, bis Sie sie auswählen, und es wird nichts angesehen, bevor Sie auf „Nach Videos suchen“ tippen."</string>
-    <string name="advanced_confirm_saved" formatted="false">"Damit kann „Videos finden“ auch Ihre „Gespeicherten Nachrichten“ auflisten. Der Chat bleibt ungewählt, bis Sie ihn auswählen, und es wird nichts angesehen, bevor Sie auf „Nach Videos suchen“ tippen."</string>
-    <string name="advanced_turn_on" formatted="false">"Einschalten"</string>
+    <string name="advanced_saved_desc" formatted="false">"Dein eigener Chat „Gespeicherte Nachrichten“."</string>
+    <string name="advanced_confirm_title" formatted="false">"Aktivieren?"</string>
+    <string name="advanced_confirm_personal" formatted="false">"Damit kann „Videos finden“ auch deine Einzelchats mit Personen auflisten. Sie bleiben abgewählt, bis du sie auswählst, und es wird nichts angesehen, bevor du auf „Nach Videos suchen“ tippst."</string>
+    <string name="advanced_confirm_saved" formatted="false">"Damit kann „Videos finden“ auch deine „Gespeicherten Nachrichten“ auflisten. Der Chat bleibt abgewählt, bis du ihn auswählst, und es wird nichts angesehen, bevor du auf „Nach Videos suchen“ tippst."</string>
+    <string name="advanced_turn_on" formatted="false">"Aktivieren"</string>
     <string name="discovery_kind_personal" formatted="false">"Persönlicher Chat"</string>
     <string name="discovery_kind_saved" formatted="false">"Gespeicherte Nachrichten"</string>
     <plurals name="picker_dropped">
-        <item quantity="one">"%1$d von Ihnen gewählter Chat ist nicht mehr verfügbar und wurde entfernt."</item>
-        <item quantity="other">"%1$d von Ihnen gewählte Chats sind nicht mehr verfügbar und wurden entfernt."</item>
+        <item quantity="one">"%1$d von dir ausgewählter Chat ist nicht mehr verfügbar und wurde entfernt."</item>
+        <item quantity="other">"%1$d von dir ausgewählte Chats sind nicht mehr verfügbar und wurden entfernt."</item>
     </plurals>
 </resources>

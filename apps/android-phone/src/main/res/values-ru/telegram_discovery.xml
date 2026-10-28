@@ -3,9 +3,9 @@
     <!-- Spec 008: add videos from your Telegram chats. -->
     <string name="discovery_add_button" formatted="false">"Добавить из ваших чатов Telegram"</string>
     <string name="discovery_notice_title" formatted="false">"Это происходит на вашем телефоне."</string>
-    <string name="discovery_notice_body" formatted="false">"Cablegram вошёл в Telegram на этом телефоне, как Telegram Desktop. Он просматривает ваши чаты здесь, на этом телефоне. Названия чатов, количества, сообщения и миниатюры никогда не отправляются на серверы Cablegram. В «Cablegram library» попадают только добавленные вами видео."</string>
+    <string name="discovery_notice_body" formatted="false">"Cablegram авторизован в Telegram на этом телефоне, как Telegram Desktop. Он просматривает ваши чаты здесь, на этом телефоне. Названия чатов, количество видео, сообщения и миниатюры никогда не отправляются на серверы Cablegram. В «Cablegram library» попадают только добавленные вами видео."</string>
     <string name="discovery_ask_title" formatted="false">"Искать видео в ваших каналах и группах?"</string>
-    <string name="discovery_ask_body" formatted="false">"Cablegram считает видео в каждом из ваших каналов и групп. Он не открывает ваши сообщения и не заглядывает в личные чаты и «Избранное»."</string>
+    <string name="discovery_ask_body" formatted="false">"Cablegram подсчитывает видео в каждом вашем канале и группе. Он не открывает ваши сообщения и не просматривает личные чаты или «Избранное»."</string>
     <string name="discovery_look" formatted="false">"Искать видео"</string>
     <string name="discovery_not_now" formatted="false">"Не сейчас"</string>
     <string name="discovery_title" formatted="false">"Поиск видео"</string>
@@ -14,10 +14,10 @@
     <string name="discovery_stop" formatted="false">"Остановить"</string>
     <string name="discovery_kind_channel" formatted="false">"Канал"</string>
     <string name="discovery_kind_group" formatted="false">"Группа"</string>
-    <string name="discovery_counting" formatted="false">"считаем…"</string>
+    <string name="discovery_counting" formatted="false">"подсчёт…"</string>
     <string name="discovery_show_empty" formatted="false">"Показать чаты без видео: %1$d"</string>
     <string name="discovery_hide_empty" formatted="false">"Скрыть чаты без видео"</string>
-    <string name="discovery_paused" formatted="false">"Telegram просит подождать %1$d с. Поиск продолжится."</string>
+    <string name="discovery_paused" formatted="false">"Telegram попросил подождать %1$d с. Поиск скоро продолжится."</string>
     <string name="discovery_protected" formatted="false">"Сохранение запрещено"</string>
     <string name="discovery_failed" formatted="false">"Не удалось просмотреть чаты. Попробуйте ещё раз."</string>
     <plurals name="discovery_videos">
@@ -36,63 +36,63 @@
         <item quantity="one">"около %1$d файла, который может быть видео"</item>
         <item quantity="few">"около %1$d файлов, которые могут быть видео"</item>
         <item quantity="many">"около %1$d файлов, которые могут быть видео"</item>
-        <item quantity="other">"около %1$d файла, которые могут быть видео"</item>
+        <item quantity="other">"около %1$d файлов, которые могут быть видео"</item>
     </plurals>
     <string name="discovery_manage" formatted="false">"Управление чатами"</string>
     <plurals name="discovery_use_chats">
-        <item quantity="one">"Использовать чат: %1$d"</item>
-        <item quantity="few">"Использовать чатов: %1$d"</item>
-        <item quantity="many">"Использовать чатов: %1$d"</item>
-        <item quantity="other">"Использовать чатов: %1$d"</item>
+        <item quantity="one">"Использовать %1$d чат"</item>
+        <item quantity="few">"Использовать %1$d чата"</item>
+        <item quantity="many">"Использовать %1$d чатов"</item>
+        <item quantity="other">"Использовать %1$d чатов"</item>
     </plurals>
     <string name="picker_title" formatted="false">"Добавить видео"</string>
     <string name="picker_all" formatted="false">"Все чаты"</string>
-    <string name="picker_in_library" formatted="false">"В библиотеке"</string>
+    <string name="picker_in_library" formatted="false">"В медиатеке"</string>
     <string name="picker_deleting" formatted="false">"Удаляется"</string>
     <string name="picker_more" formatted="false">"Показать ещё"</string>
     <string name="picker_empty" formatted="false">"В выбранных чатах пока нет видео."</string>
-    <string name="picker_adding" formatted="false">"Добавляем %1$d из %2$d…"</string>
+    <string name="picker_adding" formatted="false">"Добавление %1$d из %2$d…"</string>
     <string name="picker_failed" formatted="false">"Не удалось добавить: %1$d."</string>
     <string name="picker_try_again" formatted="false">"Повторить"</string>
     <string name="picker_readd_title" formatted="false">"Добавить снова?"</string>
-    <string name="picker_readd_body" formatted="false">"Некоторые из них (%1$d) раньше были убраны из библиотеки. Добавить снова?"</string>
+    <string name="picker_readd_body" formatted="false">"Некоторые из них (%1$d) ранее были удалены из вашей медиатеки. Добавить их снова?"</string>
     <string name="picker_readd_confirm" formatted="false">"Добавить снова"</string>
     <string name="picker_cancel" formatted="false">"Отмена"</string>
     <string name="picker_done" formatted="false">"Готово"</string>
     <string name="discovery_pick" formatted="false">"Выбрать видео"</string>
     <plurals name="picker_add">
-        <item quantity="one">"Добавить в библиотеку: %1$d"</item>
-        <item quantity="few">"Добавить в библиотеку: %1$d"</item>
-        <item quantity="many">"Добавить в библиотеку: %1$d"</item>
-        <item quantity="other">"Добавить в библиотеку: %1$d"</item>
+        <item quantity="one">"Добавить %1$d в медиатеку"</item>
+        <item quantity="few">"Добавить %1$d в медиатеку"</item>
+        <item quantity="many">"Добавить %1$d в медиатеку"</item>
+        <item quantity="other">"Добавить %1$d в медиатеку"</item>
     </plurals>
     <plurals name="picker_added">
-        <item quantity="one">"Добавлено видео: %1$d. Скоро оно появится в библиотеке."</item>
-        <item quantity="few">"Добавлено видео: %1$d. Скоро они появятся в библиотеке."</item>
-        <item quantity="many">"Добавлено видео: %1$d. Скоро они появятся в библиотеке."</item>
-        <item quantity="other">"Добавлено видео: %1$d. Скоро они появятся в библиотеке."</item>
+        <item quantity="one">"Добавлено %1$d видео. Скоро оно появится в вашей медиатеке."</item>
+        <item quantity="few">"Добавлено %1$d видео. Скоро они появятся в вашей медиатеке."</item>
+        <item quantity="many">"Добавлено %1$d видео. Скоро они появятся в вашей медиатеке."</item>
+        <item quantity="other">"Добавлено %1$d видео. Скоро они появятся в вашей медиатеке."</item>
     </plurals>
     <string name="picker_banner" formatted="false">"🔒 Просмотр только на этом телефоне. Ничего из этого не отправляется в Cablegram."</string>
     <string name="picker_banner_personal" formatted="false">"🔒 Просмотр только на этом телефоне, включая личные чаты. Ничего из этого не отправляется в Cablegram."</string>
     <string name="picker_how" formatted="false">"Как это работает"</string>
     <string name="how_title" formatted="false">"Как это работает"</string>
-    <string name="how_body" formatted="false">"Cablegram вошёл в Telegram на этом телефоне, как Telegram Desktop. Код, который смотрит ваши чаты, находится в одном месте: в пакете app.cablegram.discovery приложения для телефона, а открытый тест приложения (TelegramApiSurfaceTest) перечисляет каждый запрос к Telegram, который ему разрешён. Названия чатов, количество, сообщения и миниатюры остаются на этом телефоне. В «Cablegram library» пересылаются только добавленные вами видео."</string>
+    <string name="how_body" formatted="false">"Cablegram авторизован в Telegram на этом телефоне, как Telegram Desktop. Код, который просматривает ваши чаты, находится в одном месте — в пакете app.cablegram.discovery приложения для телефона, а открытый тест приложения (TelegramApiSurfaceTest) перечисляет все разрешённые ему запросы к Telegram. Названия чатов, количество видео, сообщения и миниатюры остаются на этом телефоне. В «Cablegram library» пересылаются только добавленные вами видео."</string>
     <string name="how_link" formatted="false">"Посмотреть тест на GitHub"</string>
     <string name="discovery_advanced" formatted="false">"Дополнительные настройки"</string>
-    <string name="advanced_personal_title" formatted="false">"Искать и в личных чатах"</string>
-    <string name="advanced_personal_desc" formatted="false">"Диалоги один на один с людьми. В них часто личные видео."</string>
-    <string name="advanced_saved_title" formatted="false">"Искать и в «Избранном»"</string>
+    <string name="advanced_personal_title" formatted="false">"Искать также в личных чатах"</string>
+    <string name="advanced_personal_desc" formatted="false">"Личные чаты с людьми один на один. В них часто бывают личные видео."</string>
+    <string name="advanced_saved_title" formatted="false">"Искать также в «Избранном»"</string>
     <string name="advanced_saved_desc" formatted="false">"Ваш чат «Избранное»."</string>
     <string name="advanced_confirm_title" formatted="false">"Включить?"</string>
-    <string name="advanced_confirm_personal" formatted="false">"Тогда «Найти видео» сможет показывать и ваши диалоги один на один. Они остаются без отметки, пока вы их не выберете, и ничего не просматривается, пока вы не нажмёте «Искать видео»."</string>
-    <string name="advanced_confirm_saved" formatted="false">"Тогда «Найти видео» сможет показывать и ваше «Избранное». Оно остаётся без отметки, пока вы его не выберете, и ничего не просматривается, пока вы не нажмёте «Искать видео»."</string>
+    <string name="advanced_confirm_personal" formatted="false">"Это позволит экрану «Поиск видео» показывать также ваши личные чаты с людьми. Они остаются неотмеченными, пока вы их не выберете, и ничего не просматривается, пока вы не нажмёте «Искать видео»."</string>
+    <string name="advanced_confirm_saved" formatted="false">"Это позволит экрану «Поиск видео» показывать также ваше «Избранное». Оно остаётся неотмеченным, пока вы его не выберете, и ничего не просматривается, пока вы не нажмёте «Искать видео»."</string>
     <string name="advanced_turn_on" formatted="false">"Включить"</string>
     <string name="discovery_kind_personal" formatted="false">"Личный чат"</string>
     <string name="discovery_kind_saved" formatted="false">"Избранное"</string>
     <plurals name="picker_dropped">
         <item quantity="one">"%1$d выбранный вами чат больше недоступен и был убран."</item>
-        <item quantity="few">"%1$d выбранных вами чатов больше недоступны, они были убраны."</item>
-        <item quantity="many">"%1$d выбранных вами чатов больше недоступны, они были убраны."</item>
-        <item quantity="other">"%1$d выбранных вами чатов больше недоступны, они были убраны."</item>
+        <item quantity="few">"%1$d выбранных вами чата больше недоступны и были убраны."</item>
+        <item quantity="many">"%1$d выбранных вами чатов больше недоступны и были убраны."</item>
+        <item quantity="other">"%1$d выбранных вами чатов больше недоступны и были убраны."</item>
     </plurals>
 </resources>

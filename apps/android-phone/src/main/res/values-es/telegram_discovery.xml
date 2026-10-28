@@ -9,7 +9,7 @@
     <string name="discovery_look" formatted="false">"Buscar vídeos"</string>
     <string name="discovery_not_now" formatted="false">"Ahora no"</string>
     <string name="discovery_title" formatted="false">"Buscar vídeos"</string>
-    <string name="discovery_listing" formatted="false">"Mirando tus chats…"</string>
+    <string name="discovery_listing" formatted="false">"Revisando tus chats…"</string>
     <string name="discovery_checked" formatted="false">"Revisados %1$d de %2$d chats"</string>
     <string name="discovery_stop" formatted="false">"Detener"</string>
     <string name="discovery_kind_channel" formatted="false">"Canal"</string>
@@ -19,17 +19,17 @@
     <string name="discovery_hide_empty" formatted="false">"Ocultar chats sin vídeos"</string>
     <string name="discovery_paused" formatted="false">"Telegram nos pide esperar %1$d segundos. La búsqueda continuará."</string>
     <string name="discovery_protected" formatted="false">"No permite guardar"</string>
-    <string name="discovery_failed" formatted="false">"No se pudieron ver tus chats. Inténtalo de nuevo."</string>
+    <string name="discovery_failed" formatted="false">"No se pudieron revisar tus chats. Inténtalo de nuevo."</string>
     <plurals name="discovery_videos">
         <item quantity="one">"%1$d vídeo"</item>
         <item quantity="other">"%1$d vídeos"</item>
     </plurals>
     <plurals name="discovery_videos_about">
-        <item quantity="one">"unos %1$d vídeo"</item>
+        <item quantity="one">"aprox. %1$d vídeo"</item>
         <item quantity="other">"unos %1$d vídeos"</item>
     </plurals>
     <plurals name="discovery_files_maybe">
-        <item quantity="one">"unos %1$d archivo que podría ser un vídeo"</item>
+        <item quantity="one">"aprox. %1$d archivo que podría ser un vídeo"</item>
         <item quantity="other">"unos %1$d archivos que podrían ser vídeos"</item>
     </plurals>
     <string name="discovery_manage" formatted="false">"Gestionar chats"</string>
@@ -40,14 +40,14 @@
     <string name="picker_title" formatted="false">"Añadir vídeos"</string>
     <string name="picker_all" formatted="false">"Todos los chats"</string>
     <string name="picker_in_library" formatted="false">"En la biblioteca"</string>
-    <string name="picker_deleting" formatted="false">"Se está eliminando"</string>
+    <string name="picker_deleting" formatted="false">"Eliminando"</string>
     <string name="picker_more" formatted="false">"Mostrar más"</string>
     <string name="picker_empty" formatted="false">"Aún no hay vídeos en los chats elegidos."</string>
     <string name="picker_adding" formatted="false">"Añadiendo %1$d de %2$d…"</string>
-    <string name="picker_failed" formatted="false">"%1$d no se enviaron."</string>
+    <string name="picker_failed" formatted="false">"No se pudieron añadir %1$d."</string>
     <string name="picker_try_again" formatted="false">"Reintentar"</string>
     <string name="picker_readd_title" formatted="false">"¿Añadir de nuevo?"</string>
-    <string name="picker_readd_body" formatted="false">"%1$d de estos se quitaron antes de tu biblioteca. ¿Añadirlos de nuevo?"</string>
+    <string name="picker_readd_body" formatted="false">"%1$d de estos se eliminaron anteriormente de tu biblioteca. ¿Añadirlos de nuevo?"</string>
     <string name="picker_readd_confirm" formatted="false">"Añadir de nuevo"</string>
     <string name="picker_cancel" formatted="false">"Cancelar"</string>
     <string name="picker_done" formatted="false">"Listo"</string>
@@ -72,8 +72,8 @@
     <string name="advanced_saved_title" formatted="false">"Buscar también en Mensajes guardados"</string>
     <string name="advanced_saved_desc" formatted="false">"Tu propio chat de Mensajes guardados."</string>
     <string name="advanced_confirm_title" formatted="false">"¿Activar?"</string>
-    <string name="advanced_confirm_personal" formatted="false">"Esto permite que Buscar vídeos también muestre tus chats individuales con personas. Quedan sin marcar hasta que los elijas, y no se mira nada hasta que pulses Buscar vídeos."</string>
-    <string name="advanced_confirm_saved" formatted="false">"Esto permite que Buscar vídeos también muestre tus Mensajes guardados. Queda sin marcar hasta que lo elijas, y no se mira nada hasta que pulses Buscar vídeos."</string>
+    <string name="advanced_confirm_personal" formatted="false">"Esto permite que «Buscar vídeos» también muestre tus chats individuales con personas. Quedan sin marcar hasta que los elijas, y no se mira nada hasta que pulses «Buscar vídeos»."</string>
+    <string name="advanced_confirm_saved" formatted="false">"Esto permite que «Buscar vídeos» también muestre tus Mensajes guardados. Queda sin marcar hasta que lo elijas, y no se mira nada hasta que pulses «Buscar vídeos»."</string>
     <string name="advanced_turn_on" formatted="false">"Activar"</string>
     <string name="discovery_kind_personal" formatted="false">"Chat personal"</string>
     <string name="discovery_kind_saved" formatted="false">"Mensajes guardados"</string>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Spec 008: add videos from your Telegram chats. -->
-    <string name="discovery_add_button" formatted="false">"إضافة من محادثات تيليجرام"</string>
+    <string name="discovery_add_button" formatted="false">"إضافة من محادثاتك في Telegram"</string>
     <string name="discovery_notice_title" formatted="false">"يحدث هذا على هاتفك."</string>
-    <string name="discovery_notice_body" formatted="false">"كابلغرام مسجّل الدخول إلى تيليجرام على هذا الهاتف، مثل تيليجرام لسطح المكتب. يطّلع على محادثاتك هنا، على هذا الهاتف. لا تُرسل أسماء المحادثات أو الأعداد أو الرسائل أو الصور المصغّرة إلى خوادم كابلغرام أبدًا. فقط مقاطع الفيديو التي تضيفها تنتقل إلى «Cablegram library»."</string>
-    <string name="discovery_ask_title" formatted="false">"البحث عن مقاطع فيديو في قنواتك ومجموعاتك؟"</string>
-    <string name="discovery_ask_body" formatted="false">"يعدّ كابلغرام مقاطع الفيديو في كل قناة ومجموعة لديك. لا يفتح رسائلك، ولا يبحث في المحادثات الشخصية أو الرسائل المحفوظة."</string>
+    <string name="discovery_notice_body" formatted="false">"سجّل Cablegram الدخول إلى Telegram على هذا الهاتف، مثل Telegram Desktop. وهو يطّلع على محادثاتك هنا، على هذا الهاتف. لا تُرسل أسماء المحادثات أو الأعداد أو الرسائل أو الصور المصغّرة إلى خوادم Cablegram أبدًا. فقط مقاطع الفيديو التي تضيفها تنتقل إلى «Cablegram library»."</string>
+    <string name="discovery_ask_title" formatted="false">"هل تريد البحث عن مقاطع فيديو في قنواتك ومجموعاتك؟"</string>
+    <string name="discovery_ask_body" formatted="false">"يحصي Cablegram مقاطع الفيديو في كل قناة ومجموعة لديك. ولا يفتح رسائلك، ولا يبحث في المحادثات الشخصية أو «الرسائل المحفوظة»."</string>
     <string name="discovery_look" formatted="false">"البحث عن مقاطع فيديو"</string>
     <string name="discovery_not_now" formatted="false">"ليس الآن"</string>
     <string name="discovery_title" formatted="false">"العثور على مقاطع فيديو"</string>
@@ -16,58 +16,58 @@
     <string name="discovery_kind_group" formatted="false">"مجموعة"</string>
     <string name="discovery_counting" formatted="false">"جارٍ العدّ…"</string>
     <string name="discovery_show_empty" formatted="false">"عرض %1$d محادثة بلا مقاطع فيديو"</string>
-    <string name="discovery_hide_empty" formatted="false">"إخفاء المحادثات بلا مقاطع فيديو"</string>
-    <string name="discovery_paused" formatted="false">"طلب تيليجرام الانتظار %1$d ثانية. سيستمر الفحص بعدها."</string>
-    <string name="discovery_protected" formatted="false">"لا يسمح بالحفظ"</string>
+    <string name="discovery_hide_empty" formatted="false">"إخفاء المحادثات الخالية من مقاطع الفيديو"</string>
+    <string name="discovery_paused" formatted="false">"طلب Telegram الانتظار لمدة %1$d ثانية. سيستمر الفحص بعد ذلك."</string>
+    <string name="discovery_protected" formatted="false">"الحفظ غير مسموح به"</string>
     <string name="discovery_failed" formatted="false">"تعذّر الاطلاع على محادثاتك. حاول مرة أخرى."</string>
     <plurals name="discovery_videos">
         <item quantity="zero">"%1$d مقطع فيديو"</item>
-        <item quantity="one">"%1$d مقطع فيديو"</item>
-        <item quantity="two">"%1$d مقطع فيديو"</item>
-        <item quantity="few">"%1$d مقطع فيديو"</item>
+        <item quantity="one">"مقطع فيديو واحد (%1$d)"</item>
+        <item quantity="two">"مقطعا فيديو (%1$d)"</item>
+        <item quantity="few">"%1$d مقاطع فيديو"</item>
         <item quantity="many">"%1$d مقطع فيديو"</item>
         <item quantity="other">"%1$d مقطع فيديو"</item>
     </plurals>
     <plurals name="discovery_videos_about">
         <item quantity="zero">"حوالي %1$d مقطع فيديو"</item>
-        <item quantity="one">"حوالي %1$d مقطع فيديو"</item>
-        <item quantity="two">"حوالي %1$d مقطع فيديو"</item>
-        <item quantity="few">"حوالي %1$d مقطع فيديو"</item>
+        <item quantity="one">"حوالي مقطع فيديو واحد (%1$d)"</item>
+        <item quantity="two">"حوالي مقطعي فيديو (%1$d)"</item>
+        <item quantity="few">"حوالي %1$d مقاطع فيديو"</item>
         <item quantity="many">"حوالي %1$d مقطع فيديو"</item>
         <item quantity="other">"حوالي %1$d مقطع فيديو"</item>
     </plurals>
     <plurals name="discovery_files_maybe">
         <item quantity="zero">"حوالي %1$d ملف قد يكون فيديو"</item>
-        <item quantity="one">"حوالي %1$d ملف قد يكون فيديو"</item>
-        <item quantity="two">"حوالي %1$d ملف قد يكون فيديو"</item>
-        <item quantity="few">"حوالي %1$d ملف قد يكون فيديو"</item>
-        <item quantity="many">"حوالي %1$d ملف قد يكون فيديو"</item>
+        <item quantity="one">"حوالي ملف واحد (%1$d) قد يكون فيديو"</item>
+        <item quantity="two">"حوالي ملفين (%1$d) قد يكونان فيديو"</item>
+        <item quantity="few">"حوالي %1$d ملفات قد تكون فيديو"</item>
+        <item quantity="many">"حوالي %1$d ملفًا قد تكون فيديو"</item>
         <item quantity="other">"حوالي %1$d ملف قد يكون فيديو"</item>
     </plurals>
     <string name="discovery_manage" formatted="false">"إدارة المحادثات"</string>
     <plurals name="discovery_use_chats">
         <item quantity="zero">"استخدام %1$d محادثة"</item>
-        <item quantity="one">"استخدام %1$d محادثة"</item>
-        <item quantity="two">"استخدام %1$d محادثة"</item>
-        <item quantity="few">"استخدام %1$d محادثة"</item>
+        <item quantity="one">"استخدام محادثة واحدة (%1$d)"</item>
+        <item quantity="two">"استخدام محادثتين (%1$d)"</item>
+        <item quantity="few">"استخدام %1$d محادثات"</item>
         <item quantity="many">"استخدام %1$d محادثة"</item>
         <item quantity="other">"استخدام %1$d محادثة"</item>
     </plurals>
-    <string name="picker_title" formatted="false">"إضافة فيديوهات"</string>
-    <string name="picker_all" formatted="false">"كل المحادثات"</string>
+    <string name="picker_title" formatted="false">"إضافة مقاطع فيديو"</string>
+    <string name="picker_all" formatted="false">"جميع المحادثات"</string>
     <string name="picker_in_library" formatted="false">"في المكتبة"</string>
-    <string name="picker_deleting" formatted="false">"قيد الحذف"</string>
+    <string name="picker_deleting" formatted="false">"جارٍ الحذف"</string>
     <string name="picker_more" formatted="false">"عرض المزيد"</string>
-    <string name="picker_empty" formatted="false">"لا توجد فيديوهات بعد في المحادثات المختارة."</string>
+    <string name="picker_empty" formatted="false">"لا توجد مقاطع فيديو في المحادثات المختارة حتى الآن."</string>
     <string name="picker_adding" formatted="false">"جارٍ إضافة %1$d من %2$d…"</string>
-    <string name="picker_failed" formatted="false">"لم يتم إرسال %1$d."</string>
-    <string name="picker_try_again" formatted="false">"حاول مرة أخرى"</string>
-    <string name="picker_readd_title" formatted="false">"إضافة مرة أخرى؟"</string>
+    <string name="picker_failed" formatted="false">"تعذّرت إضافة %1$d."</string>
+    <string name="picker_try_again" formatted="false">"إعادة المحاولة"</string>
+    <string name="picker_readd_title" formatted="false">"هل تريد الإضافة مرة أخرى؟"</string>
     <string name="picker_readd_body" formatted="false">"تمت إزالة %1$d من هذه من مكتبتك سابقًا. هل تريد إضافتها مرة أخرى؟"</string>
-    <string name="picker_readd_confirm" formatted="false">"أضف مرة أخرى"</string>
+    <string name="picker_readd_confirm" formatted="false">"إضافة مرة أخرى"</string>
     <string name="picker_cancel" formatted="false">"إلغاء"</string>
     <string name="picker_done" formatted="false">"تم"</string>
-    <string name="discovery_pick" formatted="false">"اختيار فيديوهات"</string>
+    <string name="discovery_pick" formatted="false">"اختيار مقاطع فيديو"</string>
     <plurals name="picker_add">
         <item quantity="zero">"إضافة %1$d إلى المكتبة"</item>
         <item quantity="one">"إضافة %1$d إلى المكتبة"</item>
@@ -77,36 +77,36 @@
         <item quantity="other">"إضافة %1$d إلى المكتبة"</item>
     </plurals>
     <plurals name="picker_added">
-        <item quantity="zero">"تمت إضافة %1$d فيديو. ستظهر قريبًا في مكتبتك."</item>
-        <item quantity="one">"تمت إضافة %1$d فيديو. سيظهر قريبًا في مكتبتك."</item>
-        <item quantity="two">"تمت إضافة %1$d فيديو. ستظهر قريبًا في مكتبتك."</item>
-        <item quantity="few">"تمت إضافة %1$d فيديو. ستظهر قريبًا في مكتبتك."</item>
-        <item quantity="many">"تمت إضافة %1$d فيديو. ستظهر قريبًا في مكتبتك."</item>
-        <item quantity="other">"تمت إضافة %1$d فيديو. ستظهر قريبًا في مكتبتك."</item>
+        <item quantity="zero">"تمت إضافة %1$d مقطع فيديو. ستظهر قريبًا في مكتبتك."</item>
+        <item quantity="one">"تمت إضافة مقطع فيديو واحد (%1$d). سيظهر قريبًا في مكتبتك."</item>
+        <item quantity="two">"تمت إضافة مقطعي فيديو (%1$d). سيظهران قريبًا في مكتبتك."</item>
+        <item quantity="few">"تمت إضافة %1$d مقاطع فيديو. ستظهر قريبًا في مكتبتك."</item>
+        <item quantity="many">"تمت إضافة %1$d مقطع فيديو. ستظهر قريبًا في مكتبتك."</item>
+        <item quantity="other">"تمت إضافة %1$d مقطع فيديو. ستظهر قريبًا في مكتبتك."</item>
     </plurals>
     <string name="picker_banner" formatted="false">"🔒 التصفح على هذا الهاتف فقط. لا يُرسل أي شيء من هنا إلى Cablegram."</string>
     <string name="picker_banner_personal" formatted="false">"🔒 التصفح على هذا الهاتف فقط، بما في ذلك المحادثات الشخصية. لا يُرسل أي شيء من هنا إلى Cablegram."</string>
     <string name="picker_how" formatted="false">"كيف يعمل هذا"</string>
     <string name="how_title" formatted="false">"كيف يعمل هذا"</string>
-    <string name="how_body" formatted="false">"Cablegram مسجّل الدخول إلى تيليجرام على هذا الهاتف، مثل Telegram Desktop. الشيفرة التي تنظر في محادثاتك موجودة في مكان واحد، هو الحزمة app.cablegram.discovery في تطبيق الهاتف، واختبار التطبيق المفتوح المصدر (TelegramApiSurfaceTest) يسرد كل استدعاء لتيليجرام يُسمح له به. تبقى أسماء المحادثات والأعداد والرسائل والصور المصغّرة على هذا الهاتف. لا يُحوَّل إلى «Cablegram library» سوى الفيديوهات التي تضيفها."</string>
+    <string name="how_body" formatted="false">"سجّل Cablegram الدخول إلى Telegram على هذا الهاتف، مثل Telegram Desktop. الشيفرة التي تطّلع على محادثاتك موجودة في مكان واحد، هو الحزمة app.cablegram.discovery في تطبيق الهاتف، واختبار التطبيق المفتوح المصدر (TelegramApiSurfaceTest) يسرد كل استدعاء لـ Telegram يُسمح له بإجرائه. تبقى أسماء المحادثات والأعداد والرسائل والصور المصغّرة على هذا الهاتف. ولا يُحوَّل إلى «Cablegram library» سوى مقاطع الفيديو التي تضيفها."</string>
     <string name="how_link" formatted="false">"عرض الاختبار على GitHub"</string>
-    <string name="discovery_advanced" formatted="false">"إعدادات متقدمة"</string>
-    <string name="advanced_personal_title" formatted="false">"ابحث أيضًا في المحادثات الشخصية"</string>
-    <string name="advanced_personal_desc" formatted="false">"محادثات فردية مع أشخاص. غالبًا ما تحتوي على فيديوهات شخصية."</string>
-    <string name="advanced_saved_title" formatted="false">"ابحث أيضًا في الرسائل المحفوظة"</string>
+    <string name="discovery_advanced" formatted="false">"الإعدادات المتقدمة"</string>
+    <string name="advanced_personal_title" formatted="false">"البحث أيضًا في المحادثات الشخصية"</string>
+    <string name="advanced_personal_desc" formatted="false">"محادثات فردية مع أشخاص. غالبًا ما تحتوي على مقاطع فيديو شخصية."</string>
+    <string name="advanced_saved_title" formatted="false">"البحث أيضًا في الرسائل المحفوظة"</string>
     <string name="advanced_saved_desc" formatted="false">"محادثة الرسائل المحفوظة الخاصة بك."</string>
-    <string name="advanced_confirm_title" formatted="false">"تشغيل هذا؟"</string>
-    <string name="advanced_confirm_personal" formatted="false">"بذلك يمكن لخيار «البحث عن فيديوهات» أن يعرض أيضًا محادثاتك الفردية مع الأشخاص. تبقى غير محددة حتى تختارها، ولا يُنظر في شيء حتى تضغط «ابحث عن فيديوهات»."</string>
-    <string name="advanced_confirm_saved" formatted="false">"بذلك يمكن لخيار «البحث عن فيديوهات» أن يعرض أيضًا رسائلك المحفوظة. تبقى غير محددة حتى تختارها، ولا يُنظر في شيء حتى تضغط «ابحث عن فيديوهات»."</string>
-    <string name="advanced_turn_on" formatted="false">"تشغيل"</string>
+    <string name="advanced_confirm_title" formatted="false">"هل تريد تفعيل هذا الخيار؟"</string>
+    <string name="advanced_confirm_personal" formatted="false">"يتيح هذا لميزة «العثور على مقاطع فيديو» عرض محادثاتك الفردية مع الأشخاص أيضًا. وتبقى غير محددة حتى تختارها، ولا يُطّلع على أي شيء حتى تضغط على «البحث عن مقاطع فيديو»."</string>
+    <string name="advanced_confirm_saved" formatted="false">"يتيح هذا لميزة «العثور على مقاطع فيديو» عرض «الرسائل المحفوظة» أيضًا. وتبقى غير محددة حتى تختارها، ولا يُطّلع على أي شيء حتى تضغط على «البحث عن مقاطع فيديو»."</string>
+    <string name="advanced_turn_on" formatted="false">"تفعيل"</string>
     <string name="discovery_kind_personal" formatted="false">"محادثة شخصية"</string>
     <string name="discovery_kind_saved" formatted="false">"الرسائل المحفوظة"</string>
     <plurals name="picker_dropped">
-        <item quantity="zero">"%1$d محادثة اخترتها لم تعد متاحة وتمت إزالتها."</item>
-        <item quantity="one">"%1$d محادثة اخترتها لم تعد متاحة وتمت إزالتها."</item>
-        <item quantity="two">"%1$d محادثة اخترتها لم تعد متاحة وتمت إزالتها."</item>
-        <item quantity="few">"%1$d محادثات اخترتها لم تعد متاحة وتمت إزالتها."</item>
-        <item quantity="many">"%1$d محادثات اخترتها لم تعد متاحة وتمت إزالتها."</item>
-        <item quantity="other">"%1$d محادثات اخترتها لم تعد متاحة وتمت إزالتها."</item>
+        <item quantity="zero">"لم تعد %1$d محادثة اخترتها متاحة وتمت إزالتها."</item>
+        <item quantity="one">"لم تعد محادثة واحدة (%1$d) اخترتها متاحة وتمت إزالتها."</item>
+        <item quantity="two">"لم تعد محادثتان (%1$d) اخترتهما متاحتين وتمت إزالتهما."</item>
+        <item quantity="few">"لم تعد %1$d محادثات اخترتها متاحة وتمت إزالتها."</item>
+        <item quantity="many">"لم تعد %1$d محادثة اخترتها متاحة وتمت إزالتها."</item>
+        <item quantity="other">"لم تعد %1$d محادثة اخترتها متاحة وتمت إزالتها."</item>
     </plurals>
 </resources>
