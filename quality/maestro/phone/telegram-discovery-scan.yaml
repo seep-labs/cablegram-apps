@@ -118,12 +118,15 @@ tags:
     id: discovery_chat_check
     checked: true
 
-# Clean up: untick and save an empty choice.
+# Clean up: untick ${CHAT} and save. If another chat is still chosen, Use opens the picker: close it.
 - tapOn:
     id: discovery_chat_check
     checked: true
 - tapOn:
     id: discovery_use
+- tapOn:
+    id: picker_done
+    optional: true
 - scrollUntilVisible:
     element:
       id: telegram_add_from_chats

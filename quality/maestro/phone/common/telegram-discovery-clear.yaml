@@ -25,3 +25,7 @@ appId: app.cablegram.phone
     checked: true
 - tapOn:
     id: discovery_use
+# If another chat is still chosen, Use opens the picker: close it.
+- tapOn:
+    id: picker_done
+    optional: true
