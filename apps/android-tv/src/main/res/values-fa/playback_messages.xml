@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ui_connect_telegram_title" formatted="false">"اتصال تلگرام"</string>
+    <string name="ui_connect_telegram_button" formatted="false">"اتصال تلگرام"</string>
+    <string name="ui_telegram_not_connected_message" formatted="false">"تلگرام نه روی این تلویزیون متصل است و نه روی گوشی شما."</string>
+    <string name="ui_video_unavailable_title" formatted="false">"ویدیو در دسترس نیست"</string>
+    <string name="ui_phone_lost_file_message" formatted="false">"این ویدیو روی گوشی شما نیست. ویدیو را دوباره روی گوشی اضافه کنید."</string>
+    <string name="ui_phone_replaced_message" formatted="false">"این ویدیو روی نصب قبلی برنامه در گوشی شما بود. ویدیو را دوباره روی گوشی اضافه کنید."</string>
+    <string name="ui_phone_offline_title" formatted="false">"گوشی آفلاین است"</string>
+    <string name="ui_phone_offline_message" formatted="false">"دسترسی به گوشی شما ممکن نیست. Cablegram را روی گوشی باز کنید و مطمئن شوید به اینترنت وصل است."</string>
+    <string name="ui_storage_disconnected_title" formatted="false">"فضای ذخیره‌سازی قطع شد"</string>
+    <string name="ui_cloud_disconnected_message" formatted="false">"فضای ابری شما قطع شده است. فضای ذخیره‌سازی را دوباره روی گوشی متصل کنید."</string>
+    <string name="ui_storage_credentials_rejected_title" formatted="false">"ورود به فضای ذخیره‌سازی لازم است"</string>
+    <string name="ui_cloud_credentials_rejected_message" formatted="false">"اطلاعات ورود فضای ابری شما رد شد. فضای ذخیره‌سازی را دوباره روی گوشی متصل کنید."</string>
+    <string name="ui_storage_limited_title" formatted="false">"محدودیت دانلود فضای ذخیره‌سازی"</string>
+    <string name="ui_cloud_limited_message" formatted="false">"فضای ابری شما دانلود این ویدیو را محدود کرده است. کمی بعد دوباره تلاش کنید."</string>
+    <string name="ui_unknown_playback_failure_message" formatted="false">"این ویدیو اکنون پخش نمی‌شود. کمی بعد دوباره تلاش کنید."</string>
+</resources>

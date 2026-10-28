@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ui_connect_telegram_title" formatted="false">"Telegram verbinden"</string>
+    <string name="ui_connect_telegram_button" formatted="false">"Telegram verbinden"</string>
+    <string name="ui_telegram_not_connected_message" formatted="false">"Telegram ist weder auf diesem Fernseher noch auf deinem Smartphone verbunden."</string>
+    <string name="ui_video_unavailable_title" formatted="false">"Video nicht verfügbar"</string>
+    <string name="ui_phone_lost_file_message" formatted="false">"Dieses Video ist nicht auf deinem Smartphone. Füge das Video auf deinem Smartphone erneut hinzu."</string>
+    <string name="ui_phone_replaced_message" formatted="false">"Dieses Video war auf deiner früheren App-Installation auf dem Smartphone. Füge das Video auf deinem Smartphone erneut hinzu."</string>
+    <string name="ui_phone_offline_title" formatted="false">"Smartphone offline"</string>
+    <string name="ui_phone_offline_message" formatted="false">"Dein Smartphone ist nicht erreichbar. Öffne Cablegram auf deinem Smartphone und prüfe, ob es mit dem Internet verbunden ist."</string>
+    <string name="ui_storage_disconnected_title" formatted="false">"Speicher getrennt"</string>
+    <string name="ui_cloud_disconnected_message" formatted="false">"Dein Cloud-Speicher ist getrennt. Verbinde deinen Speicher erneut auf deinem Smartphone."</string>
+    <string name="ui_storage_credentials_rejected_title" formatted="false">"Anmeldung beim Speicher erforderlich"</string>
+    <string name="ui_cloud_credentials_rejected_message" formatted="false">"Die Zugangsdaten deines Cloud-Speichers wurden abgelehnt. Verbinde deinen Speicher erneut auf deinem Smartphone."</string>
+    <string name="ui_storage_limited_title" formatted="false">"Download-Limit des Speichers"</string>
+    <string name="ui_cloud_limited_message" formatted="false">"Dein Cloud-Speicher begrenzt gerade die Downloads dieses Videos. Versuche es in einer Weile erneut."</string>
+    <string name="ui_unknown_playback_failure_message" formatted="false">"Dieses Video kann gerade nicht abgespielt werden. Versuche es gleich noch einmal."</string>
+</resources>

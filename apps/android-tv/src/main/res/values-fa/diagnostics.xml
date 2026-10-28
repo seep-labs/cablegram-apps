@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="diagnostics_crash_reports_on" formatted="false">"گزارش خرابی: روشن"</string>
+    <string name="diagnostics_crash_reports_off" formatted="false">"گزارش خرابی: خاموش"</string>
+    <string name="diagnostics_report_problem_button" formatted="false">"گزارش مشکل"</string>
+    <string name="diagnostics_sending" formatted="false">"در حال ارسال…"</string>
+    <string name="diagnostics_report_sent" formatted="false">"سپاسگزاریم! گزارش تشخیصی ثبت شد."</string>
+    <string name="diagnostics_report_failed" formatted="false">"ثبت گزارش تشخیصی انجام نشد."</string>
+</resources>
