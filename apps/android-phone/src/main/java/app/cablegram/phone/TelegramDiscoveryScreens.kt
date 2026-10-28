@@ -93,7 +93,7 @@ internal class FindVideosModel(private val graph: DiscoveryGraph, private val sc
                 if (!resume) { graph.store.restartScan() }
                 val done = graph.store.snapshot().scanned.toSet()
                 val chats = mutableListOf<DiscoveryChat>()
-                graph.discovery.discoveryChats(permit, graph.store.switches()).collect { chats += it }
+                graph.discovery.discoveryChats(permit, graph.store.switches()).collect { chats += it; app.cablegram.phone.diagnostics.SentryScrubber.rememberName(it.title) }
                 total = chats.size
                 checked = chats.count { it.id.raw in done }
                 for (chat in chats.filter { it.id.raw !in done }) {

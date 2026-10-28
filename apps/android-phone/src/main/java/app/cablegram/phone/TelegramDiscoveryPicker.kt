@@ -121,6 +121,7 @@ internal class PickerModel(private val graph: DiscoveryGraph, private val hooks:
             try {
                 val page = p.next(PAGE)
                 videos += page
+                page.forEach { app.cablegram.phone.diagnostics.SentryScrubber.rememberName(it.title) }
                 exhausted = p.exhausted
                 for (v in page) launch { graph.discovery.thumbnail(v)?.let { thumbs[key(v)] = it } }
             } catch (e: kotlinx.coroutines.CancellationException) {
