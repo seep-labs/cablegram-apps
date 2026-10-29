@@ -296,8 +296,20 @@ private fun reduceAudioSubtitleMenu(
             focus = ControlsFocus.AUDIO_SUBTITLES,
             menuIndex = 0,
         ) to emptyList()
-        DpadKey.UP -> state.copy(menuIndex = (state.menuIndex - 1).coerceAtLeast(0)) to emptyList()
-        DpadKey.DOWN -> state.copy(menuIndex = (state.menuIndex + 1).coerceAtMost(lastIndex)) to emptyList()
+        // The two columns read as one list: DOWN past the last audio track enters the subtitles ("Off" first), UP past the first subtitle
+        // returns to the last audio track. LEFT and RIGHT still jump between the columns at once.
+        DpadKey.UP ->
+            if (state.menuSection == MenuSection.SUBTITLES && state.menuIndex == 0 && ctx.audioTracks.isNotEmpty()) {
+                state.copy(menuSection = MenuSection.AUDIO, menuIndex = ctx.audioTracks.size - 1) to emptyList()
+            } else {
+                state.copy(menuIndex = (state.menuIndex - 1).coerceAtLeast(0)) to emptyList()
+            }
+        DpadKey.DOWN ->
+            if (state.menuSection == MenuSection.AUDIO && state.menuIndex >= lastIndex) {
+                state.copy(menuSection = MenuSection.SUBTITLES, menuIndex = 0) to emptyList()
+            } else {
+                state.copy(menuIndex = (state.menuIndex + 1).coerceAtMost(lastIndex)) to emptyList()
+            }
         DpadKey.LEFT -> switchSection(state, MenuSection.AUDIO, ctx) to emptyList()
         DpadKey.RIGHT -> switchSection(state, MenuSection.SUBTITLES, ctx) to emptyList()
         DpadKey.OK -> {
