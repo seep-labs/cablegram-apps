@@ -1007,6 +1007,8 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
         }
         if (setAside) status = uiText(R.string.ui_signed_in_the_previous_account_s_library_is_kept_aside_45bf31)
         checkTerms()
+        // Learn whether the household uses Telegram: a phone that signs in without a session of its own marks the Telegram titles.
+        loadTelegramLink()
     }
 
     private suspend fun ensurePhoneDevice() {

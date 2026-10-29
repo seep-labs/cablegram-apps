@@ -488,7 +488,7 @@ private fun SeriesCard(series: LibraryEntry.Series, showProgress: Boolean, viewM
         ) {
             MediaArtwork(lead, Modifier.fillMaxSize())
             SelectionMark(selection)
-            libraryProblem(lead, viewModel.libraryConnections)?.let { ProblemMark(it, Modifier.align(Alignment.TopStart).padding(start = 6.dp, top = 4.dp)) }
+            libraryProblem(lead, viewModel.libraryConnections)?.let { ProblemMark(it, Modifier.align(Alignment.TopStart).padding(start = 6.dp, top = 6.dp)) }
             Text(
                 ui.getString(R.string.ui_tv_series_e50677),
                 color = Color.White,
@@ -642,7 +642,8 @@ private fun PosterCard(item: LibraryItem, showProgress: Boolean, viewModel: Phon
                     modifier = Modifier.align(Alignment.TopStart).padding(6.dp).size(18.dp),
                 )
             }
-            problem?.let { ProblemMark(it, Modifier.align(Alignment.TopStart).padding(start = if (item.isPrivate) 30.dp else 6.dp, top = 4.dp)) }
+            // Under the lock on a private title, so the mark does not run into the storage label.
+            problem?.let { ProblemMark(it, Modifier.align(Alignment.TopStart).padding(start = 6.dp, top = if (item.isPrivate) 30.dp else 6.dp)) }
             if (showProgress) {
                 LinearProgressIndicator(
                     progress = { watchFraction(item) },
