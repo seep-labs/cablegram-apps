@@ -14,10 +14,10 @@ struct CleanupSheet: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     if groups.isEmpty {
-                        Text(key: "ios_cleanup_nothing").foregroundStyle(Color.phoneMuted)
+                        Text(key: "cleanup_nothing").foregroundStyle(Color.phoneMuted)
                     } else {
-                        Text(key: "ios_cleanup_intro").foregroundStyle(Color.phoneMuted)
-                        Button { select(groups.flatMap(\.items)) } label: { Text(verbatim: L("ios_cleanup_select_all", total)) }
+                        Text(key: "cleanup_intro").foregroundStyle(Color.phoneMuted)
+                        Button { select(groups.flatMap(\.items)) } label: { Text(verbatim: L("cleanup_select_all", total)) }
                             .buttonStyle(PrimaryButtonStyle(minHeight: 52)).accessibilityIdentifier("cleanup_select_all")
                         ForEach(groups, id: \.problem) { group in row(group) }
                     }
@@ -25,7 +25,7 @@ struct CleanupSheet: View {
                 .padding(20)
             }
             .background(Color.phoneBackground)
-            .navigationTitle(L("ios_cleanup_title"))
+            .navigationTitle(L("cleanup_title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button(L("ui_close_7d9eb7"), action: close) } }
         }
@@ -41,10 +41,10 @@ struct CleanupSheet: View {
                 Text(verbatim: "\(group.items.count)").font(PhoneFont.titleMedium).foregroundStyle(Color.phoneMuted)
             }
             HStack(spacing: 12) {
-                Button { select(group.items) } label: { Text(key: "ios_cleanup_select") }
+                Button { select(group.items) } label: { Text(key: "cleanup_select") }
                     .buttonStyle(OutlinedButtonStyle(minHeight: 44)).accessibilityIdentifier("cleanup_select_\(group.problem.identifier)")
                 if group.problem.needsConnection {
-                    Button { connect(group.problem) } label: { Text(key: "ios_cleanup_connect") }
+                    Button { connect(group.problem) } label: { Text(key: "cleanup_connect") }
                         .buttonStyle(PrimaryButtonStyle(minHeight: 44)).accessibilityIdentifier("cleanup_connect_\(group.problem.identifier)")
                 }
             }
@@ -55,8 +55,8 @@ struct CleanupSheet: View {
     private func groupTitle(_ problem: LibraryProblem) -> String {
         switch problem {
         case .unavailable, .notOnPhone: problem.label
-        case .telegramNotConnected: L("ios_cleanup_group_telegram")
-        case .cloudNotConnected: L("ios_cleanup_group_cloud")
+        case .telegramNotConnected: L("cleanup_group_telegram")
+        case .cloudNotConnected: L("cleanup_group_cloud")
         }
     }
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Titles that cannot play from this phone: marks, the connect prompt, Clean up. -->
+    <string name="library_problem_telegram" formatted="false">"Подключите Telegram, чтобы смотреть"</string>
+    <string name="library_problem_cloud" formatted="false">"Подключите облачное хранилище, чтобы смотреть"</string>
+    <string name="telegram_connect_needed_title" formatted="false">"Телевизор хочет воспроизвести видео из Telegram"</string>
+    <string name="telegram_connect_needed_body" formatted="false">"Подключите аккаунт Telegram на этом телефоне, чтобы %1$s мог его воспроизвести."</string>
+    <string name="cleanup_title" formatted="false">"Очистить библиотеку"</string>
+    <string name="cleanup_intro" formatted="false">"Эти видео сейчас нельзя воспроизвести с этого телефона. Выберите их, чтобы удалить, или подключите то, чего не хватает."</string>
+    <string name="cleanup_nothing" formatted="false">"Очищать нечего. Все видео можно воспроизвести с этого телефона."</string>
+    <string name="cleanup_select_all" formatted="false">"Выбрать все (%1$d)"</string>
+    <string name="cleanup_select" formatted="false">"Выбрать"</string>
+    <string name="cleanup_connect" formatted="false">"Подключить"</string>
+    <string name="cleanup_group_telegram" formatted="false">"Telegram не подключён на этом телефоне"</string>
+    <string name="cleanup_group_cloud" formatted="false">"Ваше облачное хранилище не подключено"</string>
+</resources>

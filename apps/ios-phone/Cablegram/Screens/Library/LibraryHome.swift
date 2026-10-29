@@ -53,7 +53,7 @@ struct LibraryHome: View {
             }
             Spacer()
             if !viewModel.cleanupProblems.isEmpty {
-                squareButton("wand.and.sparkles", label: "ios_cleanup_title", id: "library_cleanup") { cleanupOpen = true }
+                squareButton("wand.and.sparkles", label: "cleanup_title", id: "library_cleanup") { cleanupOpen = true }
             }
             squareButton("folder", label: "ui_collections_9f9fea", id: "library_collections") { viewModel.collectionsDialogOpen = true }
             squareButton("plus", label: "ui_import_videos_fec728", id: nil) { viewModel.selectTab(.browse) }
@@ -265,8 +265,8 @@ extension LibraryProblem {
         switch self {
         case .unavailable: L(StorageBadge.unavailable.labelKey)
         case .notOnPhone: L(StorageBadge.notOnPhone.labelKey)
-        case .telegramNotConnected: L("ios_telegram_not_connected_label")
-        case .cloudNotConnected: L("ios_cloud_not_connected_label")
+        case .telegramNotConnected: L("library_problem_telegram")
+        case .cloudNotConnected: L("library_problem_cloud")
         }
     }
 

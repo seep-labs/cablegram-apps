@@ -487,9 +487,9 @@ struct TelegramConnectCard: View {
             VStack(alignment: .leading, spacing: 8) {
                 HStack(spacing: 8) {
                     Image(systemName: "exclamationmark.circle.fill").foregroundStyle(Color.telegramWarning)
-                    Text(key: "ios_telegram_connect_needed_title").font(PhoneFont.titleMedium).foregroundStyle(.white)
+                    Text(key: "telegram_connect_needed_title").font(PhoneFont.titleMedium).foregroundStyle(.white)
                 }
-                Text(verbatim: L("ios_telegram_connect_needed_body", request.tvName)).font(.system(.footnote)).foregroundStyle(Color.phoneMuted)
+                Text(verbatim: L("telegram_connect_needed_body", request.tvName)).font(.system(.footnote)).foregroundStyle(Color.phoneMuted)
                 Button { telegram.openSheet() } label: { Text(key: "ui_connect_telegram_00c799") }
                     .buttonStyle(PrimaryButtonStyle(minHeight: 44)).accessibilityIdentifier("telegram_connect_needed_button")
             }

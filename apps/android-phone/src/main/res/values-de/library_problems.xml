@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Titles that cannot play from this phone: marks, the connect prompt, Clean up. -->
+    <string name="library_problem_telegram" formatted="false">"Telegram verbinden, um abzuspielen"</string>
+    <string name="library_problem_cloud" formatted="false">"Cloud-Speicher verbinden, um abzuspielen"</string>
+    <string name="telegram_connect_needed_title" formatted="false">"Ein Fernseher möchte ein Telegram-Video abspielen"</string>
+    <string name="telegram_connect_needed_body" formatted="false">"Verbinde dein Telegram-Konto auf diesem Handy, damit %1$s es abspielen kann."</string>
+    <string name="cleanup_title" formatted="false">"Bibliothek aufräumen"</string>
+    <string name="cleanup_intro" formatted="false">"Diese Titel lassen sich auf diesem Handy gerade nicht abspielen. Wähle sie aus, um sie zu entfernen, oder verbinde, was fehlt."</string>
+    <string name="cleanup_nothing" formatted="false">"Nichts aufzuräumen. Jeder Titel lässt sich auf diesem Handy abspielen."</string>
+    <string name="cleanup_select_all" formatted="false">"Alle %1$d Titel auswählen"</string>
+    <string name="cleanup_select" formatted="false">"Auswählen"</string>
+    <string name="cleanup_connect" formatted="false">"Verbinden"</string>
+    <string name="cleanup_group_telegram" formatted="false">"Telegram ist auf diesem Handy nicht verbunden"</string>
+    <string name="cleanup_group_cloud" formatted="false">"Dein Cloud-Speicher ist nicht verbunden"</string>
+</resources>
