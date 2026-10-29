@@ -15,9 +15,9 @@ LAN_IDLE_TIMEOUT_MS = 1800000
 // Test-only (Android LAN_HOST_OVERRIDE): announce this host instead of the phone's own address.
 LAN_HOST_OVERRIDE =
 // Google sign-in iOS OAuth client (founder input, see the plan). Empty client id hides the Google button.
-GOOGLE_IOS_CLIENT_ID =
+GOOGLE_IOS_CLIENT_ID =  9735184484-607nkcjqrdupdockh09qnfmfmrsdrmg5.apps.googleusercontent.com 
 // Harmless placeholder scheme until the real reversed client id is set in Local.xcconfig.
-GOOGLE_REVERSED_CLIENT_ID = app.cablegram.phone.google-unset
+GOOGLE_REVERSED_CLIENT_ID =  com.googleusercontent.apps.9735184484-607nkcjqrdupdockh09qnfmfmrsdrmg5
 // Set on each signed target (XcodeGen would otherwise write "iPhone Developer" into the app target). The release script sets Apple Distribution.
 CABLEGRAM_CODE_SIGN_IDENTITY = Apple Development
 // App Store profile names per target, for manual signing in the release workflow (scripts/setup-ios-signing.sh writes them into
