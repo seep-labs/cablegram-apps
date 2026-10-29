@@ -51,9 +51,10 @@ jobs:
           else
             version=$(sed -nE 's/^MARKETING_VERSION = (.*)$/\1/p' apps/ios-phone/Config/Base.xcconfig)
           fi
-          # Every upload needs a higher build number; reruns of a run keep theirs (TestFlight then refuses the duplicate).
+          # Every upload needs a higher build number; reruns of a run keep theirs (TestFlight then refuses the duplicate). The offset keeps this above
+          # the builds uploaded by hand (up to 1012) and the earlier CI builds (up to 1010).
           echo "MARKETING_VERSION=$version" >> "$GITHUB_ENV"
-          echo "BUILD_NUMBER=$((1000 + RUN_NUMBER))" >> "$GITHUB_ENV"
+          echo "BUILD_NUMBER=$((1100 + RUN_NUMBER))" >> "$GITHUB_ENV"
           xcodebuild -version
       - name: String Catalog is up to date
         if: env.HAS_SIGNING == 'true'
