@@ -48,6 +48,570 @@
         }
       }
     },
+    "advanced_confirm_personal": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "يتيح هذا لميزة «العثور على مقاطع فيديو» عرض محادثاتك الفردية مع الأشخاص أيضًا. وتبقى غير محددة حتى تختارها، ولا يُطّلع على أي شيء حتى تضغط على «البحث عن مقاطع فيديو»."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Damit kann „Videos finden“ auch deine Einzelchats mit Personen auflisten. Sie bleiben abgewählt, bis du sie auswählst, und es wird nichts angesehen, bevor du auf „Nach Videos suchen“ tippst."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This adds your one-to-one chats with people to what Find videos can list. They stay unchecked until you choose them, and nothing is looked at until you tap Look for videos."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esto permite que «Buscar vídeos» también muestre tus chats individuales con personas. Quedan sin marcar hasta que los elijas, y no se mira nada hasta que pulses «Buscar vídeos»."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "با این کار «یافتن ویدیوها» می‌تواند گفتگوهای دونفرهٔ شما با افراد را هم فهرست کند. این گفتگوها تا وقتی انتخابشان نکنید بدون علامت می‌مانند و تا وقتی «جست‌وجوی ویدیو» را نزنید هیچ‌چیز بررسی نمی‌شود."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Così «Trova video» può elencare anche le tue chat individuali con altre persone. Restano deselezionate finché non le scegli e non viene controllato nulla finché non tocchi «Cerca video»."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Это позволит экрану «Поиск видео» показывать также ваши личные чаты с людьми. Они остаются неотмеченными, пока вы их не выберете, и ничего не просматривается, пока вы не нажмёте «Искать видео»."
+          }
+        }
+      }
+    },
+    "advanced_confirm_saved": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "يتيح هذا لميزة «العثور على مقاطع فيديو» عرض «الرسائل المحفوظة» أيضًا. وتبقى غير محددة حتى تختارها، ولا يُطّلع على أي شيء حتى تضغط على «البحث عن مقاطع فيديو»."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Damit kann „Videos finden“ auch deine „Gespeicherten Nachrichten“ auflisten. Der Chat bleibt abgewählt, bis du ihn auswählst, und es wird nichts angesehen, bevor du auf „Nach Videos suchen“ tippst."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This adds your Saved Messages to what Find videos can list. It stays unchecked until you choose it, and nothing is looked at until you tap Look for videos."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esto permite que «Buscar vídeos» también muestre tus Mensajes guardados. Queda sin marcar hasta que lo elijas, y no se mira nada hasta que pulses «Buscar vídeos»."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "با این کار «یافتن ویدیوها» می‌تواند «پیام‌های ذخیره‌شده» شما را هم فهرست کند. این بخش تا وقتی انتخابش نکنید بدون علامت می‌ماند و تا وقتی «جست‌وجوی ویدیو» را نزنید هیچ‌چیز بررسی نمی‌شود."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Così «Trova video» può elencare anche i tuoi «Messaggi salvati». La chat resta deselezionata finché non la scegli e non viene controllato nulla finché non tocchi «Cerca video»."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Это позволит экрану «Поиск видео» показывать также ваше «Избранное». Оно остаётся неотмеченным, пока вы его не выберете, и ничего не просматривается, пока вы не нажмёте «Искать видео»."
+          }
+        }
+      }
+    },
+    "advanced_confirm_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "هل تريد تفعيل هذا الخيار؟"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktivieren?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn this on?"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Activar?"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فعال شود؟"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Attivare?"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Включить?"
+          }
+        }
+      }
+    },
+    "advanced_min_any": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "أي مدة"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beliebige Länge"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Any length"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cualquier duración"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "هر مدت‌زمانی"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Qualsiasi durata"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Любая длительность"
+          }
+        }
+      }
+    },
+    "advanced_min_desc": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تُستبعد المقاطع الأقصر من الفحص ومن شاشة الاختيار."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kürzere Clips werden bei der Suche und in der Auswahl ausgelassen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shorter clips are left out of the scan and the picker."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Los clips más cortos quedan fuera de la búsqueda y de la selección."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کلیپ‌های کوتاه‌تر از جست‌وجو و فهرست انتخاب کنار گذاشته می‌شوند."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le clip più brevi vengono escluse dalla ricerca e dalla selezione."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Более короткие ролики исключаются из поиска и списка выбора."
+          }
+        }
+      }
+    },
+    "advanced_min_option": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$d د"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$d Min."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$d min"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$d min"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$d دقیقه"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$d min"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$d мин"
+          }
+        }
+      }
+    },
+    "advanced_min_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "أقصر مدة فيديو تُحتسب"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mindestlänge für Videos"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shortest video to count"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vídeo más corto que se cuenta"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کوتاه‌ترین ویدیو برای شمارش"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Durata minima dei video"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Минимальная длительность видео"
+          }
+        }
+      }
+    },
+    "advanced_personal_desc": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "محادثات فردية مع أشخاص. غالبًا ما تحتوي على مقاطع فيديو شخصية."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einzelchats mit Personen. Diese enthalten oft persönliche Videos."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One-to-one chats with people. These often hold personal videos."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chats individuales con personas. Suelen contener vídeos personales."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "گفتگوهای دونفره با افراد. این گفتگوها اغلب حاوی ویدیوهای شخصی هستند."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chat individuali con altre persone. Spesso contengono video personali."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Личные чаты с людьми один на один. В них часто бывают личные видео."
+          }
+        }
+      }
+    },
+    "advanced_personal_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "البحث أيضًا في المحادثات الشخصية"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auch in persönlichen Chats suchen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Also look in personal chats"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buscar también en chats personales"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جست‌وجو در گفتگوهای شخصی"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cerca anche nelle chat personali"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Искать также в личных чатах"
+          }
+        }
+      }
+    },
+    "advanced_saved_desc": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "محادثة الرسائل المحفوظة الخاصة بك."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dein eigener Chat „Gespeicherte Nachrichten“."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your own Saved Messages chat."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tu propio chat de Mensajes guardados."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "گفتگوی «پیام‌های ذخیره‌شده» خودتان."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La tua chat Messaggi salvati."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ваш чат «Избранное»."
+          }
+        }
+      }
+    },
+    "advanced_saved_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "البحث أيضًا في الرسائل المحفوظة"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auch in „Gespeicherte Nachrichten“ suchen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Also look in Saved Messages"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buscar también en Mensajes guardados"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جست‌وجو در پیام‌های ذخیره‌شده"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cerca anche nei Messaggi salvati"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Искать также в «Избранном»"
+          }
+        }
+      }
+    },
+    "advanced_turn_on": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تفعيل"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktivieren"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn on"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activar"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فعال کردن"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Attiva"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Включить"
+          }
+        }
+      }
+    },
     "delete_account_cancel": {
       "extractionState": "manual",
       "localizations": {
@@ -1555,10 +2119,46 @@
     "diagnostics_crash_reports_description": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "يرسل سجلات أخطاء تشخيصية لمساعدتنا في إصلاح مشكلات التشغيل والأعطال. لا تُرسل عناوين الفيديو أو أسماء الملفات أو كلمات المرور."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sendet technische Fehlerspuren, damit wir Wiedergabeprobleme und Abstürze beheben können. Es werden keine Videotitel, Dateinamen oder Passwörter gesendet."
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Sends diagnostic error traces to help us fix playback problems and crashes. No video titles, file names or passwords are sent."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Envía registros de errores de diagnóstico para ayudarnos a corregir problemas de reproducción y fallos. No se envían títulos de vídeos, nombres de archivos ni contraseñas."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ردهای خطای تشخیصی را می‌فرستد تا به ما در رفع مشکلات پخش و خرابی‌ها کمک کند. هیچ عنوان ویدیو، نام فایل یا گذرواژه‌ای فرستاده نمی‌شود."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invia tracce di errore diagnostiche per aiutarci a risolvere problemi di riproduzione e arresti anomali. Non vengono inviati titoli dei video, nomi dei file né password."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отправляет диагностические данные об ошибках, чтобы помочь нам исправлять проблемы с воспроизведением и сбои. Названия видео, имена файлов и пароли не отправляются."
           }
         }
       }
@@ -1566,10 +2166,46 @@
     "diagnostics_crash_reports_title": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إرسال تقارير الأعطال"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Absturzberichte senden"
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Send crash reports"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enviar informes de fallos"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ارسال گزارش خرابی"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invia i report sugli arresti anomali"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отправлять отчёты о сбоях"
           }
         }
       }
@@ -1577,10 +2213,46 @@
     "diagnostics_problem_description_label": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ما الذي حدث؟ (اختياري)"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Was ist schiefgelaufen? (optional)"
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "What went wrong? (optional)"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Qué ha fallado? (opcional)"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "چه مشکلی پیش آمد؟ (اختیاری)"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cosa è andato storto? (facoltativo)"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Что пошло не так? (необязательно)"
           }
         }
       }
@@ -1588,10 +2260,46 @@
     "diagnostics_report_failed": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تعذّر تسجيل تقرير التشخيص."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Diagnosebericht konnte nicht gespeichert werden."
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Could not record diagnostic report."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se pudo registrar el informe de diagnóstico."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ثبت گزارش تشخیصی انجام نشد."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impossibile registrare il report diagnostico."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось сохранить диагностический отчёт."
           }
         }
       }
@@ -1599,10 +2307,46 @@
     "diagnostics_report_problem_button": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الإبلاغ عن مشكلة"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Problem melden"
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Report a problem"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Informar de un problema"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "گزارش مشکل"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Segnala un problema"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сообщить о проблеме"
           }
         }
       }
@@ -1610,10 +2354,46 @@
     "diagnostics_report_problem_description": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "يرسل معلومات تشخيصية (طراز الجهاز وإصدار Android وإصدار التطبيق والأخطاء الأخيرة) لمساعدتنا في التحقق. لا تُرسل عناوين الوسائط أو أسماء الملفات أو كلمات المرور."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sendet technische Infos (Gerätemodell, Android-Version, App-Version und aktuelle Fehler), damit wir der Sache nachgehen können. Es werden keine Titel, Dateinamen oder Passwörter gesendet."
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Send diagnostic info (device model, Android version, app version and recent errors) to help us investigate. No media titles, file names or passwords are sent."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Envía información de diagnóstico (modelo del dispositivo, versión de Android, versión de la app y errores recientes) para ayudarnos a investigar. No se envían títulos, nombres de archivos ni contraseñas."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اطلاعات تشخیصی (مدل دستگاه، نسخهٔ Android، نسخهٔ برنامه و خطاهای اخیر) را می‌فرستد تا در بررسی به ما کمک کند. هیچ عنوان رسانه، نام فایل یا گذرواژه‌ای فرستاده نمی‌شود."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invia informazioni diagnostiche (modello del dispositivo, versione di Android, versione dell'app ed errori recenti) per aiutarci a indagare. Non vengono inviati titoli, nomi dei file né password."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отправляет диагностические сведения (модель устройства, версия Android, версия приложения и недавние ошибки), чтобы помочь нам разобраться. Названия, имена файлов и пароли не отправляются."
           }
         }
       }
@@ -1621,10 +2401,46 @@
     "diagnostics_report_problem_title": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الإبلاغ عن مشكلة"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Problem melden"
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Report a problem"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Informar de un problema"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "گزارش مشکل"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Segnala un problema"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сообщить о проблеме"
           }
         }
       }
@@ -1632,10 +2448,46 @@
     "diagnostics_report_sent": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "شكرًا لك! تم تسجيل تقرير التشخيص."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Danke! Der Diagnosebericht wurde gespeichert."
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Thank you! Diagnostic report recorded."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¡Gracias! Informe de diagnóstico registrado."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سپاسگزاریم! گزارش تشخیصی ثبت شد."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grazie! Report diagnostico registrato."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Спасибо! Диагностический отчёт сохранён."
           }
         }
       }
@@ -1643,10 +2495,46 @@
     "diagnostics_send_report_button": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إرسال التقرير"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bericht senden"
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Send report"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enviar informe"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ارسال گزارش"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invia segnalazione"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отправить отчёт"
           }
         }
       }
@@ -1654,10 +2542,2526 @@
     "diagnostics_sending": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جارٍ الإرسال…"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wird gesendet…"
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Sending…"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enviando…"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "در حال ارسال…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invio in corso…"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отправка…"
+          }
+        }
+      }
+    },
+    "discovery_add_button": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إضافة من محادثاتك في Telegram"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aus deinen Telegram-Chats hinzufügen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add from your Telegram chats"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Añadir desde tus chats de Telegram"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "افزودن از گفتگوهای شما در Telegram"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aggiungi dalle tue chat Telegram"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Добавить из ваших чатов Telegram"
+          }
+        }
+      }
+    },
+    "discovery_advanced": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الإعدادات المتقدمة"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erweiterte Einstellungen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Advanced settings"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajustes avanzados"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تنظیمات پیشرفته"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impostazioni avanzate"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дополнительные настройки"
+          }
+        }
+      }
+    },
+    "discovery_ask_body": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "يطّلع Cablegram على هذا الهاتف على آخر 100 مقطع فيديو وملف في كل قناة ومجموعة لديك، ويحصي مقاطع الفيديو الطويلة من بينها. ويتجاهل المقاطع القصيرة ما لم تغيّر ذلك من «الإعدادات المتقدمة». ولا يطّلع على المحادثات الشخصية أو «الرسائل المحفوظة» أو المحادثات مع البوتات ما لم تفعّل ذلك."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram durchsucht auf diesem Handy die letzten 100 Videos und Dateien in jedem deiner Kanäle und in jeder deiner Gruppen und zählt darunter die langen Videos. Kurze Clips werden übersprungen, solange du das nicht in den „Erweiterten Einstellungen“ änderst. Persönliche Chats, „Gespeicherte Nachrichten“ und Chats mit Bots werden nicht durchsucht, solange du das nicht einschaltest."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram looks at the latest 100 videos and files in each of your channels and groups, on this phone, and counts the long videos among them. It skips short clips unless you change that in Advanced settings. It does not look in personal chats, Saved Messages or chats with bots unless you switch that on."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram mira, en este teléfono, los últimos 100 vídeos y archivos de cada uno de tus canales y grupos y cuenta entre ellos los vídeos largos. Omite los clips cortos, salvo que lo cambies en Ajustes avanzados. No mira en chats personales, en Mensajes guardados ni en chats con bots, salvo que lo actives."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram روی همین گوشی، ۱۰۰ ویدیو و فایل اخیر در هر یک از کانال‌ها و گروه‌های شما را بررسی می‌کند و ویدیوهای طولانی را در میان آن‌ها می‌شمارد. کلیپ‌های کوتاه را نادیده می‌گیرد، مگر اینکه این مورد را در «تنظیمات پیشرفته» تغییر دهید. در گفتگوهای شخصی، «پیام‌های ذخیره‌شده» یا گفتگوهای با ربات‌ها جست‌وجو نمی‌کند، مگر اینکه آن را روشن کنید."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram controlla, su questo telefono, gli ultimi 100 video e file di ciascuno dei tuoi canali e gruppi e conta tra questi i video lunghi. Salta le clip brevi, a meno che tu non lo cambi in «Impostazioni avanzate». Non controlla nelle chat personali, in «Messaggi salvati» né nelle chat con i bot, a meno che tu non lo attivi."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram просматривает на этом телефоне последние 100 видео и файлов в каждом вашем канале и группе и подсчитывает среди них длинные видео. Короткие ролики пропускаются, если не изменить это в «Дополнительных настройках». Личные чаты, «Избранное» и чаты с ботами не просматриваются, пока вы это не включите."
+          }
+        }
+      }
+    },
+    "discovery_ask_body_more": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "يطّلع Cablegram على هذا الهاتف على آخر 100 مقطع فيديو وملف في كل قناة ومجموعة لديك وفي الأنواع الأخرى من المحادثات التي فعّلتها، ويحصي مقاطع الفيديو الطويلة من بينها. ويتجاهل المقاطع القصيرة ما لم تغيّر ذلك من «الإعدادات المتقدمة»."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram durchsucht auf diesem Handy die letzten 100 Videos und Dateien in jedem deiner Kanäle und in jeder deiner Gruppen sowie in den weiteren Chat-Arten, die du eingeschaltet hast, und zählt darunter die langen Videos. Kurze Clips werden übersprungen, solange du das nicht in den „Erweiterten Einstellungen“ änderst."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram looks at the latest 100 videos and files in each of your channels and groups, and in the other kinds of chats you switched on, on this phone, and counts the long videos among them. It skips short clips unless you change that in Advanced settings."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram mira, en este teléfono, los últimos 100 vídeos y archivos de cada uno de tus canales y grupos, y de los demás tipos de chat que has activado, y cuenta entre ellos los vídeos largos. Omite los clips cortos, salvo que lo cambies en Ajustes avanzados."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram روی همین گوشی، ۱۰۰ ویدیو و فایل اخیر در هر یک از کانال‌ها و گروه‌های شما و در انواع دیگر گفتگوهایی که روشن کرده‌اید را بررسی می‌کند و ویدیوهای طولانی را در میان آن‌ها می‌شمارد. کلیپ‌های کوتاه را نادیده می‌گیرد، مگر اینکه این مورد را در «تنظیمات پیشرفته» تغییر دهید."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram controlla, su questo telefono, gli ultimi 100 video e file di ciascuno dei tuoi canali e gruppi e degli altri tipi di chat che hai attivato, e conta tra questi i video lunghi. Salta le clip brevi, a meno che tu non lo cambi in «Impostazioni avanzate»."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram просматривает на этом телефоне последние 100 видео и файлов в каждом вашем канале и группе, а также в других типах чатов, которые вы включили, и подсчитывает среди них длинные видео. Короткие ролики пропускаются, если не изменить это в «Дополнительных настройках»."
+          }
+        }
+      }
+    },
+    "discovery_ask_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "هل تريد البحث عن مقاطع فيديو في قنواتك ومجموعاتك؟"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In deinen Kanälen und Gruppen nach Videos suchen?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Look for videos in your channels and groups?"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Buscar vídeos en tus canales y grupos?"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جست‌وجوی ویدیو در کانال‌ها و گروه‌های شما؟"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cercare video nei tuoi canali e gruppi?"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Искать видео в ваших каналах и группах?"
+          }
+        }
+      }
+    },
+    "discovery_bots_body": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سيطّلع Cablegram على هذا الهاتف أيضًا على آخر 100 مقطع فيديو وملف في محادثاتك مع البوتات. لا يُرسل أي شيء من ذلك إلى Cablegram. ولا يحدث ذلك إلا بعد الضغط على الزر أدناه، ويمكنك إيقافه في أي وقت."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram sieht sich dann auch die letzten 100 Videos und Dateien in deinen Chats mit Bots an, auf diesem Handy. Nichts davon wird an Cablegram gesendet. Das geschieht erst, wenn du unten auf die Schaltfläche tippst, und du kannst es jederzeit wieder ausschalten."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram will also look at the latest 100 videos and files in your chats with bots, on this phone. None of it is sent to Cablegram. It only happens after you press the button below, and you can switch it off at any time."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram también mirará, en este teléfono, los últimos 100 vídeos y archivos de tus chats con bots. Nada de ello se envía a Cablegram. Solo ocurre cuando pulsas el botón de abajo y puedes desactivarlo en cualquier momento."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram روی همین گوشی، ۱۰۰ ویدیو و فایل اخیر در گفتگوهای شما با ربات‌ها را هم بررسی می‌کند. هیچ‌یک از این‌ها به Cablegram فرستاده نمی‌شود. این کار فقط پس از زدن دکمهٔ زیر انجام می‌شود و هر زمان بخواهید می‌توانید آن را خاموش کنید."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram controllerà anche, su questo telefono, gli ultimi 100 video e file delle tue chat con i bot. Niente di tutto questo viene inviato a Cablegram. Succede solo quando tocchi il pulsante qui sotto e puoi disattivarlo in qualsiasi momento."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram также просмотрит на этом телефоне последние 100 видео и файлов в ваших чатах с ботами. Ничего из этого не отправляется в Cablegram. Это произойдёт только после нажатия кнопки ниже, и вы можете отключить это в любой момент."
+          }
+        }
+      }
+    },
+    "discovery_bots_hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "يشمل بوتات التنزيل والحفظ. يطّلع على مقاطع الفيديو والملفات فقط، على هذا الهاتف."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dazu zählen Download- und Speicher-Bots. Es werden nur Videos und Dateien angesehen, auf diesem Handy."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Includes download and saver bots. Looks only at videos and files, on this phone."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Incluye bots de descarga y de guardado. Solo mira vídeos y archivos, en este teléfono."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "شامل ربات‌های دانلود و ذخیره است. فقط ویدیوها و فایل‌ها را روی همین گوشی بررسی می‌کند."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Include i bot per scaricare e salvare. Controlla solo video e file, su questo telefono."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Включая ботов для скачивания и сохранения. Просматриваются только видео и файлы, на этом телефоне."
+          }
+        }
+      }
+    },
+    "discovery_bots_switch": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ابحث أيضًا في المحادثات مع البوتات"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auch in Chats mit Bots suchen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Also look in chats with bots"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buscar también en chats con bots"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "در گفتگوهای با ربات‌ها هم جست‌وجو کن"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cerca anche nelle chat con i bot"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Искать также в чатах с ботами"
+          }
+        }
+      }
+    },
+    "discovery_bots_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "هل تريد البحث أيضًا في المحادثات مع البوتات؟"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auch in Chats mit Bots suchen?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Look in chats with bots too?"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Buscar también en chats con bots?"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "در گفتگوهای با ربات‌ها هم جست‌وجو شود؟"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cercare anche nelle chat con i bot?"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Искать также в чатах с ботами?"
+          }
+        }
+      }
+    },
+    "discovery_checked": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تم فحص %1$d من %2$d محادثة"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$d von %2$d Chats geprüft"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checked %1$d of %2$d chats"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Revisados %1$d de %2$d chats"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$d از %2$d گفتگو بررسی شد"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Controllate %1$d chat su %2$d"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Проверено чатов: %1$d из %2$d"
+          }
+        }
+      }
+    },
+    "discovery_counting": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جارٍ العدّ…"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "wird gezählt…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "counting…"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "contando…"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "در حال شمارش…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "conteggio…"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "подсчёт…"
+          }
+        }
+      }
+    },
+    "discovery_failed": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تعذّر الاطلاع على محادثاتك. حاول مرة أخرى."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deine Chats konnten nicht geladen werden. Versuch es noch einmal."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't look at your chats. Try again."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se pudieron revisar tus chats. Inténtalo de nuevo."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بررسی گفتگوهای شما ممکن نشد. دوباره تلاش کنید."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impossibile controllare le tue chat. Riprova."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось просмотреть чаты. Попробуйте ещё раз."
+          }
+        }
+      }
+    },
+    "discovery_files_maybe": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "حوالي %1$d ملفات كبيرة قد تكون فيديو ضمن آخر 100"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "حوالي %1$d ملفًا كبيرًا قد تكون فيديو ضمن آخر 100"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "حوالي ملف كبير واحد (%1$d) قد يكون فيديو ضمن آخر 100"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "حوالي %1$d ملف كبير قد يكون فيديو ضمن آخر 100"
+                }
+              },
+              "two": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "حوالي ملفين كبيرين (%1$d) قد يكونان فيديو ضمن آخر 100"
+                }
+              },
+              "zero": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "حوالي %1$d ملف كبير قد يكون فيديو ضمن آخر 100"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "etwa %1$d große Datei, die ein Video sein könnte, unter den letzten 100"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "etwa %1$d große Dateien, die Videos sein könnten, unter den letzten 100"
+                }
+              }
+            }
+          }
+        },
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "about %1$d large file that may be a video among the latest 100"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "about %1$d large files that may be videos among the latest 100"
+                }
+              }
+            }
+          }
+        },
+        "es": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "unos %1$d archivo grande que puede ser un vídeo entre los últimos 100"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "unos %1$d archivos grandes que pueden ser vídeos entre los últimos 100"
+                }
+              }
+            }
+          }
+        },
+        "fa": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "حدود %1$d فایل حجیم که شاید ویدیو باشد، در میان ۱۰۰ مورد اخیر"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "حدود %1$d فایل حجیم که شاید ویدیو باشد، در میان ۱۰۰ مورد اخیر"
+                }
+              }
+            }
+          }
+        },
+        "it": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "circa %1$d file di grandi dimensioni che potrebbe essere un video tra gli ultimi 100"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "circa %1$d file di grandi dimensioni che potrebbero essere video tra gli ultimi 100"
+                }
+              }
+            }
+          }
+        },
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "около %1$d крупных файлов, которые могут быть видео, среди последних 100"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "около %1$d крупных файлов, которые могут быть видео, среди последних 100"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "около %1$d крупного файла, который может быть видео, среди последних 100"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "около %1$d крупных файлов, которые могут быть видео, среди последних 100"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "discovery_hide_empty": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إخفاء المحادثات الخالية من مقاطع الفيديو"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chats ohne Videos ausblenden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hide chats without videos"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ocultar chats sin vídeos"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پنهان کردن گفتگوهای بدون ویدیو"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nascondi le chat senza video"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скрыть чаты без видео"
+          }
+        }
+      }
+    },
+    "discovery_kind_bot": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "محادثة مع بوت"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chat mit einem Bot"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chat with a bot"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chat con un bot"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "گفتگو با یک ربات"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chat con un bot"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Чат с ботом"
+          }
+        }
+      }
+    },
+    "discovery_kind_channel": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "قناة"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kanal"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Channel"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Canal"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کانال"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Canale"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Канал"
+          }
+        }
+      }
+    },
+    "discovery_kind_group": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مجموعة"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gruppe"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Group"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grupo"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "گروه"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gruppo"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Группа"
+          }
+        }
+      }
+    },
+    "discovery_kind_personal": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "محادثة شخصية"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Persönlicher Chat"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Personal chat"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chat personal"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "گفتگوی شخصی"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chat personale"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Личный чат"
+          }
+        }
+      }
+    },
+    "discovery_kind_saved": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الرسائل المحفوظة"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gespeicherte Nachrichten"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved Messages"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mensajes guardados"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پیام‌های ذخیره‌شده"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Messaggi salvati"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Избранное"
+          }
+        }
+      }
+    },
+    "discovery_listing": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جارٍ الاطلاع على محادثاتك…"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deine Chats werden durchsucht…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Looking at your chats…"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Revisando tus chats…"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "در حال بررسی گفتگوهای شما…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Controllo delle tue chat in corso…"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Просматриваем ваши чаты…"
+          }
+        }
+      }
+    },
+    "discovery_look": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "البحث عن مقاطع فيديو"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach Videos suchen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Look for videos"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buscar vídeos"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جست‌وجوی ویدیو"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cerca video"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Искать видео"
+          }
+        }
+      }
+    },
+    "discovery_manage": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إدارة المحادثات"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chats verwalten"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manage chats"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gestionar chats"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مدیریت گفتگوها"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gestisci chat"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Управление чатами"
+          }
+        }
+      }
+    },
+    "discovery_no_match": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لا توجد محادثات مطابقة."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine passenden Chats gefunden."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No chats match."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ningún chat coincide."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "گفتگویی یافت نشد."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nessuna chat trovata."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Совпадений не найдено."
+          }
+        }
+      }
+    },
+    "discovery_not_now": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ليس الآن"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jetzt nicht"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not now"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ahora no"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فعلاً نه"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non ora"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не сейчас"
+          }
+        }
+      }
+    },
+    "discovery_notice_body": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سجّل Cablegram الدخول إلى Telegram على هذا الهاتف، مثل Telegram Desktop. وهو يطّلع على محادثاتك هنا، على هذا الهاتف. لا تُرسل أسماء المحادثات أو الأعداد أو الرسائل أو الصور المصغّرة إلى خوادم Cablegram أبدًا. فقط مقاطع الفيديو التي تضيفها تنتقل إلى «Cablegram library»."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram ist auf diesem Handy bei Telegram angemeldet, wie Telegram Desktop. Es sieht sich deine Chats hier auf diesem Handy an. Chatnamen, Anzahlen, Nachrichten und Vorschaubilder werden nie an die Server von Cablegram gesendet. Nur die Videos, die du hinzufügst, landen in „Cablegram library“."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram is signed in to Telegram on this phone, like Telegram Desktop. It looks at your chats here, on this phone. Chat names, counts, messages and thumbnails are never sent to Cablegram's servers. Only the videos you add go into “Cablegram library”."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram ha iniciado sesión en Telegram en este teléfono, como Telegram Desktop. Mira tus chats aquí, en este teléfono. Los nombres de los chats, los recuentos, los mensajes y las miniaturas nunca se envían a los servidores de Cablegram. Solo los vídeos que añades van a «Cablegram library»."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram روی این گوشی وارد Telegram شده است، درست مثل Telegram Desktop. گفتگوهای شما را همین‌جا، روی همین گوشی بررسی می‌کند. نام گفتگوها، تعدادها، پیام‌ها و پیش‌نمایش‌ها هرگز به سرورهای Cablegram فرستاده نمی‌شوند. فقط ویدیوهایی که اضافه می‌کنید به «Cablegram library» می‌روند."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram ha effettuato l'accesso a Telegram su questo telefono, come Telegram Desktop. Guarda le tue chat qui, su questo telefono. Nomi delle chat, conteggi, messaggi e miniature non vengono mai inviati ai server di Cablegram. Solo i video che aggiungi vanno in «Cablegram library»."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram авторизован в Telegram на этом телефоне, как Telegram Desktop. Он просматривает ваши чаты здесь, на этом телефоне. Названия чатов, количество видео, сообщения и миниатюры никогда не отправляются на серверы Cablegram. В «Cablegram library» попадают только добавленные вами видео."
+          }
+        }
+      }
+    },
+    "discovery_notice_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "يحدث هذا على هاتفك."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das passiert auf deinem Handy."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This happens on your phone."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esto ocurre en tu teléfono."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "این کار روی گوشی شما انجام می‌شود."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questo avviene sul tuo telefono."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Это происходит на вашем телефоне."
+          }
+        }
+      }
+    },
+    "discovery_paused": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "طلب Telegram الانتظار لمدة %1$d ثانية. سيستمر الفحص بعد ذلك."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram bittet um %1$d Sekunden Wartezeit. Die Suche geht danach weiter."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram asked us to wait %1$d seconds. The scan will continue."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram nos pide esperar %1$d segundos. La búsqueda continuará."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram از ما خواست %1$d ثانیه صبر کنیم. بررسی ادامه خواهد یافت."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram ci chiede di attendere %1$d secondi. La ricerca continuerà."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram попросил подождать %1$d с. Поиск скоро продолжится."
+          }
+        }
+      }
+    },
+    "discovery_pick": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اختيار مقاطع فيديو"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Videos auswählen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pick videos"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elegir vídeos"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "انتخاب ویدیوها"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scegli video"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выбрать видео"
+          }
+        }
+      }
+    },
+    "discovery_protected": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الحفظ غير مسموح به"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speichern nicht erlaubt"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Doesn't allow saving"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No permite guardar"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ذخیره‌سازی مجاز نیست"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non consente il salvataggio"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сохранение запрещено"
+          }
+        }
+      }
+    },
+    "discovery_search_hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "البحث في المحادثات بالاسم"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chats nach Namen suchen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search chats by name"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buscar chats por nombre"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جست‌وجوی گفتگوها بر اساس نام"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cerca chat per nome"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поиск чатов по названию"
+          }
+        }
+      }
+    },
+    "discovery_show_empty": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "عرض %1$d محادثة بلا مقاطع فيديو"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$d Chats ohne Videos anzeigen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show %1$d chats without videos"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostrar %1$d chats sin vídeos"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نمایش %1$d گفتگو بدون ویدیو"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostra %1$d chat senza video"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Показать чаты без видео: %1$d"
+          }
+        }
+      }
+    },
+    "discovery_stop": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إيقاف"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stopp"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Detener"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "توقف"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Interrompi"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Остановить"
+          }
+        }
+      }
+    },
+    "discovery_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "العثور على مقاطع فيديو"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Videos finden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Find videos"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buscar vídeos"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "یافتن ویدیوها"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trova video"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поиск видео"
+          }
+        }
+      }
+    },
+    "discovery_unchanged": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "لم تكن في %1$d محادثات أي رسائل جديدة منذ آخر مرة، لذا لم تُفحص مجددًا."
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "لم تكن في %1$d محادثة أي رسائل جديدة منذ آخر مرة، لذا لم تُفحص مجددًا."
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "لم تكن في محادثة واحدة (%1$d) أي رسائل جديدة منذ آخر مرة، لذا لم تُفحص مجددًا."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "لم تكن في %1$d محادثة أي رسائل جديدة منذ آخر مرة، لذا لم تُفحص مجددًا."
+                }
+              },
+              "two": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "لم تكن في محادثتين (%1$d) أي رسائل جديدة منذ آخر مرة، لذا لم تُفحصا مجددًا."
+                }
+              },
+              "zero": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "لم تكن في %1$d محادثة أي رسائل جديدة منذ آخر مرة، لذا لم تُفحص مجددًا."
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d Chat hatte seit der letzten Suche keine neuen Nachrichten und wurde nicht erneut geprüft."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d Chats hatten seit der letzten Suche keine neuen Nachrichten und wurden nicht erneut geprüft."
+                }
+              }
+            }
+          }
+        },
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d chat had no new messages since your last look and was not read again."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d chats had no new messages since your last look and were not read again."
+                }
+              }
+            }
+          }
+        },
+        "es": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d chat no tenía mensajes nuevos desde la última vez y no se volvió a revisar."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d chats no tenían mensajes nuevos desde la última vez y no se volvieron a revisar."
+                }
+              }
+            }
+          }
+        },
+        "fa": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d گفتگو از آخرین بررسی شما پیام جدیدی نداشت و دوباره بررسی نشد."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d گفتگو از آخرین بررسی شما پیام جدیدی نداشت و دوباره بررسی نشد."
+                }
+              }
+            }
+          }
+        },
+        "it": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d chat non aveva nuovi messaggi dall'ultima volta e non è stata controllata di nuovo."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d chat non avevano nuovi messaggi dall'ultima volta e non sono state controllate di nuovo."
+                }
+              }
+            }
+          }
+        },
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "В %1$d чатах не было новых сообщений с прошлого раза, поэтому их не проверяли снова."
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "В %1$d чатах не было новых сообщений с прошлого раза, поэтому их не проверяли снова."
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "В %1$d чате не было новых сообщений с прошлого раза, поэтому его не проверяли снова."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "В %1$d чатах не было новых сообщений с прошлого раза, поэтому их не проверяли снова."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "discovery_use_chats": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "استخدام %1$d محادثات"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "استخدام %1$d محادثة"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "استخدام محادثة واحدة (%1$d)"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "استخدام %1$d محادثة"
+                }
+              },
+              "two": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "استخدام محادثتين (%1$d)"
+                }
+              },
+              "zero": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "استخدام %1$d محادثة"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d Chat verwenden"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d Chats verwenden"
+                }
+              }
+            }
+          }
+        },
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Use %1$d chat"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Use %1$d chats"
+                }
+              }
+            }
+          }
+        },
+        "es": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Usar %1$d chat"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Usar %1$d chats"
+                }
+              }
+            }
+          }
+        },
+        "fa": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "استفاده از %1$d گفتگو"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "استفاده از %1$d گفتگو"
+                }
+              }
+            }
+          }
+        },
+        "it": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Usa %1$d chat"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Usa %1$d chat"
+                }
+              }
+            }
+          }
+        },
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Использовать %1$d чата"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Использовать %1$d чатов"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Использовать %1$d чат"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Использовать %1$d чатов"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "discovery_videos": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d مقاطع فيديو ضمن آخر 100"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d مقطع فيديو ضمن آخر 100"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "مقطع فيديو واحد (%1$d) ضمن آخر 100"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d مقطع فيديو ضمن آخر 100"
+                }
+              },
+              "two": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "مقطعا فيديو (%1$d) ضمن آخر 100"
+                }
+              },
+              "zero": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d مقطع فيديو ضمن آخر 100"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d Video unter den letzten 100"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d Videos unter den letzten 100"
+                }
+              }
+            }
+          }
+        },
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d video among the latest 100"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d videos among the latest 100"
+                }
+              }
+            }
+          }
+        },
+        "es": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d vídeo entre los últimos 100"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d vídeos entre los últimos 100"
+                }
+              }
+            }
+          }
+        },
+        "fa": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d ویدیو در میان ۱۰۰ مورد اخیر"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d ویدیو در میان ۱۰۰ مورد اخیر"
+                }
+              }
+            }
+          }
+        },
+        "it": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d video tra gli ultimi 100"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d video tra gli ultimi 100"
+                }
+              }
+            }
+          }
+        },
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d видео среди последних 100"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d видео среди последних 100"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d видео среди последних 100"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d видео среди последних 100"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "discovery_videos_about": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "حوالي %1$d مقاطع فيديو ضمن آخر 100"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "حوالي %1$d مقطع فيديو ضمن آخر 100"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "حوالي مقطع فيديو واحد (%1$d) ضمن آخر 100"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "حوالي %1$d مقطع فيديو ضمن آخر 100"
+                }
+              },
+              "two": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "حوالي مقطعي فيديو (%1$d) ضمن آخر 100"
+                }
+              },
+              "zero": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "حوالي %1$d مقطع فيديو ضمن آخر 100"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "etwa %1$d Video unter den letzten 100"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "etwa %1$d Videos unter den letzten 100"
+                }
+              }
+            }
+          }
+        },
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "about %1$d video among the latest 100"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "about %1$d videos among the latest 100"
+                }
+              }
+            }
+          }
+        },
+        "es": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "unos %1$d vídeo entre los últimos 100"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "unos %1$d vídeos entre los últimos 100"
+                }
+              }
+            }
+          }
+        },
+        "fa": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "حدود %1$d ویدیو در میان ۱۰۰ مورد اخیر"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "حدود %1$d ویدیو در میان ۱۰۰ مورد اخیر"
+                }
+              }
+            }
+          }
+        },
+        "it": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "circa %1$d video tra gli ultimi 100"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "circa %1$d video tra gli ultimi 100"
+                }
+              }
+            }
+          }
+        },
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "около %1$d видео среди последних 100"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "около %1$d видео среди последних 100"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "около %1$d видео среди последних 100"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "около %1$d видео среди последних 100"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "how_body": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سجّل Cablegram الدخول إلى Telegram على هذا الهاتف، مثل Telegram Desktop. الشيفرة التي تطّلع على محادثاتك موجودة في مكان واحد، هو الحزمة app.cablegram.discovery في تطبيق الهاتف، واختبار التطبيق المفتوح المصدر (TelegramApiSurfaceTest) يسرد كل استدعاء لـ Telegram يُسمح له بإجرائه. تبقى أسماء المحادثات والأعداد والرسائل والصور المصغّرة على هذا الهاتف. ولا يُحوَّل إلى «Cablegram library» سوى مقاطع الفيديو التي تضيفها."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram ist auf diesem Handy bei Telegram angemeldet, wie Telegram Desktop. Der Code, der deine Chats ansieht, liegt an einer einzigen Stelle: im Paket app.cablegram.discovery der Handy-App, und der Open-Source-Test der App (TelegramApiSurfaceTest) listet jeden Telegram-Aufruf auf, den sie ausführen darf. Chatnamen, Anzahlen, Nachrichten und Vorschaubilder bleiben auf diesem Handy. Nur die Videos, die du hinzufügst, werden an „Cablegram library“ weitergeleitet."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram is signed in to Telegram on this phone, like Telegram Desktop. The code that looks at your chats lives in one place, the app.cablegram.discovery package of the phone app, and the app's open-source test (TelegramApiSurfaceTest) lists every Telegram call it is allowed to make. Chat names, counts, messages and thumbnails stay on this phone. Only the videos you add are forwarded into \"Cablegram library\"."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram ha iniciado sesión en Telegram en este teléfono, como Telegram Desktop. El código que mira tus chats está en un solo sitio, el paquete app.cablegram.discovery de la app del teléfono, y la prueba de código abierto de la app (TelegramApiSurfaceTest) enumera cada llamada a Telegram que puede hacer. Los nombres de los chats, los recuentos, los mensajes y las miniaturas se quedan en este teléfono. Solo los vídeos que añades se reenvían a «Cablegram library»."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram روی این گوشی مثل Telegram Desktop وارد Telegram شده است. کدی که گفتگوهای شما را بررسی می‌کند فقط در یک جا قرار دارد: بستهٔ app.cablegram.discovery در برنامهٔ گوشی، و آزمون متن‌باز برنامه (TelegramApiSurfaceTest) تمام درخواست‌هایی را که مجاز است به Telegram بفرستد فهرست می‌کند. نام گفتگوها، تعدادها، پیام‌ها و پیش‌نمایش‌ها روی همین گوشی می‌مانند. فقط ویدیوهایی که اضافه می‌کنید به «Cablegram library» هدایت می‌شوند."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram ha effettuato l'accesso a Telegram su questo telefono, come Telegram Desktop. Il codice che guarda le tue chat si trova in un solo posto, il pacchetto app.cablegram.discovery dell'app del telefono, e il test open source dell'app (TelegramApiSurfaceTest) elenca ogni chiamata a Telegram che è autorizzato a fare. Nomi delle chat, conteggi, messaggi e miniature restano su questo telefono. Solo i video che aggiungi vengono inoltrati a «Cablegram library»."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram авторизован в Telegram на этом телефоне, как Telegram Desktop. Код, который просматривает ваши чаты, находится в одном месте — в пакете app.cablegram.discovery приложения для телефона, а открытый тест приложения (TelegramApiSurfaceTest) перечисляет все разрешённые ему запросы к Telegram. Названия чатов, количество видео, сообщения и миниатюры остаются на этом телефоне. В «Cablegram library» пересылаются только добавленные вами видео."
+          }
+        }
+      }
+    },
+    "how_link": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "عرض الاختبار على GitHub"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Den Test auf GitHub ansehen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See the test on GitHub"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ver la prueba en GitHub"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مشاهدهٔ آزمون در GitHub"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vedi il test su GitHub"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Посмотреть тест на GitHub"
+          }
+        }
+      }
+    },
+    "how_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "كيف يعمل هذا"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "So funktioniert es"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How this works"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cómo funciona"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نحوهٔ کارکرد"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Come funziona"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Как это работает"
           }
         }
       }
@@ -5078,6 +8482,1400 @@
           "stringUnit": {
             "state": "translated",
             "value": "1. Установите Cablegram TV на Android TV или Google TV.\n\n2. Откройте Cablegram TV на телевизоре, чтобы увидеть QR-код и шестизначный PIN-код.\n\n3. Отсканируйте QR-код этим телефоном или введите PIN-код ниже."
+          }
+        }
+      }
+    },
+    "picker_add": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "إضافة %1$d إلى المكتبة"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "إضافة %1$d إلى المكتبة"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "إضافة %1$d إلى المكتبة"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "إضافة %1$d إلى المكتبة"
+                }
+              },
+              "two": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "إضافة %1$d إلى المكتبة"
+                }
+              },
+              "zero": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "إضافة %1$d إلى المكتبة"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d zur Bibliothek hinzufügen"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d zur Bibliothek hinzufügen"
+                }
+              }
+            }
+          }
+        },
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Add %1$d to library"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Add %1$d to library"
+                }
+              }
+            }
+          }
+        },
+        "es": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Añadir %1$d a la biblioteca"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Añadir %1$d a la biblioteca"
+                }
+              }
+            }
+          }
+        },
+        "fa": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "افزودن %1$d به کتابخانه"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "افزودن %1$d به کتابخانه"
+                }
+              }
+            }
+          }
+        },
+        "it": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Aggiungi %1$d alla libreria"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Aggiungi %1$d alla libreria"
+                }
+              }
+            }
+          }
+        },
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Добавить %1$d в медиатеку"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Добавить %1$d в медиатеку"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Добавить %1$d в медиатеку"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Добавить %1$d в медиатеку"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "picker_added": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "تمت إضافة %1$d مقاطع فيديو. ستظهر قريبًا في مكتبتك."
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "تمت إضافة %1$d مقطع فيديو. ستظهر قريبًا في مكتبتك."
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "تمت إضافة مقطع فيديو واحد (%1$d). سيظهر قريبًا في مكتبتك."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "تمت إضافة %1$d مقطع فيديو. ستظهر قريبًا في مكتبتك."
+                }
+              },
+              "two": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "تمت إضافة مقطعي فيديو (%1$d). سيظهران قريبًا في مكتبتك."
+                }
+              },
+              "zero": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "تمت إضافة %1$d مقطع فيديو. ستظهر قريبًا في مكتبتك."
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d Video hinzugefügt. Es erscheint in Kürze in deiner Bibliothek."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d Videos hinzugefügt. Sie erscheinen in Kürze in deiner Bibliothek."
+                }
+              }
+            }
+          }
+        },
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Added %1$d video. It appears in your library shortly."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Added %1$d videos. They appear in your library shortly."
+                }
+              }
+            }
+          }
+        },
+        "es": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Se añadió %1$d vídeo. Aparecerá enseguida en tu biblioteca."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Se añadieron %1$d vídeos. Aparecerán enseguida en tu biblioteca."
+                }
+              }
+            }
+          }
+        },
+        "fa": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d ویدیو اضافه شد. به‌زودی در کتابخانهٔ شما نمایان می‌شود."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d ویدیو اضافه شد. به‌زودی در کتابخانهٔ شما نمایان می‌شوند."
+                }
+              }
+            }
+          }
+        },
+        "it": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Aggiunto %1$d video. Apparirà a breve nella tua libreria."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Aggiunti %1$d video. Appariranno a breve nella tua libreria."
+                }
+              }
+            }
+          }
+        },
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Добавлено %1$d видео. Скоро они появятся в вашей медиатеке."
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Добавлено %1$d видео. Скоро они появятся в вашей медиатеке."
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Добавлено %1$d видео. Скоро оно появится в вашей медиатеке."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Добавлено %1$d видео. Скоро они появятся в вашей медиатеке."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "picker_adding": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جارٍ إضافة %1$d من %2$d…"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$d von %2$d werden hinzugefügt…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adding %1$d of %2$d…"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Añadiendo %1$d de %2$d…"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "در حال افزودن %1$d از %2$d…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aggiunta di %1$d su %2$d…"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Добавление %1$d из %2$d…"
+          }
+        }
+      }
+    },
+    "picker_all": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جميع المحادثات"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle Chats"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All chats"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Todos los chats"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "همهٔ گفتگوها"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tutte le chat"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Все чаты"
+          }
+        }
+      }
+    },
+    "picker_banner": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 التصفح على هذا الهاتف فقط. لا يُرسل أي شيء من هنا إلى Cablegram."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Durchsuchen nur auf diesem Handy. Nichts hiervon wird an Cablegram gesendet."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Browsing on this phone only. Nothing here is sent to Cablegram."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Solo se explora en este teléfono. Nada de esto se envía a Cablegram."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 مرور فقط روی همین گوشی انجام می‌شود. هیچ‌چیز از اینجا به Cablegram فرستاده نمی‌شود."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Consultazione solo su questo telefono. Niente di tutto questo viene inviato a Cablegram."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Просмотр только на этом телефоне. Ничего из этого не отправляется в Cablegram."
+          }
+        }
+      }
+    },
+    "picker_banner_bots": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 التصفح على هذا الهاتف فقط، بما في ذلك المحادثات مع البوتات. لا يُرسل أي شيء من هنا إلى Cablegram."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Durchsuchen nur auf diesem Handy, einschließlich Chats mit Bots. Nichts hiervon wird an Cablegram gesendet."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Browsing on this phone only, including chats with bots. Nothing here is sent to Cablegram."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Solo se explora en este teléfono, incluidos los chats con bots. Nada de esto se envía a Cablegram."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 مرور فقط روی همین گوشی انجام می‌شود، از جمله گفتگوهای با ربات‌ها. هیچ‌چیز از اینجا به Cablegram فرستاده نمی‌شود."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Consultazione solo su questo telefono, comprese le chat con i bot. Niente di tutto questo viene inviato a Cablegram."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Просмотр только на этом телефоне, включая чаты с ботами. Ничего из этого не отправляется в Cablegram."
+          }
+        }
+      }
+    },
+    "picker_banner_personal": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 التصفح على هذا الهاتف فقط، بما في ذلك المحادثات الشخصية. لا يُرسل أي شيء من هنا إلى Cablegram."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Durchsuchen nur auf diesem Handy, einschließlich persönlicher Chats. Nichts hiervon wird an Cablegram gesendet."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Browsing on this phone only, including personal chats. Nothing here is sent to Cablegram."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Solo se explora en este teléfono, incluidos los chats personales. Nada de esto se envía a Cablegram."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 مرور فقط روی همین گوشی انجام می‌شود، از جمله گفتگوهای شخصی. هیچ‌چیز از اینجا به Cablegram فرستاده نمی‌شود."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Consultazione solo su questo telefono, comprese le chat personali. Niente di tutto questo viene inviato a Cablegram."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Просмотр только на этом телефоне, включая личные чаты. Ничего из этого не отправляется в Cablegram."
+          }
+        }
+      }
+    },
+    "picker_banner_personal_bots": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 التصفح على هذا الهاتف فقط، بما في ذلك المحادثات الشخصية والمحادثات مع البوتات. لا يُرسل أي شيء من هنا إلى Cablegram."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Durchsuchen nur auf diesem Handy, einschließlich persönlicher Chats und Chats mit Bots. Nichts hiervon wird an Cablegram gesendet."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Browsing on this phone only, including personal chats and chats with bots. Nothing here is sent to Cablegram."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Solo se explora en este teléfono, incluidos los chats personales y los chats con bots. Nada de esto se envía a Cablegram."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 مرور فقط روی همین گوشی انجام می‌شود، از جمله گفتگوهای شخصی و گفتگوهای با ربات‌ها. هیچ‌چیز از اینجا به Cablegram فرستاده نمی‌شود."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Consultazione solo su questo telefono, comprese le chat personali e le chat con i bot. Niente di tutto questo viene inviato a Cablegram."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Просмотр только на этом телефоне, включая личные чаты и чаты с ботами. Ничего из этого не отправляется в Cablegram."
+          }
+        }
+      }
+    },
+    "picker_cancel": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إلغاء"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abbrechen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelar"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لغو"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annulla"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отмена"
+          }
+        }
+      }
+    },
+    "picker_deleting": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جارٍ الحذف"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wird gelöscht"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Being deleted"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eliminando"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "در حال حذف"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In eliminazione"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Удаляется"
+          }
+        }
+      }
+    },
+    "picker_done": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تم"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fertig"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listo"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تایید"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fatto"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Готово"
+          }
+        }
+      }
+    },
+    "picker_dropped": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "لم تعد %1$d محادثات اخترتها متاحة وتمت إزالتها."
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "لم تعد %1$d محادثة اخترتها متاحة وتمت إزالتها."
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "لم تعد محادثة واحدة (%1$d) اخترتها متاحة وتمت إزالتها."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "لم تعد %1$d محادثة اخترتها متاحة وتمت إزالتها."
+                }
+              },
+              "two": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "لم تعد محادثتان (%1$d) اخترتهما متاحتين وتمت إزالتهما."
+                }
+              },
+              "zero": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "لم تعد %1$d محادثة اخترتها متاحة وتمت إزالتها."
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d von dir ausgewählter Chat ist nicht mehr verfügbar und wurde entfernt."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d von dir ausgewählte Chats sind nicht mehr verfügbar und wurden entfernt."
+                }
+              }
+            }
+          }
+        },
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d chat you chose is no longer available and was removed."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d chats you chose are no longer available and were removed."
+                }
+              }
+            }
+          }
+        },
+        "es": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d chat que elegiste ya no está disponible y se quitó."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d chats que elegiste ya no están disponibles y se quitaron."
+                }
+              }
+            }
+          }
+        },
+        "fa": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d گفتگوی انتخابی شما دیگر در دسترس نیست و حذف شد."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d گفتگوی انتخابی شما دیگر در دسترس نیستند و حذف شدند."
+                }
+              }
+            }
+          }
+        },
+        "it": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d chat che hai scelto non è più disponibile ed è stata rimossa."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d chat che hai scelto non sono più disponibili e sono state rimosse."
+                }
+              }
+            }
+          }
+        },
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d выбранных вами чата больше недоступны и были убраны."
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d выбранных вами чатов больше недоступны и были убраны."
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d выбранный вами чат больше недоступен и был убран."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%1$d выбранных вами чатов больше недоступны и были убраны."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "picker_empty": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لا توجد مقاطع فيديو في المحادثات المختارة حتى الآن."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch keine Videos in deinen ausgewählten Chats."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No videos in your chosen chats yet."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aún no hay vídeos en los chats elegidos."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "هنوز ویدیویی در گفتگوهای انتخابی شما وجود ندارد."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ancora nessun video nelle chat scelte."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "В выбранных чатах пока нет видео."
+          }
+        }
+      }
+    },
+    "picker_failed": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تعذّرت إضافة %1$d."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$d konnten nicht hinzugefügt werden."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$d didn't go through."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se pudieron añadir %1$d."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$d مورد اضافه نشد."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$d non sono andati a buon fine."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось добавить: %1$d."
+          }
+        }
+      }
+    },
+    "picker_how": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "كيف يعمل هذا"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "So funktioniert es"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How this works"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cómo funciona"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نحوهٔ کارکرد"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Come funziona"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Как это работает"
+          }
+        }
+      }
+    },
+    "picker_in_library": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "في المكتبة"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In der Bibliothek"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In library"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En la biblioteca"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "در کتابخانه"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nella libreria"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "В медиатеке"
+          }
+        }
+      }
+    },
+    "picker_more": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "عرض المزيد"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mehr anzeigen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show more"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostrar más"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نمایش بیشتر"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostra altri"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Показать ещё"
+          }
+        }
+      }
+    },
+    "picker_readd_body": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تمت إزالة %1$d من هذه من مكتبتك سابقًا. هل تريد إضافتها مرة أخرى؟"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$d davon wurden zuvor aus deiner Bibliothek entfernt. Erneut hinzufügen?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$d of these were removed from your library earlier. Add them again?"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$d de estos se eliminaron anteriormente de tu biblioteca. ¿Añadirlos de nuevo?"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$d مورد از این‌ها قبلاً از کتابخانهٔ شما حذف شده بود. دوباره اضافه شوند؟"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$d di questi erano stati rimossi dalla tua libreria. Vuoi aggiungerli di nuovo?"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Некоторые из них (%1$d) ранее были удалены из вашей медиатеки. Добавить их снова?"
+          }
+        }
+      }
+    },
+    "picker_readd_confirm": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إضافة مرة أخرى"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erneut hinzufügen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add again"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Añadir de nuevo"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "افزودن دوباره"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aggiungi di nuovo"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Добавить снова"
+          }
+        }
+      }
+    },
+    "picker_readd_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "هل تريد الإضافة مرة أخرى؟"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erneut hinzufügen?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add again?"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Añadir de nuevo?"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دوباره اضافه شود؟"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aggiungere di nuovo?"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Добавить снова?"
+          }
+        }
+      }
+    },
+    "picker_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إضافة مقاطع فيديو"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Videos hinzufügen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add videos"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Añadir vídeos"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "افزودن ویدیوها"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aggiungi video"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Добавить видео"
+          }
+        }
+      }
+    },
+    "picker_try_again": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إعادة المحاولة"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erneut versuchen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try again"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reintentar"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تلاش مجدد"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Riprova"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Повторить"
           }
         }
       }
@@ -21940,43 +26738,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "يقرأ التطبيق ويدير قناة خاصة واحدة لفيديوهاتك، وهي «%1$@». بعد الربط، يمكنك اختيار الانضمام إلى قنوات Cablegram الاختيارية. ينظّم مكتبتك والقنوات التي انضممت إليها والدعم والروبوتات المضافة في مجلد Cablegram في Telegram. لا ينضم إلا إلى القنوات المحدّدة عند الضغط على «حفظ». ثم يقرأ توصيات قناة Cablegram Bot Hubs العامة ويعرض روبوتات جهات خارجية واحدًا تلو الآخر. تتطلب إضافة كل روبوت موافقة منفصلة على صلاحياته وإخلاء المسؤولية. لا يقرأ محادثاتك الأخرى أو جهات اتصالك مطلقًا. ولا يرسل إلا الفيديو الذي تختار حفظه باستخدام «حفظ في Telegram» إلى تلك القناة."
+            "value": "يقرأ التطبيق ويدير قناة خاصة واحدة لفيديوهاتك، وهي «%1$@». بعد الربط، يمكنك اختيار الانضمام إلى قنوات Cablegram الاختيارية. ينظّم مكتبتك والقنوات التي انضممت إليها والدعم والروبوتات المضافة في مجلد Cablegram في Telegram. لا ينضم إلا إلى القنوات المحدّدة عند الضغط على «حفظ». ثم يقرأ توصيات قناة Cablegram Bot Hubs العامة ويعرض روبوتات جهات خارجية واحدًا تلو الآخر. تتطلب إضافة كل روبوت موافقة منفصلة على صلاحياته وإخلاء المسؤولية. لا يقرأ محادثاتك أبدًا دون إذنك. ولا ينظر في محادثاتك الأخرى إلا على هاتفك، عندما تطلب منه إضافة فيديوهات منها، ويسألك في كل مرة قبل أن يفعل ذلك. ولا يرسلها أبدًا إلى Cablegram. ولا يقرأ جهات اتصالك مطلقًا. ولا يرسل إلى تلك القناة إلا الفيديوهات التي تختارها: فيديو تحفظه باستخدام «حفظ في Telegram» أو فيديو تضيفه من محادثاتك الأخرى."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Für deine Videos liest und verwaltet die App einen privaten Kanal namens „%1$@“. Nach dem Verbinden kannst du optional Cablegram-Kanälen beitreten. Deine Bibliothek, abonnierte Cablegram-Kanäle, Support und hinzugefügte Bots werden im Cablegram-Ordner in Telegram organisiert. Erst beim Tippen auf „Speichern“ tritt die App den ausgewählten Kanälen bei. Danach liest sie Empfehlungen aus dem öffentlichen Kanal Cablegram Bot Hubs und stellt Drittanbieter-Bots einzeln vor. Für jeden Bot musst du den Berechtigungen und dem Haftungsausschluss separat zustimmen. Andere Chats oder Kontakte werden niemals gelesen. Gesendet werden nur Videos, die du mit „In Telegram speichern“ für diesen Kanal auswählst."
+            "value": "Für deine Videos liest und verwaltet die App einen privaten Kanal namens „%1$@“. Nach dem Verbinden kannst du optional Cablegram-Kanälen beitreten. Deine Bibliothek, abonnierte Cablegram-Kanäle, Support und hinzugefügte Bots werden im Cablegram-Ordner in Telegram organisiert. Erst beim Tippen auf „Speichern“ tritt die App den ausgewählten Kanälen bei. Danach liest sie Empfehlungen aus dem öffentlichen Kanal Cablegram Bot Hubs und stellt Drittanbieter-Bots einzeln vor. Für jeden Bot musst du den Berechtigungen und dem Haftungsausschluss separat zustimmen. Die App liest deine Chats nie ohne deine Erlaubnis. Sie sieht sich deine anderen Chats nur auf deinem Handy an, wenn du Videos daraus hinzufügen möchtest, und fragt dich vorher jedes Mal. Sie sendet sie nie an Cablegram. Kontakte werden niemals gelesen. Gesendet werden nur Videos, die du auswählst, in diesen Kanal: eines, das du mit „In Telegram speichern“ sicherst, oder eines, das du aus deinen anderen Chats hinzufügst."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "For your videos, it reads and manages one private channel, \"%1$@\". After connecting, you can also choose to join Cablegram’s optional channels. It organizes your library, joined Cablegram channels, support, and added bots in a Cablegram folder in Telegram. It joins only the channels selected when you tap Save. It then reads recommendations from the public Cablegram Bot Hubs channel and offers third-party bots one at a time. Adding a bot to your library requires your separate agreement to its permissions and the disclaimer. It never reads your other chats or contacts. The only thing it ever sends is a video you choose to save with \"Save to Telegram\", into that channel."
+            "value": "For your videos, it reads and manages one private channel, \"%1$@\". After connecting, you can also choose to join Cablegram’s optional channels. It organizes your library, joined Cablegram channels, support, and added bots in a Cablegram folder in Telegram. It joins only the channels selected when you tap Save. It then reads recommendations from the public Cablegram Bot Hubs channel and offers third-party bots one at a time. Adding a bot to your library requires your separate agreement to its permissions and the disclaimer. It never reads your chats without your permission. It only looks at your other chats, on your phone, when you ask it to add videos from them, and it asks you every time before it does. It never sends them to Cablegram. It never reads your contacts. It only sends videos you choose, into that channel: one you save with \"Save to Telegram\", or one you add from your other chats."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Para tus vídeos, la aplicación lee y gestiona un único canal privado, «%1$@». Tras conectar, puedes unirte a los canales opcionales de Cablegram. Organiza la biblioteca, los canales a los que te has unido, el soporte y los bots añadidos en una carpeta Cablegram en Telegram. Solo se une a los canales seleccionados al pulsar «Guardar». Después lee las recomendaciones del canal público Cablegram Bot Hubs y presenta bots de terceros de uno en uno. Añadir cada bot requiere aceptar por separado sus permisos y el aviso de exención de responsabilidad. Nunca lee otros chats ni contactos. Solo envía al canal los vídeos que elijas mediante «Guardar en Telegram»."
+            "value": "Para tus vídeos, la aplicación lee y gestiona un único canal privado, «%1$@». Tras conectar, puedes unirte a los canales opcionales de Cablegram. Organiza la biblioteca, los canales a los que te has unido, el soporte y los bots añadidos en una carpeta Cablegram en Telegram. Solo se une a los canales seleccionados al pulsar «Guardar». Después lee las recomendaciones del canal público Cablegram Bot Hubs y presenta bots de terceros de uno en uno. Añadir cada bot requiere aceptar por separado sus permisos y el aviso de exención de responsabilidad. Nunca lee tus chats sin tu permiso. Solo mira tus otros chats, en tu teléfono, cuando le pides añadir vídeos de ellos, y te lo pregunta siempre antes. Nunca los envía a Cablegram. Nunca lee tus contactos. Solo envía al canal los vídeos que elijas: uno que guardes con «Guardar en Telegram» o uno que añadas desde tus otros chats."
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "برای ویدیوهای شما، فقط یک کانال خصوصی به نام «%1$@» را می‌خواند و مدیریت می‌کند. پس از اتصال، می‌توانید در کانال‌های اختیاری Cablegram هم عضو شوید. کتابخانه، کانال‌های Cablegram که عضو شده‌اید، پشتیبانی و ربات‌های افزوده‌شده در پوشه‌ای به نام Cablegram در تلگرام مرتب می‌شوند. فقط پس از زدن «ذخیره»، در کانال‌هایی که انتخاب کرده‌اید عضو می‌شود. سپس پیشنهادهای کانال عمومی Cablegram Bot Hubs را می‌خواند و ربات‌های شخص ثالث را یکی‌یکی معرفی می‌کند. افزودن هر ربات به کتابخانه به موافقت جداگانهٔ شما با دسترسی‌ها و متن سلب مسئولیت آن نیاز دارد. هرگز گفت‌وگوهای دیگر یا مخاطبان شما را نمی‌خواند. تنها چیزی که ارسال می‌کند، ویدیویی است که خودتان با «ذخیره در تلگرام» برای ارسال به همان کانال انتخاب می‌کنید."
+            "value": "برای ویدیوهای شما، فقط یک کانال خصوصی به نام «%1$@» را می‌خواند و مدیریت می‌کند. پس از اتصال، می‌توانید در کانال‌های اختیاری Cablegram هم عضو شوید. کتابخانه، کانال‌های Cablegram که عضو شده‌اید، پشتیبانی و ربات‌های افزوده‌شده در پوشه‌ای به نام Cablegram در Telegram مرتب می‌شوند. فقط پس از زدن «ذخیره»، در کانال‌هایی که انتخاب کرده‌اید عضو می‌شود. سپس پیشنهادهای کانال عمومی Cablegram Bot Hubs را می‌خواند و ربات‌های شخص ثالث را یکی‌یکی معرفی می‌کند. افزودن هر ربات به کتابخانه به موافقت جداگانهٔ شما با دسترسی‌ها و متن سلب مسئولیت آن نیاز دارد. هرگز بدون اجازهٔ شما گفتگوهایتان را نمی‌خواند. فقط وقتی از آن می‌خواهید ویدیوهایی را از گفتگوهای دیگرتان اضافه کند، روی همین گوشی به آن‌ها نگاه می‌کند و هر بار پیش از آن از شما می‌پرسد. آن‌ها را هرگز به Cablegram نمی‌فرستد. هرگز مخاطبین شما را نمی‌خواند. تنها چیزهایی که به همان کانال می‌فرستد ویدیوهایی است که خودتان انتخاب می‌کنید: ویدیویی که با «ذخیره در Telegram» ذخیره می‌کنید یا ویدیویی که از گفتگوهای دیگرتان اضافه می‌کنید."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Per i video, l’app legge e gestisce un solo canale privato, «%1$@». Dopo il collegamento puoi scegliere di iscriverti ai canali facoltativi di Cablegram. La libreria, i canali a cui ti iscrivi, l’assistenza e i bot aggiunti vengono organizzati nella cartella Cablegram in Telegram. L’iscrizione riguarda solo i canali selezionati quando tocchi «Salva». Poi l’app legge i suggerimenti del canale pubblico Cablegram Bot Hubs e propone i bot di terze parti uno alla volta. Ogni bot richiede il consenso separato alle autorizzazioni e all’esclusione di responsabilità. Non legge mai altre chat o contatti. Invia al canale solo i video che scegli con «Salva su Telegram»."
+            "value": "Per i video, l’app legge e gestisce un solo canale privato, «%1$@». Dopo il collegamento puoi scegliere di iscriverti ai canali facoltativi di Cablegram. La libreria, i canali a cui ti iscrivi, l’assistenza e i bot aggiunti vengono organizzati nella cartella Cablegram in Telegram. L’iscrizione riguarda solo i canali selezionati quando tocchi «Salva». Poi l’app legge i suggerimenti del canale pubblico Cablegram Bot Hubs e propone i bot di terze parti uno alla volta. Ogni bot richiede il consenso separato alle autorizzazioni e all’esclusione di responsabilità. Non legge mai le tue chat senza il tuo permesso. Guarda le tue altre chat solo sul telefono, quando chiedi di aggiungere video da lì, e te lo chiede ogni volta prima di farlo. Non le invia mai a Cablegram. Non legge mai i tuoi contatti. Invia al canale solo i video che scegli: uno che salvi con «Salva su Telegram» o uno che aggiungi dalle tue altre chat."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Для видео приложение читает и управляет одним закрытым каналом «%1$@». После подключения можно по желанию вступить в каналы Cablegram. Медиатека, выбранные каналы, поддержка и добавленные боты размещаются в папке Cablegram в Telegram. Приложение вступает только в выбранные каналы после нажатия «Сохранить». Затем оно читает рекомендации открытого канала Cablegram Bot Hubs и предлагает сторонних ботов по одному. Добавление каждого бота требует отдельного согласия с его разрешениями и отказом от ответственности. Другие чаты и контакты никогда не читаются. В канал отправляются только видео, которые вы выбираете через «Сохранить в Telegram»."
+            "value": "Для видео приложение читает и управляет одним закрытым каналом «%1$@». После подключения можно по желанию вступить в каналы Cablegram. Медиатека, выбранные каналы, поддержка и добавленные боты размещаются в папке Cablegram в Telegram. Приложение вступает только в выбранные каналы после нажатия «Сохранить». Затем оно читает рекомендации открытого канала Cablegram Bot Hubs и предлагает сторонних ботов по одному. Добавление каждого бота требует отдельного согласия с его разрешениями и отказом от ответственности. Приложение никогда не читает ваши чаты без вашего разрешения. Оно просматривает другие ваши чаты только на этом телефоне, когда вы просите добавить из них видео, и каждый раз спрашивает вас об этом заранее. Оно никогда не отправляет их в Cablegram. Контакты никогда не читаются. В канал отправляются только видео, которые вы выбираете: сохранённое через «Сохранить в Telegram» или добавленное из других ваших чатов."
           }
         }
       }
