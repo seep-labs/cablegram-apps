@@ -44,6 +44,8 @@ final class TelegramTvWork {
     private(set) var pendingLogins: [PendingTvLogin] = []
     /// A TV that Telegram asks for the two-step password: the owner types it on this phone.
     private(set) var passwordRequest: PendingTvPasswordRequest?
+    /// A TV is waiting for Telegram while this phone has no Telegram session of its own: the owner must connect Telegram here first.
+    private(set) var connectNeededFor: PendingTvLogin?
 
     @ObservationIgnored private let pairing: PairingStore
     @ObservationIgnored private let catalog: @Sendable () -> CatalogClient
@@ -51,6 +53,7 @@ final class TelegramTvWork {
     @ObservationIgnored private var approvalsTask: Task<Void, Never>?
     @ObservationIgnored private var trustTask: Task<Void, Never>?
     @ObservationIgnored private var libraryTask: Task<Void, Never>?
+    @ObservationIgnored private var notConnectedTask: Task<Void, Never>?
     @ObservationIgnored private var dismissedPasswords = Set<String>()
     /// Requests being approved right now: they must not come back as a card while the approval runs (it takes seconds).
     @ObservationIgnored private var inFlight = Set<String>()
@@ -107,7 +110,32 @@ final class TelegramTvWork {
         }
     }
 
+    /// For a phone that has no Telegram session: asks the server which TVs wait for Telegram, so the phone can say "connect Telegram" instead of
+    /// staying silent while the TV shows "Approve on your phone". Ends by itself once this phone is connected (then `start()` takes over).
+    func watchWhileNotConnected() {
+        guard !PhoneTelegram.wasLinked, notConnectedTask == nil else { return }
+        notConnectedTask = Task { [weak self] in
+            var activeAt = Date.distantPast
+            while !Task.isCancelled {
+                guard let self else { return }
+                if PhoneTelegram.wasLinked { connectNeededFor = nil; notConnectedTask = nil; return }
+                if let token {
+                    let waiting = await catalog().pendingTvLogins(token: token)?.first
+                    if waiting != nil { activeAt = Date() }
+                    if connectNeededFor != waiting { connectNeededFor = waiting }
+                }
+                try? await Task.sleep(nanoseconds: UInt64(tvSignInPollDelay(appVisible: appVisible(), sinceActivity: Date().timeIntervalSince(activeAt)) * 1_000_000_000))
+            }
+        }
+    }
+
+    func stopNotConnectedWatch() {
+        notConnectedTask?.cancel(); notConnectedTask = nil
+        connectNeededFor = nil
+    }
+
     func stop() {
+        stopNotConnectedWatch()
         approvalsTask?.cancel(); approvalsTask = nil
         trustTask?.cancel(); trustTask = nil
         libraryTask?.cancel(); libraryTask = nil

@@ -478,6 +478,34 @@ struct HiddenVideosSheet: View {
     }
 }
 
+/// A TV is waiting for Telegram but this phone has no Telegram session to approve it with: say so, with the way to fix it.
+struct TelegramConnectCard: View {
+    let telegram: TelegramController
+
+    var body: some View {
+        if let request = telegram.work.connectNeededFor, telegram.needsConnection {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 8) {
+                    Image(systemName: "exclamationmark.circle.fill").foregroundStyle(Color.telegramWarning)
+                    Text(key: "ios_telegram_connect_needed_title").font(PhoneFont.titleMedium).foregroundStyle(.white)
+                }
+                Text(verbatim: L("ios_telegram_connect_needed_body", request.tvName)).font(.system(.footnote)).foregroundStyle(Color.phoneMuted)
+                Button { telegram.openSheet() } label: { Text(key: "ui_connect_telegram_00c799") }
+                    .buttonStyle(PrimaryButtonStyle(minHeight: 44)).accessibilityIdentifier("telegram_connect_needed_button")
+            }
+            .padding(14)
+            .background(Color(hex: 0x1A1A1A).opacity(0.93), in: RoundedRectangle(cornerRadius: 12))
+            .padding(.horizontal, 16).padding(.vertical, 4)
+            .accessibilityElement(children: .contain).accessibilityIdentifier("telegram_connect_needed_card")
+        }
+    }
+}
+
+extension Color {
+    /// The "!" on Telegram titles this phone cannot play, and the connect card's icon.
+    static let telegramWarning = Color(hex: 0xFFC107)
+}
+
 /// "Allow <TV> to use your Telegram?" when automatic approval is off (a card: there is no push while the app is closed).
 struct TelegramApprovalCard: View {
     let work: TelegramTvWork

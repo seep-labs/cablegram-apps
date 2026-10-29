@@ -20,6 +20,14 @@ extension PhoneViewModel {
         applyLibraryQuery(items, libraryFilters.withoutUnknownCollections(Set(collections.map(\.id))).searching(searchQuery))
     }
 
+    /// What this phone is connected to, for the "!" on posters and the Clean up sheet.
+    var libraryConnections: LibraryConnections {
+        LibraryConnections(telegramNeedsConnection: telegram.needsConnection, cloudNeedsConnection: cloud.cloudNeedsConnection)
+    }
+
+    /// Titles that cannot play from this phone, by why (Clean up).
+    var cleanupProblems: [CleanupGroup] { cleanupGroups(items, libraryConnections) }
+
     func toggleSelected(_ ids: [String]) { selectedIds = toggleSelection(selectedIds, ids) }
     func selectAll(_ ids: [String]) { selectedIds = Set(ids) }
     func clearSelection() { if !selectedIds.isEmpty { selectedIds = [] } }
