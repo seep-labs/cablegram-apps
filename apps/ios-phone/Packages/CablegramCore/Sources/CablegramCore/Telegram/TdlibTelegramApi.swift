@@ -55,7 +55,28 @@ public final class TdlibTelegramApi: TelegramApi, @unchecked Sendable {
     }
 
     public var fileUpdates: AsyncStream<TgFile> { mapped("updateFile") { Self.file($0.object("file") ?? $0) } }
-    public var newMessages: AsyncStream<TgMessage> { mapped("updateNewMessage") { Self.message($0.object("message") ?? $0) } }
+    /// A message this account is still sending (a forward, an upload) first arrives with a temporary id that TDLib replaces once Telegram accepts it,
+    /// and the library channel is read by the real id (the TV looks the message up by it). So a pending message is skipped, and the final one is
+    /// announced by `updateMessageSendSucceeded`.
+    public var newMessages: AsyncStream<TgMessage> {
+        let updates = td.updates
+        return AsyncStream { continuation in
+            let task = Task {
+                for await update in updates {
+                    switch update.type {
+                    case "updateNewMessage":
+                        let message = update.object("message") ?? update
+                        if message.object("sending_state") == nil { continuation.yield(Self.message(message)) }
+                    case "updateMessageSendSucceeded":
+                        if let message = update.object("message") { continuation.yield(Self.message(message)) }
+                    default: break
+                    }
+                }
+                continuation.finish()
+            }
+            continuation.onTermination = { _ in task.cancel() }
+        }
+    }
     public var editedMessages: AsyncStream<TgMessage> {
         mapped("updateMessageContent") { Self.message(chatId: $0.int64("chat_id"), messageId: $0.int64("message_id"), date: 0, content: $0.object("new_content") ?? TdObject([:])) }
     }
