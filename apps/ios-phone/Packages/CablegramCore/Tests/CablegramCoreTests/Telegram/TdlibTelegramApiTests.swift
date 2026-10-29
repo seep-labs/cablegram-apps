@@ -123,6 +123,20 @@ private func videoMessage(id: Int64 = 5, chat: Int64 = -1001, caption: String = 
         #expect(change?.messageId == 9 && change?.text == "#movie_1" && change?.video == nil)
     }
 
+    /// A forward (video discovery) or an upload first shows up with a temporary id; registering that id would send the TV to a message that does not exist.
+    @Test func aMessageBeingSentIsAnnouncedOnlyWithItsRealId() async throws {
+        let newOnes = api.newMessages
+        var pending = videoMessage(id: 1_048_576, unique: "u1")
+        pending["sending_state"] = ["@type": "messageSendingStatePending"]
+        td.push(["@type": "updateNewMessage", "message": pending])
+        td.push(["@type": "updateMessageSendSucceeded", "old_message_id": "1048576", "message": videoMessage(id: 4_194_304, unique: "u1")])
+        td.push(["@type": "updateNewMessage", "message": videoMessage(id: 9, unique: "u2")])
+        var iterator = newOnes.makeAsyncIterator()
+        let first = await iterator.next(), second = await iterator.next()
+        #expect(first?.video?.messageId == 4_194_304, "the temporary id is never announced")
+        #expect(second?.video?.messageId == 9, "a message from someone else is announced at once")
+    }
+
     @Test func onlyPermanentDeletionsAreReported() async {
         let deleted = api.deletedMessages
         td.push(["@type": "updateDeleteMessages", "chat_id": "-1001", "message_ids": ["1"], "is_permanent": false, "from_cache": false])

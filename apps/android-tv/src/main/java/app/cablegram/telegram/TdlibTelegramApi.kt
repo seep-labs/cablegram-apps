@@ -58,6 +58,7 @@ import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 
 // Shared by apps/android-phone and apps/android-tv (spec 004). Keep both copies identical.
 
@@ -88,7 +89,13 @@ class TdlibTelegramApi(private val client: TdlClient = TdlClient.create()) : Tel
         (client.getAuthorizationState() as? TdlResult.Success)?.let { send(toAuthState(it.result)) }
     }.distinctUntilChanged()
     override val fileUpdates: Flow<TgFile> = client.fileUpdates.map { toFile(it.file) }
-    override val newMessages: Flow<TgMessage> = client.newMessageUpdates.map { toMessage(it.message) }
+    // A message this account is still sending (a forward, an upload) first arrives with a temporary id that TDLib replaces once Telegram accepts it.
+    // The library channel is read by the real id (a TV looks the message up by it), so a pending message is skipped and the final one is announced
+    // by messageSendSucceeded.
+    override val newMessages: Flow<TgMessage> = merge(
+        client.newMessageUpdates.filter { it.message.sendingState == null }.map { toMessage(it.message) },
+        client.messageSendSucceededUpdates.map { toMessage(it.message) },
+    )
     override val editedMessages: Flow<TgMessage> = client.messageContentUpdates.map { toMessage(it.chatId, it.messageId, 0, it.newContent) }
     override val deletedMessages: Flow<TgDeletedMessages> = client.deleteMessagesUpdates
         // Messages evicted from TDLib's cache are not deletions in the channel.
