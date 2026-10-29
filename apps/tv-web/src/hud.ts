@@ -171,8 +171,16 @@ function reduceTracksMenu(state: HudState, key: DpadKey, ctx: HudContext): Resul
   const last = Math.max(0, options.length - 1);
   switch (key) {
     case "back": return [{ ...state, overlay: "closed", focus: "audioSubtitles", menuIndex: 0 }, []];
-    case "up": return [{ ...state, menuIndex: Math.max(0, state.menuIndex - 1) }, []];
-    case "down": return [{ ...state, menuIndex: Math.min(last, state.menuIndex + 1) }, []];
+    // The two columns read as one list: Down past the last audio track enters the subtitles ("Off" first), Up past the first subtitle returns to
+    // the last audio track. Left and Right still jump between the columns at once.
+    case "up":
+      if (state.menuIndex === 0 && state.menuSection === "subtitles" && ctx.audioTracks.length > 0) {
+        return [{ ...state, menuSection: "audio", menuIndex: ctx.audioTracks.length - 1 }, []];
+      }
+      return [{ ...state, menuIndex: Math.max(0, state.menuIndex - 1) }, []];
+    case "down":
+      if (state.menuSection === "audio" && state.menuIndex >= last) return [{ ...state, menuSection: "subtitles", menuIndex: 0 }, []];
+      return [{ ...state, menuIndex: Math.min(last, state.menuIndex + 1) }, []];
     case "left": return [switchSection(state, "audio", ctx), []];
     case "right": return [switchSection(state, "subtitles", ctx), []];
     case "ok": {

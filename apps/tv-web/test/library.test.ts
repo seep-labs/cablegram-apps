@@ -93,6 +93,33 @@ describe("player remote", () => {
     expect(reduceHud(onMp3, "ok", 0, audio)[1]).toEqual([]);
     expect(reduceHud(menu, "ok", 0, audio)[1]).toEqual([{ type: "audio", id: "emb:2" }]);
   });
+  it("Down past the last audio track enters the subtitles, and Up returns to the last audio track", () => {
+    const both = { ...ctx, audioTracks: [{ id: "a1", label: "English" }, { id: "a2", label: "Persian" }], subtitleTracks: [{ id: "s1", label: "English" }], selectedAudioId: "a1" };
+    const lastAudio = { ...initialHud, controlsVisible: true, overlay: "audioSubtitles" as const, menuSection: "audio" as const, menuIndex: 1 };
+    const [inSubtitles] = reduceHud(lastAudio, "down", 0, both);
+    expect([inSubtitles.menuSection, inSubtitles.menuIndex]).toEqual(["subtitles", 0]); // "Off"
+    const [second] = reduceHud(inSubtitles, "down", 0, both);
+    expect(second.menuIndex).toBe(1);
+    expect(reduceHud(second, "down", 0, both)[0].menuIndex).toBe(1); // the end of the subtitles stays put
+    const [backToOff] = reduceHud(second, "up", 0, both);
+    expect([backToOff.menuSection, backToOff.menuIndex]).toEqual(["subtitles", 0]);
+    const [backToAudio] = reduceHud(backToOff, "up", 0, both);
+    expect([backToAudio.menuSection, backToAudio.menuIndex]).toEqual(["audio", 1]);
+    expect(reduceHud({ ...lastAudio, menuIndex: 0 }, "up", 0, both)[0].menuIndex).toBe(0); // the top of the audio stays put
+  });
+  it("with no audio tracks Down goes straight to the subtitles, and Up from them stays", () => {
+    const noAudio = { ...ctx, audioTracks: [], subtitleTracks: [{ id: "s1", label: "English" }] };
+    const menu = { ...initialHud, controlsVisible: true, overlay: "audioSubtitles" as const, menuSection: "audio" as const, menuIndex: 0 };
+    const [inSubtitles] = reduceHud(menu, "down", 0, noAudio);
+    expect([inSubtitles.menuSection, inSubtitles.menuIndex]).toEqual(["subtitles", 0]);
+    expect(reduceHud(inSubtitles, "up", 0, noAudio)[0].menuSection).toBe("subtitles");
+  });
+  it("Left and Right still jump between the columns", () => {
+    const both = { ...ctx, audioTracks: [{ id: "a1", label: "English" }], subtitleTracks: [{ id: "s1", label: "English" }], selectedAudioId: "a1" };
+    const menu = { ...initialHud, controlsVisible: true, overlay: "audioSubtitles" as const, menuSection: "audio" as const, menuIndex: 0 };
+    expect(reduceHud(menu, "right", 0, both)[0].menuSection).toBe("subtitles");
+    expect(reduceHud(reduceHud(menu, "right", 0, both)[0], "left", 0, both)[0].menuSection).toBe("audio");
+  });
 });
 
 describe("collections and all titles", () => {
