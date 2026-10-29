@@ -1,6 +1,6 @@
 // Shared build settings. URLs use the $() trick because xcconfig treats // as a comment.
 // Override locally in Local.xcconfig (gitignored); see Local.xcconfig.example.
-MARKETING_VERSION = 0.3.0
+MARKETING_VERSION = 0.4.0
 CURRENT_PROJECT_VERSION = 1
 PRODUCT_BUNDLE_IDENTIFIER = app.cablegram.phone
 DEVELOPMENT_TEAM = 3S2K758XUS
