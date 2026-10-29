@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Titles that cannot play from this phone: marks, the connect prompt, Clean up. -->
+    <string name="library_problem_telegram" formatted="false">"اربط Telegram للتشغيل"</string>
+    <string name="library_problem_cloud" formatted="false">"اربط التخزين السحابي للتشغيل"</string>
+    <string name="telegram_connect_needed_title" formatted="false">"يريد التلفاز تشغيل فيديو من Telegram"</string>
+    <string name="telegram_connect_needed_body" formatted="false">"اربط حساب Telegram على هذا الهاتف ليتمكّن %1$s من تشغيله."</string>
+    <string name="cleanup_title" formatted="false">"تنظيف مكتبتك"</string>
+    <string name="cleanup_intro" formatted="false">"لا يمكن تشغيل هذه العناوين من هذا الهاتف الآن. حدّدها لإزالتها، أو اربط ما ينقص."</string>
+    <string name="cleanup_nothing" formatted="false">"لا شيء لتنظيفه. يمكن تشغيل كل العناوين من هذا الهاتف."</string>
+    <string name="cleanup_select_all" formatted="false">"تحديد كل العناوين (%1$d)"</string>
+    <string name="cleanup_select" formatted="false">"تحديد"</string>
+    <string name="cleanup_connect" formatted="false">"ربط"</string>
+    <string name="cleanup_group_telegram" formatted="false">"Telegram غير مربوط على هذا الهاتف"</string>
+    <string name="cleanup_group_cloud" formatted="false">"التخزين السحابي الخاص بك غير مربوط"</string>
+</resources>

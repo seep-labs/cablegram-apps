@@ -29,6 +29,12 @@ object PhoneTelegram {
      */
     val libraryScanned = MutableSharedFlow<Unit>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
+    /**
+     * A TV that is waiting for Telegram while this phone has no session of its own to approve it with (null otherwise): the owner is
+     * asked to connect Telegram here. Set by [TelegramTvApprovalWatcher], shown by the library as a card.
+     */
+    val connectNeededFor = kotlinx.coroutines.flow.MutableStateFlow<PendingTvLogin?>(null)
+
     /** How this phone appears in Telegram → Settings → Devices. */
     val deviceModel: String get() = "${Build.MANUFACTURER} ${Build.MODEL}".trim()
 
