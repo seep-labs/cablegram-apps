@@ -20,4 +20,6 @@ Be kind. This project follows the [Code of Conduct](CODE_OF_CONDUCT.md).
 ## Sign-off
 
 Sign your commits with the [Developer Certificate of Origin](https://developercertificate.org/):
-`git commit -s`. Your contribution is licensed under GPL-3.0, like the rest of the repository.
+`git commit -s`. Your contribution is licensed under GPL-3.0 with the additional permissions in
+[LICENSE-OPENSSL-EXCEPTION.md](LICENSE-OPENSSL-EXCEPTION.md) and
+[LICENSE-APP-STORE-EXCEPTION.md](LICENSE-APP-STORE-EXCEPTION.md), like the rest of the repository.
