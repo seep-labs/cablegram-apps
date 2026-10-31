@@ -10,6 +10,7 @@ class CommandDeliveryTest {
                      val receipt: (String) -> Unit, val closed: () -> Unit) : CommandConnection {
             var acceptsSend = true
             var closedByClient = false
+            var changed: (String, String?) -> Unit = { _, _ -> }
             val messages = mutableListOf<String>()
             override fun send(text: String): Boolean { messages.add(text); return acceptsSend }
             override fun close() { closedByClient = true; closed() }
@@ -20,8 +21,9 @@ class CommandDeliveryTest {
         var failHttp = false
         var polls = 0
         override fun connect(token: String, onReady: () -> Unit, onCommand: (TvCommand) -> Unit,
-                             onReceipt: (String) -> Unit, onClosed: () -> Unit): CommandConnection =
-            Socket(onReady, onCommand, onReceipt, onClosed).also { sockets.add(it) }
+                             onReceipt: (String) -> Unit, onClosed: () -> Unit,
+                             onChanged: (String, String?) -> Unit): CommandConnection =
+            Socket(onReady, onCommand, onReceipt, onClosed).also { it.changed = onChanged; sockets.add(it) }
         override suspend fun poll(token: String): List<TvCommand> { polls++; return pollCommands.toList() }
         override suspend fun result(token: String, record: CommandRecord) {
             if (failHttp) throw java.io.IOException("offline")

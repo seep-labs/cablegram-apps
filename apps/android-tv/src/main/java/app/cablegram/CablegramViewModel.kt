@@ -38,6 +38,8 @@ import app.cablegram.data.isDemoVideoId
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -226,7 +228,11 @@ class CablegramViewModel @JvmOverloads constructor(
         lanPrefs.getString("command_journal_v2", null),
         save = { check(lanPrefs.edit().putString("command_journal_v2", it).commit()) { "Cannot persist command result" } },
     )
-    private val commandDelivery = CommandDelivery(viewModelScope, api.commandTransport(), commandJournal, ::handleCommand)
+    private val commandDelivery = CommandDelivery(viewModelScope, api.commandTransport(), commandJournal, ::handleCommand,
+        onChanged = ::handleServerChange)
+    /** Live sync: a hint wakes the library sync loop (or the profile-switch wait) instead of waiting out its delay. */
+    private val libraryWake = Channel<Unit>(Channel.CONFLATED)
+    private val switchWake = Channel<Unit>(Channel.CONFLATED)
     private var remoteTitleCommand by mutableStateOf<Pair<String, String>?>(null)
     val pendingRemoteTitleId: String? get() = remoteTitleCommand?.first
     private var playbackJob: Job? = null
@@ -1237,7 +1243,8 @@ class CablegramViewModel @JvmOverloads constructor(
                 waitingSwitch = request.requestId to currentToken
                 screen = ScreenState.ProfilePicker(profiles, awaitingPhoneFor = profile)
                 while (true) {
-                    delay(2_000)
+                    // The server pushes the answer; the timeout is the fallback for a missed push.
+                    withTimeoutOrNull(SWITCH_POLL_MS) { switchWake.receive() }
                     // A missed poll (Wi-Fi blip) keeps waiting; the server expires the request.
                     val status = try {
                         api.getProfileSwitchRequest(request.requestId, currentToken).status
@@ -1529,6 +1536,24 @@ class CablegramViewModel @JvmOverloads constructor(
             || tvLanIp?.startsWith("10.0.2.") == true
     }
 
+    /**
+     * A "something changed" hint from the server. It carries no data: the library sync loop refetches (a 304 when
+     * nothing differs) and keeps the grid's focus and scroll. Playback is never touched: that loop only runs on the
+     * library screen. Unknown scopes are ignored.
+     */
+    private fun handleServerChange(scope: String, profileId: String?, account: AccountCredential) {
+        when (scope) {
+            "catalog" -> if (account.token == token && (profileId == null || profileId == activeProfileId)) libraryWake.trySend(Unit)
+            "profileSwitch" -> switchWake.trySend(Unit)
+            "profiles" -> {
+                // Only the idle picker shows the profile list; refreshing it must not disturb a PIN or an approval in progress.
+                val picker = screen as? ScreenState.ProfilePicker ?: return
+                if (picker.pending || picker.pinPromptFor != null || picker.awaitingPhoneFor != null || isDemoMode) return
+                viewModelScope.launch { loadProfiles() }
+            }
+        }
+    }
+
     private fun startCommandPolling() {
         if (isDemoMode || commandJob?.isActive == true) return
         commandJob = viewModelScope.launch {
@@ -1739,7 +1764,7 @@ class CablegramViewModel @JvmOverloads constructor(
             var lastSignature: String? = null
             var lastEtag: String? = null
             while (true) {
-                delay(LIBRARY_SYNC_MS)
+                withTimeoutOrNull(LIBRARY_SYNC_MS) { libraryWake.receive() }
                 if (screen !is ScreenState.Library) return@launch
                 val currentToken = token ?: return@launch
                 runCatching { api.getVideosIfChanged(currentToken, lanToken, activeProfileId, lastEtag) }
@@ -1907,6 +1932,7 @@ class CablegramViewModel @JvmOverloads constructor(
         // New phone imports appear within a few seconds without re-fetching the
         // whole catalog and device list every two seconds.
         const val LIBRARY_SYNC_MS = 5_000L
+        const val SWITCH_POLL_MS = 5_000L
         /** How soon a removed TV signs out on any screen while Cablegram is open (CAB-37). */
         const val SESSION_CHECK_MS = 30_000L
     }
