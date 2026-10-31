@@ -255,6 +255,16 @@ export function createApi(opts: { base?: string | (() => string); fetch?: Fetch;
     async revokeSelf(token: string) {
       await call("api/devices/self", { method: "DELETE" }, bearer(token));
     },
+    /** A single-use ticket for the live socket (browsers cannot send an Authorization header on a WebSocket). */
+    async socketTicket(token?: string): Promise<string> {
+      const b = (await call("api/control/commands/socket-ticket", { method: "POST", body: "{}" }, bearer(token)))!;
+      const ticket = str(b.ticket);
+      if (!ticket) throw new ApiError(502, "no_ticket");
+      return ticket;
+    },
+    socketUrl(ticket: string): string {
+      return `${resolveBase().replace(/^http/, "ws")}/api/control/commands/socket?ticket=${encodeURIComponent(ticket)}`;
+    },
     async catalog(profileId: string): Promise<Title[]> {
       const b = (await call(`api/catalog/items?profile_id=${encodeURIComponent(profileId)}`))!;
       return ((b.items as Json[]) ?? []).map(parseTitle);

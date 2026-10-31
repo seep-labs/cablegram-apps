@@ -16,7 +16,8 @@ internal interface CommandConnection {
 
 internal interface CommandTransport {
     fun connect(token: String, onReady: () -> Unit, onCommand: (TvCommand) -> Unit,
-                onReceipt: (String) -> Unit, onClosed: () -> Unit): CommandConnection
+                onReceipt: (String) -> Unit, onClosed: () -> Unit,
+                onChanged: (scope: String, profileId: String?) -> Unit): CommandConnection
     suspend fun poll(token: String): List<TvCommand>
     suspend fun result(token: String, record: CommandRecord)
 }
@@ -29,6 +30,8 @@ internal class CommandDelivery(
     private val onCommand: (TvCommand, AccountCredential) -> Unit,
     private val now: () -> Long = System::currentTimeMillis,
     private val tickMs: Long = 250,
+    /** A live-sync hint from this account's socket. */
+    private val onChanged: (scope: String, profileId: String?, account: AccountCredential) -> Unit = { _, _, _ -> },
 ) {
     private class Session(val account: AccountCredential) {
         var connection: CommandConnection? = null
@@ -134,6 +137,7 @@ internal class CommandDelivery(
             onReceipt = { id -> deliver {
                 journal.confirm(id, s.account.sessionId); s.sentAt.remove(id)
             } },
+            onChanged = { changeScope, profileId -> deliver { onChanged(changeScope, profileId, s.account) } },
             onClosed = { deliver {
                 s.ready = false; s.connection = null
                 s.retryAt = now() + s.backoff
