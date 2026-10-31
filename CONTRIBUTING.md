@@ -20,6 +20,9 @@ Be kind. This project follows the [Code of Conduct](CODE_OF_CONDUCT.md).
 ## Sign-off
 
 Sign your commits with the [Developer Certificate of Origin](https://developercertificate.org/):
-`git commit -s`. Your contribution is licensed under GPL-3.0 with the additional permissions in
-[LICENSE-OPENSSL-EXCEPTION.md](LICENSE-OPENSSL-EXCEPTION.md) and
-[LICENSE-APP-STORE-EXCEPTION.md](LICENSE-APP-STORE-EXCEPTION.md), like the rest of the repository.
+`git commit -s`. By signing off, you agree that your contribution is licensed:
+
+- in `libs/tv-media`: under the Apache License 2.0 ([libs/tv-media/LICENSE](libs/tv-media/LICENSE));
+- everywhere else: under GPL-3.0 ([LICENSE](LICENSE)) together with the additional permissions under
+  section 7 in [LICENSE-OPENSSL-EXCEPTION.md](LICENSE-OPENSSL-EXCEPTION.md) and
+  [LICENSE-APP-STORE-EXCEPTION.md](LICENSE-APP-STORE-EXCEPTION.md).
