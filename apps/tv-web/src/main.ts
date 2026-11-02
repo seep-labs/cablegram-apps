@@ -27,6 +27,8 @@ import type { EngineHandle } from "./engine-adapter";
 import { cueText, parseVtt, saveChoice, savedChoice, startWithSmart } from "./subtitles";
 import type { Cue, SmartSubtitle } from "./subtitles";
 import * as store from "./session";
+import { startLive } from "./live";
+import type { Live, LiveChange } from "./live";
 import type { Account } from "./session";
 import type { DeviceSession, Playback, Profile, SwitchRequest, Title } from "./types";
 
@@ -282,14 +284,10 @@ let connectedWelcome = false;
 const sharedTv = () => store.accounts().length > 1;
 
 /** Profiles of every account on this TV; an account the server no longer knows is dropped. */
-async function loadProfiles() {
-  const list = store.accounts();
-  if (!list.length) { profileEntries = []; current = null; void pair(false); return; }
-  if (!root.querySelector(".picker")) loading();
-  void api.server().catch(() => undefined);
+async function fetchProfileEntries(): Promise<{ entries: ProfileEntry[]; failed: boolean }> {
   const entries: ProfileEntry[] = [];
   let failed = false;
-  for (const account of list) {
+  for (const account of store.accounts()) {
     try {
       (await api.profiles(account.token)).forEach((profile) => entries.push({ profile, account }));
     } catch (e) {
@@ -297,6 +295,14 @@ async function loadProfiles() {
       else failed = true;
     }
   }
+  return { entries, failed };
+}
+
+async function loadProfiles() {
+  if (!store.accounts().length) { profileEntries = []; current = null; stopLive(); void pair(false); return; }
+  if (!root.querySelector(".picker")) loading();
+  void api.server().catch(() => undefined);
+  const { entries, failed } = await fetchProfileEntries();
   profileEntries = entries;
   if (!store.accounts().length) { void pair(false); return; }
   if (!entries.length && failed) {
@@ -411,9 +417,12 @@ async function proceedWithProfile(entry: ProfileEntry) {
   let waiting = true;
   const cancel = () => {
     waiting = false;
+    backToCurrentAccount();
     void api.cancelProfileSwitch(requestId, token).catch(() => {});
     picker();
   };
+  // The answer arrives on the requesting account's socket.
+  ensureLive(entry.account);
   show([h("div", "center-screen pad", undefined, [h("div", "approval-panel", undefined, [
     brandMark(),
     h("div", "pin-eyebrow", "Allow on your phone"),
@@ -423,21 +432,26 @@ async function proceedWithProfile(entry: ProfileEntry) {
       : "This account is locked. Open Cablegram on a phone signed in to it and tap Allow."),
     button("Cancel", cancel, "raised", true),
   ])])], cancel);
-  every(2_000, async () => {
+  const check = async () => {
     if (!waiting) return;
     let status: string | undefined;
     // A missed poll (Wi-Fi blip) keeps waiting; the server expires the request.
     try { status = (await api.profileSwitch(requestId, token)).status; } catch { return; }
     if (!waiting) return;
     if (status === "approved") { waiting = false; void openProfile(entry); }
-    else if (status === "denied") { waiting = false; picker(`Your phone didn't allow ${entry.profile.name}.`); }
-    else if (status === "expired") { waiting = false; picker(`Nobody allowed ${entry.profile.name} on a phone in time. Try again.`); }
-  });
+    else if (status === "denied") { waiting = false; backToCurrentAccount(); picker(`Your phone didn't allow ${entry.profile.name}.`); }
+    else if (status === "expired") { waiting = false; backToCurrentAccount(); picker(`Nobody allowed ${entry.profile.name} on a phone in time. Try again.`); }
+  };
+  // The server pushes the answer; this slower poll covers a missed push or a socket that is down.
+  switchNudge = check;
+  screenCleanup.push(() => { if (switchNudge === check) switchNudge = null; });
+  every(10_000, check);
 }
 
 async function openProfile(entry: ProfileEntry) {
   current = entry;
   store.setActive(entry.account.sessionId, entry.profile.id);
+  ensureLive(entry.account);
   libraryState = { rail: "home", type: "all", genre: null, show: null, focusId: null };
   await loadLibrary();
 }
@@ -452,7 +466,7 @@ function sessionActions() {
     h("div", "session-title", "TV session"),
     h("div", "muted session-sub", "Choose an action"),
     button("Switch profile", () => picker(), "primary", true),
-    button("Sign out", () => { current = null; videos = []; void loadProfiles(); }),
+    button("Sign out", () => { current = null; videos = []; stopLive(); void loadProfiles(); }),
     // On a shared TV this removes only the open account; with one account it unpairs the TV.
     button(shared ? "Remove this account from this TV" : "Unpair this TV",
       () => (shared ? confirmUnpair(removeCurrentAccount, "Remove this account from this TV?",
@@ -475,6 +489,7 @@ async function unpairEverything() {
   loading("Unpairing…");
   await Promise.all(store.accounts().map((a) => api.revokeSelf(a.token).catch(() => {})));
   store.clearAccounts();
+  stopLive();
   current = null; videos = []; profileEntries = [];
   void pair(false);
 }
@@ -485,6 +500,7 @@ async function removeCurrentAccount() {
   loading("Removing this account…");
   await api.revokeSelf(account.token).catch(() => {});
   store.removeAccount(account.sessionId);
+  stopLive();
   current = null; videos = [];
   void loadProfiles();
 }
@@ -504,6 +520,156 @@ function showConnectedWelcome() {
   ]), closeModal);
 }
 
+// ---- Live sync ---------------------------------------------------------------------------------------------------
+// The server pushes "something changed" hints over a socket. A hint only makes the TV refetch over REST; the screen
+// is redrawn in place (same rail, filter, open show and focused card) and never while a video is playing.
+
+let live: Live | null = null;
+let liveSession: string | null = null;
+let liveWasDown = false;
+/** The profile-switch wait screen's "check now". */
+let switchNudge: (() => void) | null = null;
+let refreshing = false;
+let refreshAgain = false;
+
+const libraryOnShow = () => !!root.querySelector(".library");
+const playerOnShow = () => !!root.querySelector("video");
+
+function ensureLive(account: Account) {
+  if (live && liveSession === account.sessionId) return;
+  stopLive();
+  liveSession = account.sessionId;
+  const token = account.token;
+  live = startLive({
+    ticket: () => api.socketTicket(token),
+    socketUrl: (ticket) => api.socketUrl(ticket),
+    onChanged: onLiveChange,
+    // Whatever happened while the socket was down is picked up when it returns.
+    onState: (up) => { if (up && liveWasDown) { void refreshQuietly(); void refreshProfilesQuietly(); } liveWasDown = !up; },
+  });
+}
+
+function stopLive() {
+  live?.stop();
+  live = null; liveSession = null; liveWasDown = false;
+}
+
+/** After a refused or cancelled switch the socket goes back to the account whose library is still on screen. */
+function backToCurrentAccount() {
+  if (current) ensureLive(current.account);
+}
+
+function onLiveChange(change: LiveChange) {
+  if (change.scope === "catalog") {
+    // A My List change belongs to one profile; other profiles' TVs have nothing to refresh.
+    if (change.profileId && current && change.profileId !== current.profile.id) return;
+    void refreshQuietly();
+  } else if (change.scope === "profiles") void refreshProfilesQuietly();
+  else if (switchNudge) switchNudge();
+}
+
+/** Refetches the catalog without a loading screen and redraws only if something differs. */
+async function refreshQuietly() {
+  const entry = current;
+  // The player's exit reloads the library, so a change during playback needs nothing now.
+  if (!entry || playerOnShow()) return;
+  if (refreshing) { refreshAgain = true; return; }
+  refreshing = true;
+  try {
+    const next = await api.catalog(entry.profile.id);
+    if (current !== entry || playerOnShow()) return;
+    if (JSON.stringify(next) !== JSON.stringify(videos)) {
+      videos = next;
+      redrawLibraryInPlace();
+    }
+  } catch { /* the slow poll or the next hint tries again */ }
+  finally {
+    refreshing = false;
+    if (refreshAgain) { refreshAgain = false; void refreshQuietly(); }
+  }
+}
+
+/** The ids of the cards in a shelf, in order, so focus can land on a neighbour when its card is gone. */
+function shelfIds(shelf: string | null): string[] {
+  if (shelf === null) return [];
+  return Array.prototype.slice.call(root.querySelectorAll(`.card[data-shelf="${cssEscape(shelf)}"]`))
+    .map((c: Element) => c.getAttribute("data-id") ?? "");
+}
+
+function redrawLibraryInPlace(attempt = 0) {
+  if (!libraryOnShow()) return; // another screen is up; Back redraws from the fresh `videos`
+  if (modal) {
+    // A dialog is open; the redraw would close it. Try again shortly.
+    if (attempt < 20) window.setTimeout(() => { if (current && libraryOnShow()) redrawLibraryInPlace(attempt + 1); }, 1_500);
+    return;
+  }
+  const active = document.activeElement as HTMLElement | null;
+  const onCard = !!active && active.classList.contains("card") && !!active.getAttribute("data-id");
+  const shelf = onCard ? active!.getAttribute("data-shelf") : null;
+  const cardId = onCard ? active!.getAttribute("data-id") : null;
+  const siblings = shelfIds(shelf);
+  const elId = !onCard && active && active.id ? active.id : null;
+  const pills = Array.prototype.slice.call(root.querySelectorAll(".topbar .pill")) as HTMLElement[];
+  const pillIndex = !onCard && active ? pills.indexOf(active) : -1;
+  const open = libraryState.show;
+  if (open && !toEntries(videos).some((e) => e.kind === "show" && e.id === open.id)) {
+    libraryState = { ...libraryState, show: null, focusId: null }; // the open show was removed
+  }
+  libraryScreen();
+  if (cardId) {
+    const find = (id: string) => root.querySelector(`.card[data-shelf="${cssEscape(shelf ?? "")}"][data-id="${cssEscape(id)}"]`) as HTMLElement | null
+      ?? root.querySelector(`.card[data-id="${cssEscape(id)}"]`) as HTMLElement | null;
+    let target = find(cardId);
+    if (!target) {
+      // Its title is gone: the next card in the row, else the one before it.
+      const at = siblings.indexOf(cardId);
+      const order = siblings.slice(at + 1).concat(siblings.slice(0, at).reverse());
+      for (let i = 0; i < order.length && !target; i++) target = find(order[i]);
+    }
+    if (target) { libraryState = { ...libraryState, focusId: target.getAttribute("data-id") }; focusCard(target); }
+  } else if (elId) {
+    const el = document.getElementById(elId);
+    if (el) focusEl(el);
+  } else if (pillIndex >= 0) {
+    const again = root.querySelectorAll(".topbar .pill")[pillIndex] as HTMLElement | undefined;
+    if (again) focusEl(again);
+  }
+}
+
+/** The profile list for the picker (and a deleted profile), without touching the screen unless the picker is up. */
+async function refreshProfilesQuietly() {
+  if (!store.accounts().length) return;
+  const { entries, failed } = await fetchProfileEntries();
+  if (failed && !entries.length) return;
+  profileEntries = entries;
+  const entry = current;
+  if (entry) {
+    const same = entries.filter((x) => x.profile.id === entry.profile.id && x.account.sessionId === entry.account.sessionId)[0];
+    if (same) entry.profile = same.profile;
+    else if (!playerOnShow()) { current = null; videos = []; picker(); return; } // that profile was deleted
+  }
+  if (root.querySelector(".picker")) {
+    const tiles = Array.prototype.slice.call(root.querySelectorAll(".picker .profile-tile")) as Element[];
+    const at = tiles.indexOf(document.activeElement as Element);
+    const message = (root.querySelector(".picker-message") as HTMLElement | null)?.textContent ?? undefined;
+    const pending = !!root.querySelector(".profile-tile.disabled");
+    picker(message && message !== "Choose your profile" ? message : undefined, pending);
+    const after = root.querySelectorAll(".picker .profile-tile")[Math.min(at, tiles.length - 1)] as HTMLElement | undefined;
+    if (at >= 0 && after) focusEl(after);
+  }
+}
+
+function foreground() {
+  live?.nudge(true);
+  void refreshQuietly();
+  void refreshProfilesQuietly();
+}
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") foreground(); });
+document.addEventListener("webOSRelaunch", foreground);
+window.addEventListener("online", () => live?.nudge());
+// Fallback: while the socket is down the library is refetched every 30 s (only on the library screen, never over a video).
+window.setInterval(() => { if (current && !(live && live.isUp()) && libraryOnShow()) void refreshQuietly(); }, 30_000);
+
 // ---- Library -----------------------------------------------------------------------------------------------------
 
 type Rail = "home" | "player" | "library" | "settings";
@@ -522,7 +688,7 @@ async function loadLibrary() {
   try {
     videos = await api.catalog(entry.profile.id);
   } catch (e) {
-    if (e instanceof ApiError && e.status === 401) { store.removeAccount(entry.account.sessionId); current = null; void loadProfiles(); return; }
+    if (e instanceof ApiError && e.status === 401) { store.removeAccount(entry.account.sessionId); stopLive(); current = null; void loadProfiles(); return; }
     errorScreen("Can't load your library", "Check the TV's internet connection and try again.",
       [button("Try again", () => loadLibrary())], () => picker());
     return;

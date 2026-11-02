@@ -86,6 +86,35 @@ class CablegramApiTest {
     }
 
     @Test
+    fun `changed hints reach the callback and unknown frames neither close the socket nor stop later ones`() {
+        val events = LinkedBlockingQueue<String>()
+        server.enqueue(MockResponse().withWebSocketUpgrade(object : WebSocketListener() {
+            override fun onOpen(webSocket: WebSocket, response: Response) {
+                webSocket.send("""{"type":"ready"}""")
+                webSocket.send("""{"type":"changed","scope":"catalog","version":"1"}""")
+                webSocket.send("""{"type":"somethingNewer","scope":"x"}""")
+                webSocket.send("""{"type":"changed","scope":"somethingNewer"}""")
+                webSocket.send("""{"type":"changed","scope":"catalog","profileId":"p1","version":"2"}""")
+            }
+            override fun onClosing(webSocket: WebSocket, code: Int, reason: String) { webSocket.close(code, reason) }
+        }))
+        val socket = api.openCommandSocket("tv-token",
+            onCommand = {},
+            onClosed = { events.offer("closed") },
+            onReady = { events.offer("ready") },
+            onChanged = { scope, profileId -> events.offer("changed:$scope:${profileId ?: "-"}") },
+        )
+        try {
+            assertEquals("ready", events.poll(3, TimeUnit.SECONDS))
+            assertEquals("changed:catalog:-", events.poll(3, TimeUnit.SECONDS))
+            // A scope this app does not know is still just delivered; the caller ignores what it does not handle.
+            assertEquals("changed:somethingNewer:-", events.poll(3, TimeUnit.SECONDS))
+            assertEquals("changed:catalog:p1", events.poll(3, TimeUnit.SECONDS))
+            assertTrue(events.isEmpty())
+        } finally { socket.cancel() }
+    }
+
+    @Test
     fun `completing a command over HTTP sends a JSON body, not an empty one`() = runBlocking {
         server.enqueue(MockResponse().setResponseCode(204))
         api.completeCommand("cmd-1", "tv-token")

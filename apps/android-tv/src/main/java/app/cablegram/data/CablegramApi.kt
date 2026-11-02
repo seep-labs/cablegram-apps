@@ -11,6 +11,7 @@ import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.put
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -404,6 +405,8 @@ class CablegramApi(
         onClosed: (WebSocket) -> Unit,
         onReady: () -> Unit = {},
         onReceipt: (String) -> Unit = {},
+        /** The server's hint that something this TV shows changed: a scope and, for My List, a profile. Never data. */
+        onChanged: (scope: String, profileId: String?) -> Unit = { _, _ -> },
     ): WebSocket {
         val socketUrl = url("api/control/commands/socket")
             .replaceFirst("https://", "wss://")
@@ -417,6 +420,9 @@ class CablegramApi(
                         "command" -> onCommand(json.decodeFromJsonElement<TvCommand>(root.getValue("command")))
                         "ready" -> onReady()
                         "receipt" -> onReceipt(root.getValue("id").jsonPrimitive.content)
+                        "changed" -> root["scope"]?.jsonPrimitive?.contentOrNull?.let { scope ->
+                            onChanged(scope, root["profileId"]?.jsonPrimitive?.contentOrNull)
+                        }
                     }
                 }.onFailure { webSocket.close(1008, "invalid_message") }
             }
@@ -429,8 +435,9 @@ class CablegramApi(
 
     internal fun commandTransport(): CommandTransport = object : CommandTransport {
         override fun connect(token: String, onReady: () -> Unit, onCommand: (TvCommand) -> Unit,
-                             onReceipt: (String) -> Unit, onClosed: () -> Unit): CommandConnection {
-            val socket = openCommandSocket(token, onCommand, { onClosed() }, onReady, onReceipt)
+                             onReceipt: (String) -> Unit, onClosed: () -> Unit,
+                             onChanged: (String, String?) -> Unit): CommandConnection {
+            val socket = openCommandSocket(token, onCommand, { onClosed() }, onReady, onReceipt, onChanged)
             return object : CommandConnection {
                 override fun send(text: String) = socket.send(text)
                 override fun close() { socket.cancel() }
