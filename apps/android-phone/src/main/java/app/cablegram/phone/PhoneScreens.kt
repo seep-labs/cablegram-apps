@@ -11,6 +11,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AutoFixHigh
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
@@ -137,6 +138,7 @@ fun LibraryShell(viewModel: PhoneViewModel) {
         TelegramAccountHelp(onBack = { accountHelpOpen = false })
         return
     }
+    CleanupDialog(viewModel)
     if (viewModel.collectionsDialogOpen) AlertDialog(
         modifier = Modifier.maestroRoot(),
         onDismissRequest = { viewModel.collectionsDialogOpen = false },
@@ -195,6 +197,7 @@ fun LibraryShell(viewModel: PhoneViewModel) {
             Column(Modifier.fillMaxSize()) {
                 AddedVideosCard(viewModel)
                 if (viewModel.pendingApprovals.isNotEmpty()) ApprovalCard(viewModel, Modifier.padding(16.dp))
+                TelegramConnectCard(viewModel, Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
                 Box(Modifier.weight(1f)) {
                     when (viewModel.tab) {
                         PhoneTab.Library -> LibraryHome(viewModel)
@@ -313,6 +316,13 @@ private fun LibraryHome(viewModel: PhoneViewModel) {
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     BrandMark(compact = true)
                     ScreenHeading(ui.getString(R.string.ui_your_library_1ad842), modifier = Modifier.maestro(MaestroIds.LIBRARY_TITLE))
+                }
+                if (viewModel.cleanupProblems.isNotEmpty()) {
+                    Surface(color = VlcPanel, shape = RoundedCornerShape(16.dp)) {
+                        IconButton(onClick = { viewModel.cleanupOpen = true }, modifier = Modifier.maestro("library_cleanup")) {
+                            Icon(Icons.Default.AutoFixHigh, ui.getString(R.string.cleanup_title), tint = VlcOrange)
+                        }
+                    }
                 }
                 Surface(color = VlcPanel, shape = RoundedCornerShape(16.dp)) {
                     IconButton(onClick = { viewModel.collectionsDialogOpen = true }, modifier = Modifier.maestro("library_collections")) { Icon(Icons.Default.Folder, ui.getString(R.string.ui_collections_9f9fea), tint = VlcOrange) }
@@ -478,6 +488,7 @@ private fun SeriesCard(series: LibraryEntry.Series, showProgress: Boolean, viewM
         ) {
             MediaArtwork(lead, Modifier.fillMaxSize())
             SelectionMark(selection)
+            libraryProblem(lead, viewModel.libraryConnections)?.let { ProblemMark(it, Modifier.align(Alignment.TopStart).padding(start = 6.dp, top = 6.dp)) }
             Text(
                 ui.getString(R.string.ui_tv_series_e50677),
                 color = Color.White,
@@ -595,6 +606,8 @@ private fun PosterCard(item: LibraryItem, showProgress: Boolean, viewModel: Phon
     // still. posterPath is only used when no TMDb artwork was downloaded yet.
     // The same title can sit on several shelves; each card opens only its own menu.
     val cardKey = remember { "${item.id}:${java.util.UUID.randomUUID()}" }
+    // Why this title cannot play from this phone (null when it can).
+    val problem = libraryProblem(item, viewModel.libraryConnections)
     val menu = viewModel.actionMenuId == cardKey
     Column(
         modifier
@@ -629,6 +642,8 @@ private fun PosterCard(item: LibraryItem, showProgress: Boolean, viewModel: Phon
                     modifier = Modifier.align(Alignment.TopStart).padding(6.dp).size(18.dp),
                 )
             }
+            // Under the lock on a private title, so the mark does not run into the storage label.
+            problem?.let { ProblemMark(it, Modifier.align(Alignment.TopStart).padding(start = 6.dp, top = if (item.isPrivate) 30.dp else 6.dp)) }
             if (showProgress) {
                 LinearProgressIndicator(
                     progress = { watchFraction(item) },
@@ -640,7 +655,10 @@ private fun PosterCard(item: LibraryItem, showProgress: Boolean, viewModel: Phon
             ItemActionMenu(viewModel, item, menu)
         }
         Text(item.title, color = Color.White, maxLines = 2, overflow = TextOverflow.Ellipsis, fontSize = 14.sp, modifier = Modifier.padding(top = 10.dp))
-        if (showStatus) Text(storageStatusLine(item, resources = ui), color = if (storageBadge(item) == StorageBadge.Failed) Color(0xFFFFB74D) else VlcMuted, fontSize = 11.sp, maxLines = 2)
+        if (showStatus) {
+            if (problem?.needsConnection == true) Text(libraryProblemLabel(problem, ui), color = ProblemYellow, fontSize = 11.sp, maxLines = 2)
+            else Text(storageStatusLine(item, resources = ui), color = if (storageBadge(item) == StorageBadge.Failed) Color(0xFFFFB74D) else VlcMuted, fontSize = 11.sp, maxLines = 2)
+        }
         if (showProgress) {
             Text(
                 remainingLabel(item, resources = ui).ifBlank { ui.getString(R.string.ui_message_b6bb55, ((watchFraction(item) * 100).toInt()).toString()) },

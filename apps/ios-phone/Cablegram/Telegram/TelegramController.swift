@@ -72,7 +72,10 @@ final class TelegramController {
 
     /// At launch and after signing in: a phone that linked Telegram resumes serving TVs and syncing the channel.
     func resume() {
-        guard token != nil, PhoneTelegram.wasLinked else { return }
+        guard token != nil else { return }
+        // A phone with no session of its own still learns whether the household uses Telegram: its Telegram titles carry a warning, and a TV
+        // waiting for Telegram is told to the owner (see `needsConnection`).
+        guard PhoneTelegram.wasLinked else { loadLink(); return }
         work.start()
         loadLink()
         processDeletions()
@@ -98,8 +101,18 @@ final class TelegramController {
         guard let token else { return }
         Task {
             link = await catalog().telegramLink(token: token) ?? link
+            updateConnectWatch()
             checkHealth()
         }
+    }
+
+    /// The household uses Telegram, but this phone has no working session of its own, so Telegram titles cannot play from here and a TV that
+    /// asks for Telegram cannot be approved by this phone. Titles show a warning and the owner is asked to connect.
+    var needsConnection: Bool { link?.linked == true && (notHere || health == .signedOut) }
+
+    /// While this phone is not connected, look for a TV waiting for Telegram so the owner can be told to connect it here.
+    private func updateConnectWatch() {
+        if link?.linked == true && !PhoneTelegram.wasLinked { work.watchWhileNotConnected() } else { work.stopNotConnectedWatch() }
     }
 
     /// Is the link still usable from this phone? The owner may have left the channel, deleted it, or ended Cablegram's session in

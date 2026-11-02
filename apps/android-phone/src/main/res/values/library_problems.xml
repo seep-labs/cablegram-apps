@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Titles that cannot play from this phone: marks, the connect prompt, Clean up. -->
+    <string name="library_problem_telegram" formatted="false">"Connect Telegram to play"</string>
+    <string name="library_problem_cloud" formatted="false">"Connect your cloud storage to play"</string>
+    <string name="telegram_connect_needed_title" formatted="false">"A TV wants to play a Telegram video"</string>
+    <string name="telegram_connect_needed_body" formatted="false">"Connect your Telegram account on this phone so %1$s can play it."</string>
+    <string name="cleanup_title" formatted="false">"Clean up your library"</string>
+    <string name="cleanup_intro" formatted="false">"These titles can't play from this phone right now. Select them to remove them, or connect what's missing."</string>
+    <string name="cleanup_nothing" formatted="false">"Nothing to clean up. Every title can play from this phone."</string>
+    <string name="cleanup_select_all" formatted="false">"Select all %1$d titles"</string>
+    <string name="cleanup_select" formatted="false">"Select"</string>
+    <string name="cleanup_connect" formatted="false">"Connect"</string>
+    <string name="cleanup_group_telegram" formatted="false">"Telegram isn't connected on this phone"</string>
+    <string name="cleanup_group_cloud" formatted="false">"Your cloud storage isn't connected"</string>
+</resources>

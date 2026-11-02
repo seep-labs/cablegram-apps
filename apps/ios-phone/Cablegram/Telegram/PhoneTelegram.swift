@@ -11,6 +11,9 @@ enum PhoneTelegram {
     private static var pairing: PairingStore!
     private static var catalog: (@Sendable () -> CatalogClient)!
     private static var current: TelegramSession?
+    /// Spec 008: discovery runs on the same TDLib client as `current`, so it is rebuilt with it.
+    private static var discoveryTransport: TdDiscoveryTransport?
+    private static var discoveryGraph: (chatId: Int64, session: ObjectIdentifier, graph: DiscoveryGraph)?
     /// The signed-out client releasing TDLib's database; a new one waits for it (see `session()`).
     private static var closing: Task<Void, Never>?
 
@@ -49,7 +52,9 @@ enum PhoneTelegram {
 
     private static func create() -> TelegramSession {
         let pairing = self.pairing!, catalog = self.catalog!
-        let session = TelegramSession(api: TdlibTelegramApi(transport: TDLibJsonTransport()), role: .phone) {
+        let transport = TDLibJsonTransport()
+        discoveryTransport = TdDiscoveryTransport(transport: transport)
+        let session = TelegramSession(api: TdlibTelegramApi(transport: transport), role: .phone) {
             await PhoneTelegram.waitForClose()
             guard let token = pairing.accountToken, !token.isEmpty else { throw TelegramClientUnavailable() }
             #if DEBUG
@@ -72,6 +77,16 @@ enum PhoneTelegram {
     }
 
     private static func waitForClose() async { await closing?.value }
+
+    /// Phone-only video discovery (spec 008) for this library channel; nil until the Telegram session exists.
+    static func discovery(libraryChatId: Int64) -> DiscoveryGraph? {
+        guard let transport = discoveryTransport, let identity = sessionIdentity else { return nil }
+        if let known = discoveryGraph, known.chatId == libraryChatId, known.session == identity { return known.graph }
+        discoveryGraph?.graph.store.retire()
+        let graph = DiscoveryGraph.create(transport: transport, storage: EncryptedFileDiscoveryStorage(), libraryChatId: libraryChatId)
+        discoveryGraph = (libraryChatId, identity, graph)
+        return graph
+    }
 
     // MARK: Preferences (per install; completion belongs to a Telegram account, never to another account on the phone)
 
@@ -101,6 +116,11 @@ enum PhoneTelegram {
 
     /// After log-out: drop the session and delete its database, pieces and key.
     static func forget() {
+        // Spec 008: the discovery choice, counts, switches and thumbnail ledger go with the account.
+        discoveryGraph?.graph.store.retire()
+        discoveryGraph = nil
+        discoveryTransport = nil
+        EncryptedFileDiscoveryStorage().clear()
         current = nil
         setLinked(false)
         Storage.wipe()

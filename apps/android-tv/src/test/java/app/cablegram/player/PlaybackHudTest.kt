@@ -110,6 +110,35 @@ class PlaybackHudTest {
         assertEquals(listOf(HudEffect.SelectSubtitle(null)), effects)
     }
 
+    private fun menuAt(section: MenuSection, index: Int) =
+        PlaybackHudState(controlsVisible = true, overlay = OverlayMenu.AUDIO_SUBTITLES, menuSection = section, menuIndex = index)
+
+    @Test
+    fun `menu down past the last audio track enters the subtitles and up returns`() {
+        val (inSubtitles, _) = reducePlaybackHud(menuAt(MenuSection.AUDIO, 2), DpadKey.DOWN, 0, ctx)
+        assertEquals(MenuSection.SUBTITLES, inSubtitles.menuSection)
+        assertEquals(0, inSubtitles.menuIndex) // "Off"
+        val (second, _) = reducePlaybackHud(inSubtitles, DpadKey.DOWN, 0, ctx)
+        assertEquals(1, second.menuIndex)
+        val (third, _) = reducePlaybackHud(reducePlaybackHud(second, DpadKey.DOWN, 0, ctx).first, DpadKey.DOWN, 0, ctx)
+        assertEquals(2, third.menuIndex) // "Off" plus two subtitle tracks: the end stays put
+        val (backToOff, _) = reducePlaybackHud(reducePlaybackHud(third, DpadKey.UP, 0, ctx).first, DpadKey.UP, 0, ctx)
+        assertEquals(MenuSection.SUBTITLES, backToOff.menuSection)
+        assertEquals(0, backToOff.menuIndex)
+        val (backToAudio, _) = reducePlaybackHud(backToOff, DpadKey.UP, 0, ctx)
+        assertEquals(MenuSection.AUDIO, backToAudio.menuSection)
+        assertEquals(2, backToAudio.menuIndex)
+        assertEquals(0, reducePlaybackHud(menuAt(MenuSection.AUDIO, 0), DpadKey.UP, 0, ctx).first.menuIndex)
+    }
+
+    @Test
+    fun `menu with no audio tracks goes straight to the subtitles on down`() {
+        val noAudio = ctx.copy(audioTracks = emptyList())
+        val (inSubtitles, _) = reducePlaybackHud(menuAt(MenuSection.AUDIO, 0), DpadKey.DOWN, 0, noAudio)
+        assertEquals(MenuSection.SUBTITLES, inSubtitles.menuSection)
+        assertEquals(MenuSection.SUBTITLES, reducePlaybackHud(inSubtitles, DpadKey.UP, 0, noAudio).first.menuSection)
+    }
+
     @Test
     fun `play pause left right navigate transport row`() {
         var state = reducePlaybackHud(PlaybackHudState(), DpadKey.UP, 0, ctx).first

@@ -6,6 +6,7 @@ struct LibraryHome: View {
     let viewModel: PhoneViewModel
     @State private var gridWidth: CGFloat = 0
     @State private var moreOpen = false
+    @State private var cleanupOpen = false
 
     /// Smallest poster width; narrower screens still get three columns, wider ones (iPad) fit more.
     private static let minPoster: CGFloat = 104
@@ -38,6 +39,7 @@ struct LibraryHome: View {
         }
         .phoneScreenBackground()
         .sheet(isPresented: $vm.collectionsDialogOpen) { CollectionsSheet(viewModel: viewModel) }
+        .sheet(isPresented: $cleanupOpen) { CleanupSheet(viewModel: viewModel) { cleanupOpen = false } }
         .sheet(isPresented: $moreOpen) {
             LibraryFilterSheet(query: filters, count: entries.count, collections: viewModel.collections) { viewModel.libraryFilters = $0 }
         }
@@ -50,6 +52,9 @@ struct LibraryHome: View {
                 ScreenHeading(title: L("ui_your_library_1ad842")).accessibilityIdentifier(MaestroIds.libraryTitle)
             }
             Spacer()
+            if !viewModel.cleanupProblems.isEmpty {
+                squareButton("wand.and.sparkles", label: "cleanup_title", id: "library_cleanup") { cleanupOpen = true }
+            }
             squareButton("folder", label: "ui_collections_9f9fea", id: "library_collections") { viewModel.collectionsDialogOpen = true }
             squareButton("plus", label: "ui_import_videos_fec728", id: nil) { viewModel.selectTab(.browse) }
         }
@@ -238,6 +243,43 @@ private struct ProgressBar: View {
 
 private func percentText(_ item: LibraryItem) -> String { L("ui_message_b6bb55", "\(Int(watchFraction(item) * 100))") }
 
+/// A round "!" on a poster that cannot play from this phone: yellow when a connection would bring it back (Telegram, cloud storage), red when it
+/// is gone from here (unavailable, not on this phone).
+struct ProblemMark: View {
+    let problem: LibraryProblem
+
+    var body: some View {
+        Image(systemName: "exclamationmark.circle.fill").font(.system(.title3)).foregroundStyle(problem.needsConnection ? Color.telegramWarning : Color.problemRed)
+            .background(Circle().fill(Color.black.opacity(0.75)))
+            .accessibilityLabel(problem.label).accessibilityIdentifier("problem_mark_\(problem.identifier)")
+    }
+}
+
+extension Color {
+    static let problemRed = Color(hex: 0xFF5252)
+}
+
+extension LibraryProblem {
+    /// The poster mark's VoiceOver label, the status line under a poster and the Clean up row.
+    var label: String {
+        switch self {
+        case .unavailable: L(StorageBadge.unavailable.labelKey)
+        case .notOnPhone: L(StorageBadge.notOnPhone.labelKey)
+        case .telegramNotConnected: L("library_problem_telegram")
+        case .cloudNotConnected: L("library_problem_cloud")
+        }
+    }
+
+    var identifier: String {
+        switch self {
+        case .unavailable: "unavailable"
+        case .notOnPhone: "not_on_phone"
+        case .telegramNotConnected: "telegram"
+        case .cloudNotConnected: "cloud"
+        }
+    }
+}
+
 struct PosterCard: View {
     let item: LibraryItem
     let showProgress: Bool
@@ -245,6 +287,9 @@ struct PosterCard: View {
     /// The shelf's fixed poster width, or nil to fill a grid cell.
     var width: CGFloat? = 144
     var selection: CardSelection?
+
+    /// Why this title cannot play from this phone (nil when it can).
+    private var problem: LibraryProblem? { libraryProblem(item, viewModel.libraryConnections) }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -256,6 +301,7 @@ struct PosterCard: View {
                         if item.isPrivate {
                             Image(systemName: "lock.fill").font(.system(.callout)).foregroundStyle(.white).accessibilityLabel(L("ui_private_video_f0d5d4"))
                         }
+                        if let problem { ProblemMark(problem: problem) }
                         Spacer()
                         Badge(text: L(storageBadge(item).labelKey))
                     }
@@ -268,8 +314,12 @@ struct PosterCard: View {
             Text(item.title).font(.system(.subheadline)).foregroundStyle(.white).lineLimit(2).multilineTextAlignment(.leading).padding(.top, 10)
             // Off in the grid: the badge on the poster already says where the title is.
             if width != nil {
-                Text(key: storageBadge(item).statusLineKey)
-                    .font(.system(.caption2)).foregroundStyle(storageBadge(item) == .failed ? Color(hex: 0xFFB74D) : Color.phoneMuted).lineLimit(2).multilineTextAlignment(.leading)
+                if let problem, problem.needsConnection {
+                    Text(verbatim: problem.label).font(.system(.caption2)).foregroundStyle(Color.telegramWarning).lineLimit(2).multilineTextAlignment(.leading)
+                } else {
+                    Text(key: storageBadge(item).statusLineKey)
+                        .font(.system(.caption2)).foregroundStyle(storageBadge(item) == .failed ? Color(hex: 0xFFB74D) : Color.phoneMuted).lineLimit(2).multilineTextAlignment(.leading)
+                }
             }
             if showProgress {
                 Text(remainingDuration(item).map { L("ui_left_bc8cab", $0) } ?? percentText(item)).font(.system(.caption2)).foregroundStyle(Color.phoneMuted)
@@ -296,7 +346,10 @@ struct SeriesCard: View {
                 MediaArtwork(item: lead, store: viewModel.store)
                 SelectionMark(selection: selection)
                 VStack {
-                    HStack { Spacer(); Badge(text: L("ui_tv_series_e50677")) }.padding(6)
+                    HStack(alignment: .top) {
+                        if let problem = libraryProblem(lead, viewModel.libraryConnections) { ProblemMark(problem: problem) }
+                        Spacer(); Badge(text: L("ui_tv_series_e50677"))
+                    }.padding(6)
                     Spacer()
                     if showProgress { ProgressBar(fraction: watchFraction(lead)) }
                 }

@@ -55,6 +55,7 @@ struct TelegramStorageEntry: View {
     let viewModel: PhoneViewModel
     let onAccountHelp: () -> Void
     @State private var confirmDisconnect = false
+    @State private var findVideos = false
 
     var body: some View {
         let telegram: TelegramController = viewModel.telegram
@@ -84,6 +85,10 @@ struct TelegramStorageEntry: View {
                     .buttonStyle(OutlinedButtonStyle()).accessibilityIdentifier(MaestroIds.telegramOpen)
             }
             if linked && health == .ok && PhoneTelegram.wasLinked {
+                // Spec 008: add videos from the owner's other chats, on the phone only.
+                Button { findVideos = true } label: { Text(key: "discovery_add_button") }
+                    .buttonStyle(OutlinedButtonStyle(minHeight: 52)).disabled(telegram.link?.chatId == nil).accessibilityIdentifier(MaestroIds.telegramAddFromChats)
+                if let graph = telegram.discoveryGraph() { DiscoveryAdvanced(graph: graph) }
                 Button { telegram.checkBotHub() } label: { Text(key: "ui_check_bot_hub_d194d2") }
                     .buttonStyle(OutlinedButtonStyle(minHeight: 52)).accessibilityIdentifier(MaestroIds.telegramCheckBotHub)
                 Button { telegram.organizeFolder() } label: { Text(key: telegram.folderBusy ? "ui_organizing_564f6b" : "ui_organize_telegram_folder_84e271") }
@@ -112,6 +117,9 @@ struct TelegramStorageEntry: View {
             Text(verbatim: L("ui_cablegram_signs_out_of_telegram_on_this_phone_and_on_y_73f0dc") + L("ui_channel_they_disappear_from_cablegram_until_you_connec_2ef282", TelegramSession.libraryTitle))
         }
         .sheet(isPresented: Binding(get: { telegram.showHidden }, set: { telegram.showHidden = $0 })) { HiddenVideosSheet(telegram: telegram) }
+        .fullScreenCover(isPresented: $findVideos) {
+            if let graph = telegram.discoveryGraph() { FindVideosView(graph: graph, telegram: telegram, viewModel: viewModel) { findVideos = false } }
+        }
     }
 
     private func statusLine(_ telegram: TelegramController, linked: Bool) -> String {
@@ -476,6 +484,34 @@ struct HiddenVideosSheet: View {
         }
         .preferredColorScheme(.dark)
     }
+}
+
+/// A TV is waiting for Telegram but this phone has no Telegram session to approve it with: say so, with the way to fix it.
+struct TelegramConnectCard: View {
+    let telegram: TelegramController
+
+    var body: some View {
+        if let request = telegram.work.connectNeededFor, telegram.needsConnection {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 8) {
+                    Image(systemName: "exclamationmark.circle.fill").foregroundStyle(Color.telegramWarning)
+                    Text(key: "telegram_connect_needed_title").font(PhoneFont.titleMedium).foregroundStyle(.white)
+                }
+                Text(verbatim: L("telegram_connect_needed_body", request.tvName)).font(.system(.footnote)).foregroundStyle(Color.phoneMuted)
+                Button { telegram.openSheet() } label: { Text(key: "ui_connect_telegram_00c799") }
+                    .buttonStyle(PrimaryButtonStyle(minHeight: 44)).accessibilityIdentifier("telegram_connect_needed_button")
+            }
+            .padding(14)
+            .background(Color(hex: 0x1A1A1A).opacity(0.93), in: RoundedRectangle(cornerRadius: 12))
+            .padding(.horizontal, 16).padding(.vertical, 4)
+            .accessibilityElement(children: .contain).accessibilityIdentifier("telegram_connect_needed_card")
+        }
+    }
+}
+
+extension Color {
+    /// The "!" on Telegram titles this phone cannot play, and the connect card's icon.
+    static let telegramWarning = Color(hex: 0xFFC107)
 }
 
 /// "Allow <TV> to use your Telegram?" when automatic approval is off (a card: there is no push while the app is closed).

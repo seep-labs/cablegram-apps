@@ -49,6 +49,8 @@ final class CloudController {
     private var yourOwnStorage: String { L("ui_your_own_storage_cc541c") }
 
     var cloudConnected: Bool { storage?.connection?.status == "active" }
+    /// The storage status is known and no storage is connected: titles that live only in the owner's cloud cannot play from this phone.
+    var cloudNeedsConnection: Bool { storage != nil && !cloudConnected }
     var saveTarget: LibraryItem? { saveTargetId.flatMap { id in items().first { $0.id == id } } }
     var freeUpTarget: LibraryItem? { freeUpTargetId.flatMap { id in items().first { $0.id == id } } }
     /// The title being saved now (the transfer card shows it).

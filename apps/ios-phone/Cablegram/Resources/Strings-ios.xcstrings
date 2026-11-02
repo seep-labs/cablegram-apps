@@ -752,6 +752,53 @@
           }
         }
       }
+    },
+    "ios_discovery_how_body": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سجّل Cablegram الدخول إلى Telegram على هذا الهاتف، مثل Telegram Desktop. الشيفرة التي تطّلع على محادثاتك موجودة في مكان واحد، هو المجلد Discovery في حزمة CablegramCore بالتطبيق، واختبار التطبيق المفتوح المصدر (DiscoverySurfaceTests) يسرد كل استدعاء لـ Telegram يُسمح له بإجرائه. تبقى أسماء المحادثات والأعداد والرسائل والصور المصغّرة على هذا الهاتف. ولا يُحوَّل إلى «Cablegram library» سوى مقاطع الفيديو التي تضيفها."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram ist auf diesem Handy bei Telegram angemeldet, wie Telegram Desktop. Der Code, der deine Chats ansieht, liegt an einer einzigen Stelle: im Ordner Discovery des CablegramCore-Pakets der App, und der Open-Source-Test der App (DiscoverySurfaceTests) listet jeden Telegram-Aufruf auf, den sie ausführen darf. Chatnamen, Anzahlen, Nachrichten und Vorschaubilder bleiben auf diesem Handy. Nur die Videos, die du hinzufügst, werden an „Cablegram library“ weitergeleitet."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram is signed in to Telegram on this phone, like Telegram Desktop. The code that looks at your chats lives in one place, the Discovery folder of the app's CablegramCore package, and the app's open-source test (DiscoverySurfaceTests) lists every Telegram call it is allowed to make. Chat names, counts, messages and thumbnails stay on this phone. Only the videos you add are forwarded into “Cablegram library”."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram ha iniciado sesión en Telegram en este teléfono, como Telegram Desktop. El código que mira tus chats está en un solo sitio, la carpeta Discovery del paquete CablegramCore de la app, y la prueba de código abierto de la app (DiscoverySurfaceTests) enumera cada llamada a Telegram que puede hacer. Los nombres de los chats, los recuentos, los mensajes y las miniaturas se quedan en este teléfono. Solo los vídeos que añades se reenvían a «Cablegram library»."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram روی این گوشی مثل Telegram Desktop وارد Telegram شده است. کدی که گفتگوهای شما را بررسی می‌کند فقط در یک جا قرار دارد: پوشهٔ Discovery در بستهٔ CablegramCore برنامه، و آزمون متن‌باز برنامه (DiscoverySurfaceTests) تمام درخواست‌هایی را که مجاز است به Telegram بفرستد فهرست می‌کند. نام گفتگوها، تعدادها، پیام‌ها و پیش‌نمایش‌ها روی همین گوشی می‌مانند. فقط ویدیوهایی که اضافه می‌کنید به «Cablegram library» هدایت می‌شوند."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram ha effettuato l'accesso a Telegram su questo telefono, come Telegram Desktop. Il codice che guarda le tue chat si trova in un solo posto, la cartella Discovery del pacchetto CablegramCore dell'app, e il test open source dell'app (DiscoverySurfaceTests) elenca ogni chiamata a Telegram che è autorizzato a fare. Nomi delle chat, conteggi, messaggi e miniature restano su questo telefono. Solo i video che aggiungi vengono inoltrati a «Cablegram library»."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram авторизован в Telegram на этом телефоне, как Telegram Desktop. Код, который просматривает ваши чаты, находится в одном месте — в папке Discovery пакета CablegramCore приложения, а открытый тест приложения (DiscoverySurfaceTests) перечисляет все разрешённые ему запросы к Telegram. Названия чатов, количество видео, сообщения и миниатюры остаются на этом телефоне. В «Cablegram library» пересылаются только добавленные вами видео."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

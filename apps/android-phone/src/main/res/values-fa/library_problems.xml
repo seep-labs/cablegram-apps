@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Titles that cannot play from this phone: marks, the connect prompt, Clean up. -->
+    <string name="library_problem_telegram" formatted="false">"برای پخش، Telegram را وصل کنید"</string>
+    <string name="library_problem_cloud" formatted="false">"برای پخش، فضای ابری را وصل کنید"</string>
+    <string name="telegram_connect_needed_title" formatted="false">"تلویزیون می‌خواهد یک ویدیوی Telegram را پخش کند"</string>
+    <string name="telegram_connect_needed_body" formatted="false">"حساب Telegram خود را روی این گوشی وصل کنید تا %1$s بتواند آن را پخش کند."</string>
+    <string name="cleanup_title" formatted="false">"مرتب‌سازی کتابخانه"</string>
+    <string name="cleanup_intro" formatted="false">"این عنوان‌ها در حال حاضر از این گوشی پخش نمی‌شوند. آن‌ها را برای حذف انتخاب کنید یا چیزی را که وصل نیست وصل کنید."</string>
+    <string name="cleanup_nothing" formatted="false">"چیزی برای مرتب‌سازی نیست. همهٔ عنوان‌ها از این گوشی پخش می‌شوند."</string>
+    <string name="cleanup_select_all" formatted="false">"انتخاب هر %1$d عنوان"</string>
+    <string name="cleanup_select" formatted="false">"انتخاب"</string>
+    <string name="cleanup_connect" formatted="false">"وصل کردن"</string>
+    <string name="cleanup_group_telegram" formatted="false">"Telegram روی این گوشی وصل نیست"</string>
+    <string name="cleanup_group_cloud" formatted="false">"فضای ابری شما وصل نیست"</string>
+</resources>

@@ -467,6 +467,8 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
     val saveTarget: LibraryItem? get() = saveTargetId?.let { id -> items.firstOrNull { it.id == id } }
     val freeUpTarget: LibraryItem? get() = freeUpTargetId?.let { id -> items.firstOrNull { it.id == id } }
     val cloudConnected: Boolean get() = storage?.connection?.status == "active"
+    /** The storage status is known and no storage is connected: titles that live only in the owner's cloud cannot play from this phone. */
+    val cloudNeedsConnection: Boolean get() = storage != null && !cloudConnected
     val cloudUnlimited: Boolean get() = cloudConnected
     val cloudAvailable: Long get() = cloudAvailableBytes(items, unlimited = cloudUnlimited)
     val activeSave: LibraryItem? get() = items.firstOrNull { it.transferStatus == TRANSFER_SAVING }
@@ -1005,6 +1007,8 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
         }
         if (setAside) status = uiText(R.string.ui_signed_in_the_previous_account_s_library_is_kept_aside_45bf31)
         checkTerms()
+        // Learn whether the household uses Telegram: a phone that signs in without a session of its own marks the Telegram titles.
+        loadTelegramLink()
     }
 
     private suspend fun ensurePhoneDevice() {
@@ -1388,6 +1392,20 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
         private set
     /** The household is linked to Telegram AND this phone holds a session of its own (so it can read and save to it). */
     val telegramSignedInHere: Boolean get() = telegramLink?.linked == true && PhoneTelegram.wasLinked(getApplication())
+
+    /**
+     * The household uses Telegram, but this phone has no working session of its own, so Telegram titles cannot play from here and a TV that
+     * asks for Telegram cannot be approved by this phone. Titles show a warning and the owner is asked to connect.
+     */
+    val telegramNeedsConnection: Boolean
+        get() = telegramLink?.linked == true && (telegramHealth == TelegramHealth.NotHere || telegramHealth == TelegramHealth.SignedOut || !PhoneTelegram.wasLinked(getApplication()))
+
+    /** What this phone is connected to, for the "!" on posters and the Clean up dialog. */
+    val libraryConnections: LibraryConnections get() = LibraryConnections(telegramNeedsConnection, cloudNeedsConnection)
+
+    /** Titles that cannot play from this phone, by why (Clean up). */
+    val cleanupProblems: List<CleanupGroup> get() = cleanupGroups(items, libraryConnections)
+    var cleanupOpen by mutableStateOf(false)
 
     /** Whether the link works from this phone; see [checkTelegramHealth]. */
     var telegramHealth by mutableStateOf(TelegramHealth.Unknown)

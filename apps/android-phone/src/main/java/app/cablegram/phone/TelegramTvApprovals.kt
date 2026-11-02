@@ -43,8 +43,32 @@ class TelegramTvApprovalWatcher(private val context: Context, private val scope:
             val askedPassword = mutableSetOf<String>()
             var twoStepReportedAt = 0L
             var activeAt = 0L
+            var householdLinked = false
+            var linkCheckedAt = 0L
             while (isActive) {
                 val token = store.accountToken
+                if (!token.isNullOrBlank() && !PhoneTelegram.wasLinked(context)) {
+                    // No Telegram session here: a TV waiting for Telegram can only be told to connect it on this phone.
+                    val now = System.currentTimeMillis()
+                    if (now - linkCheckedAt > LINK_CHECK_MS) {
+                        householdLinked = client.telegramLink(token)?.linked == true
+                        linkCheckedAt = now
+                    }
+                    val waiting = if (householdLinked) client.pendingTvLogins(token).orEmpty().firstOrNull() else null
+                    if (waiting != null) {
+                        activeAt = now
+                        if (PhoneTelegram.connectNeededFor.value?.requestId != waiting.requestId) {
+                            PhoneTelegram.connectNeededFor.value = waiting
+                            TelegramConnectNeeded.ask(context, waiting)
+                        }
+                    } else if (PhoneTelegram.connectNeededFor.value != null) {
+                        PhoneTelegram.connectNeededFor.value = null
+                        TelegramConnectNeeded.cancel(context)
+                    }
+                } else if (PhoneTelegram.connectNeededFor.value != null) {
+                    PhoneTelegram.connectNeededFor.value = null
+                    TelegramConnectNeeded.cancel(context)
+                }
                 if (!token.isNullOrBlank() && PhoneTelegram.wasLinked(context)) {
                     // First, and never behind an approval that waits for this phone's session: a TV that wants the
                     // password shows its prompt until the phone screen opens (CAB-73).
@@ -152,6 +176,8 @@ class TelegramTvApprovalWatcher(private val context: Context, private val scope:
         /** Two-step verification rarely changes; checked again every 10 minutes. */
         private const val TWO_STEP_REPORT_MS = 10 * 60_000L
         private const val RETRY_MS = 30_000L
+        /** How often a phone without a Telegram session asks whether the household uses Telegram (before it looks for waiting TVs). */
+        private const val LINK_CHECK_MS = 60_000L
         private const val TRUST_POLL_MS = 60_000L
 
         /** Approves one TV login with the phone's session and reports the outcome (no secrets). False: not tried yet. */
@@ -247,6 +273,40 @@ object TelegramTvApprovals {
             .setAutoCancel(true)
             .addAction(Notification.Action.Builder(null, ui.getString(R.string.ui_allow_e213c1), action(ACTION_ALLOW, 11)).build())
             .addAction(Notification.Action.Builder(null, ui.getString(R.string.ui_don_t_allow_9803bd), action(ACTION_DENY, 12)).build())
+            .build()
+        runCatching { manager.notify(NOTIFICATION_ID, notification) }
+    }
+
+    fun cancel(context: Context) {
+        context.getSystemService(NotificationManager::class.java)?.cancel(NOTIFICATION_ID)
+    }
+}
+
+/**
+ * "A TV wants to play a Telegram video" on a phone that has no Telegram session to approve it with: tapping opens Cablegram, where a card
+ * leads to Connect Telegram. The TV keeps waiting ("Approve on your phone") until a connected phone allows it.
+ */
+object TelegramConnectNeeded {
+    private const val CHANNEL = "telegram_tv_login"
+    private const val NOTIFICATION_ID = 7305
+
+    fun ask(context: Context, request: PendingTvLogin) {
+        val ui = context.deviceLanguageResources()
+        val manager = context.getSystemService(NotificationManager::class.java) ?: return
+        if (Build.VERSION.SDK_INT >= 26) {
+            manager.createNotificationChannel(NotificationChannel(CHANNEL, ui.getString(R.string.ui_telegram_sign_in_for_tvs_168c1b), NotificationManager.IMPORTANCE_HIGH))
+        }
+        val open = context.packageManager.getLaunchIntentForPackage(context.packageName)?.let {
+            PendingIntent.getActivity(context, 13, it, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        }
+        val builder = if (Build.VERSION.SDK_INT >= 26) Notification.Builder(context, CHANNEL)
+        else @Suppress("DEPRECATION") Notification.Builder(context)
+        val notification = builder
+            .setSmallIcon(R.drawable.ic_stat_cablegram)
+            .setContentTitle(ui.getString(R.string.telegram_connect_needed_title))
+            .setStyle(Notification.BigTextStyle().bigText(ui.getString(R.string.telegram_connect_needed_body, request.tvName)))
+            .setContentIntent(open)
+            .setAutoCancel(true)
             .build()
         runCatching { manager.notify(NOTIFICATION_ID, notification) }
     }

@@ -64,6 +64,7 @@ struct LibraryShell: View {
             PrepareCard(viewModel: viewModel)
             if !viewModel.tv.pendingApprovals.isEmpty { ApprovalCard(viewModel: viewModel) }
             TelegramApprovalCard(work: viewModel.telegram.work)
+            TelegramConnectCard(telegram: viewModel.telegram)
             TransferCard(viewModel: viewModel)
             if viewModel.tab != .remote {
                 RemoteBar(viewModel: viewModel)

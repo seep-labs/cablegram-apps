@@ -29,4 +29,4 @@ else writeFileSync(join(out, "icon.png"), Buffer.from("iVBORw0KGgoAAAANSUhEUgAAA
 console.log(`Staged ${out}`);
 console.log(platform === "tizen"
   ? `Package:  tizen package -t wgt -s <certificate profile> -- ${out}\nInstall:  tizen install -n Cablegram.wgt -t <target>`
-  : `Package:  ares-package ${out} -o build\nInstall:  ares-install -d <device> build/app.cablegram.tv_0.1.0_all.ipk && ares-launch -d <device> app.cablegram.tv`);
+  : `Package:  ares-package ${out} -o build\nInstall:  ares-install -d <device> build/app.cablegram.tv_0.4.0_all.ipk && ares-launch -d <device> app.cablegram.tv`);

@@ -87,6 +87,9 @@ npm run package:tizen    # stages build/tizen, then: tizen package -t wgt -s <ce
 The webOS package builds and validates with `ares-package`. The Tizen package needs a Samsung certificate profile
 (Tizen Studio Certificate Manager), which is yours to create.
 
+`scripts/package-tizen-hosted.sh <certificate folder>` packages and signs it (asks for the certificate password at a hidden prompt, writes
+`Cablegram_TV_<version>.wgt`, checks both signatures and the licence files). It stays out of CI because the certificate stays on a maintainer's Mac.
+
 `platforms/tizen-hosted` is the Samsung counterpart of `platforms/webos-hosted`: a `.wgt` that only opens
 `https://tv.cablegram.app/`, so it needs no `file://` origin on the server. Package it as it is
 (`tizen package -t wgt -s <cert profile> -- platforms/tizen-hosted`; the package is named after the app, `Cablegram TV.wgt`,
