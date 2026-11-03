@@ -1,5 +1,6 @@
 import "./abort-polyfill"; // first, before anything creates an AbortController
 import "./style.css";
+import { keepFitted } from "./fit-window";
 import { ApiError, createApi, preflight, relayMessage } from "./api";
 import { API_BASE, WEB_APP_BASE } from "./config";
 import {
@@ -36,6 +37,7 @@ import type { DeviceSession, Playback, Profile, SwitchRequest, Title } from "./t
 // same layout, copy, colours and remote behaviour. Sizes are the Android dp values doubled (a 1080p TV is 960 dp wide).
 
 const root = document.getElementById("app")!;
+keepFitted(root);
 interface ProfileEntry { profile: Profile; account: Account }
 let current: ProfileEntry | null = null;
 const api = createApi({
