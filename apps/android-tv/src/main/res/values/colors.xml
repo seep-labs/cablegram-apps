@@ -5,4 +5,5 @@
     <color name="muted">#FFB4B4C0</color>
     <color name="accent">#FFF4BD75</color>
     <color name="launcher_background">#FF0A0B0E</color>
+    <color name="launcher_background_tv">#FFF3B86A</color>
 </resources>
