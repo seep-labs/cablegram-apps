@@ -403,6 +403,30 @@ class CablegramViewModel @JvmOverloads constructor(
     var isDemoMode by mutableStateOf(false)
         private set
     private val reviewerBypass = ReviewerBypassTracker()
+    /** Store review: the address to sign in as, while the server offers "Sign in with a code". */
+    var tvReviewerEmail by mutableStateOf<String?>(null)
+        private set
+    /** The code form is on the pairing screen: its digits and Select belong to the form, not the bypass above. */
+    var reviewerFormOpen = false
+
+    /** Null when the code was accepted (polling then finishes the pairing), otherwise what to tell the reviewer. */
+    suspend fun reviewerSignIn(code: String): String? {
+        val session = (screen as? ScreenState.Pairing)?.session
+        val email = tvReviewerEmail
+        if (session == null || email == null) return uiString(R.string.reviewer_sign_in_failed)
+        return try {
+            api.reviewerSignIn(session, email, code)
+            null
+        } catch (error: CancellationException) {
+            throw error
+        } catch (error: ApiException) {
+            uiString(if (error.error == "invalid_code") R.string.reviewer_sign_in_wrong_code else R.string.reviewer_sign_in_failed)
+        } catch (_: Exception) {
+            uiString(R.string.reviewer_sign_in_failed)
+        }
+    }
+
+    private fun uiString(id: Int): String = getApplication<android.app.Application>().resources.getString(id)
     /** Whether the Select key currently held down belongs to the focused button. */
     private var selectPassesThrough = false
 
@@ -620,7 +644,7 @@ class CablegramViewModel @JvmOverloads constructor(
         return true
     }
 
-    private fun isReviewerBypassScreen(): Boolean = when (val current = screen) {
+    private fun isReviewerBypassScreen(): Boolean = if (reviewerFormOpen) false else when (val current = screen) {
         is ScreenState.Pairing, ScreenState.Loading -> true
         is ScreenState.Error -> token == null
         else -> false
@@ -1320,6 +1344,7 @@ class CablegramViewModel @JvmOverloads constructor(
             if (isDemoMode) return
             PairLog.i("TV session ok ${PairLog.pinTail(session.pin)} session=${session.sessionId} tvIp=$tvLanIp")
             screen = ScreenState.Pairing(session)
+            viewModelScope.launch { tvReviewerEmail = if (authStore.usesDefaultServer) api.tvReviewerEmail() else null }
             // Another call may have started a poll while this one waited for the server: only one PIN is polled.
             pairingJob?.takeIf { it !== currentJob }?.cancel()
             pairingJob = viewModelScope.launch { pollPairing(session) }

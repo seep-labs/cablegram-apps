@@ -206,6 +206,20 @@ export function createApi(opts: { base?: string | (() => string); fetch?: Fetch;
       const b = (await call("api/auth/device", { method: "POST", body: JSON.stringify({ deviceName, hardwareId }) }))!;
       return { sessionId: b.session_id, pin: String(b.pin), pairingToken: b.pairing_token, expiresAt: b.expires_at };
     },
+    /** The address a TV signs in as during a store review, or undefined when this server isn't offering that (the usual case). */
+    async tvReviewerEmail(): Promise<string | undefined> {
+      try {
+        return str((await call("api/auth/methods"))?.tv_reviewer_email);
+      } catch {
+        return undefined;
+      }
+    },
+    /** Claims the session on screen with a store reviewer's code; pairingStatus then finds it paired. */
+    async reviewerSignIn(session: DeviceSession, email: string, code: string): Promise<void> {
+      await call("api/auth/device/reviewer-sign-in", { method: "POST", body: JSON.stringify({
+        session_id: session.sessionId, pairing_token: session.pairingToken, email, code,
+      }) });
+    },
     async pairingStatus(session: DeviceSession): Promise<PairingStatus> {
       const b = (await call(`api/auth/device/${session.sessionId}`, {}, `Pairing ${session.pairingToken}`))!;
       return { status: b.status, accessToken: str(b.access_token), lanCapability: str(b.lan_capability) };
