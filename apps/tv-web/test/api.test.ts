@@ -31,6 +31,27 @@ describe("servingPhone", () => {
   });
 });
 
+describe("reviewer sign-in", () => {
+  it("reads the reviewer address only when the server offers it, and survives a failure", async () => {
+    const offered = createApi({ base: "https://api.example", fetch: async () => json(200, { email_code: true, tv_reviewer_email: "r@example.com" }) });
+    expect(await offered.tvReviewerEmail()).toBe("r@example.com");
+    const usual = createApi({ base: "https://api.example", fetch: async () => json(200, { email_code: true }) });
+    expect(await usual.tvReviewerEmail()).toBeUndefined();
+    const down = createApi({ base: "https://api.example", fetch: async () => json(503, {}) });
+    expect(await down.tvReviewerEmail()).toBeUndefined();
+  });
+  it("sends the TV's own session, the address and the code", async () => {
+    let sent: { url: string; body: unknown } | undefined;
+    const api = createApi({ base: "https://api.example", fetch: async (url, init) => {
+      sent = { url, body: JSON.parse(String(init?.body)) };
+      return json(202, { status: "paired" });
+    } });
+    await api.reviewerSignIn({ sessionId: "s1", pin: "123456", pairingToken: "pt", expiresAt: "" }, "r@example.com", "482913");
+    expect(sent?.url).toContain("api/auth/device/reviewer-sign-in");
+    expect(sent?.body).toEqual({ session_id: "s1", pairing_token: "pt", email: "r@example.com", code: "482913" });
+  });
+});
+
 describe("resolvePlayback", () => {
   const phoneTitle = parseTitle({ id: "1", title: "A", sources: [{ kind: "phone_local", origin_identity: "x", serving_device_id: "p1" }] });
   it("plays a phone copy through the relay", async () => {

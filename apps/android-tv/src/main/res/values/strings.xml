@@ -1,5 +1,13 @@
 <resources>
     <string name="app_name" translatable="false">Cablegram TV</string>
+    <!-- Store review only (the server offers it during a review), so not translated. -->
+    <string name="reviewer_sign_in" translatable="false">Sign in with a code</string>
+    <string name="reviewer_sign_in_body" translatable="false">Enter the 6-digit code from the review notes.</string>
+    <string name="reviewer_sign_in_hint" translatable="false">6-digit code</string>
+    <string name="reviewer_sign_in_action" translatable="false">Sign in</string>
+    <string name="reviewer_sign_in_checking" translatable="false">Signing in…</string>
+    <string name="reviewer_sign_in_wrong_code" translatable="false">That code isn\'t right. Check it and try again.</string>
+    <string name="reviewer_sign_in_failed" translatable="false">Couldn\'t sign in. Check the TV\'s connection and try again.</string>
     <string name="app_tagline">Your own videos, streamed from your phone to your TV</string>
     <string name="legal_disclaimer">Cablegram plays videos you own or are allowed to watch. It provides no media of its own. Videos from your phone or your Telegram channel are never stored on its servers; only a web video you choose to save to Cablegram storage is, until you delete your account.</string>
     <string name="privacy_policy_url" translatable="false">https://cablegram.app/privacy.html</string>

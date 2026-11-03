@@ -163,6 +163,9 @@ fun CablegramApp(viewModel: CablegramViewModel) {
                     checkOwnServer = viewModel::checkOwnServer,
                     onUseOwnServer = viewModel::setServerUrl,
                     onReturnToCablegram = viewModel::returnToCablegram,
+                    offerReviewerSignIn = viewModel.tvReviewerEmail != null,
+                    reviewerSignIn = viewModel::reviewerSignIn,
+                    onReviewerFormOpen = { viewModel.reviewerFormOpen = it },
                 )
                 is ScreenState.ProfilePicker -> {
                     var digits by remember(screen.pinPromptFor?.id, screen.pinError) { mutableStateOf("") }
@@ -737,9 +740,17 @@ private fun PairingScreen(
     checkOwnServer: suspend (String) -> app.cablegram.data.ServerProbe = { app.cablegram.data.ServerProbe.Unreachable },
     onUseOwnServer: (String) -> Unit = {},
     onReturnToCablegram: () -> Unit = {},
+    offerReviewerSignIn: Boolean = false,
+    reviewerSignIn: suspend (String) -> String? = { null },
+    onReviewerFormOpen: (Boolean) -> Unit = {},
 ) {
     val ui = androidx.compose.ui.platform.LocalContext.current.resources
     var enteringServer by remember { mutableStateOf(false) }
+    var enteringReviewerCode by remember { mutableStateOf(false) }
+    if (enteringReviewerCode) {
+        ReviewerSignInForm(signIn = reviewerSignIn, onOpen = onReviewerFormOpen, onCancel = { enteringReviewerCode = false })
+        return
+    }
     if (enteringServer) {
         OwnServerForm(check = checkOwnServer, onUse = { enteringServer = false; onUseOwnServer(it) }, onCancel = { enteringServer = false })
         return
@@ -815,6 +826,11 @@ private fun PairingScreen(
                     colors = ButtonDefaults.colors(containerColor = PanelRaised),
                 ) {
                     Text(ui.getString(R.string.ui_new_pin_6d8849))
+                }
+                if (offerReviewerSignIn) {
+                    Button(onClick = { enteringReviewerCode = true }, colors = ButtonDefaults.colors(containerColor = PanelRaised)) {
+                        Text(ui.getString(R.string.reviewer_sign_in))
+                    }
                 }
                 if (ownServerUrl == null) {
                     Button(onClick = { enteringServer = true }, colors = ButtonDefaults.colors(containerColor = PanelRaised)) {

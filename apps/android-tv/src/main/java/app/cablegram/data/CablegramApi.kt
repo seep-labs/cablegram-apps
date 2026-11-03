@@ -111,6 +111,24 @@ class CablegramApi(
         )
     }
 
+    /** The address a TV signs in as during a store review, or null when this server isn't offering that (the usual case). */
+    suspend fun tvReviewerEmail(): String? = runCatching {
+        execute<AuthMethodsDto>(Request.Builder().url(url("api/auth/methods")).get().build()).tvReviewerEmail
+    }.getOrNull()
+
+    /** Claims the session on screen with a store reviewer's code; the usual polling then finishes the pairing. */
+    suspend fun reviewerSignIn(session: DeviceSession, email: String, code: String) {
+        val body = json.encodeToString(buildJsonObject {
+            put("session_id", session.sessionId)
+            put("pairing_token", session.pairingToken)
+            put("email", email)
+            put("code", code)
+        })
+        executeNoContent(
+            Request.Builder().url(url("api/auth/device/reviewer-sign-in")).post(body.toRequestBody(jsonMediaType)).build(),
+        )
+    }
+
     suspend fun getPairingStatus(sessionId: String, pairingToken: String): PairingStatus {
         val request = Request.Builder()
             .url(url("api/auth/device/$sessionId"))
@@ -1200,6 +1218,11 @@ private val CERT_SHA256 = Regex("[0-9a-f]{64}")
 
 /** The query parameter a phone's stream link travels in (CAB-44). */
 internal const val STREAM_LINK_PARAM = "link"
+
+@Serializable
+private data class AuthMethodsDto(
+    @kotlinx.serialization.SerialName("tv_reviewer_email") val tvReviewerEmail: String? = null,
+)
 
 @Serializable
 private data class DeviceSessionDto(

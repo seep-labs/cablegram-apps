@@ -237,9 +237,12 @@ async function pair(canCancel = profileEntries.length > 0) {
     return;
   }
   if (run !== pairingRun) return;
+  const reviewerEmail = store.serverUrl() ? undefined : await api.tvReviewerEmail();
+  if (run !== pairingRun) return;
   const link = pairLink(WEB_APP_BASE, session.pin, deviceName());
   const qr = qrCanvas(link, 544);
   const buttons = [button("New PIN", () => pair(canCancel), "raised", true)];
+  if (reviewerEmail) buttons.push(button("Sign in with a code", () => { pairingRun++; reviewerCodeScreen(session, reviewerEmail, canCancel); }, "raised"));
   if (canCancel) buttons.push(button("Cancel", () => { pairingRun++; picker(); }, "raised"));
   if (store.serverUrl()) buttons.push(button("Return to Cablegram", () => { pairingRun++; store.setServerUrl(null); void pair(false); }, "raised"));
   buttons.push(button("Check this TV", () => { pairingRun++; diagnosticsScreen(() => void pair(canCancel)); }, "raised"));
@@ -276,6 +279,67 @@ async function pair(canCancel = profileEntries.length > 0) {
       if (e instanceof ApiError && (e.status === 404 || e.status === 410)) pair(canCancel);
     }
   });
+}
+
+/**
+ * Store review: a reviewer signs this TV in with the code from the review notes, with no phone or website. The pairing
+ * screen offers it only while the server says so.
+ */
+function reviewerCodeScreen(session: DeviceSession, email: string, canCancel: boolean, error?: string) {
+  let digits = "";
+  let pending = false;
+  const back = () => void pair(canCancel);
+  const dots = h("div", "pin-dots ltr");
+  const status = h("div", `pin-status${error ? " warning" : ""}`, error ?? "Enter the 6-digit code from the review notes.");
+  const draw = () => {
+    dots.textContent = "";
+    for (let i = 0; i < 6; i++) dots.appendChild(h("i", i < digits.length ? "on" : undefined));
+  };
+  const add = (d: string) => { if (!pending && digits.length < 6) { digits += d; draw(); } };
+  const del = () => { if (!pending) { digits = digits.slice(0, -1); draw(); } };
+  const submit = async () => {
+    if (pending || digits.length !== 6) return;
+    pending = true;
+    status.className = "pin-status";
+    status.textContent = "Signing in…";
+    try {
+      await api.reviewerSignIn(session, email, digits);
+      const paired = await api.pairingStatus(session);
+      if (paired.status !== "paired" || !paired.accessToken) throw new Error(paired.status);
+      store.addAccount({ sessionId: session.sessionId, token: paired.accessToken, lanCapability: paired.lanCapability });
+      connectedWelcome = true;
+      void loadProfiles();
+    } catch (e) {
+      if (e instanceof ApiError && e.code === "pin_expired") { back(); return; }
+      reviewerCodeScreen(session, email, canCancel, e instanceof ApiError && e.code === "invalid_code"
+        ? "That code isn't right. Check it and try again."
+        : "Couldn't sign in. Check the TV's connection and try again.");
+    }
+  };
+  draw();
+  const key = (label: string, onSelect: () => void, first = false) => {
+    const k = focusable("div", "pin-key", onSelect, [], label);
+    if (first) k.setAttribute("data-autofocus", "");
+    return k;
+  };
+  const rows = [["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"]].map((r) =>
+    h("div", "pin-key-row", undefined, r.map((d) => key(d, () => add(d), d === "1"))));
+  rows.push(h("div", "pin-key-row", undefined, [key("⌫", del), key("0", () => add("0")), key("OK", () => void submit())]));
+  show([h("div", "center-screen pad", undefined, [h("div", "pin-panel", undefined, [
+    h("div", "pin-info", undefined, [
+      brandMark(),
+      h("div", "pin-eyebrow", "Store review"),
+      h("div", "pin-name", "Sign in with a code"),
+      dots, status,
+      button("Cancel", back, "raised"),
+    ]),
+    h("div", "keypad ltr", undefined, rows),
+  ])])], back);
+  screenKeys = (k, e) => {
+    if (k === "digit") { add(String.fromCharCode(e.keyCode)); return true; }
+    if (k === "delete" || e.keyCode === 8) { del(); return true; }
+    return false;
+  };
 }
 
 // ---- Profiles ----------------------------------------------------------------------------------------------------
