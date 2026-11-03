@@ -123,7 +123,11 @@ OpenSSL Toolkit (<https://www.openssl.org/>). This product includes cryptographi
 (eay@cryptsoft.com).
 
 The OpenSSL License is not compatible with the GPL, so Cablegram's own code carries an additional permission to be
-combined with it; see [LICENSE-OPENSSL-EXCEPTION.md](LICENSE-OPENSSL-EXCEPTION.md).
+combined with it; see [LICENSE-OPENSSL-EXCEPTION.md](LICENSE-OPENSSL-EXCEPTION.md). The Google Cast and Google
+Identity libraries listed above are not under a GPL-compatible licence either, and Cablegram's own code carries
+an additional permission for them and for app store distribution; see
+[LICENSE-APP-STORE-EXCEPTION.md](LICENSE-APP-STORE-EXCEPTION.md). Neither permission covers `@cryptography/aes`,
+whose authors license it under GPL-3.0-or-later.
 
 ## Fonts and visual assets
 

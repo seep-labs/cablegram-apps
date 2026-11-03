@@ -3,6 +3,9 @@ Copyright (C) 2026 The Cablegram authors
 
 Cablegram is licensed under the GNU General Public License, version 3 (see LICENSE).
 As an additional permission under section 7, you may link it with OpenSSL (see LICENSE-OPENSSL-EXCEPTION.md).
+As further additional permissions under section 7, you may convey it through app stores whose terms restrict
+recipients, as long as the source stays available under the GPL, and you may combine it with Google Play
+services and the Google Cast SDK (see LICENSE-APP-STORE-EXCEPTION.md).
 
 Cablegram is an unofficial app. It is not made or endorsed by Telegram. Its Telegram features use the
 user's own Telegram account through Telegram's public API. Forks must register their own api_id and
