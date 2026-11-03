@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Stays inside the 33 dp safe circle of an adaptive icon, because launchers may mask to a circle. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
@@ -6,8 +7,8 @@
     android:viewportHeight="108">
     <path
         android:strokeColor="#FFFFFFFF"
-        android:strokeWidth="4"
+        android:strokeWidth="3"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
-        android:pathData="M 27,22 H 81 A 5,5 0 0 1 86,27 V 65 A 5,5 0 0 1 81,70 H 27 A 5,5 0 0 1 22,65 V 27 A 5,5 0 0 1 27,22 Z M 54,70 V 78 M 38,78 H 70" />
+        android:pathData="M 33,34 H 75 A 5,5 0 0 1 80,39 V 61 A 5,5 0 0 1 75,66 H 33 A 5,5 0 0 1 28,61 V 39 A 5,5 0 0 1 33,34 Z M 54,66 V 75 M 43,75 H 65" />
 </vector>
