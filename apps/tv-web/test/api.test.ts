@@ -40,6 +40,20 @@ describe("resolvePlayback", () => {
     expect(p.status).toBe("ready");
     expect(p.url).toContain("/relay/v1/p/p1/media/x");
   });
+  it("plays a web title from its link, not through a phone", async () => {
+    const asked: string[] = [];
+    const api = createApi({ base: "https://api.example", token: () => "t", fetch: async (url) => {
+      asked.push(url);
+      if (url.endsWith("api/playback/resolve")) return json(200, { status: "ready", url: "https://samples.example/film.mp4", headers: {} });
+      return url.endsWith("api/me") ? json(200, { devices: [{ id: "p1", kind: "phone" }] }) : json(200, { ticket: "rt1" });
+    } });
+    const web = parseTitle({ id: "w1", title: "Film", sources: [{ kind: "web", origin_identity: "web:key" }] });
+    const p = await api.resolvePlayback(web, "cap");
+    expect(p.status).toBe("ready");
+    expect(p.url).toBe("https://samples.example/film.mp4");
+    expect(p.engine).toBeUndefined();
+    expect(asked.some((u) => u.includes("relay"))).toBe(false);
+  });
   it("refuses Telegram-only titles with an explanation", async () => {
     const api = createApi({ fetch: async () => json(200, {}) });
     const tg = parseTitle({ id: "3", sources: [{ kind: "telegram", origin_identity: "tg:1:2" }] });
