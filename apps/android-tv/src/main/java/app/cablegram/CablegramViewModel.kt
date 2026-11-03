@@ -27,7 +27,6 @@ import app.cablegram.data.ServerClock
 import app.cablegram.data.flushProgress
 import app.cablegram.data.localIpv4
 import app.cablegram.data.localIpv4Addresses
-import android.view.KeyEvent
 import app.cablegram.data.demoLibraryVideos
 import app.cablegram.data.demoPlaybackUrl
 import app.cablegram.data.extractUserIdFromToken
@@ -402,12 +401,9 @@ class CablegramViewModel @JvmOverloads constructor(
 
     var isDemoMode by mutableStateOf(false)
         private set
-    private val reviewerBypass = ReviewerBypassTracker()
     /** Store review: the address to sign in as, while the server offers "Sign in with a code". */
     var tvReviewerEmail by mutableStateOf<String?>(null)
         private set
-    /** The code form is on the pairing screen: its digits and Select belong to the form, not the bypass above. */
-    var reviewerFormOpen = false
 
     /** Null when the code was accepted (polling then finishes the pairing), otherwise what to tell the reviewer. */
     suspend fun reviewerSignIn(code: String): String? {
@@ -427,8 +423,6 @@ class CablegramViewModel @JvmOverloads constructor(
     }
 
     private fun uiString(id: Int): String = getApplication<android.app.Application>().resources.getString(id)
-    /** Whether the Select key currently held down belongs to the focused button. */
-    private var selectPassesThrough = false
 
     val activeProfileName: String
         get() = when {
@@ -615,39 +609,6 @@ class CablegramViewModel @JvmOverloads constructor(
         cachedVideos = applyDemoMyList(demoLibraryVideos())
         libraryVideos = cachedVideos
         screen = ScreenState.Library
-    }
-
-    /**
-     * Play Console reviewer bypass. Must run from [MainActivity.dispatchKeyEvent]
-     * before Compose so Select does not activate "New code".
-     */
-    fun onReviewerBypassKey(event: KeyEvent): Boolean {
-        if (isDemoMode || !isReviewerBypassScreen()) return false
-        val digit = reviewerDigit(event.keyCode)
-        val isSelect = isReviewerSelectKey(event.keyCode)
-        if (!isSelect && digit == null) return false
-        if (isSelect) {
-            // Down and Up must go the same way: Compose clicks on key Up.
-            if (event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0) {
-                selectPassesThrough = reviewerBypass.isDeliberateSelect()
-                if (reviewerBypass.onSelect()) {
-                    selectPassesThrough = false
-                    enterDemoMode()
-                    return true
-                }
-            }
-            return !selectPassesThrough
-        }
-        if (event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0 && reviewerBypass.onDigit(digit!!)) {
-            enterDemoMode()
-        }
-        return true
-    }
-
-    private fun isReviewerBypassScreen(): Boolean = if (reviewerFormOpen) false else when (val current = screen) {
-        is ScreenState.Pairing, ScreenState.Loading -> true
-        is ScreenState.Error -> token == null
-        else -> false
     }
 
     fun refreshLibrary() {
@@ -1339,8 +1300,8 @@ class CablegramViewModel @JvmOverloads constructor(
                 android.provider.Settings.Secure.getString(getApplication<android.app.Application>().contentResolver, android.provider.Settings.Secure.ANDROID_ID)
             }.getOrNull()
             val session = api.createDeviceSession(deviceName, hardwareId)
-            // A New PIN press can still be in flight when the reviewer gesture
-            // opens demo mode; a late session must not replace it.
+            // A New PIN press can still be in flight when demo mode opens (instrumented tests);
+            // a late session must not replace it.
             if (isDemoMode) return
             PairLog.i("TV session ok ${PairLog.pinTail(session.pin)} session=${session.sessionId} tvIp=$tvLanIp")
             screen = ScreenState.Pairing(session)
@@ -1961,28 +1922,4 @@ class CablegramViewModel @JvmOverloads constructor(
         /** How soon a removed TV signs out on any screen while Cablegram is open (CAB-37). */
         const val SESSION_CHECK_MS = 30_000L
     }
-}
-
-private fun isReviewerSelectKey(keyCode: Int): Boolean = when (keyCode) {
-    KeyEvent.KEYCODE_DPAD_CENTER,
-    KeyEvent.KEYCODE_ENTER,
-    KeyEvent.KEYCODE_NUMPAD_ENTER,
-    KeyEvent.KEYCODE_BUTTON_A,
-    KeyEvent.KEYCODE_BUTTON_SELECT,
-    -> true
-    else -> false
-}
-
-private fun reviewerDigit(keyCode: Int): Char? = when (keyCode) {
-    KeyEvent.KEYCODE_0, KeyEvent.KEYCODE_NUMPAD_0 -> '0'
-    KeyEvent.KEYCODE_1, KeyEvent.KEYCODE_NUMPAD_1 -> '1'
-    KeyEvent.KEYCODE_2, KeyEvent.KEYCODE_NUMPAD_2 -> '2'
-    KeyEvent.KEYCODE_3, KeyEvent.KEYCODE_NUMPAD_3 -> '3'
-    KeyEvent.KEYCODE_4, KeyEvent.KEYCODE_NUMPAD_4 -> '4'
-    KeyEvent.KEYCODE_5, KeyEvent.KEYCODE_NUMPAD_5 -> '5'
-    KeyEvent.KEYCODE_6, KeyEvent.KEYCODE_NUMPAD_6 -> '6'
-    KeyEvent.KEYCODE_7, KeyEvent.KEYCODE_NUMPAD_7 -> '7'
-    KeyEvent.KEYCODE_8, KeyEvent.KEYCODE_NUMPAD_8 -> '8'
-    KeyEvent.KEYCODE_9, KeyEvent.KEYCODE_NUMPAD_9 -> '9'
-    else -> null
 }
