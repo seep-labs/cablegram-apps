@@ -13,9 +13,9 @@ type Json = Record<string, any>;
 const str = (v: unknown): string | undefined => (typeof v === "string" && v ? v : undefined);
 const num = (v: unknown): number | undefined => (typeof v === "number" ? v : undefined);
 
-/** Phone-served sources (LAN/relay) carry an origin identity and are neither Telegram nor the household cloud. */
+/** Phone-served sources (LAN/relay) carry an origin identity and are neither Telegram, the household cloud nor a web link. */
 export const isPhoneSource = (s: Source) =>
-  s.kind !== "telegram" && s.kind !== "own_cloud" && !!s.originIdentity;
+  s.kind !== "telegram" && s.kind !== "own_cloud" && s.kind !== "web" && !!s.originIdentity;
 const usable = (s: Source) => s.archiveState !== "archived" && s.availability !== "unavailable";
 
 export function parseTitle(raw: Json): Title {
