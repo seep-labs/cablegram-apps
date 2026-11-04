@@ -1805,23 +1805,37 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
         telegramStarted = false
     }
 
+    /** Disconnecting signs every TV out first, which can take a while: the button shows it's working. */
+    var telegramDisconnecting by mutableStateOf(false)
+        private set
+
     fun disconnectTelegram() {
         val token = pairing.accountToken ?: return
+        if (telegramDisconnecting) return
+        telegramDisconnecting = true
         viewModelScope.launch {
-            if (!catalog().deleteTelegramLink(token)) {
-                status = uiText(R.string.ui_couldn_t_disconnect_telegram_check_your_connection_and_7a7e1e)
-                return@launch
+            try {
+                disconnectTelegram(token)
+            } finally {
+                telegramDisconnecting = false
             }
-            // End every TV's Telegram session while this phone can still do it: signing the phone out first
-            // would leave TVs that are off or unplugged signed in to the account (US7, FR-010).
-            val unended = withContext(Dispatchers.IO) {
-                runCatching { TelegramTvApprovalWatcher.endDueSessions(getApplication(), catalog(), token) }
-                catalog().dueTvTelegramSessions(token)?.size ?: -1
-            }
-            wipeTelegramLocally()
-            status = if (unended == 0) uiText(R.string.ui_telegram_disconnected_your_tvs_are_signed_out_of_teleg_5f064d)
-            else uiText(R.string.ui_telegram_disconnected_some_tvs_may_still_be_signed_in__3b14d3)
         }
+    }
+
+    private suspend fun disconnectTelegram(token: String) {
+        if (!catalog().deleteTelegramLink(token)) {
+            status = uiText(R.string.ui_couldn_t_disconnect_telegram_check_your_connection_and_7a7e1e)
+            return
+        }
+        // End every TV's Telegram session while this phone can still do it: signing the phone out first
+        // would leave TVs that are off or unplugged signed in to the account (US7, FR-010).
+        val unended = withContext(Dispatchers.IO) {
+            runCatching { TelegramTvApprovalWatcher.endDueSessions(getApplication(), catalog(), token) }
+            catalog().dueTvTelegramSessions(token)?.size ?: -1
+        }
+        wipeTelegramLocally()
+        status = if (unended == 0) uiText(R.string.ui_telegram_disconnected_your_tvs_are_signed_out_of_teleg_5f064d)
+        else uiText(R.string.ui_telegram_disconnected_some_tvs_may_still_be_signed_in__3b14d3)
     }
 
     fun loadRelayUsage() {
