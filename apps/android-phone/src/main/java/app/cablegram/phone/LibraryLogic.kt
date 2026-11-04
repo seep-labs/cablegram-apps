@@ -6,6 +6,8 @@ fun storageBadge(item: LibraryItem): StorageBadge = when {
     item.transferStatus == TRANSFER_SAVING -> StorageBadge.Saving
     item.transferStatus == TRANSFER_FAILED && !item.cloudObjectPresent -> StorageBadge.Failed
     item.sourceKind == "telegram" -> if (item.sourceAvailable == false) StorageBadge.Unavailable else StorageBadge.Telegram
+    // A web title streams from its link: nothing of it is on the phone.
+    item.sourceKind == "web" -> StorageBadge.Cloud
     // Saved to Telegram: still on the phone too (Both), or only in Telegram once the phone copy was freed.
     item.telegramCopy && item.sourceAvailable == false -> StorageBadge.Telegram
     item.telegramCopy && !item.cloudObjectPresent -> StorageBadge.Both

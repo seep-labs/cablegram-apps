@@ -6,6 +6,8 @@ public func storageBadge(_ item: LibraryItem) -> StorageBadge {
     if item.transferStatus == transferSaving { return .saving }
     if item.transferStatus == transferFailed && !item.cloudObjectPresent { return .failed }
     if item.sourceKind == "telegram" { return item.sourceAvailable == false ? .unavailable : .telegram }
+    // A web title streams from its link: nothing of it is on the phone.
+    if item.sourceKind == "web" { return .cloud }
     // Saved to Telegram: still on the phone too (both), or only in Telegram once the phone copy was freed.
     if item.telegramCopy && item.sourceAvailable == false { return .telegram }
     if item.telegramCopy && !item.cloudObjectPresent { return .both }
