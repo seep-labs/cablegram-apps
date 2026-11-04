@@ -331,71 +331,27 @@ private data class DemoTitle(
     val durationSeconds: Int,
 )
 
-private const val DEMO_LOOP_BASE = "https://pub-e1061ea99e4c4c17bf26411787d5a160.r2.dev"
+private const val DEMO_FILM_BASE = "https://samples.cablegram.app"
 
+// Blender Foundation films under CC BY 3.0, the same files as a store reviewer's library.
 private val DEMO_TITLES = listOf(
-    DemoTitle(
-        slug = "italy",
-        title = "Italy",
-        url = "$DEMO_LOOP_BASE/Italy.mp4",
-        posterUrl = "$DEMO_LOOP_BASE/italy.png",
-        overview = "Royalty-free travel loop for Play Console Demo Mode.",
-        year = 2024,
-        durationSeconds = 30,
-    ),
-    DemoTitle(
-        slug = "japan",
-        title = "Japan",
-        url = "$DEMO_LOOP_BASE/Japan.mp4",
-        posterUrl = "$DEMO_LOOP_BASE/japan.png",
-        overview = "Royalty-free travel loop for Play Console Demo Mode.",
-        year = 2024,
-        durationSeconds = 30,
-    ),
-    DemoTitle(
-        slug = "paris",
-        title = "Paris",
-        url = "$DEMO_LOOP_BASE/Paris.mp4",
-        posterUrl = "$DEMO_LOOP_BASE/paris.png",
-        overview = "Royalty-free travel loop for Play Console Demo Mode.",
-        year = 2024,
-        durationSeconds = 30,
-    ),
-    DemoTitle(
-        slug = "africa",
-        title = "Africa",
-        url = "$DEMO_LOOP_BASE/africa.mp4",
-        posterUrl = "$DEMO_LOOP_BASE/africa.png",
-        overview = "Royalty-free travel loop for Play Console Demo Mode.",
-        year = 2024,
-        durationSeconds = 30,
-    ),
-    DemoTitle(
-        slug = "big-buck-bunny",
-        title = "Big Buck Bunny",
-        url = "https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4",
-        posterUrl = "https://archive.org/services/img/BigBuckBunny_124",
-        overview = "Open movie from the Blender Foundation. Play Console Demo Mode sample.",
-        year = 2008,
-        durationSeconds = 596,
-    ),
-    DemoTitle(
-        slug = "elephants-dream",
-        title = "Elephants Dream",
-        url = "https://archive.org/download/ElephantsDream/ed_hd.mp4",
-        posterUrl = "https://archive.org/services/img/ElephantsDream",
-        overview = "Royalty-free Blender Foundation short, used for the demo library.",
-        year = 2006,
-        durationSeconds = 654,
-    ),
     DemoTitle(
         slug = "sintel",
         title = "Sintel",
-        url = "https://archive.org/download/Sintel/sintel-2048-surround.mp4",
-        posterUrl = "https://archive.org/services/img/Sintel",
-        overview = "Royalty-free Blender Foundation short for store review.",
+        url = "$DEMO_FILM_BASE/sintel.mp4",
+        posterUrl = "$DEMO_FILM_BASE/sintel.jpg",
+        overview = "© Blender Foundation | durian.blender.org. Licensed under CC BY 3.0.",
         year = 2010,
         durationSeconds = 888,
+    ),
+    DemoTitle(
+        slug = "tears-of-steel",
+        title = "Tears of Steel",
+        url = "$DEMO_FILM_BASE/tears-of-steel.mp4",
+        posterUrl = "$DEMO_FILM_BASE/tears-of-steel.jpg",
+        overview = "(CC) Blender Foundation | mango.blender.org. Licensed under CC BY 3.0.",
+        year = 2012,
+        durationSeconds = 734,
     ),
 )
 

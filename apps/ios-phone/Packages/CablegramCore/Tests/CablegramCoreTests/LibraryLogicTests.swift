@@ -113,6 +113,12 @@ private func item(
         #expect(!canSaveToCloud(web))
     }
 
+    @Test func webTitlesSayCloudAndHaveNoConnectionProblem() {
+        var web = item(); web.sourceKind = "web"; web.copied = false; web.sourceAvailable = true
+        #expect(storageBadge(web) == .cloud)
+        #expect(libraryProblem(web, LibraryConnections(telegramNeedsConnection: true, cloudNeedsConnection: true)) == nil)
+    }
+
     @Test func telegramTitlesShowACloudBadgeAndCannotBeSavedToCloudAgain() {
         var telegram = item(); telegram.sourceKind = "telegram"; telegram.copied = false; telegram.sourceAvailable = true
         #expect(storageBadge(telegram) == .telegram)

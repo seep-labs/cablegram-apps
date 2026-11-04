@@ -12,6 +12,13 @@ import org.junit.Test
 class LibraryLogicTest {
     private val res = ApplicationProvider.getApplicationContext<android.content.Context>().resources
 
+    @Test fun `a web title says cloud, not on phone, and has no connection problem`() {
+        val web = item().copy(sourceKind = "web", storageState = STORAGE_LOCAL, copied = false, sourceAvailable = true)
+        assertEquals(StorageBadge.Cloud, storageBadge(web))
+        assertEquals(res.getString(R.string.ui_cloud_b977b9), storageStatusLine(web, resources = res))
+        assertEquals(null, libraryProblem(web, LibraryConnections(telegramNeedsConnection = true, cloudNeedsConnection = true)))
+    }
+
     @Test fun `poster storage badges use the selected language`() {
         val context = ApplicationProvider.getApplicationContext<android.content.Context>()
         val labels = mapOf("en" to "On phone", "de" to "Auf dem Smartphone", "es" to "En el teléfono",
