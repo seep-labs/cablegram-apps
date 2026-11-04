@@ -34,7 +34,8 @@ private func local(_ id: String) -> LibraryItem { LibraryItem(id: id, title: id,
         store.add(local("mine"))
         var restored = local("restored"); restored.householdOnly = true
         var tg = local("tg"); tg.sourceKind = "telegram"
-        store.add(restored); store.add(tg)
+        var web = local("web"); web.sourceKind = "web"
+        store.add(restored); store.add(tg); store.add(web)
         store.forgetHousehold()
         #expect(store.list().map(\.id) == ["mine"])
         #expect(store.snapshot().householdId == nil)

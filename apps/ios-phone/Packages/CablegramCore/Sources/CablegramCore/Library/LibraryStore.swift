@@ -193,7 +193,7 @@ public final class LibraryStore: @unchecked Sendable {
             file.householdId = nil
             file.dismissedRemoteIds = []
             file.promptedTelegramIds = []
-            file.items = file.items.filter { !$0.householdOnly && $0.sourceKind != "telegram" }.map { var i = $0; i.telegramCopy = false; return i }
+            file.items = file.items.filter { !$0.householdOnly && $0.sourceKind != "telegram" && $0.sourceKind != "web" }.map { var i = $0; i.telegramCopy = false; return i }
             save(file)
             if let previous { try? fm.removeItem(at: root.appendingPathComponent("index-\(previous).json")) }
         }
