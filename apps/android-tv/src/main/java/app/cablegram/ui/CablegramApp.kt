@@ -165,7 +165,6 @@ fun CablegramApp(viewModel: CablegramViewModel) {
                     onReturnToCablegram = viewModel::returnToCablegram,
                     offerReviewerSignIn = viewModel.tvReviewerEmail != null,
                     reviewerSignIn = viewModel::reviewerSignIn,
-                    onReviewerFormOpen = { viewModel.reviewerFormOpen = it },
                 )
                 is ScreenState.ProfilePicker -> {
                     var digits by remember(screen.pinPromptFor?.id, screen.pinError) { mutableStateOf("") }
@@ -742,13 +741,12 @@ private fun PairingScreen(
     onReturnToCablegram: () -> Unit = {},
     offerReviewerSignIn: Boolean = false,
     reviewerSignIn: suspend (String) -> String? = { null },
-    onReviewerFormOpen: (Boolean) -> Unit = {},
 ) {
     val ui = androidx.compose.ui.platform.LocalContext.current.resources
     var enteringServer by remember { mutableStateOf(false) }
     var enteringReviewerCode by remember { mutableStateOf(false) }
     if (enteringReviewerCode) {
-        ReviewerSignInForm(signIn = reviewerSignIn, onOpen = onReviewerFormOpen, onCancel = { enteringReviewerCode = false })
+        ReviewerSignInForm(signIn = reviewerSignIn, onCancel = { enteringReviewerCode = false })
         return
     }
     if (enteringServer) {

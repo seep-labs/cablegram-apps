@@ -26,7 +26,6 @@ class MainActivity : ComponentActivity() {
         // CAB-67: any key counts as someone using the TV (a shared TV closes an unused profile).
         if (event.action == KeyEvent.ACTION_DOWN) cablegramViewModel.noteUserActivity()
         if (playerKeyHandler?.invoke(event) == true) return true
-        if (cablegramViewModel.onReviewerBypassKey(event)) return true
         return super.dispatchKeyEvent(event)
     }
 

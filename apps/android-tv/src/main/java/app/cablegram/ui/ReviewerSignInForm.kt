@@ -43,7 +43,6 @@ private const val CODE_LENGTH = 6
 @Composable
 internal fun ReviewerSignInForm(
     signIn: suspend (String) -> String?,
-    onOpen: (Boolean) -> Unit,
     onCancel: () -> Unit,
 ) {
     val ui = androidx.compose.ui.platform.LocalContext.current.resources
@@ -56,10 +55,6 @@ internal fun ReviewerSignInForm(
     var fieldFocused by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
     BackHandler(onBack = onCancel)
-    DisposableEffect(Unit) {
-        onOpen(true)
-        onDispose { onOpen(false) }
-    }
 
     fun submit() {
         if (checking || code.length != CODE_LENGTH) return
