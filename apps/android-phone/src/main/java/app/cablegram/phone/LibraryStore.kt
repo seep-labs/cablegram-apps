@@ -155,7 +155,7 @@ class LibraryStore private constructor(private val context: Context) {
     /**
      * The household was deleted with the account: nothing tied to it may stay or sync into a later account.
      * Videos that are files on this phone stay (they are the user's own); titles that only existed because of
-     * the household (restored placeholders, Telegram channel titles) and its bookkeeping go.
+     * the household (restored placeholders, Telegram channel titles, web titles) and its bookkeeping go.
      */
     @Synchronized
     fun forgetHousehold() {
@@ -165,7 +165,7 @@ class LibraryStore private constructor(private val context: Context) {
             dismissedRemoteIds = emptyList(),
             promptedTelegramIds = emptyList(),
             pendingWebImports = emptyList(),
-            items = current.items.filterNot { it.householdOnly || it.sourceKind == "telegram" }
+            items = current.items.filterNot { it.householdOnly || it.sourceKind == "telegram" || it.sourceKind == "web" }
                 .map { it.copy(telegramCopy = false) },
         ))
         File(root, "index-${current.householdId}.json").delete()
