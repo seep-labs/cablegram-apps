@@ -351,9 +351,14 @@ final class TelegramController {
         wipeLocally()
     }
 
+    /// Disconnecting signs every TV out first, which can take a while: the button shows it's working.
+    private(set) var disconnecting = false
+
     func disconnect() {
-        guard let token else { return }
+        guard let token, !disconnecting else { return }
+        disconnecting = true
         Task {
+            defer { disconnecting = false }
             let client = catalog()
             guard await client.deleteTelegramLink(token: token) else {
                 setStatus(L("ui_couldn_t_disconnect_telegram_check_your_connection_and_7a7e1e"))

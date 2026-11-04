@@ -106,8 +106,11 @@ struct TelegramStorageEntry: View {
             }
             Button(action: onAccountHelp) { Text(key: "telegram_separate_learn") }.buttonStyle(AccentTextButtonStyle()).accessibilityIdentifier(MaestroIds.telegramAccountHelp)
             if linked {
-                Button { confirmDisconnect = true } label: { Text(key: "ui_disconnect_telegram_3896d7").foregroundStyle(Color.phoneError) }
-                    .buttonStyle(OutlinedButtonStyle()).accessibilityIdentifier(MaestroIds.telegramDisconnect)
+                Button { confirmDisconnect = true } label: {
+                    if telegram.disconnecting { ProgressView() } else { Text(key: "ui_disconnect_telegram_3896d7").foregroundStyle(Color.phoneError) }
+                }
+                .disabled(telegram.disconnecting)
+                .buttonStyle(OutlinedButtonStyle()).accessibilityIdentifier(MaestroIds.telegramDisconnect)
             }
         }
         .alert(L("ui_disconnect_telegram_eb9ab8"), isPresented: $confirmDisconnect) {

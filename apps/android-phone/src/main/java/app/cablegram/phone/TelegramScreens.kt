@@ -224,8 +224,12 @@ internal fun TelegramStorageEntry(viewModel: PhoneViewModel, onAccountHelp: () -
     if (linked) {
         OutlinedButton(
             onClick = { confirmDisconnect = true },
+            enabled = !viewModel.telegramDisconnecting,
             modifier = Modifier.fillMaxWidth().maestro(MaestroIds.TELEGRAM_DISCONNECT),
-        ) { Text(ui.getString(R.string.ui_disconnect_telegram_3896d7), color = Color(0xFFFF8A80)) }
+        ) {
+            if (viewModel.telegramDisconnecting) CircularProgressIndicator(Modifier.size(22.dp), color = VlcOrange, strokeWidth = 2.dp)
+            else Text(ui.getString(R.string.ui_disconnect_telegram_3896d7), color = Color(0xFFFF8A80))
+        }
     }
     if (confirmDisconnect) {
         AlertDialog(
