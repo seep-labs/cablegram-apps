@@ -26,14 +26,26 @@ class TelegramFileReader(
 ) {
     private val windowStart = ConcurrentHashMap<Int, Long>()
     val bytesServed = AtomicLong(0)
+    private val newestStream = ConcurrentHashMap<Int, Long>()
+    private val streams = AtomicLong(0)
+
+    /**
+     * A new stream of [fileId]. TDLib downloads one window per file, so two readers at different places keep cancelling
+     * each other's download and neither gets data: after a seek, the player's old connection did that for a minute. So
+     * the newest stream owns the window, and older ones stop reading.
+     */
+    fun openStream(fileId: Int): Long = streams.incrementAndGet().also { newestStream[fileId] = it }
+
+    fun isNewestStream(fileId: Int, stream: Long): Boolean = newestStream[fileId] == stream
 
     /**
      * Up to [want] bytes of [fileId] at [position], waiting for Telegram to deliver them.
-     * Returns null if nothing arrives within the timeout.
+     * Returns null if nothing arrives within the timeout, or as soon as a newer stream replaces [stream].
      */
-    suspend fun read(fileId: Int, position: Long, want: Int): ByteArray? {
+    suspend fun read(fileId: Int, position: Long, want: Int, stream: Long? = null): ByteArray? {
         val deadline = clock() + timeoutMs
         while (clock() < deadline) {
+            if (stream != null && !isNewestStream(fileId, stream)) return null
             ensureWindow(fileId, position)
             val file = api.file(fileId)
             val available = availableAt(file, position)
@@ -59,6 +71,7 @@ class TelegramFileReader(
     /** Drops what is stored for [fileId] (playback stopped). */
     suspend fun release(fileId: Int) {
         windowStart.remove(fileId)
+        newestStream.remove(fileId)
         runCatching { api.cancelDownload(fileId) }
         runCatching { api.deleteLocalFile(fileId) }
     }

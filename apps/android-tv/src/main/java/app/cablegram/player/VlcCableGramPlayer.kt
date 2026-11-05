@@ -124,6 +124,7 @@ class VlcCableGramPlayer(context: Context) : CableGramPlayer {
     private var settleLost = 0
     private var settleCorrupt = 0
     private var settleShownAtStart = 0
+    private var settleSampleTime = -1L
     private var settleShown = 0
     private var settleOnFirstPlaying = false
     private val settleTick = object : Runnable {
@@ -416,12 +417,13 @@ class VlcCableGramPlayer(context: Context) : CableGramPlayer {
             val stats = runCatching { mediaPlayer.media?.stats }.getOrNull()
             if (stats != null) {
                 if (settleSampleAt == 0L) {
-                    settleSampleAt = now; settleLost = stats.lostPictures; settleCorrupt = stats.demuxCorrupted; settleShown = stats.displayedPictures
+                    settleSampleAt = now; settleSampleTime = mediaPlayer.time; settleLost = stats.lostPictures; settleCorrupt = stats.demuxCorrupted; settleShown = stats.displayedPictures
                 } else if (now - settleSampleAt >= SETTLE_SAMPLE_MS) {
+                    // "Playing" isn't enough: while a slow source catches up VLC says playing and the position stands still.
                     val clean = stats.lostPictures == settleLost && stats.demuxCorrupted == settleCorrupt &&
-                        stats.displayedPictures - settleShown >= SETTLE_MIN_PICTURES
+                        stats.displayedPictures - settleShown >= SETTLE_MIN_PICTURES && mediaPlayer.time != settleSampleTime
                     if (clean) { endSettle(); return }
-                    settleSampleAt = now; settleLost = stats.lostPictures; settleCorrupt = stats.demuxCorrupted; settleShown = stats.displayedPictures
+                    settleSampleAt = now; settleSampleTime = mediaPlayer.time; settleLost = stats.lostPictures; settleCorrupt = stats.demuxCorrupted; settleShown = stats.displayedPictures
                 }
             } else if (elapsed >= SETTLE_MIN_HOLD_MS + SETTLE_SAMPLE_MS) {
                 endSettle(); return

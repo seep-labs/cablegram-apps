@@ -62,6 +62,33 @@ class TelegramFileReaderTest {
     }
 
     @Test
+    fun `after a seek the old stream stops and cannot pull the window back`() = runTest {
+        val api = FakeTelegramApi()
+        api.addFile(1, size = 8192)
+        val reader = TelegramFileReader(api, window = 1024, refillAt = 256, clock = { testScheduler.currentTime })
+
+        val before = reader.openStream(1)
+        val old = async { reader.read(1, position = 0, want = 100, stream = before) }
+        runCurrent()
+        val seek = reader.openStream(1)
+        val new = async { reader.read(1, position = 4096, want = 100, stream = seek) }
+        runCurrent()
+        testScheduler.advanceTimeBy(5_000)
+        runCurrent()
+
+        assertNull("the old stream ends well before the 60 second timeout", old.await())
+        assertEquals(
+            "the window went to the seek once and stayed there",
+            listOf("download:1@0+1024", "download:1@4096+1024"),
+            api.calls,
+        )
+        api.deliver(1, bytes = 300)
+        assertEquals(100, new.await()!!.size)
+        assertTrue(reader.isNewestStream(1, seek))
+        assertFalse(reader.isNewestStream(1, before))
+    }
+
+    @Test
     fun `the local copy is dropped once it exceeds the storage cap`() = runTest {
         val api = FakeTelegramApi()
         api.addFile(1, size = 64 * 1024)
