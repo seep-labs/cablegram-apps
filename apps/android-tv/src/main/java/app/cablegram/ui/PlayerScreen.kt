@@ -117,6 +117,8 @@ fun PlayerScreen(
     playback: PlaybackResponse,
     isLive: Boolean = false,
     durationSeconds: Int? = null,
+    /** Stays on screen while a slow source opens, so the wait isn't a black screen. */
+    waitingScreen: (@Composable () -> Unit)? = null,
     onState: (Int, Int?, Boolean, Int, Boolean, String) -> Unit,
     remoteCommand: TvCommand?,
     remoteTitleCommandId: String?,
@@ -148,6 +150,9 @@ fun PlayerScreen(
     var lastSourceError by remember(playback.url) { mutableStateOf<String?>(null) }
     // CAB-15: the source is opened (it passed its probe) and nothing has played yet; bounds the silent start.
     var loaded by remember(playback.url) { mutableStateOf(false) }
+    // The film's tracks are known, so its decoder is about to start: the waiting clip stops first, because a small TV
+    // may not manage two hardware decoders.
+    var streamOpened by remember(playback.url) { mutableStateOf(false) }
     var startupSwitched by remember(playback.url) { mutableStateOf(false) }
     // Retry reopens the title; it resumes where playback last moved, not at a seek target that never played.
     var retryCount by remember(playback.url) { mutableIntStateOf(0) }
@@ -405,7 +410,7 @@ fun PlayerScreen(
                 DpadKey.OK -> if (recoveryChoice == RecoveryChoice.RETRY) {
                     val from = reachedMs
                     error = null; lastSourceError = null
-                    hasStarted = false; isPlaying = false; settling = false; loaded = false; startupSwitched = false
+                    hasStarted = false; isPlaying = false; settling = false; loaded = false; streamOpened = false; startupSwitched = false
                     currentPositionMs = from
                     retryCount++
                 } else exit()
@@ -527,6 +532,7 @@ fun PlayerScreen(
                     }
                 }
                 PlayerEvent.TracksChanged -> {
+                    streamOpened = true
                     applySavedSubtitleIfNeeded()
                     selectedSubtitleId = player.activeSubtitleTrackId
                     trackGeneration++
@@ -971,7 +977,10 @@ fun PlayerScreen(
                 )
             }
         }
-        if (start != null && !hasStarted && error == null) {
+        // The wait carries on until the film is about to show, however long a slow source takes to open.
+        val stillWaiting = waitingScreen != null && start != null && !hasStarted && !streamOpened && error == null
+        if (stillWaiting) waitingScreen?.invoke()
+        if (!stillWaiting && start != null && !hasStarted && error == null) {
             Column(
                 modifier = Modifier
                     .align(Alignment.Center)

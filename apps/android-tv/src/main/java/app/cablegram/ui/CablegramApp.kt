@@ -259,6 +259,14 @@ fun CablegramApp(viewModel: CablegramViewModel) {
                     playback = screen.playback,
                     isLive = screen.video.mediaType == "live",
                     durationSeconds = screen.video.durationSeconds,
+                    waitingScreen = viewModel.waitingClipUrl?.let { clip ->
+                        {
+                            PrepareStatusScreen(
+                                ScreenState.Resolving(screen.video, loadingVideoUrl = clip, signatureAttemptId = screen.video.id),
+                                onCancel = viewModel::closePlayer,
+                            )
+                        }
+                    },
                     onState = { position, duration, isPlaying, volume, muted, engine -> viewModel.reportPlaybackState(screen.video.id, position, duration, isPlaying, volume, muted, engine) },
                     remoteCommand = viewModel.pendingPlayerCommand,
                     remoteTitleCommandId = viewModel.pendingRemoteTitleId,

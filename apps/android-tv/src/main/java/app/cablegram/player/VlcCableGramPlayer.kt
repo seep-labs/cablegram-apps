@@ -63,6 +63,8 @@ private const val SETTLE_SAMPLE_MS = 1_000L
 private const val HEALTH_SAMPLE_MS = 1_000L
 /** Pictures that must be displayed in a clean sample (about a third of a second of film). */
 private const val SETTLE_MIN_PICTURES = 8
+/** A slow source (Telegram far from the start) can take a minute after a seek: keep the spinner until pictures move. */
+private const val SETTLE_GIVE_UP_MS = 120_000L
 
 /** What the screen and media session tell apart: starved (under 50 %), filling, or full. */
 internal fun bufferingLevel(percent: Float): Int = when {
@@ -121,6 +123,7 @@ class VlcCableGramPlayer(context: Context) : CableGramPlayer {
     private var settleSampleAt = 0L
     private var settleLost = 0
     private var settleCorrupt = 0
+    private var settleShownAtStart = 0
     private var settleShown = 0
     private var settleOnFirstPlaying = false
     private val settleTick = object : Runnable {
@@ -390,6 +393,7 @@ class VlcCableGramPlayer(context: Context) : CableGramPlayer {
         settleResumed = !resumePlaying // a paused player is not resumed, only waited for
         settleBuffered = false
         settleSampleAt = 0L
+        settleShownAtStart = runCatching { mediaPlayer.media?.stats?.displayedPictures }.getOrNull() ?: 0
         if (resumePlaying && mediaPlayer.isPlaying) mediaPlayer.pause()
         settlingState.value = true
         handler.postDelayed(settleTick, SETTLE_TICK_MS)
@@ -423,7 +427,8 @@ class VlcCableGramPlayer(context: Context) : CableGramPlayer {
                 endSettle(); return
             }
         }
-        if (elapsed >= SETTLE_MAX_TOTAL_MS) { endSettle(); return }
+        val shown = runCatching { mediaPlayer.media?.stats?.displayedPictures }.getOrNull() ?: 0
+        if (settleHoldOver(elapsed, shown - settleShownAtStart)) { endSettle(); return }
         handler.postDelayed(settleTick, SETTLE_TICK_MS)
     }
 
@@ -560,3 +565,7 @@ internal fun resumeAfterUserSeek(settling: Boolean, settleResume: Boolean, playi
 
 private fun debugProp(key: String): String =
     runCatching { Class.forName("android.os.SystemProperties").getMethod("get", String::class.java).invoke(null, key) as String }.getOrDefault("")
+
+/** The hold ends once pictures are moving (dirty or not), or after [SETTLE_GIVE_UP_MS], when the stall timers take over. */
+internal fun settleHoldOver(elapsedMs: Long, picturesSinceSeek: Int): Boolean =
+    elapsedMs >= SETTLE_GIVE_UP_MS || (elapsedMs >= SETTLE_MAX_TOTAL_MS && picturesSinceSeek >= SETTLE_MIN_PICTURES)

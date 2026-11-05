@@ -1665,7 +1665,10 @@ function playerScreen(t: Title, p: Profile, url: string, startAt?: number, attem
     subtitleBox.style.display = text ? "" : "none";
   };
   subtitleBox.style.display = "none";
-  const wrap = h("div", "player", undefined, [video, subtitleBox, topLeft, flash, controls, menu, starting]);
+  // After a seek a slow source can take a minute: say so until the picture moves again, instead of a frozen frame.
+  const seekingCard = h("div", "start-card centered", undefined, [h("div", "start-title", "Getting the picture ready…")]);
+  seekingCard.style.display = "none";
+  const wrap = h("div", "player", undefined, [video, subtitleBox, topLeft, flash, controls, menu, starting, seekingCard]);
   show([wrap], null);
   // After show(): it clears the timers of the screen it replaces.
   every(200, drawSubtitle);
@@ -1891,11 +1894,14 @@ function playerScreen(t: Title, p: Profile, url: string, startAt?: number, attem
     const resume = startAt ?? t.resumeSeconds;
     if (resume && resume < video.duration - 10) video.currentTime = resume;
   });
+  video.addEventListener("seeking", () => { if (started) seekingCard.style.display = ""; });
+  video.addEventListener("seeked", () => { if (video.paused || video.readyState >= 3) seekingCard.style.display = "none"; });
   video.addEventListener("playing", () => {
+    seekingCard.style.display = "none";
     if (!started) { started = true; starting.style.display = "none"; }
     render(); arm();
   });
-  video.addEventListener("pause", () => { void save("paused"); render(); arm(); });
+  video.addEventListener("pause", () => { if (!video.seeking) seekingCard.style.display = "none"; void save("paused"); render(); arm(); });
   video.addEventListener("timeupdate", () => {
     if (hud.controlsVisible) render();
     if (Date.now() - lastSave > 15_000) { lastSave = Date.now(); void save(video.paused ? "paused" : "playing"); }

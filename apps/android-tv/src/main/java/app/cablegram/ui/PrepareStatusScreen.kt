@@ -4,10 +4,8 @@ import app.cablegram.R
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.withFrameNanos
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.tv.material3.Button
@@ -151,12 +149,10 @@ fun PrepareStatusScreen(screen: ScreenState.Resolving, onCancel: () -> Unit, onC
 private fun SignaturePreparingScreen(screen: ScreenState.Resolving, onClipStarted: () -> Unit, onStartNow: () -> Unit) {
     val ui = androidx.compose.ui.platform.LocalContext.current.resources
     val offline = screen.prepareStage == app.cablegram.data.PHONE_OFFLINE_STAGE
-    val visibility by animateFloatAsState(if (screen.fadingOut) 0f else 1f, tween(400), label = "signature-fade")
     Row(
         modifier = Modifier
             .fillMaxSize()
             .background(PrepareBg)
-            .alpha(visibility)
             .padding(horizontal = 28.dp, vertical = 24.dp),
         horizontalArrangement = Arrangement.spacedBy(24.dp),
         verticalAlignment = Alignment.CenterVertically,

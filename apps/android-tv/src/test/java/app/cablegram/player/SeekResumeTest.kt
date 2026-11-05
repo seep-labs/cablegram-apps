@@ -21,4 +21,12 @@ class SeekResumeTest {
     fun `outside the hold a seek follows the player`() {
         assertTrue(resumeAfterUserSeek(settling = false, settleResume = false, playing = true))
     }
+
+    @Test
+    fun `the seek spinner stays until pictures move, however slow the source`() {
+        assertFalse(settleHoldOver(21_000L, 100))
+        assertFalse(settleHoldOver(60_000L, 0))
+        assertTrue(settleHoldOver(22_000L, 8))
+        assertTrue(settleHoldOver(120_000L, 0))
+    }
 }
