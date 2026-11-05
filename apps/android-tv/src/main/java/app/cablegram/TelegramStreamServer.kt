@@ -74,6 +74,8 @@ class TelegramStreamServer(private val api: TelegramApi) : NanoHTTPD("127.0.0.1"
     private inner class FileStream(private val fileId: Int, private var position: Long, private val end: Long) : InputStream() {
         private var buffer = ByteArray(0)
         private var offset = 0
+        // Taken on the first read: a HEAD request never reads, and must not stop what is playing.
+        private var stream: Long? = null
 
         override fun read(): Int {
             val one = ByteArray(1)
@@ -84,8 +86,9 @@ class TelegramStreamServer(private val api: TelegramApi) : NanoHTTPD("127.0.0.1"
             if (position > end) return -1
             if (offset >= buffer.size) {
                 val want = minOf(end - position + 1, CHUNK).toInt()
-                buffer = runBlocking { reader.read(fileId, position, want) } ?: run {
-                    PairLog.e("Telegram stream: no data for file $fileId at $position")
+                val current = stream ?: reader.openStream(fileId).also { stream = it }
+                buffer = runBlocking { reader.read(fileId, position, want, current) } ?: run {
+                    if (reader.isNewestStream(fileId, current)) PairLog.e("Telegram stream: no data for file $fileId at $position")
                     return -1
                 }
                 offset = 0
