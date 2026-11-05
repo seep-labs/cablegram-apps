@@ -59,7 +59,6 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
 /** How long the waiting clip fades before the player replaces it. */
-private const val SIGNATURE_FADE_MS = 400L
 
 sealed interface ScreenState {
     data object Loading : ScreenState
@@ -90,7 +89,6 @@ sealed interface ScreenState {
         /** The title is ready and starts within [SignaturePlaybackGate.MINIMUM_MS]; OK starts it now. */
         val readyToStart: Boolean = false,
         /** The clip is fading out just before the player replaces it. */
-        val fadingOut: Boolean = false,
     ) : ScreenState
     data class Player(val video: Video, val playback: PlaybackResponse) : ScreenState
     /** A Telegram title was opened while this TV still waits for the Telegram two-step password. */
@@ -237,6 +235,9 @@ class CablegramViewModel @JvmOverloads constructor(
     private var playbackJob: Job? = null
     private val signatureGate = SignaturePlaybackGate()
     private var signatureAttemptId: String? = null
+    /** The clip of the current wait: the player keeps showing it while a slow source opens. */
+    var waitingClipUrl: String? = null
+        private set
     private var releaseJob: Job? = null
     private var readyPlayer: Pair<String, ScreenState.Player>? = null
     private var lastPlayerPosition: Pair<String, Int>? = null
@@ -261,6 +262,7 @@ class CablegramViewModel @JvmOverloads constructor(
         val id = java.util.UUID.randomUUID().toString()
         releaseJob?.cancel(); readyPlayer = null
         signatureAttemptId = id
+        waitingClipUrl = url
         signatureGate.begin(id, holdForClip)
         screen = ScreenState.Resolving(video, converting = converting, loadingVideoUrl = url, signatureAttemptId = id)
         return id
@@ -291,11 +293,6 @@ class CablegramViewModel @JvmOverloads constructor(
                 delay(wait)
             }
             if (!signatureGate.isCurrent(id) || readyPlayer?.first != id) return@launch
-            // A short fade instead of a hard cut, only when the clip is what is on screen.
-            (screen as? ScreenState.Resolving)?.takeIf { it.signatureAttemptId == id }?.let {
-                screen = it.copy(fadingOut = true)
-                delay(SIGNATURE_FADE_MS)
-            }
             if (!signatureGate.isCurrent(id) || readyPlayer?.first != id) return@launch
             readyPlayer = null
             screen = player
