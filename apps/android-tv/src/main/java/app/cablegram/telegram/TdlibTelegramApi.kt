@@ -12,6 +12,7 @@ import dev.g000sha256.tdl.dto.ChatFolder
 import dev.g000sha256.tdl.dto.ChatListArchive
 import dev.g000sha256.tdl.dto.ChatFolderInfo
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import dev.g000sha256.tdl.TdlClient
 import dev.g000sha256.tdl.TdlResult
 import dev.g000sha256.tdl.dto.AuthorizationState
@@ -129,7 +130,9 @@ class TdlibTelegramApi(private val client: TdlClient = TdlClient.create()) : Tel
             coroutineScope {
                 // Subscribe before asking, so the Closed update can't be missed.
                 val closed = async(start = CoroutineStart.UNDISPATCHED) {
-                    client.authorizationStateUpdates.first { it.authorizationState is AuthorizationStateClosed }
+                    // firstOrNull: when Telegram already ended the session the updates just finish, and that must not
+                    // throw. This runs on its own scope, so an exception here would crash the app.
+                    client.authorizationStateUpdates.firstOrNull { it.authorizationState is AuthorizationStateClosed }
                 }
                 if (client.close() is TdlResult.Success) closed.await() else closed.cancel()
             }
