@@ -15,8 +15,8 @@
 /manifest.webmanifest
   Cache-Control: no-cache
 
-# CAB-62: Android checks this file to let the Cablegram app open TV pairing links. Debug signing key for now; add the
-# Play App Signing key's SHA-256 fingerprint before release.
+# CAB-62: Android checks this file to let the Cablegram app open TV pairing links. Lists the debug key and the Play
+# Console fingerprints (Play App Signing and upload keys).
 /.well-known/assetlinks.json
   Content-Type: application/json
   Cache-Control: max-age=300
