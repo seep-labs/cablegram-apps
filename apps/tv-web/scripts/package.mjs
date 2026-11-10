@@ -1,6 +1,6 @@
 // Stages dist/ plus a platform manifest into build/<platform>/ and prints the packaging command.
 // Usage: node scripts/package.mjs tizen|webos   (run `npm run build` first)
-import { cpSync, existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -27,6 +27,10 @@ if (existsSync(icon)) cpSync(icon, join(out, "icon.png"));
 else writeFileSync(join(out, "icon.png"), Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==", "base64"));
 
 console.log(`Staged ${out}`);
-console.log(platform === "tizen"
-  ? `Package:  tizen package -t wgt -s <certificate profile> -- ${out}\nInstall:  tizen install -n Cablegram.wgt -t <target>`
-  : `Package:  ares-package ${out} -o build\nInstall:  ares-install -d <device> build/app.cablegram.tv_0.4.0_all.ipk && ares-launch -d <device> app.cablegram.tv`);
+if (platform === "tizen") {
+  console.log(`Package:  tizen package -t wgt -s <certificate profile> -- ${out}\nInstall:  tizen install -n Cablegram.wgt -t <target>`);
+} else {
+  // ares-package names the file <id>_<version>_all.ipk from appinfo.json.
+  const { id, version } = JSON.parse(readFileSync(join(out, manifest), "utf8"));
+  console.log(`Package:  ares-package ${out} -o build\nInstall:  ares-install -d <device> build/${id}_${version}_all.ipk && ares-launch -d <device> ${id}`);
+}
