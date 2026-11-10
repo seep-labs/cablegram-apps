@@ -25,6 +25,11 @@ for (const name of ["LICENSE", "NOTICE"]) {
 const icon = join(root, "platforms/icon.png");
 if (existsSync(icon)) cpSync(icon, join(out, "icon.png"));
 else writeFileSync(join(out, "icon.png"), Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==", "base64"));
+// A platform's own icons replace the shared one (webOS: icon.png 80x80 and largeIcon.png 130x130, as appinfo.json asks).
+for (const name of ["icon.png", "largeIcon.png"]) {
+  const own = join(root, "platforms", platform, name);
+  if (existsSync(own)) cpSync(own, join(out, name));
+}
 
 console.log(`Staged ${out}`);
 console.log(platform === "tizen"
