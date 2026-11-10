@@ -16,7 +16,7 @@ sealed interface TelegramState {
     data object Starting : TelegramState
     /** Phone: enter the phone number. */
     data object NeedsPhoneNumber : TelegramState
-    data object NeedsCode : TelegramState
+    data class NeedsCode(val info: TgCodeInfo = TgCodeInfo()) : TelegramState
     data class NeedsPassword(val hint: String) : TelegramState
     /** TV: waiting for the household phone (or a QR scan) to approve [link]. */
     data class WaitingForApproval(val link: String) : TelegramState
@@ -71,6 +71,10 @@ class TelegramSession(
     }
 
     private val inputLock = Mutex()
+    /** The code step the owner left to correct the number; TDLib is still waiting for that code. */
+    @Volatile private var codeBeforeEdit: TgCodeInfo? = null
+    /** The number to start from when the owner came back from the code step; empty otherwise. */
+    val phoneToEdit: String get() = codeBeforeEdit?.phone.orEmpty()
     private var job: Job? = null
 
     fun start() {
@@ -78,7 +82,22 @@ class TelegramSession(
         job = scope.launch { api.authStates.collect { handle(it) } }
     }
 
-    fun submitPhoneNumber(phone: String) = submit { api.setPhoneNumber(normalizePhone(phone)) }
+    fun submitPhoneNumber(phone: String) = submit {
+        api.setPhoneNumber(normalizePhone(phone))
+        // TDLib stays in WaitCode, and an identical state is never reported again (the same number sent twice).
+        codeBeforeEdit?.let { if (_state.value == TelegramState.NeedsPhoneNumber) _state.value = TelegramState.NeedsCode(it) }
+    }
+
+    /** Back from the code step to the number, which may be mistyped. TDLib accepts a new number while it waits for a code. */
+    fun editPhoneNumber() {
+        val code = _state.value as? TelegramState.NeedsCode ?: return
+        if (_busy.value) return
+        codeBeforeEdit = code.info
+        _lastError.value = null
+        _state.value = TelegramState.NeedsPhoneNumber
+    }
+
+    fun resendCode() = submit { api.resendCode() }
     fun submitCode(code: String) = submit { api.checkCode(code.filter(Char::isDigit)) }
     fun submitPassword(password: String) = submit { api.checkPassword(password) }
 
@@ -178,9 +197,13 @@ class TelegramSession(
                     _state.value = TelegramState.Starting
                     api.requestQrLogin()
                 } else {
+                    codeBeforeEdit = null
                     _state.value = TelegramState.NeedsPhoneNumber
                 }
-                TgAuthState.WaitCode -> _state.value = TelegramState.NeedsCode
+                is TgAuthState.WaitCode -> {
+                    codeBeforeEdit = null
+                    _state.value = TelegramState.NeedsCode(auth.info)
+                }
                 is TgAuthState.WaitPassword -> _state.value = TelegramState.NeedsPassword(auth.hint)
                 is TgAuthState.WaitOtherDevice -> _state.value = TelegramState.WaitingForApproval(auth.link)
                 TgAuthState.Ready -> _state.value = TelegramState.Ready(api.me())
@@ -230,6 +253,7 @@ class TelegramSession(
             e.name.contains("PHONE_NUMBER_INVALID") -> "That phone number isn't valid. Include the country code, e.g. +31."
             e.name.contains("PHONE_CODE_INVALID") -> "That code isn't right. Check the latest code in Telegram."
             e.name.contains("PHONE_CODE_EXPIRED") -> "That code expired. Request a new one."
+            e.name.contains("SEND_CODE_UNAVAILABLE") -> "Telegram can't send another code right now. Check the number, or try again later."
             e.name.contains("PASSWORD_HASH_INVALID") -> "That password isn't right."
             e.name.contains("SESSION_TOO_FRESH") || e.name.contains("FRESH_RESET_AUTHORISATION_FORBIDDEN") ->
                 "Telegram doesn't allow this from a session less than 24 hours old. Try again later."

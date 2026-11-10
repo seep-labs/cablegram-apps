@@ -1105,4 +1105,13 @@
     <string name="library_bulk_result">"Удалено: %1$d, не удалось удалить: %2$d. Проверьте подключение."</string>
     <string name="library_select_season">"Выбрать сезон"</string>
     <string name="library_collection_name_taken">"Коллекция с таким названием уже есть."</string>
+    <string name="telegram_code_sent_app" formatted="false">"Telegram отправил код на номер %1$s. Откройте Telegram на устройстве, где вы уже вошли в аккаунт, и найдите сообщение от Telegram."</string>
+    <string name="telegram_code_sent_sms" formatted="false">"Telegram отправил код на номер %1$s по SMS."</string>
+    <string name="telegram_code_sent_call" formatted="false">"Telegram звонит на номер %1$s, чтобы сообщить код."</string>
+    <string name="telegram_code_resend" formatted="false">"Отправить код ещё раз"</string>
+    <string name="telegram_code_resend_sms" formatted="false">"Отправить по SMS"</string>
+    <string name="telegram_code_resend_call" formatted="false">"Позвонить мне с кодом"</string>
+    <string name="telegram_code_resend_wait" formatted="false">"Отправить снова через %1$d с"</string>
+    <string name="telegram_code_no_resend" formatted="false">"У Telegram нет другого способа отправить этот код. Проверьте номер или повторите попытку позже."</string>
+    <string name="telegram_code_change_number" formatted="false">"Неверный номер? Изменить"</string>
 </resources>

@@ -15,7 +15,7 @@ import org.junit.Test
 class TelegramApiSurfaceTest {
     private val allowed = setOf(
         // Sign-in and sign-out.
-        "start", "requestQrLogin", "setPhoneNumber", "checkCode", "checkPassword", "confirmQrLogin", "logOut", "close", "me",
+        "start", "requestQrLogin", "setPhoneNumber", "resendCode", "checkCode", "checkPassword", "confirmQrLogin", "logOut", "close", "me",
         // The library channel only: find or create it, set its logo, list its videos, delete its messages.
         "chat", "findChatByTitle", "createChannel", "setChannelPhoto", "videos", "message", "deleteMessages",
         // Save to Telegram (T011): the only call that sends anything. It sends one video the owner chose,

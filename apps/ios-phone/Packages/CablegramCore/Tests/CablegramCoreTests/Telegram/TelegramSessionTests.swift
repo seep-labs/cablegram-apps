@@ -49,8 +49,8 @@ import Testing
         s.submitPhoneNumber(" +31 6 1234 5678 ")
         #expect(await eventually { api.calls.last == "setPhoneNumber:+31612345678" })
         #expect(await eventually { !s.busy })
-        api.emitAuth(.waitCode)
-        #expect(await eventually { s.state == .needsCode })
+        api.emitAuth(.waitCode())
+        #expect(await eventually { s.state == .needsCode() })
         s.submitCode("12 345")
         #expect(await eventually { api.calls.last == "checkCode:12345" })
         #expect(await eventually { !s.busy })
@@ -84,15 +84,58 @@ import Testing
         #expect(s.busy == false)
     }
 
+    @Test func theCodeCanBeRequestedAgain() async {
+        let api = FakeTelegramApi()
+        let s = session(api, .phone)
+        let first = TgCodeInfo(phone: "+31612345678", sentBy: .telegramApp, nextBy: .sms, resendAfterSeconds: 60)
+        api.emitAuth(.waitCode(first))
+        #expect(await eventually { s.state == .needsCode(first) })
+        s.resendCode()
+        #expect(await eventually { api.calls.last == "resendCode" })
+        #expect(await eventually { !s.busy })
+        let second = TgCodeInfo(phone: "+31612345678", sentBy: .sms, nextBy: nil, resendAfterSeconds: 60)
+        api.emitAuth(.waitCode(second))
+        #expect(await eventually { s.state == .needsCode(second) })
+    }
+
+    @Test func aMistypedNumberCanBeChangedFromTheCodeStep() async {
+        let api = FakeTelegramApi()
+        let s = session(api, .phone)
+        let wrong = TgCodeInfo(phone: "+31600000001", sentBy: .sms)
+        api.emitAuth(.waitCode(wrong))
+        #expect(await eventually { s.state == .needsCode(wrong) })
+        s.editPhoneNumber()
+        #expect(s.state == .needsPhoneNumber)
+        #expect(s.phoneToEdit == "+31600000001")
+        s.submitPhoneNumber("+31600000002")
+        #expect(await eventually { api.calls.last == "setPhoneNumber:+31600000002" })
+        #expect(await eventually { !s.busy })
+        let right = TgCodeInfo(phone: "+31600000002", sentBy: .sms)
+        api.emitAuth(.waitCode(right))
+        #expect(await eventually { s.state == .needsCode(right) })
+        #expect(s.phoneToEdit == "")
+    }
+
+    @Test func sendingTheSameNumberAgainReturnsToTheCodeStepWithoutANewState() async {
+        let api = FakeTelegramApi()
+        let s = session(api, .phone)
+        let info = TgCodeInfo(phone: "+31600000001", sentBy: .sms)
+        api.emitAuth(.waitCode(info))
+        #expect(await eventually { s.state == .needsCode(info) })
+        s.editPhoneNumber()
+        s.submitPhoneNumber("+31600000001")
+        #expect(await eventually { s.state == .needsCode(info) })
+    }
+
     @Test func aRejectedInputKeepsTheStepAndSaysWhy() async {
         let api = FakeTelegramApi()
         let s = session(api, .phone)
-        api.emitAuth(.waitCode)
-        #expect(await eventually { s.state == .needsCode })
+        api.emitAuth(.waitCode())
+        #expect(await eventually { s.state == .needsCode() })
         api.failNext = TgError(code: 400, name: "PHONE_CODE_INVALID")
         s.submitCode("00000")
         #expect(await eventually { s.lastError == "That code isn't right. Check the latest code in Telegram." })
-        #expect(s.state == .needsCode)
+        #expect(s.state == .needsCode())
         api.emitAuth(.waitPassword(hint: ""))
         #expect(await eventually { s.state == .needsPassword(hint: "") })
         #expect(s.lastError == nil, "cleared when Telegram moves on")

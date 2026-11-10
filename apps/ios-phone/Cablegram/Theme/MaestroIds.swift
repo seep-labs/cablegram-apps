@@ -24,6 +24,8 @@ enum MaestroIds {
     static let telegramAccountHelp = "telegram_account_help"
     static let telegramAccountHelpBack = "telegram_account_help_back"
     static let telegramContinue = "telegram_continue"
+    static let telegramResendCode = "telegram_resend_code"
+    static let telegramChangeNumber = "telegram_change_number"
     static let telegramOrganizeFolder = "telegram_organize_folder"
     static let telegramAddFromChats = "telegram_add_from_chats"
     static let discoveryPrompt = "discovery_prompt"

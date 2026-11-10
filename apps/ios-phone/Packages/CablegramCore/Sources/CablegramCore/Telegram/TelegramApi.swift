@@ -16,6 +16,8 @@ public protocol TelegramApi: Sendable {
     func start(_ parameters: TgParameters) async throws
     func requestQrLogin() async throws
     func setPhoneNumber(_ phone: String) async throws
+    /// Asks Telegram to send the login code again, the way `TgCodeInfo.nextBy` says.
+    func resendCode() async throws
     func checkCode(_ code: String) async throws
     func checkPassword(_ password: String) async throws
     func confirmQrLogin(_ link: String) async throws
@@ -97,10 +99,24 @@ public struct TgParameters: Sendable {
     }
 }
 
+/// How Telegram delivers a login code.
+public enum TgCodeDelivery: Sendable, Equatable { case telegramApp, sms, call, other }
+
+/// The login code Telegram sent to `phone`. `nextBy` is how a resend would arrive, nil when Telegram has no other try; it opens after `resendAfterSeconds`.
+public struct TgCodeInfo: Sendable, Equatable {
+    public var phone: String
+    public var sentBy: TgCodeDelivery
+    public var nextBy: TgCodeDelivery?
+    public var resendAfterSeconds: Int
+    public init(phone: String = "", sentBy: TgCodeDelivery = .other, nextBy: TgCodeDelivery? = nil, resendAfterSeconds: Int = 0) {
+        self.phone = phone; self.sentBy = sentBy; self.nextBy = nextBy; self.resendAfterSeconds = resendAfterSeconds
+    }
+}
+
 public enum TgAuthState: Sendable, Equatable {
     case waitParameters
     case waitPhoneNumber
-    case waitCode
+    case waitCode(TgCodeInfo = TgCodeInfo())
     case waitPassword(hint: String)
     case waitOtherDevice(link: String)
     case ready

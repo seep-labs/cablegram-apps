@@ -31,6 +31,7 @@ class FakeTelegramApi : TelegramApi {
     override suspend fun start(parameters: TgParameters) = record("start")
     override suspend fun requestQrLogin() = record("requestQrLogin")
     override suspend fun setPhoneNumber(phone: String) = record("setPhoneNumber:$phone")
+    override suspend fun resendCode() = record("resendCode")
     override suspend fun checkCode(code: String) = record("checkCode:$code")
     override suspend fun checkPassword(password: String) = record("checkPassword")
     /** What confirming a login link adds to [sessions] (the device the link came from). */

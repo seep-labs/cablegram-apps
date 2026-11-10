@@ -20,6 +20,8 @@ interface TelegramApi {
     suspend fun start(parameters: TgParameters)
     suspend fun requestQrLogin()
     suspend fun setPhoneNumber(phone: String)
+    /** Asks Telegram to send the login code again, the way [TgCodeInfo.nextBy] says. */
+    suspend fun resendCode()
     suspend fun checkCode(code: String)
     suspend fun checkPassword(password: String)
     suspend fun confirmQrLogin(link: String)
@@ -90,7 +92,7 @@ data class TgParameters(
 sealed interface TgAuthState {
     data object WaitParameters : TgAuthState
     data object WaitPhoneNumber : TgAuthState
-    data object WaitCode : TgAuthState
+    data class WaitCode(val info: TgCodeInfo = TgCodeInfo()) : TgAuthState
     data class WaitPassword(val hint: String) : TgAuthState
     data class WaitOtherDevice(val link: String) : TgAuthState
     data object Ready : TgAuthState
@@ -99,6 +101,17 @@ sealed interface TgAuthState {
     /** A state Cablegram does not support, e.g. registration of a new Telegram account. */
     data class Unsupported(val name: String) : TgAuthState
 }
+
+/** How Telegram delivers a login code. */
+enum class TgCodeDelivery { TelegramApp, Sms, Call, Other }
+
+/** The login code Telegram sent to [phone]. [nextBy] is how a resend would arrive, null when Telegram has no other try; it opens after [resendAfterSeconds]. */
+data class TgCodeInfo(
+    val phone: String = "",
+    val sentBy: TgCodeDelivery = TgCodeDelivery.Other,
+    val nextBy: TgCodeDelivery? = null,
+    val resendAfterSeconds: Int = 0,
+)
 
 data class TgUser(val id: Long, val displayName: String)
 
