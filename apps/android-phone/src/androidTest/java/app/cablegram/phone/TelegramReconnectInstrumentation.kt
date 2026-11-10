@@ -30,7 +30,7 @@ class TelegramReconnectInstrumentation : Instrumentation() {
         val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
         val puts = AtomicInteger()
         val failLibrary = AtomicBoolean()
-        val auth = MutableStateFlow<TgAuthState>(TgAuthState.WaitCode)
+        val auth = MutableStateFlow<TgAuthState>(TgAuthState.WaitCode())
         val current = PhoneTelegram::class.java.getDeclaredField("current").apply { isAccessible = true }
         val server = object : NanoHTTPD("127.0.0.1", 0) {
             override fun serve(request: IHTTPSession): Response {

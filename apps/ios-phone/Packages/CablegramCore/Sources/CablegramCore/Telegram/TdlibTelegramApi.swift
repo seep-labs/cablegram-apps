@@ -117,6 +117,7 @@ public final class TdlibTelegramApi: TelegramApi, @unchecked Sendable {
 
     public func requestQrLogin() async throws { try await call("requestQrCodeAuthentication", ["other_user_ids": [Int64]()]) }
     public func setPhoneNumber(_ phone: String) async throws { try await call("setAuthenticationPhoneNumber", ["phone_number": phone]) }
+    public func resendCode() async throws { try await call("resendAuthenticationCode") }
     public func checkCode(_ code: String) async throws { try await call("checkAuthenticationCode", ["code": code]) }
     public func checkPassword(_ password: String) async throws { try await call("checkAuthenticationPassword", ["password": password]) }
     public func confirmQrLogin(_ link: String) async throws { try await call("confirmQrCodeAuthentication", ["link": link]) }
@@ -493,11 +494,24 @@ public final class TdlibTelegramApi: TelegramApi, @unchecked Sendable {
                       downloadedSize: local.int64("downloaded_size"), completed: local.bool("is_downloading_completed"))
     }
 
+    static func codeInfo(_ info: TdObject) -> TgCodeInfo {
+        TgCodeInfo(phone: "+" + info.string("phone_number").filter(\.isNumber), sentBy: delivery(info.object("type")), nextBy: info.object("next_type").map { delivery($0) }, resendAfterSeconds: info.int("timeout"))
+    }
+
+    static func delivery(_ type: TdObject?) -> TgCodeDelivery {
+        switch type?.type {
+        case "authenticationCodeTypeTelegramMessage": .telegramApp
+        case "authenticationCodeTypeSms", "authenticationCodeTypeSmsWord", "authenticationCodeTypeSmsPhrase": .sms
+        case "authenticationCodeTypeCall", "authenticationCodeTypeFlashCall", "authenticationCodeTypeMissedCall": .call
+        default: .other
+        }
+    }
+
     static func authState(_ state: TdObject) -> TgAuthState {
         switch state.type {
         case "authorizationStateWaitTdlibParameters": .waitParameters
         case "authorizationStateWaitPhoneNumber": .waitPhoneNumber
-        case "authorizationStateWaitCode": .waitCode
+        case "authorizationStateWaitCode": .waitCode(codeInfo(state.object("code_info") ?? TdObject([:])))
         case "authorizationStateWaitPassword": .waitPassword(hint: state.string("password_hint"))
         case "authorizationStateWaitOtherDeviceConfirmation": .waitOtherDevice(link: state.string("link"))
         case "authorizationStateReady": .ready

@@ -47,6 +47,8 @@ import app.cablegram.telegram.CablegramChannel
 import app.cablegram.telegram.CommunityChannels
 import app.cablegram.telegram.TelegramSession
 import app.cablegram.telegram.TelegramState
+import app.cablegram.telegram.TgCodeDelivery
+import app.cablegram.telegram.TgCodeInfo
 
 private const val PRIVACY_URL = "https://cablegram.app/privacy.html#telegram"
 
@@ -356,7 +358,7 @@ private fun SignInSteps(viewModel: PhoneViewModel) {
     val state by session.state.collectAsState()
     val busy by session.busy.collectAsState()
     val inputError by session.lastError.collectAsState()
-    var input by rememberSaveable(state::class) { mutableStateOf("") }
+    var input by rememberSaveable(state::class) { mutableStateOf(if (state is TelegramState.NeedsPhoneNumber) session.phoneToEdit else "") }
     Text(if (viewModel.telegramBotHubOnly) ui.getString(R.string.ui_bot_hub_6dcb6e) else ui.getString(R.string.ui_connect_telegram_00c799), color = Color.White, style = MaterialTheme.typography.headlineSmall)
 
     val linked = viewModel.telegramLink?.linked == true && viewModel.telegramHealth == TelegramHealth.Ok && PhoneTelegram.wasLinked(context)
@@ -401,8 +403,8 @@ private fun SignInSteps(viewModel: PhoneViewModel) {
                     enabled = input.count(Char::isDigit) >= 7,
                 ) { session.submitPhoneNumber(input) }
             }
-            TelegramState.NeedsCode -> {
-                Text(ui.getString(R.string.ui_telegram_sent_a_login_code_to_your_telegram_app_or_by__0317af), color = VlcMuted)
+            is TelegramState.NeedsCode -> {
+                Text(codeSentMessage(ui, s.info), color = VlcMuted)
                 Text(
                     ui.getString(R.string.ui_telegram_s_message_says_not_to_give_this_code_to_anyon_7277cb) +
                         ui.getString(R.string.ui_cablegram_uses_it_to_sign_in_with_telegram_directly_li_f3fc01),
@@ -412,6 +414,7 @@ private fun SignInSteps(viewModel: PhoneViewModel) {
                 Step(ui.getString(R.string.ui_login_code_95e717), "5 digits", input, { input = it.filter(Char::isDigit).take(8) }, KeyboardType.NumberPassword, busy, inputError, ui.getString(R.string.ui_continue_31fbef), input.length >= 5) {
                     session.submitCode(input)
                 }
+                CodeRecovery(s.info, busy, onResend = session::resendCode, onChangeNumber = session::editPhoneNumber)
             }
             is TelegramState.NeedsPassword -> {
                 Text(ui.getString(R.string.ui_your_account_has_two_step_verification_enter_your_tele_9e706f), color = VlcMuted)
@@ -581,6 +584,49 @@ private fun Step(
         enabled = enabled && !busy,
         modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp).maestro(MaestroIds.TELEGRAM_SUBMIT),
     ) { Text(if (busy) ui.getString(R.string.ui_checking_ec963f) else action) }
+}
+
+/** Names the number and the channel: a code that "never came" is often waiting in the Telegram app, or went to a mistyped number. */
+private fun codeSentMessage(ui: android.content.res.Resources, info: TgCodeInfo): String {
+    val phone = "\u2066${info.phone}\u2069" // Stays left to right inside Arabic and Persian sentences.
+    return when (info.sentBy) {
+        TgCodeDelivery.TelegramApp -> ui.getString(R.string.telegram_code_sent_app, phone)
+        TgCodeDelivery.Sms -> ui.getString(R.string.telegram_code_sent_sms, phone)
+        TgCodeDelivery.Call -> ui.getString(R.string.telegram_code_sent_call, phone)
+        TgCodeDelivery.Other -> ui.getString(R.string.ui_telegram_sent_a_login_code_to_your_telegram_app_or_by__0317af)
+    }
+}
+
+/** The code didn't arrive: ask again once Telegram allows it, or go back and correct the number. */
+@Composable
+private fun CodeRecovery(info: TgCodeInfo, busy: Boolean, onResend: () -> Unit, onChangeNumber: () -> Unit) {
+    val ui = LocalContext.current.resources
+    var wait by remember(info) { mutableStateOf(info.resendAfterSeconds) }
+    androidx.compose.runtime.LaunchedEffect(info) {
+        while (wait > 0) { kotlinx.coroutines.delay(1_000); wait-- }
+    }
+    val next = info.nextBy
+    if (next == null) {
+        Text(ui.getString(R.string.telegram_code_no_resend), color = VlcMuted, style = MaterialTheme.typography.bodySmall)
+    } else {
+        OutlinedButton(
+            onClick = onResend,
+            enabled = !busy && wait == 0,
+            modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp).maestro(MaestroIds.TELEGRAM_RESEND_CODE),
+        ) {
+            Text(
+                when {
+                    wait > 0 -> ui.getString(R.string.telegram_code_resend_wait, wait)
+                    next == TgCodeDelivery.Sms -> ui.getString(R.string.telegram_code_resend_sms)
+                    next == TgCodeDelivery.Call -> ui.getString(R.string.telegram_code_resend_call)
+                    else -> ui.getString(R.string.telegram_code_resend)
+                },
+            )
+        }
+    }
+    TextButton(onClick = onChangeNumber, enabled = !busy, modifier = Modifier.maestro(MaestroIds.TELEGRAM_CHANGE_NUMBER)) {
+        Text(ui.getString(R.string.telegram_code_change_number), color = VlcOrange)
+    }
 }
 
 @Composable

@@ -8,7 +8,7 @@ public enum TelegramState: Sendable, Equatable {
     case starting
     /// Phone: enter the phone number.
     case needsPhoneNumber
-    case needsCode
+    case needsCode(TgCodeInfo = TgCodeInfo())
     case needsPassword(hint: String)
     /// TV: waiting for the household phone (or a QR scan) to approve `link`.
     case waitingForApproval(link: String)
@@ -39,6 +39,10 @@ public final class TelegramSession {
     public private(set) var lastError: String?
     /// Identity actually used to start this session, also used to verify newly approved devices.
     @ObservationIgnored public private(set) var clientApiId = 0
+    /// The code step the owner left to correct the number; TDLib is still waiting for that code.
+    @ObservationIgnored private var codeBeforeEdit: TgCodeInfo?
+    /// The number to start from when the owner came back from the code step; empty otherwise.
+    public var phoneToEdit: String { codeBeforeEdit?.phone ?? "" }
 
     @ObservationIgnored private let role: TelegramRole
     @ObservationIgnored private let parameters: @Sendable () async throws -> TgParameters
@@ -74,7 +78,23 @@ public final class TelegramSession {
 
     public func stop() { job?.cancel(); job = nil }
 
-    public func submitPhoneNumber(_ phone: String) { submit { try await self.api.setPhoneNumber(Self.normalizePhone(phone)) } }
+    public func submitPhoneNumber(_ phone: String) {
+        submit {
+            try await self.api.setPhoneNumber(Self.normalizePhone(phone))
+            // TDLib stays in waitCode, and an identical state is never reported again (the same number sent twice).
+            if let code = self.codeBeforeEdit, self.state == .needsPhoneNumber { self.state = .needsCode(code) }
+        }
+    }
+
+    /// Back from the code step to the number, which may be mistyped. TDLib accepts a new number while it waits for a code.
+    public func editPhoneNumber() {
+        guard case let .needsCode(code) = state, !busy else { return }
+        codeBeforeEdit = code
+        lastError = nil
+        state = .needsPhoneNumber
+    }
+
+    public func resendCode() { submit { try await self.api.resendCode() } }
     public func submitCode(_ code: String) { submit { try await self.api.checkCode(code.filter(\.isNumber)) } }
     public func submitPassword(_ password: String) { submit { try await self.api.checkPassword(password) } }
 
@@ -157,8 +177,8 @@ public final class TelegramSession {
                 clientApiId = supplied.apiId
                 try await api.start(supplied)
             case .waitPhoneNumber:
-                if role == .tv { state = .starting; try await api.requestQrLogin() } else { state = .needsPhoneNumber }
-            case .waitCode: state = .needsCode
+                if role == .tv { state = .starting; try await api.requestQrLogin() } else { codeBeforeEdit = nil; state = .needsPhoneNumber }
+            case let .waitCode(info): codeBeforeEdit = nil; state = .needsCode(info)
             case let .waitPassword(hint): state = .needsPassword(hint: hint)
             case let .waitOtherDevice(link): state = .waitingForApproval(link: link)
             case .ready: state = .ready(try await api.me())
@@ -213,6 +233,7 @@ public final class TelegramSession {
         if name.contains("PHONE_NUMBER_INVALID") { return "That phone number isn't valid. Include the country code, e.g. +31." }
         if name.contains("PHONE_CODE_INVALID") { return "That code isn't right. Check the latest code in Telegram." }
         if name.contains("PHONE_CODE_EXPIRED") { return "That code expired. Request a new one." }
+        if name.contains("SEND_CODE_UNAVAILABLE") { return "Telegram can't send another code right now. Check the number, or try again later." }
         if name.contains("PASSWORD_HASH_INVALID") { return "That password isn't right." }
         if name.contains("SESSION_TOO_FRESH") || name.contains("FRESH_RESET_AUTHORISATION_FORBIDDEN") {
             return "Telegram doesn't allow this from a session less than 24 hours old. Try again later."

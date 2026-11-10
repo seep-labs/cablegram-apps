@@ -8,7 +8,7 @@ import Testing
 @Suite struct TelegramApiSurfaceTests {
     static let allowed: Set<String> = [
         // Sign-in and sign-out.
-        "start", "requestQrLogin", "setPhoneNumber", "checkCode", "checkPassword", "confirmQrLogin", "logOut", "close", "me",
+        "start", "requestQrLogin", "setPhoneNumber", "resendCode", "checkCode", "checkPassword", "confirmQrLogin", "logOut", "close", "me",
         // The library channel only: find or create it, set its logo, list its videos, delete its messages.
         "chat", "findChatByTitle", "createChannel", "setChannelPhoto", "videos", "message", "deleteMessages",
         // Save to Telegram (T011): the only call that sends anything.

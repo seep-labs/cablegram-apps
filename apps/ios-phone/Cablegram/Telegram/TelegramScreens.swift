@@ -218,7 +218,7 @@ private struct SignInSteps: View {
         if let session = PhoneTelegram.existing() {
             content(session)
                 // Each step starts empty (Android keys the field by the step).
-                .onChange(of: session.state) { _, _ in input = "" }
+                .onChange(of: session.state) { _, new in input = new == .needsPhoneNumber ? session.phoneToEdit : "" }
         } else {
             Working(L("ui_starting_telegram_44fd03"))
         }
@@ -254,11 +254,12 @@ private struct SignInSteps: View {
                 Step(label: L("ui_phone_number_306f1b"), hint: L("ui_with_country_code_e_g_31_6_1234_5678_f10939"), value: $input, keyboard: .phonePad, busy: session.busy, error: session.lastError,
                      action: L("ui_send_code_66a5b4"), enabled: input.filter(\.isNumber).count >= 7) { session.submitPhoneNumber(input) }
                     .onChange(of: input) { _, v in input = String(v.prefix(20)) }
-            case .needsCode:
-                Text(key: "ui_telegram_sent_a_login_code_to_your_telegram_app_or_by__0317af").foregroundStyle(Color.phoneMuted)
+            case let .needsCode(info):
+                Text(verbatim: codeSentMessage(info)).foregroundStyle(Color.phoneMuted)
                 Text(verbatim: L("ui_telegram_s_message_says_not_to_give_this_code_to_anyon_7277cb") + L("ui_cablegram_uses_it_to_sign_in_with_telegram_directly_li_f3fc01")).font(.system(.caption)).foregroundStyle(Color.phoneMuted)
                 Step(label: L("ui_login_code_95e717"), hint: "5 digits", value: $input, keyboard: .numberPad, busy: session.busy, error: session.lastError, action: L("ui_continue_31fbef"), enabled: input.count >= 5) { session.submitCode(input) }
                     .onChange(of: input) { _, v in input = String(v.filter(\.isNumber).prefix(8)) }
+                CodeRecovery(info: info, busy: session.busy, onResend: { session.resendCode() }, onChangeNumber: { session.editPhoneNumber() })
             case let .needsPassword(hint):
                 Text(key: "ui_your_account_has_two_step_verification_enter_your_tele_9e706f").foregroundStyle(Color.phoneMuted)
                 Text(key: "ui_cablegram_passes_your_password_to_telegram_to_sign_in__0bb35c").font(.system(.caption)).foregroundStyle(Color.phoneMuted)
@@ -363,6 +364,59 @@ private struct LibraryBotOptions: View {
             }
         }
         .accessibilityElement(children: .contain).accessibilityIdentifier("telegram_library_bots")
+    }
+}
+
+/// Names the number and the channel: a code that "never came" is often waiting in the Telegram app, or went to a mistyped number.
+private func codeSentMessage(_ info: TgCodeInfo) -> String {
+    let phone = "\u{2066}\(info.phone)\u{2069}" // Stays left to right inside Arabic and Persian sentences.
+    switch info.sentBy {
+    case .telegramApp: return L("telegram_code_sent_app", phone)
+    case .sms: return L("telegram_code_sent_sms", phone)
+    case .call: return L("telegram_code_sent_call", phone)
+    case .other: return L("ui_telegram_sent_a_login_code_to_your_telegram_app_or_by__0317af")
+    }
+}
+
+/// The code didn't arrive: ask again once Telegram allows it, or go back and correct the number.
+private struct CodeRecovery: View {
+    let info: TgCodeInfo
+    let busy: Bool
+    let onResend: () -> Void
+    let onChangeNumber: () -> Void
+    @State private var wait = 0
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            if let next = info.nextBy {
+                Button(action: onResend) { Text(verbatim: resendLabel(next)) }
+                    .buttonStyle(OutlinedButtonStyle())
+                    .disabled(busy || wait > 0)
+                    .accessibilityIdentifier(MaestroIds.telegramResendCode)
+            } else {
+                Text(key: "telegram_code_no_resend").font(.system(.caption)).foregroundStyle(Color.phoneMuted)
+            }
+            Button(action: onChangeNumber) { Text(key: "telegram_code_change_number").foregroundStyle(Color.phoneAccent) }
+                .disabled(busy)
+                .accessibilityIdentifier(MaestroIds.telegramChangeNumber)
+        }
+        .task(id: info) {
+            wait = info.resendAfterSeconds
+            while wait > 0 {
+                try? await Task.sleep(nanoseconds: 1_000_000_000)
+                if Task.isCancelled { return }
+                wait -= 1
+            }
+        }
+    }
+
+    private func resendLabel(_ next: TgCodeDelivery) -> String {
+        if wait > 0 { return L("telegram_code_resend_wait", wait) }
+        switch next {
+        case .sms: return L("telegram_code_resend_sms")
+        case .call: return L("telegram_code_resend_call")
+        default: return L("telegram_code_resend")
+        }
     }
 }
 

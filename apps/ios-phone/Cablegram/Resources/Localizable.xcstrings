@@ -10350,6 +10350,429 @@
         }
       }
     },
+    "telegram_code_change_number": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "رقم خاطئ؟ غيّره"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Falsche Nummer? Ändern"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wrong number? Change it"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Número incorrecto? Cámbialo"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "شماره اشتباه است؟ آن را تغییر دهید"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Numero sbagliato? Modificalo"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Неверный номер? Изменить"
+          }
+        }
+      }
+    },
+    "telegram_code_no_resend": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ليست لدى تيليجرام طريقة أخرى لإرسال هذا الرمز. تحقق من الرقم أو حاول مرة أخرى لاحقًا."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram kann diesen Code nicht auf andere Weise senden. Prüfe die Nummer oder versuche es später noch einmal."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram has no other way to send this code. Check the number, or try again later."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram no tiene otra forma de enviar este código. Comprueba el número o inténtalo más tarde."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تلگرام راه دیگری برای فرستادن این کد ندارد. شماره را بررسی کنید یا بعداً دوباره امتحان کنید."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram non ha altri modi per inviare questo codice. Controlla il numero o riprova più tardi."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "У Telegram нет другого способа отправить этот код. Проверьте номер или повторите попытку позже."
+          }
+        }
+      }
+    },
+    "telegram_code_resend": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إرسال الرمز مرة أخرى"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Code erneut senden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send the code again"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enviar el código de nuevo"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ارسال دوبارهٔ کد"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invia di nuovo il codice"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отправить код ещё раз"
+          }
+        }
+      }
+    },
+    "telegram_code_resend_call": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اتصل بي لإبلاغي بالرمز"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Code per Anruf erhalten"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Call me with the code"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Llamarme con el código"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "با من تماس بگیرید و کد را بگویید"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chiamami con il codice"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Позвонить мне с кодом"
+          }
+        }
+      }
+    },
+    "telegram_code_resend_sms": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إرساله عبر رسالة نصية"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Per SMS senden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send it by SMS"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enviarlo por SMS"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ارسال با پیامک"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invialo via SMS"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отправить по SMS"
+          }
+        }
+      }
+    },
+    "telegram_code_resend_wait": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إعادة الإرسال بعد %1$d ث"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erneut senden in %1$d s"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send again in %1$d s"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reenviar en %1$d s"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ارسال دوباره تا %1$d ثانیه دیگر"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invia di nuovo tra %1$d s"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отправить снова через %1$d с"
+          }
+        }
+      }
+    },
+    "telegram_code_sent_app": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "أرسل تيليجرام الرمز إلى %1$@. افتح تيليجرام على جهاز سجّلت الدخول عليه بالفعل وابحث عن رسالة من Telegram."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram hat den Code an %1$@ gesendet. Öffne Telegram auf einem Gerät, auf dem du bereits angemeldet bist, und suche nach einer Nachricht von Telegram."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram sent the code to %1$@. Open Telegram on a device where you're already signed in and look for a message from Telegram."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram envió el código a %1$@. Abre Telegram en un dispositivo donde ya hayas iniciado sesión y busca un mensaje de Telegram."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تلگرام کد را به %1$@ فرستاد. تلگرام را در دستگاهی که قبلاً با آن وارد شده‌اید باز کنید و دنبال پیامی از Telegram بگردید."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram ha inviato il codice a %1$@. Apri Telegram su un dispositivo in cui hai già effettuato l'accesso e cerca un messaggio di Telegram."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram отправил код на номер %1$@. Откройте Telegram на устройстве, где вы уже вошли в аккаунт, и найдите сообщение от Telegram."
+          }
+        }
+      }
+    },
+    "telegram_code_sent_call": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "يتصل تيليجرام بالرقم %1$@ لإبلاغك بالرمز."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram ruft %1$@ an, um den Code durchzugeben."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram is calling %1$@ with the code."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram está llamando a %1$@ con el código."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تلگرام برای اعلام کد با %1$@ تماس می‌گیرد."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram sta chiamando %1$@ per comunicare il codice."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram звонит на номер %1$@, чтобы сообщить код."
+          }
+        }
+      }
+    },
+    "telegram_code_sent_sms": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "أرسل تيليجرام الرمز إلى %1$@ عبر رسالة نصية."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram hat den Code per SMS an %1$@ gesendet."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram sent the code to %1$@ by SMS."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram envió el código a %1$@ por SMS."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تلگرام کد را با پیامک به %1$@ فرستاد."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram ha inviato il codice a %1$@ via SMS."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telegram отправил код на номер %1$@ по SMS."
+          }
+        }
+      }
+    },
     "telegram_connect_needed_body": {
       "extractionState": "manual",
       "localizations": {

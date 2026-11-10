@@ -995,6 +995,15 @@
     <string name="telegram_separate_title" formatted="false">"Prefer a separate Telegram account?"</string>
     <string name="telegram_separate_intro" formatted="false">"You can connect your existing Telegram account or create a separate one for your Cablegram library. A separate account is optional."</string>
     <string name="telegram_separate_learn" formatted="false">"Learn about separate accounts"</string>
+    <string name="telegram_code_sent_app" formatted="false">"Telegram sent the code to %1$s. Open Telegram on a device where you\'re already signed in and look for a message from Telegram."</string>
+    <string name="telegram_code_sent_sms" formatted="false">"Telegram sent the code to %1$s by SMS."</string>
+    <string name="telegram_code_sent_call" formatted="false">"Telegram is calling %1$s with the code."</string>
+    <string name="telegram_code_resend" formatted="false">"Send the code again"</string>
+    <string name="telegram_code_resend_sms" formatted="false">"Send it by SMS"</string>
+    <string name="telegram_code_resend_call" formatted="false">"Call me with the code"</string>
+    <string name="telegram_code_resend_wait" formatted="false">"Send again in %1$d s"</string>
+    <string name="telegram_code_no_resend" formatted="false">"Telegram has no other way to send this code. Check the number, or try again later."</string>
+    <string name="telegram_code_change_number" formatted="false">"Wrong number? Change it"</string>
     <string name="telegram_separate_number_title" formatted="false">"Keep control of your number"</string>
     <string name="telegram_separate_number_body" formatted="false">"A separate Telegram account needs another phone number. Choose a SIM or eSIM with SMS support and check how to keep the number active, receive future login codes, and recover it if you lose your phone. A data-only travel eSIM is not enough."</string>
     <string name="telegram_separate_super_title" formatted="false">"Provider example: Super"</string>

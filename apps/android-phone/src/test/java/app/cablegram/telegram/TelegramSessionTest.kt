@@ -51,8 +51,8 @@ class TelegramSessionTest {
 
         s.submitPhoneNumber(" +31 6 1234 5678 "); runCurrent()
         assertEquals("setPhoneNumber:+31612345678", api.calls.last())
-        api.authStates.emit(TgAuthState.WaitCode); runCurrent()
-        assertEquals(TelegramState.NeedsCode, s.state.value)
+        api.authStates.emit(TgAuthState.WaitCode()); runCurrent()
+        assertEquals(TelegramState.NeedsCode(), s.state.value)
         s.submitCode("12 345"); runCurrent()
         assertEquals("checkCode:12345", api.calls.last())
         api.authStates.emit(TgAuthState.WaitPassword("my hint")); runCurrent()
@@ -60,6 +60,48 @@ class TelegramSessionTest {
         s.submitPassword("secret"); runCurrent()
         api.authStates.emit(TgAuthState.Ready); runCurrent()
         assertEquals(TelegramState.Ready(TgUser(42, "Test User")), s.state.value)
+    }
+
+    @Test
+    fun `the code can be requested again`() = runTest {
+        val api = FakeTelegramApi()
+        val s = session(api, TelegramRole.Phone)
+        val first = TgCodeInfo("+31612345678", TgCodeDelivery.TelegramApp, TgCodeDelivery.Sms, 60)
+        api.authStates.emit(TgAuthState.WaitCode(first)); runCurrent()
+        assertEquals(TelegramState.NeedsCode(first), s.state.value)
+        s.resendCode(); runCurrent()
+        assertEquals("resendCode", api.calls.last())
+        val second = first.copy(sentBy = TgCodeDelivery.Sms, nextBy = null)
+        api.authStates.emit(TgAuthState.WaitCode(second)); runCurrent()
+        assertEquals(TelegramState.NeedsCode(second), s.state.value)
+    }
+
+    @Test
+    fun `a mistyped number can be changed from the code step`() = runTest {
+        val api = FakeTelegramApi()
+        val s = session(api, TelegramRole.Phone)
+        val wrong = TgCodeInfo("+31600000001", TgCodeDelivery.Sms, null, 0)
+        api.authStates.emit(TgAuthState.WaitCode(wrong)); runCurrent()
+        s.editPhoneNumber()
+        assertEquals(TelegramState.NeedsPhoneNumber, s.state.value)
+        assertEquals("+31600000001", s.phoneToEdit)
+        s.submitPhoneNumber("+31600000002"); runCurrent()
+        assertEquals("setPhoneNumber:+31600000002", api.calls.last())
+        val right = wrong.copy(phone = "+31600000002")
+        api.authStates.emit(TgAuthState.WaitCode(right)); runCurrent()
+        assertEquals(TelegramState.NeedsCode(right), s.state.value)
+        assertEquals("", s.phoneToEdit)
+    }
+
+    @Test
+    fun `sending the same number again returns to the code step without a new state`() = runTest {
+        val api = FakeTelegramApi()
+        val s = session(api, TelegramRole.Phone)
+        val info = TgCodeInfo("+31600000001", TgCodeDelivery.Sms, null, 0)
+        api.authStates.emit(TgAuthState.WaitCode(info)); runCurrent()
+        s.editPhoneNumber()
+        s.submitPhoneNumber("+31600000001"); runCurrent()
+        assertEquals(TelegramState.NeedsCode(info), s.state.value)
     }
 
     @Test
@@ -88,10 +130,10 @@ class TelegramSessionTest {
     fun `a rejected input keeps the step and says why`() = runTest {
         val api = FakeTelegramApi()
         val s = session(api, TelegramRole.Phone)
-        api.authStates.emit(TgAuthState.WaitCode); runCurrent()
+        api.authStates.emit(TgAuthState.WaitCode()); runCurrent()
         api.failNext = TgException(400, "PHONE_CODE_INVALID")
         s.submitCode("00000"); runCurrent()
-        assertEquals(TelegramState.NeedsCode, s.state.value)
+        assertEquals(TelegramState.NeedsCode(), s.state.value)
         assertEquals("That code isn't right. Check the latest code in Telegram.", s.lastError.value)
         api.authStates.emit(TgAuthState.WaitPassword("")); runCurrent()
         assertNull("cleared when Telegram moves on", s.lastError.value)

@@ -36,6 +36,8 @@ object MaestroIds {
     const val TELEGRAM_ACCOUNT_HELP = "telegram_account_help"
     const val TELEGRAM_ACCOUNT_HELP_BACK = "telegram_account_help_back"
     const val TELEGRAM_CONTINUE = "telegram_continue"
+    const val TELEGRAM_RESEND_CODE = "telegram_resend_code"
+    const val TELEGRAM_CHANGE_NUMBER = "telegram_change_number"
     const val TELEGRAM_ORGANIZE_FOLDER = "telegram_organize_folder"
     const val TELEGRAM_ADD_FROM_CHATS = "telegram_add_from_chats"
     const val DISCOVERY_PROMPT = "discovery_prompt"

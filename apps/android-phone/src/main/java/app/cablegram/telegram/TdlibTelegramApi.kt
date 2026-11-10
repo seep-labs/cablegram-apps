@@ -15,6 +15,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import dev.g000sha256.tdl.TdlClient
 import dev.g000sha256.tdl.TdlResult
+import dev.g000sha256.tdl.dto.AuthenticationCodeInfo
+import dev.g000sha256.tdl.dto.AuthenticationCodeType
+import dev.g000sha256.tdl.dto.AuthenticationCodeTypeCall
+import dev.g000sha256.tdl.dto.AuthenticationCodeTypeFlashCall
+import dev.g000sha256.tdl.dto.AuthenticationCodeTypeMissedCall
+import dev.g000sha256.tdl.dto.AuthenticationCodeTypeSms
+import dev.g000sha256.tdl.dto.AuthenticationCodeTypeSmsPhrase
+import dev.g000sha256.tdl.dto.AuthenticationCodeTypeSmsWord
+import dev.g000sha256.tdl.dto.AuthenticationCodeTypeTelegramMessage
 import dev.g000sha256.tdl.dto.AuthorizationState
 import dev.g000sha256.tdl.dto.AuthorizationStateClosed
 import dev.g000sha256.tdl.dto.AuthorizationStateClosing
@@ -121,6 +130,7 @@ class TdlibTelegramApi(private val client: TdlClient = TdlClient.create()) : Tel
 
     override suspend fun requestQrLogin() { client.requestQrCodeAuthentication(LongArray(0)).ok() }
     override suspend fun setPhoneNumber(phone: String) { client.setAuthenticationPhoneNumber(phone, null).ok() }
+    override suspend fun resendCode() { client.resendAuthenticationCode(null).ok() }
     override suspend fun checkCode(code: String) { client.checkAuthenticationCode(code).ok() }
     override suspend fun checkPassword(password: String) { client.checkAuthenticationPassword(password).ok() }
     override suspend fun confirmQrLogin(link: String) { client.confirmQrCodeAuthentication(link).ok() }
@@ -433,10 +443,24 @@ class TdlibTelegramApi(private val client: TdlClient = TdlClient.create()) : Tel
             completed = file.local.isDownloadingCompleted,
         )
 
+        private fun toCodeInfo(info: AuthenticationCodeInfo) = TgCodeInfo(
+            phone = "+" + info.phoneNumber.filter(Char::isDigit),
+            sentBy = toDelivery(info.type),
+            nextBy = info.nextType?.let(::toDelivery),
+            resendAfterSeconds = info.timeout,
+        )
+
+        private fun toDelivery(type: AuthenticationCodeType): TgCodeDelivery = when (type) {
+            is AuthenticationCodeTypeTelegramMessage -> TgCodeDelivery.TelegramApp
+            is AuthenticationCodeTypeSms, is AuthenticationCodeTypeSmsWord, is AuthenticationCodeTypeSmsPhrase -> TgCodeDelivery.Sms
+            is AuthenticationCodeTypeCall, is AuthenticationCodeTypeFlashCall, is AuthenticationCodeTypeMissedCall -> TgCodeDelivery.Call
+            else -> TgCodeDelivery.Other
+        }
+
         fun toAuthState(state: AuthorizationState): TgAuthState = when (state) {
             is AuthorizationStateWaitTdlibParameters -> TgAuthState.WaitParameters
             is AuthorizationStateWaitPhoneNumber -> TgAuthState.WaitPhoneNumber
-            is AuthorizationStateWaitCode -> TgAuthState.WaitCode
+            is AuthorizationStateWaitCode -> TgAuthState.WaitCode(toCodeInfo(state.codeInfo))
             is AuthorizationStateWaitPassword -> TgAuthState.WaitPassword(state.passwordHint)
             is AuthorizationStateWaitOtherDeviceConfirmation -> TgAuthState.WaitOtherDevice(state.link)
             is AuthorizationStateReady -> TgAuthState.Ready

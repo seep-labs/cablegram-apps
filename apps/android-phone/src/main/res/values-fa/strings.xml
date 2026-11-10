@@ -1105,4 +1105,13 @@
     <string name="library_bulk_result">"%1$d حذف شد، %2$d حذف نشد. اتصال خود را بررسی کنید."</string>
     <string name="library_select_season">"انتخاب فصل"</string>
     <string name="library_collection_name_taken">"شما از قبل مجموعه‌ای با این نام دارید."</string>
+    <string name="telegram_code_sent_app" formatted="false">"تلگرام کد را به %1$s فرستاد. تلگرام را در دستگاهی که قبلاً با آن وارد شده‌اید باز کنید و دنبال پیامی از Telegram بگردید."</string>
+    <string name="telegram_code_sent_sms" formatted="false">"تلگرام کد را با پیامک به %1$s فرستاد."</string>
+    <string name="telegram_code_sent_call" formatted="false">"تلگرام برای اعلام کد با %1$s تماس می‌گیرد."</string>
+    <string name="telegram_code_resend" formatted="false">"ارسال دوبارهٔ کد"</string>
+    <string name="telegram_code_resend_sms" formatted="false">"ارسال با پیامک"</string>
+    <string name="telegram_code_resend_call" formatted="false">"با من تماس بگیرید و کد را بگویید"</string>
+    <string name="telegram_code_resend_wait" formatted="false">"ارسال دوباره تا %1$d ثانیه دیگر"</string>
+    <string name="telegram_code_no_resend" formatted="false">"تلگرام راه دیگری برای فرستادن این کد ندارد. شماره را بررسی کنید یا بعداً دوباره امتحان کنید."</string>
+    <string name="telegram_code_change_number" formatted="false">"شماره اشتباه است؟ آن را تغییر دهید"</string>
 </resources>

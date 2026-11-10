@@ -71,11 +71,11 @@ private func videoMessage(id: Int64 = 5, chat: Int64 = -1001, caption: String = 
         }
         try await Task.sleep(nanoseconds: 100_000_000)
         td.push(["@type": "updateAuthorizationState", "authorization_state": ["@type": "authorizationStateWaitPhoneNumber"]])   // repeat
-        td.push(["@type": "updateAuthorizationState", "authorization_state": ["@type": "authorizationStateWaitCode"]])
+        td.push(["@type": "updateAuthorizationState", "authorization_state": ["@type": "authorizationStateWaitCode", "code_info": ["phone_number": "31612345678", "type": ["@type": "authenticationCodeTypeTelegramMessage"], "next_type": ["@type": "authenticationCodeTypeSms"], "timeout": 60]]])
         td.push(["@type": "updateAuthorizationState", "authorization_state": ["@type": "authorizationStateWaitPassword", "password_hint": "pet"]])
         td.push(["@type": "updateAuthorizationState", "authorization_state": ["@type": "authorizationStateWaitOtherDeviceConfirmation", "link": "tg://login?token=abc"]])
         let states = await reader.value
-        #expect(states == [.waitPhoneNumber, .waitCode, .waitPassword(hint: "pet"), .waitOtherDevice(link: "tg://login?token=abc")])
+        #expect(states == [.waitPhoneNumber, .waitCode(TgCodeInfo(phone: "+31612345678", sentBy: .telegramApp, nextBy: .sms, resendAfterSeconds: 60)), .waitPassword(hint: "pet"), .waitOtherDevice(link: "tg://login?token=abc")])
         #expect(TdlibTelegramApi.authState(TdObject(["@type": "authorizationStateWaitRegistration"])) == .unsupported(name: "WaitRegistration"))
         #expect(TdlibTelegramApi.authState(TdObject(["@type": "authorizationStateClosing"])) == .closed)
     }

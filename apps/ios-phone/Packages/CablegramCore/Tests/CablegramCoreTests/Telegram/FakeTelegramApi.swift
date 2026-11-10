@@ -144,6 +144,7 @@ final class FakeTelegramApi: TelegramApi, @unchecked Sendable {
     func start(_ parameters: TgParameters) async throws { try record("start") }
     func requestQrLogin() async throws { try record("requestQrLogin") }
     func setPhoneNumber(_ phone: String) async throws { try record("setPhoneNumber:\(phone)") }
+    func resendCode() async throws { try record("resendCode") }
     func checkCode(_ code: String) async throws { try record("checkCode:\(code)") }
     func checkPassword(_ password: String) async throws { try record("checkPassword") }
     func confirmQrLogin(_ link: String) async throws {
