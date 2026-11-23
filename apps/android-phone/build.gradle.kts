@@ -106,6 +106,7 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":telegram-discovery"))
     implementation("com.google.android.gms:play-services-cast-framework:22.3.1")
     implementation("androidx.mediarouter:mediarouter:1.7.0")
     implementation(platform("androidx.compose:compose-bom:2025.03.00"))

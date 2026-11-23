@@ -69,15 +69,14 @@ interface TelegramApi {
 
     suspend fun activeSessions(): List<TgSessionInfo>
     suspend fun terminateSession(sessionId: Long)
+
+    /** Sends `/start <startParam>` to the Cablegram bot (standalone TV sign-in & profile lock link). */
+    suspend fun sendBotStartMessage(botUsername: String, startParam: String)
+    /** Unblocks the Cablegram bot if the owner previously blocked it, before restarting it. */
+    suspend fun unblockBot(botUsername: String)
 }
 
 /** A failed Telegram request: [code] is TDLib's error code, [name] its message such as `PASSWORD_HASH_INVALID`. */
-class TgException(val code: Int, val name: String) : Exception("$code $name") {
-    /** Telegram asks to wait before retrying (`FLOOD_WAIT_x` or "Too Many Requests: retry after x"). */
-    val retryAfterSeconds: Int?
-        get() = Regex("""(?:FLOOD_WAIT_|retry after )(\d+)""").find(name)?.groupValues?.get(1)?.toIntOrNull()
-}
-
 data class TgParameters(
     val databaseDirectory: String,
     val filesDirectory: String,

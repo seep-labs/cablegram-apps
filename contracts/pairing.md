@@ -24,7 +24,7 @@ A member MAY revoke a TV (`DELETE /api/devices/{id}`). The TV MUST lose househol
 
 ## Profile unlock (ordinary play authorization)
 
-1. Opening the TV app or switching profile requires PIN (if the profile has one) or an explicit user-id allowance/confirmation.
+1. Opening the TV app or switching profile requires PIN (if the profile has one) or an explicit user-id allowance/confirmation. When a TV has the Telegram section enabled (`telegram_section = true`), its profiles are locked by default and unlock via the Cablegram Telegram bot (or profile PIN, or phone Allow when a phone is paired); see [telegram-bot.md](telegram-bot.md).
 2. Unlock is local (cached `pin_hash`) so an already-paired TV can unlock when the control service is down.
 3. After unlock, **ordinary** household catalog titles with a reachable source may play with no further PIN, phone tap, or control-plane per-title grant.
 4. Control service down: if the profile is already unlocked (or hash is cached and the user completes PIN locally), the TV MAY **start** LAN play of ordinary titles; queue progress.

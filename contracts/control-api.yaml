@@ -21,6 +21,90 @@ paths:
       responses:
         "200":
           description: Server capabilities descriptor (see server-capabilities.md)
+  /api/auth/methods:
+    get:
+      security: []
+      summary: Available sign-in methods (including optional telegram_bot when configured)
+      responses:
+        "200":
+          description: Sign-in methods descriptor (see telegram-tv-sign-in.md)
+  /api/auth/device/telegram-start:
+    post:
+      security: []
+      summary: Start standalone TV sign-in with Telegram (see telegram-tv-sign-in.md)
+      responses:
+        "201":
+          description: Telegram client config and single-use start_param
+  /api/auth/device/telegram-start/{id}:
+    get:
+      security: []
+      summary: Poll standalone Telegram sign-in state (pending, claimed, ambiguous, expired)
+      responses:
+        "200":
+          description: Current state
+  /api/telegram/bot/link-start:
+    post:
+      summary: Start linking the Cablegram Telegram bot to the household (see telegram-bot.md)
+      responses:
+        "201":
+          description: Single-use bot start_param
+  /api/telegram/bot/webhook:
+    post:
+      security: []
+      summary: Telegram Bot API webhook (verified by X-Telegram-Bot-Api-Secret-Token)
+      responses:
+        "200":
+          description: Processed
+  /api/devices/me/telegram-section:
+    put:
+      summary: Mark whether this TV has the Telegram section active (enables bot profile lock)
+      responses:
+        "200":
+          description: Updated device telegram_section flag
+  /api/devices/me/profile-lock:
+    put:
+      summary: Enable or disable bot profile lock on this TV (disabling requires fresh bot approval)
+      responses:
+        "200":
+          description: Updated profile_lock_disabled flag
+  /api/devices/{deviceId}/profile-lock:
+    put:
+      summary: Phone enables or disables per-TV bot profile lock
+      responses:
+        "200":
+          description: Updated profile_lock_disabled flag
+  /api/me/email/start:
+    post:
+      summary: Phone starts adding an email to a Telegram-only account
+      responses:
+        "200":
+          description: Verification code sent
+  /api/me/email/verify:
+    post:
+      summary: Phone verifies and attaches an email to a Telegram-only account
+      responses:
+        "200":
+          description: Email attached
+  /api/account/delete/telegram-start:
+    post:
+      summary: TV starts bot-confirmed deletion for a Telegram-only account
+      responses:
+        "201":
+          description: Deletion start_param
+  /api/account/delete/web-telegram-start:
+    post:
+      security: []
+      summary: Web deletion page starts bot-confirmed deletion for a Telegram-only account
+      responses:
+        "201":
+          description: Deep link and poll token
+  /api/account/delete/telegram-status/{id}:
+    get:
+      security: []
+      summary: Poll bot-confirmed account deletion status
+      responses:
+        "200":
+          description: pending, deleted, or expired
   /api/auth/setup/claim:
     post:
       security: []

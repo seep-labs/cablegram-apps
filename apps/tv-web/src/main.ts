@@ -24,6 +24,9 @@ import { SourceError } from "tv-media";
 import type { ByteSource } from "tv-media";
 import type { TelegramRef } from "./telegram-identity";
 import { checkCode, clearSession, newTvKeys, openSealed, saveSession, savedSession } from "./telegram-link";
+import { DiscoveryController, DiscoveryStore } from "./telegram-discovery";
+import { formatFloodWaitMinutes, mapTelegramError, runQrSignInLoop, verifyTelegramUserIdMatch } from "./telegram-standalone";
+import { renderTelegramSection } from "./telegram-section";
 import type { EngineHandle } from "./engine-adapter";
 import { cueText, parseVtt, saveChoice, savedChoice, startWithSmart } from "./subtitles";
 import type { Cue, SmartSubtitle } from "./subtitles";
@@ -238,10 +241,19 @@ async function pair(canCancel = profileEntries.length > 0) {
   }
   if (run !== pairingRun) return;
   const reviewerEmail = store.serverUrl() ? undefined : await api.tvReviewerEmail();
+  const telegramBot = import.meta.env.VITE_TG_DIRECT === "1" && !store.serverUrl()
+    ? await api.telegramBotMethod()
+    : undefined;
   if (run !== pairingRun) return;
   const link = pairLink(WEB_APP_BASE, session.pin, deviceName());
   const qr = qrCanvas(link, 544);
   const buttons = [button("New PIN", () => pair(canCancel), "raised", true)];
+  if (telegramBot) {
+    buttons.push(button("Sign in with Telegram", () => {
+      pairingRun++;
+      void telegramConsentScreen(session, canCancel);
+    }, "raised"));
+  }
   if (reviewerEmail) buttons.push(button("Sign in with a code", () => { pairingRun++; reviewerCodeScreen(session, reviewerEmail, canCancel); }, "raised"));
   if (canCancel) buttons.push(button("Cancel", () => { pairingRun++; picker(); }, "raised"));
   if (store.serverUrl()) buttons.push(button("Return to Cablegram", () => { pairingRun++; store.setServerUrl(null); void pair(false); }, "raised"));
@@ -279,6 +291,274 @@ async function pair(canCancel = profileEntries.length > 0) {
       if (e instanceof ApiError && (e.status === 404 || e.status === 410)) pair(canCancel);
     }
   });
+}
+
+async function telegramConsentScreen(session: DeviceSession, canCancel: boolean) {
+  loading("Loading terms…");
+  let legal: { terms: { version: string; url: string }; privacy: { version: string; url: string } };
+  try {
+    legal = await api.legalDocuments();
+  } catch {
+    errorScreen("Can't reach Cablegram", "Check your internet connection and try again.", [
+      button("Back", () => pair(canCancel), "raised", true),
+    ], () => pair(canCancel));
+    return;
+  }
+  let ageConfirmed = false;
+  const ageBtn = button("I am old enough to use Cablegram: No", () => {
+    ageConfirmed = !ageConfirmed;
+    ageBtn.textContent = `I am old enough to use Cablegram: ${ageConfirmed ? "Yes" : "No"}`;
+    continueBtn.style.opacity = ageConfirmed ? "1" : "0.5";
+  }, "panel");
+  const continueBtn = button("Continue", async () => {
+    if (!ageConfirmed) return;
+    loading("Starting Telegram sign-in…");
+    try {
+      const startInfo = await api.telegramStart(session, {
+        terms_version: legal.terms.version,
+        privacy_version: legal.privacy.version,
+      });
+      await telegramQrSignInScreen(session, startInfo, canCancel);
+    } catch {
+      errorScreen("Telegram sign-in unavailable", "Try pairing with your phone instead.", [
+        button("Pair with your phone", () => pair(canCancel), "raised", true),
+      ], () => pair(canCancel));
+    }
+  }, "raised", true);
+  continueBtn.style.opacity = "0.5";
+
+  show([h("div", "center-screen pad", undefined, [h("div", "session-panel", undefined, [
+    brandMark(),
+    h("div", "screen-title", "Sign in with Telegram"),
+    h("div", "settings-text", `By continuing you accept Cablegram's Terms (${legal.terms.version}) and Privacy Policy (${legal.privacy.version}).`),
+    h("div", "settings-text small", "Already use Cablegram on your phone? Pair with your phone instead."),
+    ageBtn,
+    h("div", "row-buttons", undefined, [
+      continueBtn,
+      button("Pair with your phone", () => pair(canCancel), "panel"),
+    ]),
+  ])])], () => pair(canCancel));
+}
+
+async function telegramQrSignInScreen(
+  session: DeviceSession,
+  startInfo: { id: string; apiId: number; apiHash: string; botUsername: string; startParam: string; expiresAt: string },
+  canCancel: boolean,
+) {
+  const tg = await telegramModule();
+  if (!tg) {
+    errorScreen("Telegram unavailable", "This build does not include direct Telegram sign-in.", [
+      button("Back", () => pair(canCancel), "raised", true),
+    ], () => pair(canCancel));
+    return;
+  }
+  const backend = await tg.createStandaloneBackend({ apiId: startInfo.apiId, apiHash: startInfo.apiHash });
+  let cancelled = false;
+  const cancel = () => {
+    cancelled = true;
+    void backend.disconnect();
+    void pair(canCancel);
+  };
+
+  const qrHost = h("div", "qr-white");
+  const statusEl = h("div", "qr-caption", "Open Telegram on your phone -> Settings -> Devices -> Link Desktop Device and scan this.");
+  show([h("div", "pairing", undefined, [
+    h("div", "pairing-text", undefined, [
+      brandMark(),
+      h("div", "screen-title", "Sign in with Telegram"),
+      statusEl,
+      h("div", "row-buttons", undefined, [
+        button("Use phone number instead", () => {
+          cancelled = true;
+          void telegramPhoneSignInScreen(session, backend, startInfo, canCancel);
+        }, "raised", true),
+        button("Cancel", cancel, "panel"),
+      ]),
+    ]),
+    h("div", "qr-card", undefined, [qrHost]),
+  ])], cancel);
+
+  try {
+    const auth = await runQrSignInLoop(backend, (link) => {
+      qrHost.innerHTML = "";
+      qrHost.appendChild(qrCanvas(link, 544));
+    }, () => cancelled);
+    await finishStandaloneTelegramSignIn(session, backend, startInfo, auth, canCancel);
+  } catch (e) {
+    if (cancelled) return;
+    const mapped = mapTelegramError(e);
+    const msg = mapped.code === "FLOOD_WAIT" && mapped.floodSeconds
+      ? formatFloodWaitMinutes(mapped.floodSeconds)
+      : String((e as Error)?.message ?? "").includes("QR_EXPIRED_5M")
+        ? "QR code expired. Try again."
+        : "Telegram sign-in failed.";
+    void backend.disconnect();
+    errorScreen("Sign in with Telegram", msg, [
+      button("Try again", () => pair(canCancel), "raised", true),
+    ], () => pair(canCancel));
+  }
+}
+
+async function telegramPhoneSignInScreen(
+  session: DeviceSession,
+  backend: Awaited<ReturnType<NonNullable<Awaited<ReturnType<typeof telegramModule>>>["createStandaloneBackend"]>>,
+  startInfo: { id: string; apiId: number; apiHash: string; botUsername: string; startParam: string; expiresAt: string },
+  canCancel: boolean,
+) {
+  let step: "phone" | "code" | "password" = "phone";
+  let phone = "+";
+  let code = "";
+  let phoneCodeHash = "";
+  let passwordTries = 0;
+  let errText = "";
+
+  const draw = () => {
+    const cancel = () => { void backend.disconnect(); void pair(canCancel); };
+    if (step === "password") {
+      const pwInput = document.createElement("input");
+      pwInput.type = "password";
+      pwInput.placeholder = "Two-step verification password";
+      pwInput.className = "focusable";
+      pwInput.setAttribute("data-autofocus", "1");
+      const submit = button("Submit password", async () => {
+        try {
+          const auth = await backend.signInWithPassword(pwInput.value);
+          await finishStandaloneTelegramSignIn(session, backend, startInfo, auth, canCancel);
+        } catch (e) {
+          const mapped = mapTelegramError(e);
+          passwordTries++;
+          if (mapped.code === "FLOOD_WAIT" && mapped.floodSeconds) {
+            errText = formatFloodWaitMinutes(mapped.floodSeconds);
+          } else if (passwordTries >= 3) {
+            void backend.disconnect();
+            errorScreen("Too many wrong passwords", "Please start Telegram sign-in again.", [
+              button("Back", () => pair(canCancel), "raised", true),
+            ], () => pair(canCancel));
+            return;
+          } else {
+            errText = `Wrong password (${3 - passwordTries} tries left).`;
+          }
+          draw();
+        }
+      }, "raised");
+      show([h("div", "center-screen pad", undefined, [h("div", "session-panel", undefined, [
+        brandMark(),
+        h("div", "screen-title", "Telegram password"),
+        errText ? h("div", "pin-error", errText) : h("div", "settings-text small", "Enter your Telegram two-step verification password."),
+        pwInput,
+        h("div", "row-buttons", undefined, [submit, button("Cancel", cancel, "panel")]),
+      ])])], cancel);
+      return;
+    }
+
+    const value = step === "phone" ? phone : code;
+    const digits = "1234567890".split("").map((d) => button(d, () => {
+      if (step === "phone") phone += d;
+      else code += d;
+      draw();
+    }, "panel"));
+    digits.push(button("Del", () => {
+      if (step === "phone" && phone.length > 1) phone = phone.slice(0, -1);
+      else if (step === "code" && code.length > 0) code = code.slice(0, -1);
+      draw();
+    }, "panel"));
+    digits.push(button("Next", async () => {
+      errText = "";
+      try {
+        if (step === "phone") {
+          const sent = await backend.sendPhoneCode(phone);
+          phoneCodeHash = sent.phoneCodeHash;
+          step = "code";
+          draw();
+        } else {
+          const res = await backend.signInWithCode(phone, phoneCodeHash, code);
+          if (res.kind === "password_required") {
+            step = "password";
+            draw();
+          } else {
+            await finishStandaloneTelegramSignIn(session, backend, startInfo, res, canCancel);
+          }
+        }
+      } catch (e) {
+        const mapped = mapTelegramError(e);
+        if (mapped.code === "FLOOD_WAIT" && mapped.floodSeconds) errText = formatFloodWaitMinutes(mapped.floodSeconds);
+        else if (mapped.code === "PHONE_NUMBER_INVALID") errText = "That phone number isn't valid.";
+        else if (mapped.code === "PHONE_CODE_INVALID") errText = "Wrong or expired code.";
+        else errText = "Telegram sign-in failed.";
+        draw();
+      }
+    }, "raised", true));
+
+    show([h("div", "center-screen pad", undefined, [h("div", "session-panel", undefined, [
+      brandMark(),
+      h("div", "screen-title", step === "phone" ? "Enter phone number" : "Enter Telegram code"),
+      h("div", "pin-boxes ltr", value || " "),
+      errText ? h("div", "pin-error", errText) : h("div"),
+      h("div", "row-buttons", undefined, digits),
+      button("Cancel", cancel, "panel"),
+    ])])], cancel);
+  };
+
+  draw();
+}
+
+async function finishStandaloneTelegramSignIn(
+  session: DeviceSession,
+  backend: Awaited<ReturnType<NonNullable<Awaited<ReturnType<typeof telegramModule>>>["createStandaloneBackend"]>>,
+  startInfo: { id: string; apiId: number; apiHash: string; botUsername: string; startParam: string; expiresAt: string },
+  auth: { sessionString: string; userId: string },
+  canCancel: boolean,
+) {
+  loading("Signing in to Cablegram…");
+  try {
+    await backend.startBot(startInfo.botUsername, startInfo.startParam);
+  } catch {
+    void backend.disconnect();
+    errorScreen("Bot unreachable", "Could not reach the Cablegram bot in Telegram.", [
+      button("Try again", () => pair(canCancel), "raised", true),
+    ], () => pair(canCancel));
+    return;
+  }
+  void backend.disconnect();
+
+  const deadline = Date.now() + 30_000;
+  while (Date.now() < deadline) {
+    try {
+      const st = await api.telegramStartState(session, startInfo.id);
+      if (st.state === "ambiguous") {
+        errorScreen(
+          "Multiple Cablegram accounts",
+          "This Telegram account is used by more than one Cablegram account. Pair the TV with your phone instead.",
+          [button("Pair with your phone", () => pair(canCancel), "raised", true)],
+          () => pair(canCancel),
+        );
+        return;
+      }
+      const p = await api.pairingStatus(session);
+      if (p.status === "paired" && p.accessToken) {
+        const me = await api.me(p.accessToken);
+        if (!verifyTelegramUserIdMatch(me.user?.telegramUserId, auth.userId)) {
+          await api.revokeSelf(p.accessToken).catch(() => {});
+          errorScreen(
+            "Signed in to a different Telegram account",
+            "The Cablegram account didn't match this TV's Telegram session.",
+            [button("Back", () => pair(canCancel), "raised", true)],
+            () => pair(canCancel),
+          );
+          return;
+        }
+        saveSession(session.sessionId, auth.sessionString, localStorage);
+        store.addAccount({ sessionId: session.sessionId, token: p.accessToken, lanCapability: p.lanCapability });
+        connectedWelcome = true;
+        void loadProfiles();
+        return;
+      }
+    } catch { /* keep polling */ }
+    await new Promise((r) => setTimeout(r, 1500));
+  }
+  errorScreen("Sign-in timed out", "Telegram bot did not confirm in time.", [
+    button("Try again", () => pair(canCancel), "raised", true),
+  ], () => pair(canCancel));
 }
 
 /**
@@ -489,14 +769,42 @@ async function proceedWithProfile(entry: ProfileEntry) {
   };
   // The answer arrives on the requesting account's socket.
   ensureLive(entry.account);
+  let meInfo: Awaited<ReturnType<typeof api.me>> | undefined;
+  try { meInfo = await api.me(token); } catch { /* ignore */ }
+  const isTelegramOnly = meInfo?.user?.email === null;
+  const botLinked = meInfo?.household.telegramBotLinked === true;
+  const approvalButtons: Node[] = [];
+  if (request.botBlocked && import.meta.env.VITE_TG_DIRECT === "1") {
+    const session = savedSession(entry.account.sessionId, localStorage);
+    if (session) {
+      approvalButtons.push(button("Ask Telegram again", async () => {
+        try {
+          const cfg = await api.telegramClientConfig();
+          const linkStart = await api.telegramBotLinkStart();
+          const tg = await telegramModule();
+          if (tg) await tg.sendBotStartWithSession(cfg, session, linkStart.botUsername, linkStart.startParam, true);
+          waiting = false;
+          void proceedWithProfile(entry);
+        } catch { /* ignore */ }
+      }, "raised"));
+    }
+  }
+  approvalButtons.push(button("Cancel", cancel, "raised", !request.botBlocked));
+  const approvalText = request.botBlocked
+    ? "Cablegram's bot is blocked in Telegram. Tap Ask Telegram again to unblock and retry."
+    : botLinked
+      ? (isTelegramOnly
+        ? "Check Telegram: the Cablegram bot asked you to allow this TV."
+        : "Check Telegram: the Cablegram bot asked you to allow this TV. Or tap Allow in the Cablegram app on your phone.")
+      : sharedTv()
+        ? "Other accounts use this TV too, so this account's phone has to allow it. Open Cablegram on that phone and tap Allow."
+        : "This account is locked. Open Cablegram on a phone signed in to it and tap Allow.";
   show([h("div", "center-screen pad", undefined, [h("div", "approval-panel", undefined, [
     brandMark(),
-    h("div", "pin-eyebrow", "Allow on your phone"),
+    h("div", "pin-eyebrow", botLinked ? "Allow in Telegram" : "Allow on your phone"),
     h("div", "pin-name", entry.profile.name),
-    h("div", "approval-text", sharedTv()
-      ? "Other accounts use this TV too, so this account's phone has to allow it. Open Cablegram on that phone and tap Allow."
-      : "This account is locked. Open Cablegram on a phone signed in to it and tap Allow."),
-    button("Cancel", cancel, "raised", true),
+    h("div", "approval-text", approvalText),
+    ...approvalButtons,
   ])])], cancel);
   const check = async () => {
     if (!waiting) return;
@@ -738,7 +1046,7 @@ window.setInterval(() => { if (current && !(live && live.isUp()) && libraryOnSho
 
 // ---- Library -----------------------------------------------------------------------------------------------------
 
-type Rail = "home" | "player" | "library" | "settings";
+type Rail = "home" | "player" | "library" | "telegram" | "settings";
 interface LibraryState {
   rail: Rail; type: LibraryType; genre: string | null; show: Show | null; focusId: string | null;
   /** The "All titles" grid's type chip and sort order (default: all, recently added). */
@@ -812,12 +1120,14 @@ function libraryScreen() {
   avatarBtn.id = "rail-avatar";
   avatarBtn.addEventListener("focus", () => { avatarLabel.textContent = "Switch"; });
   avatarBtn.addEventListener("blur", () => { avatarLabel.textContent = entry.profile.name; });
+  const hasTgSession = import.meta.env.VITE_TG_DIRECT === "1" && !!savedSession(entry.account.sessionId, localStorage);
   const rail = h("div", "rail", undefined, [
     avatarBtn,
     h("div", "rail-gap"),
     railItem("rail-home", "home", "Home", "home", () => go("home", "all")),
     railItem("rail-player", "player", "Continue", "player", () => go("player", "watchlist")),
     railItem("rail-library", "library", "My List", "library", () => go("library", "mylist")),
+    ...(hasTgSession ? [railItem("rail-telegram", "telegram", "Telegram", "telegram", () => go("telegram", st.type))] : []),
     h("div", "rail-spacer"),
     railItem("rail-settings", "settings", "Settings", "settings", () => go("settings", st.type)),
   ]);
@@ -846,7 +1156,7 @@ function libraryScreen() {
       }, true),
     ]));
   } else {
-    top.appendChild(h("div", "topbar-title", ({ home: "Home", player: "Continue watching", library: "My List", settings: "Settings" } as const)[st.rail]));
+    top.appendChild(h("div", "topbar-title", ({ home: "Home", player: "Continue watching", library: "My List", telegram: "Telegram", settings: "Settings" } as const)[st.rail]));
   }
   top.appendChild(h("div", "flex"));
   top.appendChild(clock());
@@ -901,7 +1211,67 @@ function libraryScreen() {
     void startPlayback(v);
   };
 
-  if (st.rail === "settings") {
+  if (st.rail === "telegram") {
+    const tgHost = h("div", "tg-section-host");
+    main.appendChild(tgHost);
+    const tgSession = savedSession(entry.account.sessionId, localStorage);
+    if (tgSession && import.meta.env.VITE_TG_DIRECT === "1") {
+      void (async () => {
+        const tg = await telegramModule();
+        const cfg = await api.telegramClientConfig();
+        if (!tg) return;
+        const discStore = new DiscoveryStore(entry.account.sessionId, localStorage);
+        const transport = tg.createGramJsDiscoveryTransport(cfg, tgSession);
+        let libraryChatId: string | null = null;
+        try {
+          const link = await api.telegramLink();
+          if (link.linked) libraryChatId = "library";
+        } catch { /* ignore */ }
+        const controller = new DiscoveryController(transport, discStore, () => libraryChatId);
+        renderTelegramSection(tgHost, {
+          controller,
+          hasLibraryChannel: () => !!libraryChatId,
+          isFirstTime: () => discStore.load().scanResults.length === 0 && discStore.load().chosenChats.length === 0,
+          onFirstConsentAgreed: async () => {
+            await api.setTelegramSection(true).catch(() => {});
+            try {
+              const me = await api.me();
+              if (!me.household.telegramBotLinked) {
+                const ls = await api.telegramBotLinkStart();
+                await tg.sendBotStartWithSession(cfg, tgSession, ls.botUsername, ls.startParam);
+              }
+            } catch { /* ignore */ }
+          },
+          onPlayVideo: (v) => {
+            void (async () => {
+              const source = await tg.openTelegramSource({ chatId: v.chatId, messageId: v.messageId }, cfg, tgSession);
+              const placeholderTitle = {
+                id: `tg:${v.chatId}:${v.messageId}`,
+                title: v.title,
+                durationSeconds: v.durationSeconds,
+                mediaType: "movie",
+                inMyList: false,
+                sources: [{ kind: "telegram", isPrivate: false }],
+                genres: [],
+                addedAt: "",
+                isPrivate: false,
+                sourceKinds: ["telegram"],
+              };
+              const placeholderEntry = toEntries([placeholderTitle])[0];
+              void placeholderEntry;
+              void source;
+            })();
+          },
+          onAddedToLibrary: async () => {
+            await loadLibrary();
+          },
+          onBackToMenu: () => go("home", "all"),
+          inLibraryIds: () => new Set<string>(),
+        });
+        focusFirst(tgHost);
+      })();
+    }
+  } else if (st.rail === "settings") {
     main.appendChild(settingsPanel());
     show([h("div", "library", undefined, [ambient, h("div", "lib-row", undefined, [rail, main])])], libraryBack);
     focusEl(document.getElementById("rail-settings")!);
@@ -1238,8 +1608,62 @@ function settingsPanel(): HTMLElement {
   connNodes.push(
     h("div", "settings-heading", "Telegram"),
     h("div", "settings-text small", import.meta.env.VITE_TG_DIRECT === "1"
-      ? "Telegram playback on this TV is in testing."
+      ? "Telegram playback and discovery on this TV."
       : "Telegram playback isn't available on this TV yet. Titles stored in Telegram play on the Android TV app."),
+    button("Ask in Telegram before opening", async () => {
+      try {
+        const me = await api.me();
+        const thisDev = me.devices.find((d) => d.kind === "tv");
+        const disabled = thisDev?.profileLockDisabled === true;
+        if (disabled) {
+          await api.setDeviceProfileLock(true);
+          settingsPanel();
+          libraryScreen();
+        } else if (current) {
+          const sw = await api.requestProfileSwitch(current.profile.id, deviceName(), current.account.token);
+          if (sw.status === "approved") {
+            await api.setDeviceProfileLock(false, sw.requestId);
+          } else {
+            // Poll for bot approval before disabling
+            for (let i = 0; i < 60; i++) {
+              await new Promise((r) => setTimeout(r, 2000));
+              const st = await api.profileSwitch(sw.requestId, current.account.token);
+              if (st.status === "approved") {
+                await api.setDeviceProfileLock(false, sw.requestId);
+                break;
+              }
+              if (st.status === "denied" || st.status === "expired") break;
+            }
+          }
+          libraryScreen();
+        }
+      } catch { /* ignore */ }
+    }, "panel"),
+    button("Delete Telegram-only account", async () => {
+      if (!current || import.meta.env.VITE_TG_DIRECT !== "1") return;
+      const tgSession = savedSession(current.account.sessionId, localStorage);
+      if (!tgSession) return;
+      try {
+        const cfg = await api.telegramClientConfig();
+        const del = await api.deleteAccountTelegramStart();
+        const tg = await telegramModule();
+        if (!tg) return;
+        await tg.sendBotStartWithSession(cfg, tgSession, del.botUsername, del.startParam);
+        for (let i = 0; i < 30; i++) {
+          await new Promise((r) => setTimeout(r, 2000));
+          const st = await api.deleteAccountTelegramStatus(del.id, del.pollToken);
+          if (st.status === "deleted") {
+            new DiscoveryStore(current.account.sessionId, localStorage).clear();
+            clearSession(current.account.sessionId, localStorage);
+            store.removeAccount(current.account.sessionId);
+            current = null;
+            void pair(false);
+            return;
+          }
+          if (st.status === "expired") break;
+        }
+      } catch { /* ignore */ }
+    }, "panel"),
     h("div", "settings-heading", "Help"),
     button("Diagnostics", () => diagnosticsScreen(), "panel"),
     h("div", "settings-heading", "Legal"),

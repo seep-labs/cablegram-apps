@@ -15,3 +15,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "cablegram-phone"
+include(":telegram-discovery")
+project(":telegram-discovery").projectDir = file("../../libs/telegram-discovery")

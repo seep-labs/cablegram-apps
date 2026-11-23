@@ -14,6 +14,8 @@ import { peerOf } from "./telegram-identity";
 import type { TelegramRef } from "./telegram-identity";
 import { loginLink } from "./telegram-link";
 import { Slots } from "./telegram-slots";
+import type { StandaloneTelegramBackend } from "./telegram-standalone";
+import type { DiscoveryChat, DiscoveryChatKind, DiscoveryTransport, DiscoveryVideo } from "./telegram-discovery";
 
 // The auth-key exchange (2048-bit Diffie-Hellman) took ~19 s on a 2019 Samsung TV with GramJS's own modExp. The handshake
 // reads helpers.modExp at call time, also in the bundle, so replacing it here is enough.
@@ -326,4 +328,274 @@ export async function openTelegramSource(
     },
   };
   return new TelegramSource(api, doc.size.toJSNumber());
+}
+
+// ---- standalone TV sign-in & bot start -------------------------------------------------------------------------------
+
+export async function createStandaloneBackend(config: Config): Promise<StandaloneTelegramBackend> {
+  await dropShared();
+  const client = makeClient(config, "");
+  await within("connect", 30_000, client.connect());
+  let currentPhoneCodeHash = "";
+  let currentPhoneNumber = "";
+
+  const startBotOnClient = async (botUsername: string, startParam: string) => {
+    const bot = await client.getInputEntity(botUsername);
+    await client.invoke(new Api.messages.StartBot({
+      bot,
+      peer: bot,
+      randomId: bigInt(Math.floor(Math.random() * 1e15)),
+      startParam,
+    }));
+  };
+
+  return {
+    async exportQrLoginToken(exceptIds: number[]) {
+      const r = await client.invoke(new Api.auth.ExportLoginToken({
+        apiId: config.apiId,
+        apiHash: config.apiHash,
+        exceptIds: exceptIds.map((id) => bigInt(id)),
+      }));
+      if (r instanceof Api.auth.LoginTokenSuccess) {
+        const me = await client.getMe();
+        return { sessionString: String(client.session.save()), userId: String((me as Api.User).id) };
+      }
+      if (r instanceof Api.auth.LoginTokenMigrateTo) {
+        await client._switchDC(r.dcId);
+        const migrated = await client.invoke(new Api.auth.ImportLoginToken({ token: r.token }));
+        if (migrated instanceof Api.auth.LoginTokenSuccess) {
+          const me = await client.getMe();
+          return { sessionString: String(client.session.save()), userId: String((me as Api.User).id) };
+        }
+      }
+      if (r instanceof Api.auth.LoginToken) {
+        return { token: new Uint8Array(r.token), expires: r.expires };
+      }
+      throw new Error("UNEXPECTED_LOGIN_TOKEN");
+    },
+
+    async sendPhoneCode(phoneNumber: string) {
+      currentPhoneNumber = phoneNumber;
+      const sent = await client.invoke(new Api.auth.SendCode({
+        phoneNumber,
+        apiId: config.apiId,
+        apiHash: config.apiHash,
+        settings: new Api.CodeSettings({}),
+      }));
+      if (!("phoneCodeHash" in sent)) throw new Error("SEND_CODE_FAILED");
+      currentPhoneCodeHash = String(sent.phoneCodeHash);
+      return { phoneCodeHash: currentPhoneCodeHash };
+    },
+
+    async signInWithCode(phoneNumber: string, phoneCodeHash: string, code: string) {
+      try {
+        await client.invoke(new Api.auth.SignIn({
+          phoneNumber,
+          phoneCodeHash: phoneCodeHash || currentPhoneCodeHash,
+          phoneCode: code,
+        }));
+        const me = await client.getMe();
+        return { kind: "signed_in", sessionString: String(client.session.save()), userId: String((me as Api.User).id) };
+      } catch (e) {
+        const msg = rpcMessage(e) ?? String((e as { message?: unknown })?.message ?? "");
+        if (msg.includes("SESSION_PASSWORD_NEEDED")) {
+          return { kind: "password_required" };
+        }
+        throw e;
+      }
+    },
+
+    async signInWithPassword(password: string) {
+      const srp = await client.invoke(new Api.account.GetPassword());
+      const { computeCheck } = await import("telegram/Password");
+      const check = await computeCheck(srp, password);
+      await client.invoke(new Api.auth.CheckPassword({ password: check }));
+      const me = await client.getMe();
+      return { sessionString: String(client.session.save()), userId: String((me as Api.User).id) };
+    },
+
+    async startBot(botUsername: string, startParam: string) {
+      await startBotOnClient(botUsername, startParam);
+    },
+
+    async unblockAndStartBot(botUsername: string, startParam: string) {
+      const bot = await client.getInputEntity(botUsername);
+      await client.invoke(new Api.contacts.Unblock({ id: bot }));
+      await startBotOnClient(botUsername, startParam);
+    },
+
+    async disconnect() {
+      try { await client.disconnect(); } catch { /* ignore */ }
+    },
+  };
+}
+
+export async function sendBotStartWithSession(
+  config: Config,
+  session: string,
+  botUsername: string,
+  startParam: string,
+  unblock = false,
+): Promise<void> {
+  const client = await connect(config, session);
+  const bot = await client.getInputEntity(botUsername);
+  if (unblock) {
+    await client.invoke(new Api.contacts.Unblock({ id: bot }));
+  }
+  await client.invoke(new Api.messages.StartBot({
+    bot,
+    peer: bot,
+    randomId: bigInt(Math.floor(Math.random() * 1e15)),
+    startParam,
+  }));
+}
+
+export async function getSelfUserIdWithSession(config: Config, session: string): Promise<string> {
+  const client = await connect(config, session);
+  const me = await client.getMe();
+  return String((me as Api.User).id);
+}
+
+// ---- TV Telegram section discovery transport (GramJS) ---------------------------------------------------------------
+
+export function createGramJsDiscoveryTransport(config: Config, session: string): DiscoveryTransport {
+  const MIN_FILE_BYTES = 100 * 1024 * 1024; // 100 MB (spec 008 FR-006)
+
+  const classifyDialog = (d: { isChannel?: boolean; isGroup?: boolean; entity?: unknown }): DiscoveryChatKind => {
+    const entity = d.entity as { className?: string; bot?: boolean; isSelf?: boolean } | undefined;
+    if (entity?.className === "EncryptedChat") return "secret";
+    if (entity?.isSelf) return "saved";
+    if (entity?.bot) return "bot";
+    if (d.isChannel && !d.isGroup) return "channel";
+    if (d.isGroup) return "group";
+    return "personal";
+  };
+
+  const extractVideoMeta = (msg: Api.Message): DiscoveryVideo | null => {
+    const media = msg.media;
+    if (!(media instanceof Api.MessageMediaDocument) || !(media.document instanceof Api.Document)) return null;
+    const doc = media.document;
+    if (!doc.mimeType?.startsWith("video/")) return null;
+    const videoAttr = doc.attributes.find((a): a is Api.DocumentAttributeVideo => a instanceof Api.DocumentAttributeVideo);
+    const fileAttr = doc.attributes.find((a): a is Api.DocumentAttributeFilename => a instanceof Api.DocumentAttributeFilename);
+    const captionLine = (msg.message ?? "").split("\n").map((s) => s.trim()).find(Boolean);
+    const title = captionLine || fileAttr?.fileName || `Video ${msg.id}`;
+    return {
+      chatId: String(msg.chatId ?? ""),
+      messageId: msg.id,
+      title,
+      durationSeconds: videoAttr?.duration,
+      sizeBytes: doc.size.toJSNumber(),
+      dateUnix: msg.date,
+      mimeType: doc.mimeType,
+      remoteUniqueId: undefined,
+      protectedContent: msg.noforwards === true,
+    };
+  };
+
+  return {
+    async listChats(): Promise<DiscoveryChat[]> {
+      const client = await connect(config, session);
+      const dialogs = await client.getDialogs({ limit: 200 });
+      return dialogs.map((d) => ({
+        id: String(d.id),
+        title: d.title || "Untitled",
+        kind: classifyDialog(d),
+        pinned: d.pinned === true,
+        archived: d.archived === true,
+      }));
+    },
+
+    async countChatVideos(chatId: string, minDurationSeconds: number): Promise<{ videoCount: number; fileCount: number }> {
+      const client = await connect(config, session);
+      const peer = await client.getInputEntity(chatId);
+      const videoRes = await client.invoke(new Api.messages.Search({
+        peer,
+        q: "",
+        filter: new Api.InputMessagesFilterVideo(),
+        minDate: 0,
+        maxDate: 0,
+        offsetId: 0,
+        addOffset: 0,
+        limit: 100,
+        maxId: 0,
+        minId: 0,
+        hash: bigInt.zero,
+      }));
+      const docRes = await client.invoke(new Api.messages.Search({
+        peer,
+        q: "",
+        filter: new Api.InputMessagesFilterDocument(),
+        minDate: 0,
+        maxDate: 0,
+        offsetId: 0,
+        addOffset: 0,
+        limit: 100,
+        maxId: 0,
+        minId: 0,
+        hash: bigInt.zero,
+      }));
+      let videoCount = 0;
+      let fileCount = 0;
+      const countFrom = (res: Api.messages.TypeMessages, isDoc: boolean) => {
+        if (!("messages" in res)) return;
+        for (const m of res.messages) {
+          if (!(m instanceof Api.Message)) continue;
+          const v = extractVideoMeta(m);
+          if (!v) continue;
+          if (!isDoc && v.durationSeconds !== undefined) {
+            if (minDurationSeconds === 0 || v.durationSeconds >= minDurationSeconds) videoCount++;
+          } else if ((v.sizeBytes ?? 0) >= (minDurationSeconds === 0 ? 0 : MIN_FILE_BYTES)) {
+            fileCount++;
+          }
+        }
+      };
+      countFrom(videoRes, false);
+      countFrom(docRes, true);
+      return { videoCount, fileCount };
+    },
+
+    async listChatVideos(chatId: string, minDurationSeconds: number, offsetId = 0, limit = 30): Promise<DiscoveryVideo[]> {
+      const client = await connect(config, session);
+      const peer = await client.getInputEntity(chatId);
+      const res = await client.invoke(new Api.messages.Search({
+        peer,
+        q: "",
+        filter: new Api.InputMessagesFilterVideo(),
+        minDate: 0,
+        maxDate: 0,
+        offsetId,
+        addOffset: 0,
+        limit,
+        maxId: 0,
+        minId: 0,
+        hash: bigInt.zero,
+      }));
+      const out: DiscoveryVideo[] = [];
+      if ("messages" in res) {
+        for (const m of res.messages) {
+          if (!(m instanceof Api.Message)) continue;
+          const v = extractVideoMeta(m);
+          if (!v) continue;
+          v.chatId = chatId;
+          if (v.durationSeconds === undefined || minDurationSeconds === 0 || v.durationSeconds >= minDurationSeconds) {
+            out.push(v);
+          }
+        }
+      }
+      return out;
+    },
+
+    async forwardToLibrary(libraryChatId: string, chatId: string, messageIds: number[]): Promise<void> {
+      const client = await connect(config, session);
+      const fromPeer = await client.getInputEntity(chatId);
+      const toPeer = await client.getInputEntity(libraryChatId);
+      await client.invoke(new Api.messages.ForwardMessages({
+        fromPeer,
+        toPeer,
+        id: messageIds,
+        randomId: messageIds.map(() => bigInt(Math.floor(Math.random() * 1e15))),
+      }));
+    },
+  };
 }

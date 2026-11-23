@@ -32,6 +32,8 @@ class TelegramApiSurfaceTest {
         "file", "download", "readPart", "cancelDownload", "deleteLocalFile",
         // Ending Cablegram's own TV sessions (spec 004 US8).
         "passwordState", "activeSessions", "terminateSession",
+        // Cablegram bot sign-in & profile lock link.
+        "sendBotStartMessage", "unblockBot",
         // Updates.
         "getAuthStates", "getFileUpdates", "getNewMessages", "getDeletedMessages", "getEditedMessages",
     )

@@ -98,6 +98,7 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":telegram-discovery"))
     implementation("com.google.android.gms:play-services-cast-tv:21.1.1")
     implementation("com.google.android.gms:play-services-cast:22.3.1")
     implementation("androidx.media:media:1.7.1")
