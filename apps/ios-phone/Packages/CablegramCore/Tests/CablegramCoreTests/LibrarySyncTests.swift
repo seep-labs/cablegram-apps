@@ -42,6 +42,24 @@ extension Network {
         #expect(store.get("c9")?.householdOnly == true, "a household title without a file is restored as 'not on this phone'")
     }
 
+    @Test func aSyncListsWebTitlesTheServerHolds() async throws {
+        let store = tempStore()
+        MockHTTP.route("/api/catalog/sources/reconcile", 200)
+        MockHTTP.route("/api/catalog/items", 200, #"""
+        {"items":[{"id":"w1","title":"Sintel","media_type":"movie","duration_seconds":888,"sources":[{"kind":"web","canonical_url":"https://samples.example/sintel.mp4"}]}]}
+        """#)
+        let sync = LibrarySync(store: store, client: client(), token: "t", phoneDeviceId: "dev", sources: FakeSources())
+        try await sync.run()
+        try await sync.run()
+        let web = try #require(store.get("w1"))
+        #expect(web.sourceKind == "web" && web.canonicalUrl == "https://samples.example/sintel.mp4")
+        #expect(web.title == "Sintel" && web.durationSeconds == 888 && !web.householdOnly && web.sourceAvailable == true)
+        #expect(storageBadge(web) == .cloud)
+        #expect(store.list().count == 1, "a second sync doesn't list it twice")
+        store.forgetHousehold()
+        #expect(store.get("w1") == nil, "a deleted account's web titles go")
+    }
+
     @Test func aFailedReconcileStopsTheSyncAndKeepsTheCatalog() async {
         let store = tempStore()
         store.add(LibraryItem(id: "m1", title: "Dune", filename: "Dune.mkv", importedAt: "2026-01-01T00:00:00Z", sourceUri: "ph://1"))

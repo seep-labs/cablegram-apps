@@ -239,6 +239,35 @@ public final class LibraryStore: @unchecked Sendable {
         }
     }
 
+    /// A household title that exists only as a web link (the reviewer's sample films): listed on the phone, played by the
+    /// TV from its link. Adding web links stays off (CAB-80); this only lists titles the server already holds.
+    @discardableResult
+    public func registerWeb(_ remote: RemoteCatalogItem, canonicalUrl: String) -> LibraryItem {
+        locked {
+            if let existing = get(remote.id) { return existing }
+            let item = LibraryItem(
+                id: remote.id,
+                title: nonBlank(remote.title) ?? "Video",
+                filename: canonicalUrl,
+                fileName: remote.id,
+                durationSeconds: remote.durationSeconds,
+                overview: remote.overview,
+                posterUrl: remote.posterUrl,
+                mediaType: "movie",
+                importedAt: isoTimestamp(),
+                sourceKind: "web",
+                canonicalUrl: canonicalUrl,
+                copied: false,
+                sourceAvailable: true,
+                storageState: storageLocal,
+                catalogItemId: remote.id,
+                artworkOrigin: remote.posterUrl == nil ? artworkPlaceholder : artworkCatalog
+            )
+            add(item)
+            return item
+        }
+    }
+
     /// A video in the household's Telegram channel: listed on the phone, played by the TV from Telegram.
     @discardableResult
     public func registerTelegram(_ remote: RemoteCatalogItem, source: RemoteCatalogSource) -> LibraryItem {
