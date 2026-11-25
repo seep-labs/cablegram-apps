@@ -38,6 +38,8 @@ data class MeDevice(
     @kotlinx.serialization.SerialName("telegram_direct_allowed") val telegramDirectAllowed: Boolean = false,
     /** A TV with Cablegram open that takes remote commands now; null from a control plane that doesn't say. */
     val online: Boolean? = null,
+    /** false: Cablegram is open on the TV, but that TV app (browser, LG, Samsung) takes no commands from the phone yet. */
+    @kotlinx.serialization.SerialName("remote_control") val remoteControl: Boolean? = null,
 )
 
 fun MeDevice.toTrust() = TvTrust(
