@@ -251,8 +251,11 @@ final class LanServingController {
 
     // MARK: Live Activity
 
+    /// The banner and the Live Activity show only while a TV plays from this iPhone (see `servingNoticeVisible`).
+    var noticeVisible: Bool { servingNoticeVisible(running: running, activeStreams: activeStreams, relayStreaming: relayText != nil) }
+
     private func updateActivity() {
-        guard running else { liveActivity.end(); return }
+        guard noticeVisible else { liveActivity.end(); return }
         liveActivity.update(title: L("ios_serving_to", tvNames.last ?? L("ui_your_tv_f04452")), detail: relayText ?? L("ios_serving_keep_open"), streams: activeStreams)
     }
 }

@@ -1,12 +1,12 @@
 import SwiftUI
 
-/// "Serving to <TV>" above the tabs while paired TVs can reach this iPhone. iOS cannot serve from the background, so the banner
+/// "Serving to <TV>" above the tabs while a TV plays a film from this iPhone. iOS cannot serve from the background, so the banner
 /// also says to keep the app open (the Android notification's job). Stop ends serving until the app is opened again.
 struct ServingBanner: View {
     let serving: LanServingController
 
     var body: some View {
-        if serving.running {
+        if serving.noticeVisible {
             HStack(spacing: 12) {
                 Image(systemName: serving.activeStreams > 0 ? "tv.and.mediabox" : "tv").foregroundStyle(Color.phoneAccent)
                 VStack(alignment: .leading, spacing: 2) {
