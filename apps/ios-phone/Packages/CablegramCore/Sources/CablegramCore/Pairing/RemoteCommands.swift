@@ -22,6 +22,15 @@ public enum TargetResult: Sendable, Equatable {
     case failed(String)
 }
 
+/// Why a title can't start on a TV the control plane says is off. A TV app that is open but takes no phone commands (browser, LG,
+/// Samsung) gets its own message: opening Cablegram on it, as "isn't on" says, wouldn't help.
+public func titleStartRefusal(tvName: String, device: MeDevice?) -> String {
+    if device?.remoteControl == false {
+        return "\(tvName) can't be controlled from your phone yet. Choose the film on the TV."
+    }
+    return "\(tvName) isn't on. Open Cablegram TV on it, choose who's watching, then try again."
+}
+
 /// Picks the TV a remote command goes to. A selected TV that the account no longer lists is a failure: a command must never fall
 /// back to a different TV. Only with nothing selected does the first account TV serve as the default. `household` is nil when it
 /// could not be loaded.
