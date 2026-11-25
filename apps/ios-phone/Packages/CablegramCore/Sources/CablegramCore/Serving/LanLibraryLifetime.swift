@@ -36,3 +36,10 @@ public final class LanLibraryLifetime: @unchecked Sendable {
         }
     }
 }
+
+/// Whether "Serving to <TV> · keep Cablegram open" shows, in the app and as the Lock Screen Live Activity: only while a TV
+/// plays a film from this iPhone (over the LAN or the relay). A paired TV that could reach the phone is no reason to ask the
+/// person to keep the app open; titles a TV plays from Telegram or a web link don't need the phone at all.
+public func servingNoticeVisible(running: Bool, activeStreams: Int, relayStreaming: Bool) -> Bool {
+    running && (activeStreams > 0 || relayStreaming)
+}

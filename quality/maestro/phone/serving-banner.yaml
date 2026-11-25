@@ -1,4 +1,5 @@
-# Preconditions: authenticated main UI with at least one paired TV, on the iPhone app. iOS only (Android shows a notification).
+# Preconditions: authenticated main UI on the iPhone app, with a paired TV playing a film from this iPhone (the banner shows
+# only then, not for a paired TV alone). iOS only (Android shows a notification).
 # Checks the "Serving to <TV>" banner, then stops serving. Serving starts again the next time the app is opened.
 appId: app.cablegram.phone
 ---
