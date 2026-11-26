@@ -400,7 +400,7 @@
     <string name="ui_in_your_household_library_file_not_on_this_phone_698618" formatted="false">"En su biblioteca · Archivo no en este teléfono"</string>
     <string name="ui_in_your_own_storage_e2575f" formatted="false">"En su propio almacenamiento"</string>
     <string name="ui_include_forced_subtitles_5c1992" formatted="false">"Incluir subtítulos forzados"</string>
-    <string name="ui_install_cablegram_on_your_android_tv_or_google_tv_and__d27b55" formatted="false">"Instala Cablegram TV en tu TV Android o Google TV y ábrela. A continuación, introduzca el código de seis dígitos que muestra."</string>
+    <string name="ui_install_cablegram_on_your_android_tv_or_google_tv_and__d27b55" formatted="false">"Instala Cablegram en tu televisor (Android TV o Google TV; LG y Samsung donde esté disponible) y ábrelo. Luego introduce el código de seis dígitos que muestra."</string>
     <string name="ui_is_already_in_your_library_5f2bdf">"%1$s ya está en tu biblioteca"</string>
     <string name="ui_is_already_on_this_phone_417a80">"%1$s ya está en este teléfono."</string>
     <string name="ui_is_signing_in_to_your_telegram_type_your_two_step_veri_999fde">"%1$s está iniciando sesión en tu Telegram. Introduce la contraseña de verificación en dos pasos. Se cifra solo para ese televisor; Cablegram no puede leerla."</string>
@@ -1114,4 +1114,13 @@
     <string name="telegram_code_resend_wait" formatted="false">"Reenviar en %1$d s"</string>
     <string name="telegram_code_no_resend" formatted="false">"Telegram no tiene otra forma de enviar este código. Comprueba el número o inténtalo más tarde."</string>
     <string name="telegram_code_change_number" formatted="false">"¿Número incorrecto? Cámbialo"</string>
+    <string name="companion_tv_title" formatted="false">"Aplicación complementaria para tu televisor"</string>
+    <string name="companion_tv_body" formatted="false">"Esta aplicación guarda tu biblioteca; tu televisor la reproduce. Instala Cablegram en tu televisor (Android TV o Google TV; LG y Samsung donde esté disponible) y vincúlalo tras iniciar sesión. En Android TV y Google TV, tu teléfono también es el mando."</string>
+    <string name="companion_tv_link" formatted="false">"Cómo conseguir la app de TV"</string>
+    <string name="settings_feedback_note" formatted="false">"Cablegram es nuevo y sigue creciendo — cuéntanos qué te parece."</string>
+    <string name="settings_feedback_button" formatted="false">"Enviar comentarios"</string>
+    <string name="feedback_prompt_title" formatted="false">"¿Qué tal fue?"</string>
+    <string name="feedback_prompt_body" formatted="false">"Cablegram es nuevo y sigue creciendo. Cuéntanos qué funcionó bien, qué se sintió mejorable o qué te gustaría ver después."</string>
+    <string name="feedback_prompt_send" formatted="false">"Enviar comentarios"</string>
+    <string name="feedback_prompt_later" formatted="false">"Ahora no"</string>
 </resources>

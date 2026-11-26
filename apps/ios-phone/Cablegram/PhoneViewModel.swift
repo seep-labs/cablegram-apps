@@ -93,6 +93,24 @@ final class PhoneViewModel {
 
     // Delete account
     private(set) var deletingAccount = false
+    /// One-time prompt shown after the first film finishes or stops playing.
+    var feedbackPromptOpen = false
+
+    func maybePromptForFeedback(confirmedStart: Bool, playedSeconds: Int, reachedEnd: Bool) {
+        if shouldAskForFeedback(
+            seen: pairing.feedbackPromptSeen,
+            confirmedStart: confirmedStart,
+            playedSeconds: playedSeconds,
+            reachedEnd: reachedEnd
+        ) {
+            feedbackPromptOpen = true
+        }
+    }
+
+    func dismissFeedbackPrompt() {
+        pairing.feedbackPromptSeen = true
+        feedbackPromptOpen = false
+    }
     private(set) var deletionCodeSentTo: String?
     private(set) var deletionCodeFailed = false
 
@@ -160,6 +178,9 @@ final class PhoneViewModel {
         subtitles = SubtitleController(pairing: pairing, catalog: makeClient, store: libraryStore, media: mediaProvider, selectedId: { [weak self] in self?.selectedId },
                                        setStatus: { [weak self] in self?.status = $0 })
         tv.onTvsChanged = { [weak self] in self?.serving.start() }
+        tv.onPlaybackEnded = { [weak self] confirmedStart, playedSeconds, reachedEnd in
+            self?.maybePromptForFeedback(confirmedStart: confirmedStart, playedSeconds: playedSeconds, reachedEnd: reachedEnd)
+        }
         store.onWrite = { [weak self] in Task { @MainActor in self?.refresh() } }
         refresh()
         recoverSharedImports()

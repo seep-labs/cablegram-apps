@@ -302,4 +302,28 @@ private final class VirtualTime: @unchecked Sendable {
     @Test func anotherTitleStartedOnTheTVIsReportedAsSuch() {
         #expect(followTv(report("playing", videoId: "v2", originId: "o2"), nowPlayingId: "v1", sinceOwnCommandMs: longAgo) == .other(videoId: "v2", originId: "o2", paused: false))
     }
+
+    @Test func feedbackPromptSeenDefaultsToFalseAndPersists() {
+        let suite = "cablegram.test.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suite)!
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let store = PairingStore(defaults: defaults, secrets: InMemorySecretStore())
+        #expect(store.feedbackPromptSeen == false)
+        store.feedbackPromptSeen = true
+        #expect(PairingStore(defaults: defaults, secrets: InMemorySecretStore()).feedbackPromptSeen == true)
+    }
+
+    @Test func feedbackPromptShowsOnceAfterFiveMinutesOrAtEnd() {
+        #expect(shouldAskForFeedback(seen: false, confirmedStart: true, playedSeconds: 300, reachedEnd: false) == true)
+        #expect(shouldAskForFeedback(seen: false, confirmedStart: true, playedSeconds: 20, reachedEnd: true) == true)
+        #expect(reachedPlaybackEnd(positionMs: 5_975_000, durationSeconds: 6000) == true)
+        #expect(reachedPlaybackEnd(positionMs: 5_000, durationSeconds: 6000) == false)
+    }
+
+    @Test func feedbackPromptSkipsShortStopsFailedStartsAndSeen() {
+        #expect(shouldAskForFeedback(seen: false, confirmedStart: true, playedSeconds: 5, reachedEnd: false) == false)
+        #expect(shouldAskForFeedback(seen: false, confirmedStart: true, playedSeconds: 299, reachedEnd: false) == false)
+        #expect(shouldAskForFeedback(seen: false, confirmedStart: false, playedSeconds: 600, reachedEnd: true) == false)
+        #expect(shouldAskForFeedback(seen: true, confirmedStart: true, playedSeconds: 600, reachedEnd: true) == false)
+    }
 }
