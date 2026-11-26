@@ -48,9 +48,12 @@ final class TvController {
     @ObservationIgnored private var playbackStartPositionMs: Int64?
     @ObservationIgnored private var playbackMaxPositionMs: Int64 = 0
     @ObservationIgnored private var playbackDurationSeconds: Int?
+    /// When the TV confirmed the start; wall-clock time, so it keeps counting while the phone is locked.
+    @ObservationIgnored private var playbackConfirmedAt: Date?
 
     private func beginPlaybackTracking(_ item: LibraryItem?, confirmedStart: Bool) {
         playbackConfirmedStart = confirmedStart && item != nil
+        playbackConfirmedAt = playbackConfirmedStart ? Date() : nil
         playbackStartPositionMs = nil
         playbackMaxPositionMs = 0
         playbackDurationSeconds = item?.durationSeconds
@@ -59,6 +62,7 @@ final class TvController {
     private func recordTvPosition(_ report: TvPlayback) {
         guard report.state == "playing" || report.state == "paused" else { return }
         playbackConfirmedStart = true
+        if playbackConfirmedAt == nil { playbackConfirmedAt = Date() }
         if let pos = report.positionMs {
             if playbackStartPositionMs == nil { playbackStartPositionMs = pos }
             if pos > playbackMaxPositionMs { playbackMaxPositionMs = pos }
@@ -66,7 +70,8 @@ final class TvController {
     }
 
     private func finishPlaybackTracking() {
-        let playedSeconds = playbackStartPositionMs.map { Int(max(0, playbackMaxPositionMs - $0) / 1000) } ?? 0
+        let playedSeconds = playedSecondsForFeedback(startPositionMs: playbackStartPositionMs, maxPositionMs: playbackMaxPositionMs,
+                                                     confirmedAt: playbackConfirmedAt, now: Date())
         let reachedEnd = reachedPlaybackEnd(positionMs: playbackMaxPositionMs, durationSeconds: playbackDurationSeconds)
         let confirmed = playbackConfirmedStart
         beginPlaybackTracking(nil, confirmedStart: false)

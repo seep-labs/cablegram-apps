@@ -326,4 +326,14 @@ private final class VirtualTime: @unchecked Sendable {
         #expect(shouldAskForFeedback(seen: false, confirmedStart: false, playedSeconds: 600, reachedEnd: true) == false)
         #expect(shouldAskForFeedback(seen: true, confirmedStart: true, playedSeconds: 600, reachedEnd: true) == false)
     }
+
+    @Test func aFilmWatchedWithThePhoneLockedCountsByTheTimeSinceTheConfirmedStart() {
+        let start = Date(timeIntervalSince1970: 1_000)
+        // Last position read 10 s in (the phone was then locked); stopped 6 minutes after the confirmed start.
+        let played = playedSecondsForFeedback(startPositionMs: 0, maxPositionMs: 10_000, confirmedAt: start, now: start.addingTimeInterval(360))
+        #expect(played == 360)
+        #expect(shouldAskForFeedback(seen: false, confirmedStart: true, playedSeconds: played, reachedEnd: false))
+        #expect(playedSecondsForFeedback(startPositionMs: 100_000, maxPositionMs: 500_000, confirmedAt: start, now: start.addingTimeInterval(60)) == 400)
+        #expect(playedSecondsForFeedback(startPositionMs: nil, maxPositionMs: 0, confirmedAt: nil, now: start) == 0, "no confirmed start")
+    }
 }
