@@ -170,6 +170,11 @@ class PairingStore(context: Context) : AccountTokens {
         get() = prefs.getBoolean("welcome_tour_seen", false)
         set(value) { prefs.edit().putBoolean("welcome_tour_seen", value).apply() }
 
+    /** The one-time post-playback feedback prompt was shown or dismissed on this install. */
+    var feedbackPromptSeen: Boolean
+        get() = prefs.getBoolean("feedback_prompt_seen", false)
+        set(value) { prefs.edit().putBoolean("feedback_prompt_seen", value).apply() }
+
     fun removeTv(pin: String) {
         tvs = tvs.filterNot { it.pin == pin }
     }

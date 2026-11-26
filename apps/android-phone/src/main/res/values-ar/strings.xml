@@ -400,7 +400,7 @@
     <string name="ui_in_your_household_library_file_not_on_this_phone_698618" formatted="false">"في مكتبتك · الملف غير موجود على هذا الهاتف"</string>
     <string name="ui_in_your_own_storage_e2575f" formatted="false">"في مخزنك الخاص"</string>
     <string name="ui_include_forced_subtitles_5c1992" formatted="false">"تضمين الترجمات الإجبارية"</string>
-    <string name="ui_install_cablegram_on_your_android_tv_or_google_tv_and__d27b55" formatted="false">"ثبّت Cablegram TV على جهاز Android TV أو Google TV وافتحه، ثم أدخل الرمز المكوّن من ستة أرقام الظاهر عليه."</string>
+    <string name="ui_install_cablegram_on_your_android_tv_or_google_tv_and__d27b55" formatted="false">"ثبّت Cablegram على تلفزيونك (Android TV أو Google TV؛ وLG وSamsung حيثما توفّر) وافتحه، ثم أدخل الرمز المكوّن من ستة أرقام الظاهر عليه."</string>
     <string name="ui_is_already_in_your_library_5f2bdf">"%1$s موجود بالفعل في مكتبتك"</string>
     <string name="ui_is_already_on_this_phone_417a80">"%1$s موجود بالفعل على هذا الهاتف."</string>
     <string name="ui_is_signing_in_to_your_telegram_type_your_two_step_veri_999fde">"يسجّل %1$s الدخول إلى Telegram. أدخل كلمة مرور التحقّق بخطوتين. تُشفّر لهذا التلفزيون فقط ولا يستطيع Cablegram قراءتها."</string>
@@ -1114,4 +1114,13 @@
     <string name="telegram_code_resend_wait" formatted="false">"إعادة الإرسال بعد %1$d ث"</string>
     <string name="telegram_code_no_resend" formatted="false">"ليست لدى تيليجرام طريقة أخرى لإرسال هذا الرمز. تحقق من الرقم أو حاول مرة أخرى لاحقًا."</string>
     <string name="telegram_code_change_number" formatted="false">"رقم خاطئ؟ غيّره"</string>
+    <string name="companion_tv_title" formatted="false">"تطبيق مرافق لتلفزيونك"</string>
+    <string name="companion_tv_body" formatted="false">"يدير هذا التطبيق مكتبتك ويعمل كجهاز تحكم عن بُعد. للمشاهدة على الشاشة الكبيرة، ثبّت Cablegram على تلفزيونك (Android TV أو Google TV؛ وLG وSamsung حيثما توفّر) واقرنه بعد تسجيل الدخول."</string>
+    <string name="companion_tv_link" formatted="false">"كيفية الحصول على تطبيق التلفزيون"</string>
+    <string name="settings_feedback_note" formatted="false">"تطبيق Cablegram جديد وما زال يتطوّر — أخبرنا برأيك."</string>
+    <string name="settings_feedback_button" formatted="false">"إرسال ملاحظات"</string>
+    <string name="feedback_prompt_title" formatted="false">"كيف كانت التجربة؟"</string>
+    <string name="feedback_prompt_body" formatted="false">"تطبيق Cablegram جديد وما زال يتطوّر. أخبرنا بما نجح معك، أو ما بدا صعباً، أو ما تود رؤيته لاحقاً."</string>
+    <string name="feedback_prompt_send" formatted="false">"إرسال ملاحظات"</string>
+    <string name="feedback_prompt_later" formatted="false">"ليس الآن"</string>
 </resources>

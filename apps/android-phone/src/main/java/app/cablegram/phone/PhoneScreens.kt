@@ -227,6 +227,30 @@ fun LibraryShell(viewModel: PhoneViewModel) {
             )
             CloudFlow(viewModel)
             if (viewModel.telegramSheetOpen) TelegramConnectSheet(viewModel)
+            if (viewModel.feedbackPromptOpen) {
+                val feedbackUriHandler = androidx.compose.ui.platform.LocalUriHandler.current
+                AlertDialog(
+                    modifier = Modifier.maestroRoot(),
+                    onDismissRequest = viewModel::dismissFeedbackPrompt,
+                    title = { Text(ui.getString(R.string.feedback_prompt_title)) },
+                    text = { Text(ui.getString(R.string.feedback_prompt_body)) },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                viewModel.dismissFeedbackPrompt()
+                                feedbackUriHandler.openUri(FEEDBACK_URL)
+                            },
+                            modifier = Modifier.maestro("feedback_prompt_send"),
+                        ) { Text(ui.getString(R.string.feedback_prompt_send)) }
+                    },
+                    dismissButton = {
+                        TextButton(
+                            onClick = viewModel::dismissFeedbackPrompt,
+                            modifier = Modifier.maestro("feedback_prompt_later"),
+                        ) { Text(ui.getString(R.string.feedback_prompt_later)) }
+                    },
+                )
+            }
         }
     }
 }
@@ -1281,6 +1305,8 @@ private fun SettingsScreen(viewModel: PhoneViewModel) {
             TextButton(onClick = { showLegal = true }) { Text(ui.getString(R.string.ui_licence_and_third_party_notices_0dcfa5)) }
             val sourceUriHandler = androidx.compose.ui.platform.LocalUriHandler.current
             TextButton(onClick = { sourceUriHandler.openUri(SOURCE_CODE_URL) }) { Text(ui.getString(R.string.ui_source_code_on_github_6de0bf)) }
+            Text(ui.getString(R.string.settings_feedback_note), color = VlcMuted, style = MaterialTheme.typography.bodySmall)
+            TextButton(onClick = { sourceUriHandler.openUri(FEEDBACK_URL) }, modifier = Modifier.maestro("settings_send_feedback")) { Text(ui.getString(R.string.settings_feedback_button)) }
             Text(ui.getString(R.string.ui_cablegram_your_videos_your_screen_your_space_b83cca, BuildConfig.VERSION_NAME), color = VlcMuted, style = MaterialTheme.typography.bodySmall)
         }
         if (page == "account" && viewModel.accountDeletionAvailable) {

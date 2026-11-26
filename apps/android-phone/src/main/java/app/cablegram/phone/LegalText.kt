@@ -10,6 +10,9 @@ import android.content.Context
 /** The apps' public repository, linked from Settings next to the licence. */
 const val SOURCE_CODE_URL = "https://github.com/seep-labs/cablegram-apps"
 
+/** The public feedback page on cablegram.app, linked from Settings and the post-playback prompt. */
+const val FEEDBACK_URL = "https://cablegram.app/feedback.html"
+
 object LegalText {
     fun read(context: Context): String = listOf("NOTICE", "LICENSE").joinToString("\n\n") { name ->
         runCatching { context.assets.open("legal/$name").bufferedReader().use { it.readText() } }

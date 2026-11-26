@@ -400,7 +400,7 @@
     <string name="ui_in_your_household_library_file_not_on_this_phone_698618" formatted="false">"In Ihrer Bibliothek · Datei nicht auf diesem Handy"</string>
     <string name="ui_in_your_own_storage_e2575f" formatted="false">"In Ihrem eigenen Lager"</string>
     <string name="ui_include_forced_subtitles_5c1992" formatted="false">"Erzwungene Untertitel einschließen"</string>
-    <string name="ui_install_cablegram_on_your_android_tv_or_google_tv_and__d27b55" formatted="false">"Installieren Sie Cablegram TV auf Ihrem Android TV oder Google TV und öffnen Sie es. Geben Sie dann den sechsstelligen Code ein, den er zeigt."</string>
+    <string name="ui_install_cablegram_on_your_android_tv_or_google_tv_and__d27b55" formatted="false">"Installieren Sie Cablegram auf Ihrem Fernseher (Android TV oder Google TV; LG und Samsung, sofern verfügbar) und öffnen Sie es. Geben Sie dann den sechsstelligen Code ein, der angezeigt wird."</string>
     <string name="ui_is_already_in_your_library_5f2bdf">"%1$s ist bereits in Ihrer Bibliothek"</string>
     <string name="ui_is_already_on_this_phone_417a80">"%1$s ist bereits auf diesem Telefon."</string>
     <string name="ui_is_signing_in_to_your_telegram_type_your_two_step_veri_999fde">"%1$s meldet sich bei deinem Telegram an. Gib dein Passwort für die zweistufige Bestätigung ein. Es wird nur für diesen Fernseher verschlüsselt; Cablegram kann es nicht lesen."</string>
@@ -1114,4 +1114,13 @@
     <string name="telegram_code_resend_wait" formatted="false">"Erneut senden in %1$d s"</string>
     <string name="telegram_code_no_resend" formatted="false">"Telegram kann diesen Code nicht auf andere Weise senden. Prüfe die Nummer oder versuche es später noch einmal."</string>
     <string name="telegram_code_change_number" formatted="false">"Falsche Nummer? Ändern"</string>
+    <string name="companion_tv_title" formatted="false">"Begleit-App für Ihren Fernseher"</string>
+    <string name="companion_tv_body" formatted="false">"Diese Smartphone-App verwaltet Ihre Mediathek und dient als Fernbedienung. Um auf dem großen Bildschirm zu schauen, installieren Sie Cablegram auf Ihrem Fernseher (Android TV oder Google TV; LG und Samsung, sofern verfügbar) und koppeln ihn nach der Anmeldung."</string>
+    <string name="companion_tv_link" formatted="false">"TV-App herunterladen"</string>
+    <string name="settings_feedback_note" formatted="false">"Cablegram ist neu und wächst noch — sagen Sie uns, was Sie denken."</string>
+    <string name="settings_feedback_button" formatted="false">"Feedback senden"</string>
+    <string name="feedback_prompt_title" formatted="false">"Wie hat es geklappt?"</string>
+    <string name="feedback_prompt_body" formatted="false">"Cablegram ist neu und wächst noch. Sagen Sie uns, was gut lief, was noch hakt oder was Sie sich als Nächstes wünschen."</string>
+    <string name="feedback_prompt_send" formatted="false">"Feedback senden"</string>
+    <string name="feedback_prompt_later" formatted="false">"Nicht jetzt"</string>
 </resources>
