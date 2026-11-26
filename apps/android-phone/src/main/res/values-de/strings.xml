@@ -1115,7 +1115,7 @@
     <string name="telegram_code_no_resend" formatted="false">"Telegram kann diesen Code nicht auf andere Weise senden. Prüfe die Nummer oder versuche es später noch einmal."</string>
     <string name="telegram_code_change_number" formatted="false">"Falsche Nummer? Ändern"</string>
     <string name="companion_tv_title" formatted="false">"Begleit-App für Ihren Fernseher"</string>
-    <string name="companion_tv_body" formatted="false">"Diese Smartphone-App verwaltet Ihre Mediathek und dient als Fernbedienung. Um auf dem großen Bildschirm zu schauen, installieren Sie Cablegram auf Ihrem Fernseher (Android TV oder Google TV; LG und Samsung, sofern verfügbar) und koppeln ihn nach der Anmeldung."</string>
+    <string name="companion_tv_body" formatted="false">"Diese Smartphone-App verwaltet Ihre Mediathek; Ihr Fernseher spielt sie ab. Installieren Sie Cablegram auf Ihrem Fernseher (Android TV oder Google TV; LG und Samsung, sofern verfügbar) und koppeln ihn nach der Anmeldung. Auf Android TV und Google TV ist Ihr Smartphone außerdem die Fernbedienung."</string>
     <string name="companion_tv_link" formatted="false">"TV-App herunterladen"</string>
     <string name="settings_feedback_note" formatted="false">"Cablegram ist neu und wächst noch — sagen Sie uns, was Sie denken."</string>
     <string name="settings_feedback_button" formatted="false">"Feedback senden"</string>

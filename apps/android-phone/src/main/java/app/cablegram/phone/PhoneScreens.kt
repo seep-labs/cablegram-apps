@@ -227,7 +227,16 @@ fun LibraryShell(viewModel: PhoneViewModel) {
             )
             CloudFlow(viewModel)
             if (viewModel.telegramSheetOpen) TelegramConnectSheet(viewModel)
-            if (viewModel.feedbackPromptOpen) {
+            val otherModalOpen = viewModel.deleteTarget != null ||
+                viewModel.removeCloudCopyTarget != null ||
+                viewModel.castPickerOpen ||
+                viewModel.cloudSheet != CloudSheet.None ||
+                viewModel.telegramSheetOpen ||
+                viewModel.collectionsDialogOpen ||
+                viewModel.pendingPrivacyItem != null ||
+                viewModel.pendingPair != null ||
+                viewModel.artworkEditor.draft != null
+            if (viewModel.feedbackPromptOpen && !otherModalOpen) {
                 val feedbackUriHandler = androidx.compose.ui.platform.LocalUriHandler.current
                 AlertDialog(
                     modifier = Modifier.maestroRoot(),

@@ -1078,7 +1078,7 @@
     <string name="library_select_season">"Select season"</string>
     <string name="library_collection_name_taken">"You already have a collection with that name."</string>
     <string name="companion_tv_title" formatted="false">"Companion app for your TV"</string>
-    <string name="companion_tv_body" formatted="false">"This phone app manages your library and acts as your remote. To watch on the big screen, install Cablegram on your TV (Android TV or Google TV; LG and Samsung where available) and pair it after signing in."</string>
+    <string name="companion_tv_body" formatted="false">"This phone app holds your library; your TV plays it. Install Cablegram on your TV (Android TV or Google TV; LG and Samsung where available) and pair it after signing in. On Android TV and Google TV, your phone is also the remote."</string>
     <string name="companion_tv_link" formatted="false">"How to get the TV app"</string>
     <string name="settings_feedback_note" formatted="false">"Cablegram is new and still growing — tell us what you think."</string>
     <string name="settings_feedback_button" formatted="false">"Send feedback"</string>

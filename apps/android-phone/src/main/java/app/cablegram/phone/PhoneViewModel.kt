@@ -108,7 +108,7 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
                         if (terminal) {
                             val wasPlaying = nowPlaying != null
                             nowPlaying = null; paused = false; castPlaybackOwned = false
-                            if (wasPlaying) maybePromptForFeedback()
+                            if (wasPlaying) finishPlaybackTracking()
                         } else isPaused?.let { paused = it }
                     }
                 }
@@ -145,8 +145,36 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
     var feedbackPromptOpen by mutableStateOf(false)
         private set
 
-    fun maybePromptForFeedback() {
-        if (!pairing.feedbackPromptSeen) feedbackPromptOpen = true
+    private var playbackConfirmedStart = false
+    private var playbackStartPositionMs: Long? = null
+    private var playbackMaxPositionMs = 0L
+    private var playbackDurationSeconds: Int? = null
+
+    private fun beginPlaybackTracking(item: LibraryItem?, confirmedStart: Boolean) {
+        playbackConfirmedStart = confirmedStart && item != null
+        playbackStartPositionMs = null
+        playbackMaxPositionMs = 0L
+        playbackDurationSeconds = item?.durationSeconds
+    }
+
+    private fun recordTvPosition(report: TvPlayback) {
+        if (report.state == "playing" || report.state == "paused") {
+            playbackConfirmedStart = true
+            report.positionMs?.let { pos ->
+                if (playbackStartPositionMs == null) playbackStartPositionMs = pos
+                if (pos > playbackMaxPositionMs) playbackMaxPositionMs = pos
+            }
+        }
+    }
+
+    private fun finishPlaybackTracking() {
+        val playedSeconds = playbackStartPositionMs?.let { ((playbackMaxPositionMs - it).coerceAtLeast(0L) / 1000L).toInt() } ?: 0
+        val reachedEnd = reachedPlaybackEnd(playbackMaxPositionMs, playbackDurationSeconds)
+        val confirmed = playbackConfirmedStart
+        beginPlaybackTracking(null, confirmedStart = false)
+        if (shouldAskForFeedback(pairing.feedbackPromptSeen, confirmed, playedSeconds, reachedEnd)) {
+            feedbackPromptOpen = true
+        }
     }
 
     fun dismissFeedbackPrompt() {
@@ -3098,6 +3126,7 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
             if (effectiveRoute != null && castSender?.playbackTerminated != false) return@launch
             castPlaybackOwned = effectiveRoute != null
             playingTvDeviceId = sent.deviceId
+            beginPlaybackTracking(ready, confirmedStart = sent.outcome == Outcome.Confirmed)
             nowPlaying = ready
             paused = effectiveRoute != null && castSender?.playbackPaused == true
             store.setWatchProgress(ready.id, ready.positionSeconds.coerceAtLeast(1))
@@ -3153,7 +3182,7 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
             val wasPlaying = nowPlaying != null
             nowPlaying = null
             paused = false
-            if (wasPlaying) maybePromptForFeedback()
+            if (wasPlaying) finishPlaybackTracking()
         }
     }
 
@@ -3534,10 +3563,15 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
                 }
                 when (val follow = followTv(report, current.id, SystemClock.elapsedRealtime() - ownCommandAt)) {
                     TvFollow.Keep -> Unit
-                    TvFollow.Stopped -> { nowPlaying = null; paused = false; maybePromptForFeedback() }
-                    is TvFollow.Playing -> if (paused != follow.paused) paused = follow.paused
+                    TvFollow.Stopped -> { nowPlaying = null; paused = false; finishPlaybackTracking() }
+                    is TvFollow.Playing -> {
+                        recordTvPosition(report)
+                        if (paused != follow.paused) paused = follow.paused
+                    }
                     is TvFollow.Other -> {
                         val other = items.firstOrNull { it.id == follow.videoId || it.id == follow.originId }
+                        beginPlaybackTracking(other, confirmedStart = other != null)
+                        if (other != null) recordTvPosition(report)
                         nowPlaying = other
                         paused = other != null && follow.paused
                     }
