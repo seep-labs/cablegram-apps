@@ -97,6 +97,12 @@ public final class PairingStore: AccountTokens, @unchecked Sendable {
         set { defaults.set(newValue, forKey: "welcome_tour_seen") }
     }
 
+    /// The one-time post-playback feedback prompt was shown or dismissed on this install.
+    public var feedbackPromptSeen: Bool {
+        get { defaults.bool(forKey: "feedback_prompt_seen") }
+        set { defaults.set(newValue, forKey: "feedback_prompt_seen") }
+    }
+
     /// An optional public https address of this phone (advanced settings); shown to the person, not sent to the control plane (as on Android).
     public var tunnelUrl: String {
         get { defaults.string(forKey: "tunnel_url") ?? "" }

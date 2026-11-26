@@ -73,6 +73,19 @@ struct LibraryShell: View {
             tabs(selection)
         }
         .phoneScreenBackground()
+        .alert(L("feedback_prompt_title"), isPresented: $viewModel.feedbackPromptOpen) {
+            Button(L("feedback_prompt_send")) {
+                viewModel.dismissFeedbackPrompt()
+                if let url = URL(string: "https://cablegram.app/feedback.html") {
+                    UIApplication.shared.open(url)
+                }
+            }
+            Button(L("feedback_prompt_later"), role: .cancel) {
+                viewModel.dismissFeedbackPrompt()
+            }
+        } message: {
+            Text(key: "feedback_prompt_body")
+        }
     }
 
     private func tabs(_ selection: Binding<PhoneTab>) -> some View {

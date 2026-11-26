@@ -37,6 +37,30 @@ struct SignInPage<Content: View>: View {
     }
 }
 
+private let tvDownloadsURL = URL(string: "https://cablegram.app/#downloads")!
+
+private struct CompanionTvCard: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(key: "companion_tv_title")
+                .font(PhoneFont.titleMedium)
+                .foregroundStyle(.white)
+            Text(key: "companion_tv_body")
+                .font(.system(.subheadline))
+                .foregroundStyle(Color.phoneMuted)
+            Link(destination: tvDownloadsURL) {
+                Text(key: "companion_tv_link")
+            }
+            .buttonStyle(AccentTextButtonStyle())
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.phonePanel, in: RoundedRectangle(cornerRadius: 16))
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("sign_in_companion_tv")
+    }
+}
+
 private struct StartForm: View {
     let viewModel: PhoneViewModel
     @State private var email = ""
@@ -48,6 +72,7 @@ private struct StartForm: View {
             BrandMark()
             Spacer().frame(height: 12)
             ScreenHeading(title: L("ui_your_library_your_big_screen_1ff86b"), subtitle: L("ui_sign_in_or_create_an_account_to_bring_your_own_videos__e9e560"))
+            CompanionTvCard()
             // App Store guideline 4.8: Sign in with Apple is offered above any other sign-in service.
             if signIn.methods?.apple != nil { AppleSignInButton(viewModel: viewModel, busy: signIn.busy) }
             if signIn.methods?.google != nil {

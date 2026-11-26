@@ -3,6 +3,7 @@ import SwiftUI
 
 /// The apps' public repository, linked from the settings footer next to the licence.
 private let sourceCodeURL = URL(string: "https://github.com/seep-labs/cablegram-apps")!
+private let feedbackURL = URL(string: "https://cablegram.app/feedback.html")!
 
 private enum SettingsPage: String { case account, tvs, profiles, collections, transfers, connection }
 
@@ -327,6 +328,11 @@ struct SettingsScreen: View {
                 .buttonStyle(AccentTextButtonStyle())
             Link(destination: sourceCodeURL) { Text(key: "ui_source_code_on_github_6de0bf") }
                 .buttonStyle(AccentTextButtonStyle())
+            Text(key: "settings_feedback_note")
+                .font(.system(.caption)).foregroundStyle(Color.phoneMuted)
+                .padding(.top, 4)
+            Link(destination: feedbackURL) { Text(key: "settings_feedback_button") }
+                .buttonStyle(AccentTextButtonStyle()).accessibilityIdentifier("settings_send_feedback")
             Text(L("ui_cablegram_your_videos_your_screen_your_space_b83cca",
                    Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""))
                 .font(.system(.caption)).foregroundStyle(Color.phoneMuted)

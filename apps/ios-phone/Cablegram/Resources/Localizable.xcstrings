@@ -988,6 +988,147 @@
         }
       }
     },
+    "companion_tv_body": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "يدير هذا التطبيق مكتبتك ويعمل كجهاز تحكم عن بُعد. للمشاهدة على الشاشة الكبيرة، ثبّت Cablegram على تلفزيونك (Android TV أو Google TV؛ وLG وSamsung حيثما توفّر) واقرنه بعد تسجيل الدخول."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Smartphone-App verwaltet Ihre Mediathek und dient als Fernbedienung. Um auf dem großen Bildschirm zu schauen, installieren Sie Cablegram auf Ihrem Fernseher (Android TV oder Google TV; LG und Samsung, sofern verfügbar) und koppeln ihn nach der Anmeldung."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This phone app manages your library and acts as your remote. To watch on the big screen, install Cablegram on your TV (Android TV or Google TV; LG and Samsung where available) and pair it after signing in."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esta aplicación gestiona tu biblioteca y sirve de mando a distancia. Para ver en la pantalla grande, instala Cablegram en tu televisor (Android TV o Google TV; LG y Samsung donde esté disponible) y vincúlalo tras iniciar sesión."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "این اپلیکیشن کتابخانه شما را مدیریت می‌کند و نقش کنترل را دارد. برای تماشا روی صفحه بزرگ، Cablegram را روی تلویزیون (Android TV یا Google TV؛ و LG و Samsung در صورت در دسترس بودن) نصب کنید و پس از ورود آن را جفت کنید."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questa app gestisce la tua libreria e funge da telecomando. Per guardare sul grande schermo, installa Cablegram sulla tua TV (Android TV o Google TV; LG e Samsung dove disponibile) e abbinala dopo l'accesso."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Это приложение управляет вашей библиотекой и работает как пульт. Чтобы смотреть на большом экране, установите Cablegram на свой ТВ (Android TV или Google TV; LG и Samsung, где доступно) и подключите его после входа."
+          }
+        }
+      }
+    },
+    "companion_tv_link": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "كيفية الحصول على تطبيق التلفزيون"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TV-App herunterladen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How to get the TV app"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cómo conseguir la app de TV"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نحوه دریافت برنامه تلویزیون"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Come ottenere l'app TV"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Как установить приложение на ТВ"
+          }
+        }
+      }
+    },
+    "companion_tv_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تطبيق مرافق لتلفزيونك"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Begleit-App für Ihren Fernseher"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Companion app for your TV"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aplicación complementaria para tu televisor"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اپلیکیشن همراه برای تلویزیون شما"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App complementare per la tua TV"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Приложение-компаньон для вашего ТВ"
+          }
+        }
+      }
+    },
     "delete_account_cancel": {
       "extractionState": "manual",
       "localizations": {
@@ -5297,6 +5438,194 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "feedback_prompt_body": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تطبيق Cablegram جديد وما زال يتطوّر. أخبرنا بما نجح معك، أو ما بدا صعباً، أو ما تود رؤيته لاحقاً."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram ist neu und wächst noch. Sagen Sie uns, was gut lief, was noch hakt oder was Sie sich als Nächstes wünschen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram is new and still growing. Tell us what worked, what felt rough, or what you'd like next."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram es nuevo y sigue creciendo. Cuéntanos qué funcionó bien, qué se sintió mejorable o qué te gustaría ver después."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram تازه است و هنوز در حال رشد است. به ما بگویید چه چیزی خوب کار کرد، چه بخشی ناهماهنگ بود یا بعداً چه امکانی دوست دارید."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram è nuovo e continua a crescere. Dicci cosa ha funzionato, cosa ti è sembrato migliorabile o cosa vorresti vedere in seguito."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram ещё новый и продолжает расти. Расскажите, что сработало хорошо, что показалось сырым или чего вам не хватает."
+          }
+        }
+      }
+    },
+    "feedback_prompt_later": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ليس الآن"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nicht jetzt"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not now"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ahora no"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فعلاً نه"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non ora"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не сейчас"
+          }
+        }
+      }
+    },
+    "feedback_prompt_send": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إرسال ملاحظات"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feedback senden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send feedback"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enviar comentarios"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ارسال بازخورد"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invia feedback"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отправить отзыв"
+          }
+        }
+      }
+    },
+    "feedback_prompt_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "كيف كانت التجربة؟"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie hat es geklappt?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How did that go?"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Qué tal fue?"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تجربه چطور بود؟"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Com'è andata?"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Как всё прошло?"
           }
         }
       }
@@ -10346,6 +10675,100 @@
           "stringUnit": {
             "state": "translated",
             "value": "Повторить"
+          }
+        }
+      }
+    },
+    "settings_feedback_button": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إرسال ملاحظات"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feedback senden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send feedback"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enviar comentarios"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ارسال بازخورد"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invia feedback"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отправить отзыв"
+          }
+        }
+      }
+    },
+    "settings_feedback_note": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تطبيق Cablegram جديد وما زال يتطوّر — أخبرنا برأيك."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram ist neu und wächst noch — sagen Sie uns, was Sie denken."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram is new and still growing — tell us what you think."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram es nuevo y sigue creciendo — cuéntanos qué te parece."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram تازه است و هنوز در حال رشد است — نظرتان را به ما بگویید."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram è nuovo e continua a crescere — dicci cosa ne pensi."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cablegram ещё новый и продолжает расти — расскажите, что вы думаете."
           }
         }
       }
@@ -29934,43 +30357,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "ثبّت Cablegram TV على جهاز Android TV أو Google TV وافتحه، ثم أدخل الرمز المكوّن من ستة أرقام الظاهر عليه."
+            "value": "ثبّت Cablegram على تلفزيونك (Android TV أو Google TV؛ وLG وSamsung حيثما توفّر) وافتحه، ثم أدخل الرمز المكوّن من ستة أرقام الظاهر عليه."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Installieren Sie Cablegram TV auf Ihrem Android TV oder Google TV und öffnen Sie es. Geben Sie dann den sechsstelligen Code ein, den er zeigt."
+            "value": "Installieren Sie Cablegram auf Ihrem Fernseher (Android TV oder Google TV; LG und Samsung, sofern verfügbar) und öffnen Sie es. Geben Sie dann den sechsstelligen Code ein, der angezeigt wird."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Install Cablegram TV on your Android TV or Google TV and open it. Then enter the six-digit code it shows."
+            "value": "Install Cablegram on your TV (Android TV or Google TV; LG and Samsung where available) and open it. Then enter the six-digit code it shows."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Instala Cablegram TV en tu TV Android o Google TV y ábrela. A continuación, introduzca el código de seis dígitos que muestra."
+            "value": "Instala Cablegram en tu televisor (Android TV o Google TV; LG y Samsung donde esté disponible) y ábrelo. Luego introduce el código de seis dígitos que muestra."
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cablegram TV را روی Android TV یا Google TV نصب و باز کنید. سپس کد شش‌رقمی نمایش‌داده‌شده را وارد کنید."
+            "value": "برنامه Cablegram را روی تلویزیون خود (Android TV یا Google TV؛ و LG و Samsung در صورت در دسترس بودن) نصب و باز کنید. سپس کد شش‌رقمی نمایش‌داده‌شده را وارد کنید."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Installa Cablegram TV sul tuo Android TV o Google TV e aprilo. Quindi inserire il codice a sei cifre che mostra."
+            "value": "Installa Cablegram sulla tua TV (Android TV o Google TV; LG e Samsung dove disponibile) e aprila. Poi inserisci il codice a sei cifre mostrato."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Установите Cablegram TV на телевизор Android или Google TV и откройте его. Затем введите шестизначный код, который он показывает."
+            "value": "Установите Cablegram на свой телевизор (Android TV или Google TV; LG и Samsung, где доступно) и откройте его. Затем введите шестизначный код на экране."
           }
         }
       }

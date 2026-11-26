@@ -42,6 +42,8 @@ final class TvController {
     @ObservationIgnored private let onPairedChanged: (Bool) -> Void
     /// Called whenever the list of paired TVs changes, so the media server accepts exactly the TVs that are paired (CAB-37).
     @ObservationIgnored var onTvsChanged: () -> Void = {}
+    /// Called when playback on a TV finishes or is stopped, so the app can show a one-time feedback prompt.
+    @ObservationIgnored var onPlaybackEnded: () -> Void = {}
     @ObservationIgnored private var householdTvsCache: [MeDevice]?
     @ObservationIgnored private var commandGeneration = 0
     @ObservationIgnored private var titleStartToken = 0
@@ -263,7 +265,11 @@ final class TvController {
             }
             sender.onPlayback = { [weak self] isPaused, terminal in
                 guard let self, castPlaybackOwned else { return }
-                if terminal { nowPlaying = nil; paused = false; castPlaybackOwned = false } else if let isPaused { paused = isPaused }
+                if terminal {
+                    let wasPlaying = nowPlaying != nil
+                    nowPlaying = nil; paused = false; castPlaybackOwned = false
+                    if wasPlaying { onPlaybackEnded() }
+                } else if let isPaused { paused = isPaused }
             }
             castSender = sender
             castRoutesTask = Task { [weak self] in
@@ -375,8 +381,10 @@ final class TvController {
             guard let outcome = await sendCommand("stop")?.outcome else { return }
             // "not_applicable": the TV had nothing to stop (the title already ended there), so nothing plays either way.
             if !outcome.applies, outcome != .rejected(reason: "not_applicable") { return }
+            let wasPlaying = nowPlaying != nil
             nowPlaying = nil
             paused = false
+            if wasPlaying { onPlaybackEnded() }
         }
     }
 
@@ -507,7 +515,7 @@ final class TvController {
                 }
                 switch followTv(report, nowPlayingId: current.id, sinceOwnCommandMs: Int64(Date().timeIntervalSince(self.ownCommandAt) * 1000)) {
                 case .keep: break
-                case .stopped: self.nowPlaying = nil; self.paused = false
+                case .stopped: self.nowPlaying = nil; self.paused = false; self.onPlaybackEnded()
                 case .playing(let isPaused): if self.paused != isPaused { self.paused = isPaused }
                 case .other(let videoId, let originId, let isPaused):
                     let other = self.items().first { $0.id == videoId || $0.id == originId }

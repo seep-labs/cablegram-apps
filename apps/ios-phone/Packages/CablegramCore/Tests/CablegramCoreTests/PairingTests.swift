@@ -302,4 +302,14 @@ private final class VirtualTime: @unchecked Sendable {
     @Test func anotherTitleStartedOnTheTVIsReportedAsSuch() {
         #expect(followTv(report("playing", videoId: "v2", originId: "o2"), nowPlayingId: "v1", sinceOwnCommandMs: longAgo) == .other(videoId: "v2", originId: "o2", paused: false))
     }
+
+    @Test func feedbackPromptSeenDefaultsToFalseAndPersists() {
+        let suite = "cablegram.test.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suite)!
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let store = PairingStore(defaults: defaults, secrets: InMemorySecretStore())
+        #expect(store.feedbackPromptSeen == false)
+        store.feedbackPromptSeen = true
+        #expect(PairingStore(defaults: defaults, secrets: InMemorySecretStore()).feedbackPromptSeen == true)
+    }
 }
