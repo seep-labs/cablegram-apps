@@ -149,9 +149,12 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
     private var playbackStartPositionMs: Long? = null
     private var playbackMaxPositionMs = 0L
     private var playbackDurationSeconds: Int? = null
+    /** When the TV confirmed the start ([SystemClock.elapsedRealtime], which keeps counting while the phone sleeps). */
+    private var playbackConfirmedAtMs: Long? = null
 
     private fun beginPlaybackTracking(item: LibraryItem?, confirmedStart: Boolean) {
         playbackConfirmedStart = confirmedStart && item != null
+        playbackConfirmedAtMs = if (playbackConfirmedStart) SystemClock.elapsedRealtime() else null
         playbackStartPositionMs = null
         playbackMaxPositionMs = 0L
         playbackDurationSeconds = item?.durationSeconds
@@ -160,6 +163,7 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
     private fun recordTvPosition(report: TvPlayback) {
         if (report.state == "playing" || report.state == "paused") {
             playbackConfirmedStart = true
+            if (playbackConfirmedAtMs == null) playbackConfirmedAtMs = SystemClock.elapsedRealtime()
             report.positionMs?.let { pos ->
                 if (playbackStartPositionMs == null) playbackStartPositionMs = pos
                 if (pos > playbackMaxPositionMs) playbackMaxPositionMs = pos
@@ -168,7 +172,7 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
     }
 
     private fun finishPlaybackTracking() {
-        val playedSeconds = playbackStartPositionMs?.let { ((playbackMaxPositionMs - it).coerceAtLeast(0L) / 1000L).toInt() } ?: 0
+        val playedSeconds = playedSecondsForFeedback(playbackStartPositionMs, playbackMaxPositionMs, playbackConfirmedAtMs, SystemClock.elapsedRealtime())
         val reachedEnd = reachedPlaybackEnd(playbackMaxPositionMs, playbackDurationSeconds)
         val confirmed = playbackConfirmedStart
         beginPlaybackTracking(null, confirmedStart = false)
