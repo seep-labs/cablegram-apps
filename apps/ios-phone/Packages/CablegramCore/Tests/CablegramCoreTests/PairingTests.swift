@@ -132,6 +132,15 @@ private func at(_ iso: String) -> Date { parseISO8601(iso)! }
         #expect(resolveTarget(selected: living, household: [device("tv-1", "Living"), device("tv-2", "Bedroom")]) == .target(deviceId: "tv-1", name: "Living room"))
     }
 
+    @Test func aTVOpenWithoutPhoneCommandsSaysToChooseTheFilmOnTheTV() throws {
+        let json = #"{"id":"tv-1","kind":"tv","online":false,"remote_control":false}"#
+        let browser = try JSONDecoder().decode(MeDevice.self, from: Data(json.utf8))
+        #expect(browser.remoteControl == false)
+        #expect(titleStartRefusal(tvName: "Chrome", device: browser) == "Chrome can't be controlled from your phone yet. Choose the film on the TV.")
+        #expect(titleStartRefusal(tvName: "Living room", device: device("tv-1", online: false)).hasPrefix("Living room isn't on."), "a closed TV, or an older server")
+        #expect(titleStartRefusal(tvName: "Living room", device: nil).hasPrefix("Living room isn't on."))
+    }
+
     @Test func aSelectedTVThatIsOffGivesWayToTheOnlyTVThatIsOnAndSaysSo() {
         #expect(resolveTarget(selected: living, household: [device("tv-1", "Living", online: false), device("tv-2", "Bedroom", online: true)])
                 == .target(deviceId: "tv-2", name: "Bedroom", switchedFrom: "Living room"))
