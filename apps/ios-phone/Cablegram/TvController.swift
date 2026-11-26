@@ -42,8 +42,36 @@ final class TvController {
     @ObservationIgnored private let onPairedChanged: (Bool) -> Void
     /// Called whenever the list of paired TVs changes, so the media server accepts exactly the TVs that are paired (CAB-37).
     @ObservationIgnored var onTvsChanged: () -> Void = {}
-    /// Called when playback on a TV finishes or is stopped, so the app can show a one-time feedback prompt.
-    @ObservationIgnored var onPlaybackEnded: () -> Void = {}
+    /// Called when playback on a TV finishes or is stopped, reporting `(confirmedStart, playedSeconds, reachedEnd)`.
+    @ObservationIgnored var onPlaybackEnded: (Bool, Int, Bool) -> Void = { _, _, _ in }
+    @ObservationIgnored private var playbackConfirmedStart = false
+    @ObservationIgnored private var playbackStartPositionMs: Int64?
+    @ObservationIgnored private var playbackMaxPositionMs: Int64 = 0
+    @ObservationIgnored private var playbackDurationSeconds: Int?
+
+    private func beginPlaybackTracking(_ item: LibraryItem?, confirmedStart: Bool) {
+        playbackConfirmedStart = confirmedStart && item != nil
+        playbackStartPositionMs = nil
+        playbackMaxPositionMs = 0
+        playbackDurationSeconds = item?.durationSeconds
+    }
+
+    private func recordTvPosition(_ report: TvPlayback) {
+        guard report.state == "playing" || report.state == "paused" else { return }
+        playbackConfirmedStart = true
+        if let pos = report.positionMs {
+            if playbackStartPositionMs == nil { playbackStartPositionMs = pos }
+            if pos > playbackMaxPositionMs { playbackMaxPositionMs = pos }
+        }
+    }
+
+    private func finishPlaybackTracking() {
+        let playedSeconds = playbackStartPositionMs.map { Int(max(0, playbackMaxPositionMs - $0) / 1000) } ?? 0
+        let reachedEnd = reachedPlaybackEnd(positionMs: playbackMaxPositionMs, durationSeconds: playbackDurationSeconds)
+        let confirmed = playbackConfirmedStart
+        beginPlaybackTracking(nil, confirmedStart: false)
+        onPlaybackEnded(confirmed, playedSeconds, reachedEnd)
+    }
     @ObservationIgnored private var householdTvsCache: [MeDevice]?
     @ObservationIgnored private var commandGeneration = 0
     @ObservationIgnored private var titleStartToken = 0
@@ -268,7 +296,7 @@ final class TvController {
                 if terminal {
                     let wasPlaying = nowPlaying != nil
                     nowPlaying = nil; paused = false; castPlaybackOwned = false
-                    if wasPlaying { onPlaybackEnded() }
+                    if wasPlaying { finishPlaybackTracking() }
                 } else if let isPaused { paused = isPaused }
             }
             castSender = sender
@@ -351,6 +379,7 @@ final class TvController {
             if effectiveRoute != nil, castSender?.playbackTerminated != false { return }
             castPlaybackOwned = effectiveRoute != nil
             playingTvDeviceId = sent.deviceId
+            beginPlaybackTracking(item, confirmedStart: sent.outcome == .confirmed)
             nowPlaying = item
             paused = effectiveRoute != nil && castSender?.playbackPaused == true
             store.setWatchProgress(item.id, positionSeconds: max(item.positionSeconds, 1))
@@ -384,7 +413,7 @@ final class TvController {
             let wasPlaying = nowPlaying != nil
             nowPlaying = nil
             paused = false
-            if wasPlaying { onPlaybackEnded() }
+            if wasPlaying { finishPlaybackTracking() }
         }
     }
 
@@ -515,10 +544,14 @@ final class TvController {
                 }
                 switch followTv(report, nowPlayingId: current.id, sinceOwnCommandMs: Int64(Date().timeIntervalSince(self.ownCommandAt) * 1000)) {
                 case .keep: break
-                case .stopped: self.nowPlaying = nil; self.paused = false; self.onPlaybackEnded()
-                case .playing(let isPaused): if self.paused != isPaused { self.paused = isPaused }
+                case .stopped: self.nowPlaying = nil; self.paused = false; self.finishPlaybackTracking()
+                case .playing(let isPaused):
+                    self.recordTvPosition(report)
+                    if self.paused != isPaused { self.paused = isPaused }
                 case .other(let videoId, let originId, let isPaused):
                     let other = self.items().first { $0.id == videoId || $0.id == originId }
+                    self.beginPlaybackTracking(other, confirmedStart: other != nil)
+                    if other != nil { self.recordTvPosition(report) }
                     self.nowPlaying = other
                     self.paused = other != nil && isPaused
                 }

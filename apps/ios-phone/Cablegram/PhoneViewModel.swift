@@ -96,8 +96,15 @@ final class PhoneViewModel {
     /// One-time prompt shown after the first film finishes or stops playing.
     var feedbackPromptOpen = false
 
-    func maybePromptForFeedback() {
-        if !pairing.feedbackPromptSeen { feedbackPromptOpen = true }
+    func maybePromptForFeedback(confirmedStart: Bool, playedSeconds: Int, reachedEnd: Bool) {
+        if shouldAskForFeedback(
+            seen: pairing.feedbackPromptSeen,
+            confirmedStart: confirmedStart,
+            playedSeconds: playedSeconds,
+            reachedEnd: reachedEnd
+        ) {
+            feedbackPromptOpen = true
+        }
     }
 
     func dismissFeedbackPrompt() {
@@ -171,7 +178,9 @@ final class PhoneViewModel {
         subtitles = SubtitleController(pairing: pairing, catalog: makeClient, store: libraryStore, media: mediaProvider, selectedId: { [weak self] in self?.selectedId },
                                        setStatus: { [weak self] in self?.status = $0 })
         tv.onTvsChanged = { [weak self] in self?.serving.start() }
-        tv.onPlaybackEnded = { [weak self] in self?.maybePromptForFeedback() }
+        tv.onPlaybackEnded = { [weak self] confirmedStart, playedSeconds, reachedEnd in
+            self?.maybePromptForFeedback(confirmedStart: confirmedStart, playedSeconds: playedSeconds, reachedEnd: reachedEnd)
+        }
         store.onWrite = { [weak self] in Task { @MainActor in self?.refresh() } }
         refresh()
         recoverSharedImports()

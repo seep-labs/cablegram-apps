@@ -994,43 +994,43 @@
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "يدير هذا التطبيق مكتبتك ويعمل كجهاز تحكم عن بُعد. للمشاهدة على الشاشة الكبيرة، ثبّت Cablegram على تلفزيونك (Android TV أو Google TV؛ وLG وSamsung حيثما توفّر) واقرنه بعد تسجيل الدخول."
+            "value": "يحتفظ هذا التطبيق بمكتبتك؛ ويقوم تلفزيونك بتشغيلها. ثبّت Cablegram على تلفزيونك (Android TV أو Google TV؛ وLG وSamsung حيثما توفّر) واقرنه بعد تسجيل الدخول. على Android TV وGoogle TV، يعمل هاتفك أيضاً كجهاز تحكم عن بُعد."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Diese Smartphone-App verwaltet Ihre Mediathek und dient als Fernbedienung. Um auf dem großen Bildschirm zu schauen, installieren Sie Cablegram auf Ihrem Fernseher (Android TV oder Google TV; LG und Samsung, sofern verfügbar) und koppeln ihn nach der Anmeldung."
+            "value": "Diese Smartphone-App verwaltet Ihre Mediathek; Ihr Fernseher spielt sie ab. Installieren Sie Cablegram auf Ihrem Fernseher (Android TV oder Google TV; LG und Samsung, sofern verfügbar) und koppeln ihn nach der Anmeldung. Auf Android TV und Google TV ist Ihr Smartphone außerdem die Fernbedienung."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "This phone app manages your library and acts as your remote. To watch on the big screen, install Cablegram on your TV (Android TV or Google TV; LG and Samsung where available) and pair it after signing in."
+            "value": "This phone app holds your library; your TV plays it. Install Cablegram on your TV (Android TV or Google TV; LG and Samsung where available) and pair it after signing in. On Android TV and Google TV, your phone is also the remote."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Esta aplicación gestiona tu biblioteca y sirve de mando a distancia. Para ver en la pantalla grande, instala Cablegram en tu televisor (Android TV o Google TV; LG y Samsung donde esté disponible) y vincúlalo tras iniciar sesión."
+            "value": "Esta aplicación guarda tu biblioteca; tu televisor la reproduce. Instala Cablegram en tu televisor (Android TV o Google TV; LG y Samsung donde esté disponible) y vincúlalo tras iniciar sesión. En Android TV y Google TV, tu teléfono también es el mando."
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "این اپلیکیشن کتابخانه شما را مدیریت می‌کند و نقش کنترل را دارد. برای تماشا روی صفحه بزرگ، Cablegram را روی تلویزیون (Android TV یا Google TV؛ و LG و Samsung در صورت در دسترس بودن) نصب کنید و پس از ورود آن را جفت کنید."
+            "value": "این اپلیکیشن کتابخانه شما را نگه می‌دارد و تلویزیون آن را پخش می‌کند. Cablegram را روی تلویزیون خود (Android TV یا Google TV؛ و LG و Samsung در صورت در دسترس بودن) نصب کنید و پس از ورود جفتش کنید. روی Android TV و Google TV، گوشی شما کنترل هم هست."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Questa app gestisce la tua libreria e funge da telecomando. Per guardare sul grande schermo, installa Cablegram sulla tua TV (Android TV o Google TV; LG e Samsung dove disponibile) e abbinala dopo l'accesso."
+            "value": "Questa app conserva la tua libreria; la tua TV la riproduce. Installa Cablegram sulla tua TV (Android TV o Google TV; LG e Samsung dove disponibile) e abbinala dopo l'accesso. Su Android TV e Google TV, il telefono fa anche da telecomando."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Это приложение управляет вашей библиотекой и работает как пульт. Чтобы смотреть на большом экране, установите Cablegram на свой ТВ (Android TV или Google TV; LG и Samsung, где доступно) и подключите его после входа."
+            "value": "Это приложение хранит вашу библиотеку, а телевизор её воспроизводит. Установите Cablegram на свой ТВ (Android TV или Google TV; LG и Samsung, где доступно) и подключите его после входа. На Android TV и Google TV телефон также служит пультом."
           }
         }
       }

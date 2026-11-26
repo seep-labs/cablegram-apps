@@ -58,6 +58,20 @@ struct LibraryShell: View {
     var body: some View {
         // Storage is a screen under Settings: the bar keeps highlighting Settings while it is open.
         let selection = Binding<PhoneTab>(get: { viewModel.tab.barItem }, set: { viewModel.selectTab($0) })
+        let otherModalOpen = viewModel.telegram.sheetOpen ||
+            viewModel.telegram.work.passwordRequest != nil ||
+            viewModel.tv.pendingPair != nil ||
+            viewModel.artworkEditor.draft != nil ||
+            viewModel.tv.castPickerOpen ||
+            viewModel.pendingPrivacyItem != nil ||
+            viewModel.deleteTarget != nil ||
+            viewModel.cloud.cloudSheet != .none ||
+            viewModel.undoRemoval != nil ||
+            viewModel.bulkFailure != nil
+        let feedbackPresented = Binding<Bool>(
+            get: { viewModel.feedbackPromptOpen && !otherModalOpen },
+            set: { if !$0 { viewModel.dismissFeedbackPrompt() } }
+        )
         VStack(spacing: 0) {
             AddedVideosCard(viewModel: viewModel)
                 .animation(.default, value: viewModel.tab == .library && !viewModel.recentlyAddedIds.isEmpty)
@@ -73,12 +87,10 @@ struct LibraryShell: View {
             tabs(selection)
         }
         .phoneScreenBackground()
-        .alert(L("feedback_prompt_title"), isPresented: $viewModel.feedbackPromptOpen) {
+        .alert(L("feedback_prompt_title"), isPresented: feedbackPresented) {
             Button(L("feedback_prompt_send")) {
                 viewModel.dismissFeedbackPrompt()
-                if let url = URL(string: "https://cablegram.app/feedback.html") {
-                    UIApplication.shared.open(url)
-                }
+                UIApplication.shared.open(AppConfiguration.feedbackURL)
             }
             Button(L("feedback_prompt_later"), role: .cancel) {
                 viewModel.dismissFeedbackPrompt()
