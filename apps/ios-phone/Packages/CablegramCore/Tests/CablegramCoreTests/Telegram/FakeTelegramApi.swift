@@ -238,6 +238,8 @@ final class FakeTelegramApi: TelegramApi, @unchecked Sendable {
         return sessions
     }
     func terminateSession(_ sessionId: Int64) async throws { try record("terminateSession:\(sessionId)") }
+    func sendBotStartMessage(botUsername: String, startParam: String) async throws { try record("sendBotStartMessage:\(botUsername):\(startParam)") }
+    func unblockBot(botUsername: String) async throws { try record("unblockBot:\(botUsername)") }
 
     private static func stored(_ state: State, _ id: Int) throws -> TgFile {
         guard let f = state.files[id] else { throw TgError(code: 404, name: "NO_SUCH_FILE") }

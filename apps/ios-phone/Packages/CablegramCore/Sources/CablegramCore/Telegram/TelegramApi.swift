@@ -63,6 +63,11 @@ public protocol TelegramApi: Sendable {
 
     func activeSessions() async throws -> [TgSessionInfo]
     func terminateSession(_ sessionId: Int64) async throws
+
+    /// Sends `/start <startParam>` to the Cablegram bot (standalone TV sign-in and profile lock link).
+    func sendBotStartMessage(botUsername: String, startParam: String) async throws
+    /// Unblocks the Cablegram bot if the owner previously blocked it, before restarting it.
+    func unblockBot(botUsername: String) async throws
 }
 
 /// A failed Telegram request: `code` is TDLib's error code, `name` its message such as `PASSWORD_HASH_INVALID`.
