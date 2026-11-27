@@ -86,7 +86,7 @@ import kotlinx.coroutines.delay
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-private enum class RailDestination { Home, Player, Library, Settings }
+private enum class RailDestination { Home, Player, Library, Telegram, Settings }
 
 /** Second Back within this window closes the app (see LibraryScreen's BackHandler). */
 private const val EXIT_CONFIRM_MS = 2_500L
@@ -122,6 +122,8 @@ internal fun LibraryScreen(
     onTelegramCancel: () -> Unit = {},
     serverUrl: String? = null,
     onReturnToCablegram: (() -> Unit)? = null,
+    showTelegramSection: Boolean = false,
+    telegramSectionContent: (@Composable (onBackToMenu: () -> Unit) -> Unit)? = null,
 ) {
     val ui = androidx.compose.ui.platform.LocalContext.current.resources
     val exitHint = ui.getString(R.string.ui_press_back_again_to_exit_e12dfa)
@@ -245,6 +247,11 @@ internal fun LibraryScreen(
                     selectedShow = null
                     onTypeSelected("mylist")
                 },
+                showTelegram = showTelegramSection,
+                onTelegram = {
+                    rail = RailDestination.Telegram
+                    selectedShow = null
+                },
                 onSettings = {
                     rail = RailDestination.Settings
                     selectedShow = null
@@ -267,6 +274,7 @@ internal fun LibraryScreen(
                         RailDestination.Home -> ui.getString(R.string.ui_home_3a7869)
                         RailDestination.Player -> ui.getString(R.string.ui_continue_watching_81ebbe)
                         RailDestination.Library -> ui.getString(R.string.ui_my_list_e957f4)
+                        RailDestination.Telegram -> "Telegram"
                         RailDestination.Settings -> ui.getString(R.string.ui_settings_74a883)
                     },
                     selectedType = selectedType,
@@ -286,7 +294,12 @@ internal fun LibraryScreen(
                         }
                     },
                 )
-                if (rail == RailDestination.Settings) {
+                if (rail == RailDestination.Telegram && telegramSectionContent != null) {
+                    telegramSectionContent {
+                        rail = RailDestination.Home
+                        onTypeSelected("all")
+                    }
+                } else if (rail == RailDestination.Settings) {
                     AboutSettingsPanel(
                         isDemoMode = isDemoMode,
                         tvLanIp = tvLanIp,
@@ -649,6 +662,8 @@ private fun CollapsedSidebar(
     onHome: () -> Unit,
     onPlayer: () -> Unit,
     onLibrary: () -> Unit,
+    showTelegram: Boolean = false,
+    onTelegram: () -> Unit = {},
     onSettings: () -> Unit,
     onSwitchProfile: () -> Unit,
     profileFocusRequester: FocusRequester,
@@ -680,6 +695,9 @@ private fun CollapsedSidebar(
         RailIconButton(RailIcon.Home, ui.getString(R.string.ui_home_3a7869), destination == RailDestination.Home, onHome, homeFocusRequester)
         RailIconButton(RailIcon.Player, ui.getString(R.string.ui_continue_31fbef), destination == RailDestination.Player, onPlayer)
         RailIconButton(RailIcon.Library, ui.getString(R.string.ui_my_list_e957f4), destination == RailDestination.Library, onLibrary)
+        if (showTelegram) {
+            RailIconButton(RailIcon.Telegram, "Telegram", destination == RailDestination.Telegram, onTelegram)
+        }
         Spacer(Modifier.weight(1f))
         RailIconButton(RailIcon.Settings, ui.getString(R.string.ui_settings_74a883), selected = destination == RailDestination.Settings, onClick = onSettings)
     }
@@ -745,7 +763,7 @@ private fun SidebarAvatar(
     }
 }
 
-private enum class RailIcon { Home, Player, Library, Settings }
+private enum class RailIcon { Home, Player, Library, Telegram, Settings }
 
 @Composable
 private fun RailIconButton(
@@ -829,6 +847,10 @@ private fun LineIcon(icon: RailIcon, tint: Color) {
                         drawLine(tint, Offset(w * .74f, h * .1f), Offset(w * .74f, h * .9f), stroke.width, StrokeCap.Round)
                         drawLine(tint, Offset(w * .26f, h * .9f), Offset(w * .5f, h * .68f), stroke.width, StrokeCap.Round)
                         drawLine(tint, Offset(w * .74f, h * .9f), Offset(w * .5f, h * .68f), stroke.width, StrokeCap.Round)
+                    }
+                    RailIcon.Telegram -> {
+                        drawCircle(tint, radius = size.minDimension * .38f, style = stroke)
+                        drawLine(tint, Offset(size.width * .32f, size.height * .52f), Offset(size.width * .68f, size.height * .36f), stroke.width, StrokeCap.Round)
                     }
                     RailIcon.Settings -> {
                         drawCircle(tint, radius = size.minDimension * .16f, style = stroke)

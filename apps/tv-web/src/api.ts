@@ -1,6 +1,6 @@
 import { API_BASE, TG_DIRECT } from "./config";
 import { parseTelegramIdentity } from "./telegram-identity";
-import type { Device, DeviceSession, PairingStatus, Playback, Profile, ServerCapabilities, Source, SwitchRequest, Title } from "./types";
+import type { Device, DeviceSession, MeInfo, PairingStatus, Playback, Profile, ServerCapabilities, Source, SwitchRequest, Title } from "./types";
 
 export class ApiError extends Error {
   constructor(readonly status: number, readonly code: string) { super(code); }
@@ -214,6 +214,48 @@ export function createApi(opts: { base?: string | (() => string); fetch?: Fetch;
         return undefined;
       }
     },
+    async telegramBotMethod(): Promise<{ username: string } | undefined> {
+      try {
+        const b = await call("api/auth/methods");
+        const username = str(b?.telegram_bot?.username);
+        return username ? { username } : undefined;
+      } catch {
+        return undefined;
+      }
+    },
+    async legalDocuments(): Promise<{ terms: { version: string; url: string }; privacy: { version: string; url: string } }> {
+      const b = (await call("api/legal"))!;
+      return {
+        terms: { version: String(b.terms.version), url: String(b.terms.url) },
+        privacy: { version: String(b.privacy.version), url: String(b.privacy.url) },
+      };
+    },
+    async telegramStart(
+      session: DeviceSession,
+      accepted: { terms_version: string; privacy_version: string },
+    ): Promise<{ id: string; apiId: number; apiHash: string; botUsername: string; startParam: string; expiresAt: string }> {
+      const b = (await call("api/auth/device/telegram-start", {
+        method: "POST",
+        body: JSON.stringify({
+          session_id: session.sessionId,
+          pairing_token: session.pairingToken,
+          accepted,
+          age_confirmed: true,
+        }),
+      }))!;
+      return {
+        id: String(b.id),
+        apiId: Number(b.api_id),
+        apiHash: String(b.api_hash),
+        botUsername: String(b.bot_username),
+        startParam: String(b.start_param),
+        expiresAt: String(b.expires_at),
+      };
+    },
+    async telegramStartState(session: DeviceSession, id: string): Promise<{ state: string }> {
+      const b = (await call(`api/auth/device/telegram-start/${encodeURIComponent(id)}`, {}, `Pairing ${session.pairingToken}`))!;
+      return { state: String(b.state) };
+    },
     /** Claims the session on screen with a store reviewer's code; pairingStatus then finds it paired. */
     async reviewerSignIn(session: DeviceSession, email: string, code: string): Promise<void> {
       await call("api/auth/device/reviewer-sign-in", { method: "POST", body: JSON.stringify({
@@ -239,7 +281,7 @@ export function createApi(opts: { base?: string | (() => string); fetch?: Fetch;
     /** Profile lock: "approved" opens at once, otherwise a phone in the household has to allow it. */
     async requestProfileSwitch(profileId: string, deviceName: string, token?: string): Promise<SwitchRequest> {
       const b = (await call("api/profiles/switch-requests", { method: "POST", body: JSON.stringify({ profileId, deviceName }) }, bearer(token)))!;
-      return { requestId: b.requestId, status: b.status };
+      return { requestId: b.requestId, status: b.status, botBlocked: b.bot_blocked === true };
     },
     async profileSwitch(requestId: string, token?: string): Promise<SwitchRequest> {
       const b = (await call(`api/profiles/switch-requests/${requestId}`, {}, bearer(token)))!;
@@ -285,7 +327,60 @@ export function createApi(opts: { base?: string | (() => string); fetch?: Fetch;
     },
     async devices(): Promise<Device[]> {
       const b = (await call("api/me"))!;
-      return ((b.devices as Json[]) ?? []).map((d) => ({ id: d.id, kind: d.kind, revokedAt: str(d.revoked_at) }));
+      return ((b.devices as Json[]) ?? []).map((d) => ({
+        id: d.id,
+        kind: d.kind,
+        revokedAt: str(d.revoked_at),
+        telegramSection: d.telegram_section === true,
+        profileLockDisabled: d.profile_lock_disabled === true,
+      }));
+    },
+    async me(token?: string): Promise<MeInfo> {
+      const b = (await call("api/me", {}, bearer(token)))!;
+      return {
+        user: b.user ? { email: str(b.user.email) ?? null, telegramUserId: str(b.user.telegram_user_id) ?? null } : undefined,
+        household: {
+          id: String(b.household?.id ?? ""),
+          name: String(b.household?.name ?? ""),
+          profileLock: b.household?.profile_lock === true,
+          telegramBotLinked: b.household?.telegram_bot_linked === true,
+          telegramBotBlocked: b.household?.telegram_bot_blocked === true,
+        },
+        devices: ((b.devices as Json[]) ?? []).map((d) => ({
+          id: d.id,
+          kind: d.kind,
+          revokedAt: str(d.revoked_at),
+          telegramSection: d.telegram_section === true,
+          profileLockDisabled: d.profile_lock_disabled === true,
+        })),
+      };
+    },
+    async telegramBotLinkStart(): Promise<{ id: string; botUsername: string; startParam: string; expiresAt: string }> {
+      const b = (await call("api/telegram/bot/link-start", { method: "POST", body: "{}" }))!;
+      return { id: String(b.id), botUsername: String(b.bot_username), startParam: String(b.start_param), expiresAt: String(b.expires_at) };
+    },
+    async setTelegramSection(on: boolean): Promise<void> {
+      await call("api/devices/me/telegram-section", { method: "PUT", body: JSON.stringify({ on }) });
+    },
+    async setDeviceProfileLock(on: boolean, switchRequestId?: string): Promise<void> {
+      await call("api/devices/me/profile-lock", {
+        method: "PUT",
+        body: JSON.stringify({ on, ...(switchRequestId ? { switch_request_id: switchRequestId } : {}) }),
+      });
+    },
+    async deleteAccountTelegramStart(): Promise<{ id: string; botUsername: string; startParam: string; pollToken: string; expiresAt: string }> {
+      const b = (await call("api/account/delete/telegram-start", { method: "POST", body: "{}" }))!;
+      return {
+        id: String(b.id),
+        botUsername: String(b.bot_username),
+        startParam: String(b.start_param),
+        pollToken: String(b.poll_token),
+        expiresAt: String(b.expires_at),
+      };
+    },
+    async deleteAccountTelegramStatus(id: string, pollToken: string): Promise<{ status: string }> {
+      const b = (await call(`api/account/delete/telegram-status/${encodeURIComponent(id)}`, {}, `Bearer ${pollToken}`))!;
+      return { status: String(b.status) };
     },
     /** The application's Telegram identity for this TV (allowed per TV by the control plane). */
     async telegramClientConfig(): Promise<{ apiId: number; apiHash: string }> {

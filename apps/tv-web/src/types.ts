@@ -15,7 +15,12 @@ export interface Title {
   /** The account's own collections this title is in (Kids, Favourites…), from the catalog. */
   collections?: { id: string; name: string }[];
 }
-export interface Device { id: string; kind: string; revokedAt?: string }
+export interface Device { id: string; kind: string; revokedAt?: string; telegramSection?: boolean; profileLockDisabled?: boolean }
+export interface MeInfo {
+  user?: { email: string | null; telegramUserId: string | null };
+  household: { id: string; name: string; profileLock: boolean; telegramBotLinked: boolean; telegramBotBlocked: boolean };
+  devices: Device[];
+}
 export interface Playback {
   status: "ready" | "denied" | "preparing" | "unsupported";
   url?: string; headers: Record<string, string>; message?: string;
@@ -26,7 +31,7 @@ export interface Playback {
   /** A Telegram message to play over MTProto (only with VITE_TG_DIRECT=1); `url` is empty then. */
   telegram?: { chatId: string; messageId: number };
 }
-export interface SwitchRequest { requestId: string; status: string }
+export interface SwitchRequest { requestId: string; status: string; botBlocked?: boolean }
 export interface ServerFeatures {
   artwork: boolean;
   aiTitleResolution: boolean;

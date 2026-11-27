@@ -23,6 +23,8 @@ class TelegramLogAuditTest {
     // Spec 008 T023: the discovery code logs counts at most, never which chat or which video.
     private val discoveryRoots = listOf(
         "src/main/java/app/cablegram/discovery",
+        "../../libs/telegram-discovery/src/main/java/app/cablegram/discovery",
+        "../android-tv/src/main/java/app/cablegram/ui/TelegramSection.kt",
         "src/main/java/app/cablegram/phone/TelegramDiscoveryScreens.kt",
         "src/main/java/app/cablegram/phone/TelegramDiscoveryPicker.kt",
         "src/main/java/app/cablegram/phone/TelegramDiscoveryAdvanced.kt",

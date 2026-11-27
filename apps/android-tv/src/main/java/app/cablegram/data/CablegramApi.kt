@@ -116,6 +116,97 @@ class CablegramApi(
         execute<AuthMethodsDto>(Request.Builder().url(url("api/auth/methods")).get().build()).tvReviewerEmail
     }.getOrNull()
 
+    suspend fun telegramBotMethod(): String? = runCatching {
+        execute<AuthMethodsDto>(Request.Builder().url(url("api/auth/methods")).get().build()).telegramBot?.username
+    }.getOrNull()
+
+    suspend fun legalVersions(): Pair<String, String> {
+        val dto = execute<LegalDocsDto>(Request.Builder().url(url("api/legal")).get().build())
+        return dto.terms.version to dto.privacy.version
+    }
+
+    suspend fun telegramStart(
+        session: DeviceSession,
+        termsVersion: String,
+        privacyVersion: String,
+    ): TelegramStartResult {
+        val body = json.encodeToString(buildJsonObject {
+            put("session_id", session.sessionId)
+            put("pairing_token", session.pairingToken)
+            put("accepted", buildJsonObject {
+                put("terms_version", termsVersion)
+                put("privacy_version", privacyVersion)
+            })
+            put("age_confirmed", true)
+        })
+        val dto = execute<TelegramStartDto>(
+            Request.Builder().url(url("api/auth/device/telegram-start")).post(body.toRequestBody(jsonMediaType)).build(),
+        )
+        return TelegramStartResult(dto.id, dto.apiId, dto.apiHash, dto.botUsername, dto.startParam, dto.expiresAt)
+    }
+
+    suspend fun telegramStartState(id: String, pairingToken: String): String {
+        val dto = execute<TelegramStartStateDto>(
+            Request.Builder()
+                .url(url("api/auth/device/telegram-start/$id"))
+                .header("Authorization", "Pairing $pairingToken")
+                .get()
+                .build(),
+        )
+        return dto.state
+    }
+
+    suspend fun meOverview(token: String): MeOverview {
+        val dto = execute<MeFullDto>(authenticatedRequest("api/me", token).get().build())
+        val tv = dto.devices.firstOrNull { it.kind == "tv" }
+        return MeOverview(
+            email = dto.user?.email,
+            telegramUserId = dto.user?.telegramUserId,
+            telegramBotLinked = dto.household?.telegramBotLinked == true,
+            telegramBotBlocked = dto.household?.telegramBotBlocked == true,
+            telegramSection = tv?.telegramSection == true,
+            profileLockDisabled = tv?.profileLockDisabled == true,
+        )
+    }
+
+    suspend fun telegramBotLinkStart(token: String): BotLinkStartResult {
+        val dto = execute<BotLinkStartDto>(
+            authenticatedRequest("api/telegram/bot/link-start", token).post("{}".toRequestBody(jsonMediaType)).build(),
+        )
+        return BotLinkStartResult(dto.id, dto.botUsername, dto.startParam, dto.expiresAt)
+    }
+
+    suspend fun setTelegramSection(token: String, on: Boolean) {
+        val body = json.encodeToString(buildJsonObject { put("on", on) })
+        executeNoContent(authenticatedRequest("api/devices/me/telegram-section", token).put(body.toRequestBody(jsonMediaType)).build())
+    }
+
+    suspend fun setDeviceProfileLock(token: String, on: Boolean, switchRequestId: String? = null) {
+        val body = json.encodeToString(buildJsonObject {
+            put("on", on)
+            if (switchRequestId != null) put("switch_request_id", switchRequestId)
+        })
+        executeNoContent(authenticatedRequest("api/devices/me/profile-lock", token).put(body.toRequestBody(jsonMediaType)).build())
+    }
+
+    suspend fun deleteAccountTelegramStart(token: String): DeleteTelegramStartResult {
+        val dto = execute<DeleteTelegramStartDto>(
+            authenticatedRequest("api/account/delete/telegram-start", token).post("{}".toRequestBody(jsonMediaType)).build(),
+        )
+        return DeleteTelegramStartResult(dto.id, dto.botUsername, dto.startParam, dto.pollToken, dto.expiresAt)
+    }
+
+    suspend fun deleteAccountTelegramStatus(id: String, pollToken: String): String {
+        val dto = execute<DeleteTelegramStatusDto>(
+            Request.Builder()
+                .url(url("api/account/delete/telegram-status/$id"))
+                .header("Authorization", "Bearer $pollToken")
+                .get()
+                .build(),
+        )
+        return dto.status
+    }
+
     /** Claims the session on screen with a store reviewer's code; the usual polling then finishes the pairing. */
     suspend fun reviewerSignIn(session: DeviceSession, email: String, code: String) {
         val body = json.encodeToString(buildJsonObject {
@@ -1222,6 +1313,75 @@ internal const val STREAM_LINK_PARAM = "link"
 @Serializable
 private data class AuthMethodsDto(
     @kotlinx.serialization.SerialName("tv_reviewer_email") val tvReviewerEmail: String? = null,
+    @kotlinx.serialization.SerialName("telegram_bot") val telegramBot: TelegramBotMethodDto? = null,
+)
+
+@Serializable
+private data class TelegramBotMethodDto(val username: String)
+
+@Serializable
+private data class LegalDocsDto(val terms: LegalDocDto, val privacy: LegalDocDto)
+
+@Serializable
+private data class LegalDocDto(val version: String, val url: String)
+
+@Serializable
+private data class TelegramStartDto(
+    val id: String,
+    @kotlinx.serialization.SerialName("api_id") val apiId: Int,
+    @kotlinx.serialization.SerialName("api_hash") val apiHash: String,
+    @kotlinx.serialization.SerialName("bot_username") val botUsername: String,
+    @kotlinx.serialization.SerialName("start_param") val startParam: String,
+    @kotlinx.serialization.SerialName("expires_at") val expiresAt: String,
+)
+
+@Serializable
+private data class TelegramStartStateDto(val state: String)
+
+@Serializable
+private data class BotLinkStartDto(
+    val id: String,
+    @kotlinx.serialization.SerialName("bot_username") val botUsername: String,
+    @kotlinx.serialization.SerialName("start_param") val startParam: String,
+    @kotlinx.serialization.SerialName("expires_at") val expiresAt: String,
+)
+
+@Serializable
+private data class DeleteTelegramStartDto(
+    val id: String,
+    @kotlinx.serialization.SerialName("bot_username") val botUsername: String,
+    @kotlinx.serialization.SerialName("start_param") val startParam: String,
+    @kotlinx.serialization.SerialName("poll_token") val pollToken: String,
+    @kotlinx.serialization.SerialName("expires_at") val expiresAt: String,
+)
+
+@Serializable
+private data class DeleteTelegramStatusDto(val status: String)
+
+@Serializable
+private data class MeFullDto(
+    val user: MeUserDto? = null,
+    val household: MeHouseholdBotDto? = null,
+    val devices: List<MeDeviceFlagsDto> = emptyList(),
+)
+
+@Serializable
+private data class MeUserDto(
+    val email: String? = null,
+    @kotlinx.serialization.SerialName("telegram_user_id") val telegramUserId: String? = null,
+)
+
+@Serializable
+private data class MeHouseholdBotDto(
+    @kotlinx.serialization.SerialName("telegram_bot_linked") val telegramBotLinked: Boolean = false,
+    @kotlinx.serialization.SerialName("telegram_bot_blocked") val telegramBotBlocked: Boolean = false,
+)
+
+@Serializable
+private data class MeDeviceFlagsDto(
+    val kind: String = "",
+    @kotlinx.serialization.SerialName("telegram_section") val telegramSection: Boolean = false,
+    @kotlinx.serialization.SerialName("profile_lock_disabled") val profileLockDisabled: Boolean = false,
 )
 
 @Serializable

@@ -6,10 +6,14 @@ import app.cablegram.data.ApiException
 import app.cablegram.data.CablegramApi
 import app.cablegram.data.PairLog
 import app.cablegram.telegram.TdlibTelegramApi
+import app.cablegram.telegram.TelegramApi
 import app.cablegram.telegram.TelegramDatabaseKey
 import app.cablegram.telegram.TelegramLibrarySync
 import app.cablegram.telegram.TelegramRole
 import app.cablegram.telegram.TelegramSession
+import app.cablegram.discovery.*
+import app.cablegram.ui.TvDiscoveryStorage
+import dev.g000sha256.tdl.TdlClient
 import app.cablegram.telegram.TelegramState
 import app.cablegram.telegram.TgParameters
 import kotlinx.coroutines.CoroutineScope
@@ -106,6 +110,8 @@ class TvTelegram(
     val status: StateFlow<TvTelegramStatus> = _status.asStateFlow()
 
     @Volatile private var session: TelegramSession? = null
+    @Volatile private var activeApi: TelegramApi? = null
+    @Volatile private var activeTdl: TdlClient? = null
     private var watchJob: Job? = null
     private var syncJob: Job? = null
     @Volatile private var token: String? = null
@@ -152,6 +158,27 @@ class TvTelegram(
 
     /** The phone that can stream Telegram titles to this TV when it holds no session of its own. */
     fun phoneDeviceId(): String? = linkedPhoneId
+
+    fun hasActiveSession(): Boolean = _status.value is TvTelegramStatus.Connected
+
+    suspend fun sendBotStart(botUsername: String, startParam: String, unblock: Boolean = false) {
+        val tg = activeApi ?: return
+        if (unblock) tg.unblockBot(botUsername)
+        tg.sendBotStartMessage(botUsername, startParam)
+    }
+
+    fun discoveryGraph(accountId: String): DiscoveryGraph? {
+        val tdl = activeTdl ?: return null
+        return DiscoveryGraph.create(
+            transport = TdlibDiscoveryTransport(tdl),
+            storage = TvDiscoveryStorage(context, accountId),
+            libraryChatId = libraryChatId ?: 0L,
+        )
+    }
+
+    fun wipeDiscovery(accountId: String) {
+        TvDiscoveryStorage(context, accountId).clear()
+    }
 
     val configured: Boolean get() = true
 
@@ -488,8 +515,12 @@ class TvTelegram(
         if (prefs.getString(PREF_OWNER, null) == null || !keys.hasLocalData()) {
             account?.let { prefs.edit().putString(PREF_OWNER, it).apply() }
         }
+        val tdl = TdlClient.create()
+        val tgApi = TdlibTelegramApi(tdl)
+        activeTdl = tdl
+        activeApi = tgApi
         val created = TelegramSession(
-            api = TdlibTelegramApi(),
+            api = tgApi,
             role = TelegramRole.Tv,
             parameters = {
                 closing?.join()

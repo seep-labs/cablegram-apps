@@ -117,6 +117,8 @@ class FakeTelegramApi : TelegramApi {
         return sessions.toList()
     }
     override suspend fun terminateSession(sessionId: Long) = record("terminateSession:$sessionId")
+    override suspend fun sendBotStartMessage(botUsername: String, startParam: String) = record("sendBotStartMessage:$botUsername:$startParam")
+    override suspend fun unblockBot(botUsername: String) = record("unblockBot:$botUsername")
 
     fun addFile(id: Int, size: Int): TgFile {
         content[id] = ByteArray(size) { (it % 251).toByte() }

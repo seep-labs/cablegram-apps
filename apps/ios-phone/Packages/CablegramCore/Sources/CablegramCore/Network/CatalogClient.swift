@@ -246,10 +246,28 @@ public struct CatalogClient: Sendable {
         await send("POST", "/api/account/name", token: token, json: ["displayName": name]).isSuccess
     }
 
-    /// The signed-in account's email address; nil when offline.
+    /// The signed-in account's email address; nil when offline or Telegram-only.
     public func accountEmail(token: String) async -> String? {
         let reply = await send("GET", "/api/auth/email", token: token)
         return reply.isSuccess ? reply.object?["email"] as? String : nil
+    }
+
+    /// Starts attaching an email to a Telegram-only account.
+    public func startAddEmail(token: String, email: String) async -> Int {
+        let reply = await send("POST", "/api/me/email/start", token: token, json: ["email": email])
+        return reply.status ?? 0
+    }
+
+    /// Verifies and attaches an email to a Telegram-only account.
+    public func verifyAddEmail(token: String, email: String, code: String) async -> Int {
+        let reply = await send("POST", "/api/me/email/verify", token: token, json: ["email": email, "code": code])
+        return reply.status ?? 0
+    }
+
+    /// Enables or disables per-TV bot profile lock ("Ask in Telegram before opening").
+    public func setTvProfileLock(token: String, deviceId: String, on: Bool) async -> Bool {
+        let reply = await send("PUT", "/api/devices/\(deviceId)/profile-lock", token: token, json: ["on": on])
+        return reply.isSuccess
     }
 
     /// Deletes the account, confirmed with a sign-in code mailed to its address (spec 007 FR-015).

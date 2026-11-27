@@ -278,7 +278,7 @@ class CatalogClient(
         }.getOrDefault(null to null)
     }
 
-    /** The signed-in account's email address; null when offline. */
+    /** The signed-in account's email address; null when offline or Telegram-only. */
     suspend fun accountEmail(token: String): String? = withContext(Dispatchers.IO) {
         val request = Request.Builder().url("${baseUrl.trimEnd('/')}/api/auth/email").header("Authorization", "Bearer $token").get().build()
         runCatching {
@@ -287,6 +287,29 @@ class CatalogClient(
                 json.parseToJsonElement(response.body?.string().orEmpty()).jsonObject["email"]?.jsonPrimitive?.contentOrNull
             }
         }.getOrNull()
+    }
+
+    /** Starts attaching an email to a Telegram-only account. */
+    suspend fun startAddEmail(token: String, email: String): Int = withContext(Dispatchers.IO) {
+        val (status, _) = postJson("/api/me/email/start", token, buildJsonObject { put("email", email) })
+        status ?: 0
+    }
+
+    /** Verifies and attaches an email to a Telegram-only account. */
+    suspend fun verifyAddEmail(token: String, email: String, code: String): Int = withContext(Dispatchers.IO) {
+        val (status, _) = postJson("/api/me/email/verify", token, buildJsonObject { put("email", email); put("code", code) })
+        status ?: 0
+    }
+
+    /** Enables or disables per-TV bot profile lock ("Ask in Telegram before opening"). */
+    suspend fun setTvProfileLock(token: String, deviceId: String, on: Boolean): Boolean = withContext(Dispatchers.IO) {
+        val body = buildJsonObject { put("on", on) }.toString().toRequestBody("application/json; charset=utf-8".toMediaType())
+        val request = Request.Builder()
+            .url("${baseUrl.trimEnd('/')}/api/devices/$deviceId/profile-lock")
+            .header("Authorization", "Bearer $token")
+            .put(body)
+            .build()
+        runCatching { client.newCall(request).execute().use { it.isSuccessful } }.getOrDefault(false)
     }
 
     /** This month's relay usage for the household and this phone; null when offline. */

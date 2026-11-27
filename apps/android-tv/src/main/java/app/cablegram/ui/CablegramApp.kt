@@ -152,20 +152,61 @@ fun CablegramApp(viewModel: CablegramViewModel) {
         ) { screen ->
             when (screen) {
                 ScreenState.Loading -> LoadingScreen()
-                is ScreenState.Pairing -> PairingScreen(
-                    screen.session,
-                    screen.nameRequired,
-                    viewModel::retry,
-                    viewModel::cancelProfilePairing,
-                    canCancel = viewModel.hasProfiles,
-                    tvLanIp = viewModel.tvLanIp,
-                    ownServerUrl = viewModel.serverUrl.takeIf { !viewModel.usesDefaultServer },
-                    checkOwnServer = viewModel::checkOwnServer,
-                    onUseOwnServer = viewModel::setServerUrl,
-                    onReturnToCablegram = viewModel::returnToCablegram,
-                    offerReviewerSignIn = viewModel.tvReviewerEmail != null,
-                    reviewerSignIn = viewModel::reviewerSignIn,
-                )
+                is ScreenState.Pairing -> {
+                    val st = viewModel.standaloneTgState
+                    if (st != null) {
+                        when (st.step) {
+                            StandaloneStep.Consent -> TelegramSignInConsentScreen(
+                                termsVersion = "current",
+                                privacyVersion = "current",
+                                onContinue = viewModel::confirmStandaloneConsent,
+                                onPairWithPhone = viewModel::cancelStandaloneSignIn,
+                            )
+                            StandaloneStep.Qr -> TelegramQrSignInScreen(
+                                qrBitmap = st.qrLink?.let { createQrBitmap(it, 520) },
+                                errorText = st.errorText,
+                                onUsePhoneNumber = viewModel::switchToStandalonePhone,
+                                onCancel = viewModel::cancelStandaloneSignIn,
+                            )
+                            StandaloneStep.Phone, StandaloneStep.Code, StandaloneStep.Password -> TelegramPhoneSignInScreen(
+                                step = st.step,
+                                value = if (st.step == StandaloneStep.Phone) st.phone else st.code,
+                                errorText = st.errorText,
+                                onDigit = viewModel::appendStandaloneDigit,
+                                onDelete = viewModel::deleteStandaloneDigit,
+                                onSubmitPhoneOrCode = viewModel::submitStandalonePhoneOrCode,
+                                onSubmitPassword = viewModel::submitStandalonePassword,
+                                onCancel = viewModel::cancelStandaloneSignIn,
+                            )
+                            StandaloneStep.BotCompleting -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                                Text("Signing in to Cablegram...", color = Color.White)
+                            }
+                            StandaloneStep.Error -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                                    Text(st.errorText ?: "Telegram sign-in failed", color = Color(0xFFFF6B6B))
+                                    Button(onClick = viewModel::cancelStandaloneSignIn) { Text("Back") }
+                                }
+                            }
+                        }
+                    } else {
+                        PairingScreen(
+                            screen.session,
+                            screen.nameRequired,
+                            viewModel::retry,
+                            viewModel::cancelProfilePairing,
+                            canCancel = viewModel.hasProfiles,
+                            tvLanIp = viewModel.tvLanIp,
+                            ownServerUrl = viewModel.serverUrl.takeIf { !viewModel.usesDefaultServer },
+                            checkOwnServer = viewModel::checkOwnServer,
+                            onUseOwnServer = viewModel::setServerUrl,
+                            onReturnToCablegram = viewModel::returnToCablegram,
+                            offerReviewerSignIn = viewModel.tvReviewerEmail != null,
+                            reviewerSignIn = viewModel::reviewerSignIn,
+                            offerTelegramSignIn = viewModel.telegramBotUsername != null,
+                            onTelegramSignIn = { viewModel.startStandaloneTelegramSignIn(screen.session) },
+                        )
+                    }
+                }
                 is ScreenState.ProfilePicker -> {
                     var digits by remember(screen.pinPromptFor?.id, screen.pinError) { mutableStateOf("") }
                     // Back returns to the library after "switch profile"; at app start it asks before exiting.
@@ -208,6 +249,10 @@ fun CablegramApp(viewModel: CablegramViewModel) {
                             viewModel.cancelProfilePin()
                         },
                         pinBuffer = digits,
+                        botLinked = viewModel.awaitingBotLinked,
+                        telegramOnly = viewModel.awaitingTelegramOnly,
+                        botBlocked = viewModel.awaitingBotBlocked,
+                        onAskTelegramAgain = viewModel::askTelegramAgain,
                         onApprovalCancel = viewModel::cancelProfileApproval,
                     )
                     Unit
@@ -245,6 +290,22 @@ fun CablegramApp(viewModel: CablegramViewModel) {
                     onTelegramCancel = viewModel.telegram::cancelConnect,
                     serverUrl = viewModel.serverUrl,
                     onReturnToCablegram = viewModel::returnToCablegram.takeIf { !viewModel.usesDefaultServer },
+                    showTelegramSection = viewModel.hasTelegramSession(),
+                    telegramSectionContent = { onBackToMenu ->
+                        val g = viewModel.discoveryGraphForCurrentAccount()
+                        if (g != null) {
+                            TelegramSectionScreen(
+                                graph = g,
+                                hasLibraryChannel = (viewModel.telegram.status.collectAsState().value as? app.cablegram.TvTelegramStatus.Connected)?.libraryChatId != null,
+                                isFirstTime = g.store.snapshot().choice.isEmpty() && g.store.snapshot().scan.isEmpty(),
+                                inLibraryUniqueIds = emptySet(),
+                                onFirstConsentAgreed = { viewModel.onFirstTvDiscoveryConsent() },
+                                onPlayVideo = { _ -> },
+                                onAddedToLibrary = { viewModel.refreshLibrary() },
+                                onBackToMenu = onBackToMenu,
+                            )
+                        }
+                    },
                 )
                 ConnectedWelcomeDialog(viewModel.connectedWelcome, viewModel::dismissConnectedWelcome) }
                 is ScreenState.Resolving -> PrepareStatusScreen(
@@ -319,11 +380,23 @@ private fun ProfilePickerScreen(
     onPinDelete: () -> Unit,
     onPinCancel: () -> Unit,
     pinBuffer: String,
+    botLinked: Boolean = false,
+    telegramOnly: Boolean = false,
+    botBlocked: Boolean = false,
+    onAskTelegramAgain: (Profile) -> Unit = {},
     onApprovalCancel: () -> Unit,
 ) {
     val ui = androidx.compose.ui.platform.LocalContext.current.resources
     state.awaitingPhoneFor?.let { profile ->
-        PhoneApprovalPanel(profile, sharedTv, onApprovalCancel)
+        PhoneApprovalPanel(
+            profile = profile,
+            sharedTv = sharedTv,
+            botLinked = botLinked,
+            telegramOnly = telegramOnly,
+            botBlocked = botBlocked,
+            onAskTelegramAgain = { onAskTelegramAgain(profile) },
+            onCancel = onApprovalCancel,
+        )
         return
     }
     // R-4 / FR-008: PIN entry overlay for a protected profile; a 4-8 digit code
@@ -456,7 +529,15 @@ private fun ProfilePickerScreen(
 
 /** Profile lock: the TV waits until a phone in the household allows this profile. */
 @Composable
-private fun PhoneApprovalPanel(profile: Profile, sharedTv: Boolean, onCancel: () -> Unit) {
+private fun PhoneApprovalPanel(
+    profile: Profile,
+    sharedTv: Boolean,
+    botLinked: Boolean = false,
+    telegramOnly: Boolean = false,
+    botBlocked: Boolean = false,
+    onAskTelegramAgain: () -> Unit = {},
+    onCancel: () -> Unit,
+) {
     val ui = androidx.compose.ui.platform.LocalContext.current.resources
     BackHandler(onBack = onCancel)
     val cancelFocus = remember { FocusRequester() }
@@ -472,25 +553,38 @@ private fun PhoneApprovalPanel(profile: Profile, sharedTv: Boolean, onCancel: ()
         ) {
             BrandMark()
             Spacer(Modifier.height(24.dp))
-            Text(ui.getString(R.string.ui_allow_on_your_phone_f78aa2), color = Muted, fontSize = 16.sp)
+            Text(
+                if (botLinked) "Allow in Telegram" else ui.getString(R.string.ui_allow_on_your_phone_f78aa2),
+                color = Muted,
+                fontSize = 16.sp,
+            )
             Text(profile.name, color = Color.White, fontSize = 32.sp, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
             Spacer(Modifier.height(14.dp))
             Text(
-                if (sharedTv) {
-                    ui.getString(R.string.ui_other_accounts_use_this_tv_too_so_this_account_s_phone_9a6f28)
-                } else {
-                    ui.getString(R.string.ui_this_account_is_locked_open_cablegram_on_a_phone_signe_af553c)
+                when {
+                    botBlocked -> "Cablegram's bot is blocked in Telegram. Tap Ask Telegram again to unblock and retry."
+                    botLinked && telegramOnly -> "Check Telegram: the Cablegram bot asked you to allow this TV."
+                    botLinked -> "Check Telegram: the Cablegram bot asked you to allow this TV. Or tap Allow in the Cablegram app on your phone."
+                    sharedTv -> ui.getString(R.string.ui_other_accounts_use_this_tv_too_so_this_account_s_phone_9a6f28)
+                    else -> ui.getString(R.string.ui_this_account_is_locked_open_cablegram_on_a_phone_signe_af553c)
                 },
                 color = Muted,
                 fontSize = 18.sp,
             )
             Spacer(Modifier.height(26.dp))
-            Button(
-                onClick = onCancel,
-                colors = ButtonDefaults.colors(containerColor = PanelRaised),
-                modifier = Modifier.focusRequester(cancelFocus),
-            ) {
-                Text(ui.getString(R.string.ui_cancel_19766e))
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                if (botBlocked) {
+                    Button(onClick = onAskTelegramAgain, colors = ButtonDefaults.colors(containerColor = PanelRaised)) {
+                        Text("Ask Telegram again")
+                    }
+                }
+                Button(
+                    onClick = onCancel,
+                    colors = ButtonDefaults.colors(containerColor = PanelRaised),
+                    modifier = Modifier.focusRequester(cancelFocus),
+                ) {
+                    Text(ui.getString(R.string.ui_cancel_19766e))
+                }
             }
         }
     }
@@ -749,6 +843,8 @@ private fun PairingScreen(
     onReturnToCablegram: () -> Unit = {},
     offerReviewerSignIn: Boolean = false,
     reviewerSignIn: suspend (String) -> String? = { null },
+    offerTelegramSignIn: Boolean = false,
+    onTelegramSignIn: () -> Unit = {},
 ) {
     val ui = androidx.compose.ui.platform.LocalContext.current.resources
     var enteringServer by remember { mutableStateOf(false) }
@@ -832,6 +928,11 @@ private fun PairingScreen(
                     colors = ButtonDefaults.colors(containerColor = PanelRaised),
                 ) {
                     Text(ui.getString(R.string.ui_new_pin_6d8849))
+                }
+                if (offerTelegramSignIn) {
+                    Button(onClick = onTelegramSignIn, colors = ButtonDefaults.colors(containerColor = PanelRaised)) {
+                        Text("Sign in with Telegram")
+                    }
                 }
                 if (offerReviewerSignIn) {
                     Button(onClick = { enteringReviewerCode = true }, colors = ButtonDefaults.colors(containerColor = PanelRaised)) {

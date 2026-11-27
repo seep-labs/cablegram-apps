@@ -401,6 +401,285 @@ class CablegramViewModel @JvmOverloads constructor(
     /** Store review: the address to sign in as, while the server offers "Sign in with a code". */
     var tvReviewerEmail by mutableStateOf<String?>(null)
         private set
+    var telegramBotUsername by mutableStateOf<String?>(null)
+        private set
+    var standaloneTgState by mutableStateOf<app.cablegram.ui.StandaloneSignInState?>(null)
+        private set
+    var awaitingBotBlocked by mutableStateOf(false)
+        private set
+    var awaitingTelegramOnly by mutableStateOf(false)
+        private set
+    var awaitingBotLinked by mutableStateOf(false)
+        private set
+
+    private var standaloneJob: kotlinx.coroutines.Job? = null
+    private var standaloneApi: app.cablegram.telegram.TelegramApi? = null
+    private var standaloneSession: DeviceSession? = null
+    private var standaloneStart: app.cablegram.data.TelegramStartResult? = null
+
+    fun startStandaloneTelegramSignIn(session: DeviceSession) {
+        standaloneSession = session
+        standaloneTgState = app.cablegram.ui.StandaloneSignInState(step = app.cablegram.ui.StandaloneStep.Consent)
+    }
+
+    fun cancelStandaloneSignIn() {
+        standaloneJob?.cancel()
+        standaloneJob = null
+        val apiToClose = standaloneApi
+        standaloneApi = null
+        if (apiToClose != null) {
+            viewModelScope.launch { runCatching { apiToClose.close() } }
+        }
+        standaloneTgState = null
+    }
+
+    fun confirmStandaloneConsent() {
+        val session = standaloneSession ?: return
+        standaloneJob?.cancel()
+        standaloneJob = viewModelScope.launch {
+            try {
+                val (termsVer, privacyVer) = api.legalVersions()
+                val start = api.telegramStart(session, termsVer, privacyVer)
+                standaloneStart = start
+                val keys = app.cablegram.telegram.TelegramDatabaseKey(getApplication())
+                val tg = app.cablegram.telegram.TdlibTelegramApi()
+                standaloneApi = tg
+                standaloneTgState = app.cablegram.ui.StandaloneSignInState(step = app.cablegram.ui.StandaloneStep.Qr)
+
+                val collector = launch {
+                    tg.authStates.collect { st ->
+                        when (st) {
+                            is app.cablegram.telegram.TgAuthState.WaitOtherDevice -> {
+                                standaloneTgState = standaloneTgState?.copy(qrLink = st.link, errorText = null)
+                            }
+                            is app.cablegram.telegram.TgAuthState.WaitCode -> {
+                                standaloneTgState = standaloneTgState?.copy(step = app.cablegram.ui.StandaloneStep.Code, errorText = null)
+                            }
+                            is app.cablegram.telegram.TgAuthState.WaitPassword -> {
+                                standaloneTgState = standaloneTgState?.copy(step = app.cablegram.ui.StandaloneStep.Password, errorText = null)
+                            }
+                            is app.cablegram.telegram.TgAuthState.Ready -> {
+                                finishStandaloneSignIn(tg, session, start)
+                            }
+                            else -> Unit
+                        }
+                    }
+                }
+                tg.start(
+                    app.cablegram.telegram.TgParameters(
+                        databaseDirectory = keys.databaseDirectory.path,
+                        filesDirectory = keys.filesDirectory.path,
+                        databaseKey = keys.databaseKey(),
+                        apiId = start.apiId,
+                        apiHash = start.apiHash,
+                        deviceModel = "${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}".trim(),
+                        systemVersion = "Android TV ${android.os.Build.VERSION.RELEASE}",
+                        applicationVersion = app.cablegram.BuildConfig.VERSION_NAME,
+                    ),
+                )
+                tg.requestQrLogin()
+                collector.join()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: app.cablegram.telegram.TgException) {
+                val (msg, _) = app.cablegram.ui.mapStandaloneTgError(e, 3)
+                standaloneTgState = standaloneTgState?.copy(errorText = msg)
+            } catch (_: Exception) {
+                standaloneTgState = standaloneTgState?.copy(errorText = "Telegram sign-in failed.")
+            }
+        }
+    }
+
+    fun switchToStandalonePhone() {
+        standaloneTgState = standaloneTgState?.copy(step = app.cablegram.ui.StandaloneStep.Phone, errorText = null)
+    }
+
+    fun appendStandaloneDigit(d: Char) {
+        val st = standaloneTgState ?: return
+        standaloneTgState = when (st.step) {
+            app.cablegram.ui.StandaloneStep.Phone -> st.copy(phone = st.phone + d)
+            app.cablegram.ui.StandaloneStep.Code -> st.copy(code = st.code + d)
+            else -> st
+        }
+    }
+
+    fun deleteStandaloneDigit() {
+        val st = standaloneTgState ?: return
+        standaloneTgState = when (st.step) {
+            app.cablegram.ui.StandaloneStep.Phone -> if (st.phone.length > 1) st.copy(phone = st.phone.dropLast(1)) else st
+            app.cablegram.ui.StandaloneStep.Code -> if (st.code.isNotEmpty()) st.copy(code = st.code.dropLast(1)) else st
+            else -> st
+        }
+    }
+
+    fun submitStandalonePhoneOrCode() {
+        val st = standaloneTgState ?: return
+        val tg = standaloneApi ?: return
+        viewModelScope.launch {
+            try {
+                if (st.step == app.cablegram.ui.StandaloneStep.Phone) {
+                    tg.setPhoneNumber(st.phone)
+                } else if (st.step == app.cablegram.ui.StandaloneStep.Code) {
+                    tg.checkCode(st.code)
+                }
+            } catch (e: app.cablegram.telegram.TgException) {
+                val (msg, _) = app.cablegram.ui.mapStandaloneTgError(e, st.passwordTriesLeft)
+                standaloneTgState = standaloneTgState?.copy(errorText = msg)
+            }
+        }
+    }
+
+    fun submitStandalonePassword(password: String) {
+        val st = standaloneTgState ?: return
+        val tg = standaloneApi ?: return
+        viewModelScope.launch {
+            try {
+                tg.checkPassword(password)
+            } catch (e: app.cablegram.telegram.TgException) {
+                val (msg, fatal) = app.cablegram.ui.mapStandaloneTgError(e, st.passwordTriesLeft)
+                if (fatal) {
+                    cancelStandaloneSignIn()
+                } else {
+                    standaloneTgState = standaloneTgState?.copy(
+                        passwordTriesLeft = (st.passwordTriesLeft - 1).coerceAtLeast(0),
+                        errorText = msg,
+                    )
+                }
+            }
+        }
+    }
+
+    private suspend fun finishStandaloneSignIn(
+        tg: app.cablegram.telegram.TelegramApi,
+        session: DeviceSession,
+        start: app.cablegram.data.TelegramStartResult,
+    ) {
+        standaloneTgState = standaloneTgState?.copy(step = app.cablegram.ui.StandaloneStep.BotCompleting, errorText = null)
+        val selfUser = tg.me()
+        tg.sendBotStartMessage(start.botUsername, start.startParam)
+        tg.close()
+        standaloneApi = null
+
+        val deadline = System.currentTimeMillis() + 30_000L
+        while (System.currentTimeMillis() < deadline) {
+            val state = runCatching { api.telegramStartState(start.id, session.pairingToken) }.getOrNull()
+            if (state == "ambiguous") {
+                standaloneTgState = standaloneTgState?.copy(
+                    step = app.cablegram.ui.StandaloneStep.Error,
+                    errorText = "This Telegram account is used by more than one Cablegram account. Pair the TV with your phone instead.",
+                )
+                return
+            }
+            val poll = runCatching { api.getPairingStatus(session.sessionId, session.pairingToken) }.getOrNull()
+            if (poll?.status == "paired" && poll.token != null) {
+                val me = runCatching { api.meOverview(poll.token) }.getOrNull()
+                if (me?.telegramUserId != selfUser.id.toString()) {
+                    runCatching { api.revokeSelf(poll.token) }
+                    standaloneTgState = standaloneTgState?.copy(
+                        step = app.cablegram.ui.StandaloneStep.Error,
+                        errorText = "Signed in to a different Telegram account",
+                    )
+                    return
+                }
+                standaloneTgState = null
+                pairingJob?.cancel()
+                val pairedAccount = AccountCredential(
+                    sessionId = session.sessionId,
+                    token = poll.token,
+                    userId = extractUserIdFromToken(poll.token),
+                    lanCapability = poll.lanCapability?.takeIf { it.isNotBlank() },
+                )
+                authStore.saveAccount(pairedAccount)
+                accountCredentials = authStore.getAccounts()
+                connectedWelcome = true
+                token = poll.token
+                sessionId = session.sessionId
+                loadProfiles()
+                return
+            }
+            delay(1500)
+        }
+        standaloneTgState = standaloneTgState?.copy(
+            step = app.cablegram.ui.StandaloneStep.Error,
+            errorText = "Telegram bot did not confirm in time.",
+        )
+    }
+
+    fun hasTelegramSession(): Boolean = telegram.hasActiveSession()
+
+    fun discoveryGraphForCurrentAccount(): app.cablegram.discovery.DiscoveryGraph? {
+        val acc = sessionId ?: return null
+        return telegram.discoveryGraph(acc)
+    }
+
+    suspend fun onFirstTvDiscoveryConsent() {
+        val currentToken = token ?: return
+        runCatching { api.setTelegramSection(currentToken, true) }
+        val me = runCatching { api.meOverview(currentToken) }.getOrNull()
+        if (me?.telegramBotLinked != true) {
+            runCatching {
+                val link = api.telegramBotLinkStart(currentToken)
+                telegram.sendBotStart(link.botUsername, link.startParam)
+            }
+        }
+    }
+
+    fun askTelegramAgain(profile: Profile) {
+        val currentToken = token ?: return
+        viewModelScope.launch {
+            runCatching {
+                val link = api.telegramBotLinkStart(currentToken)
+                telegram.sendBotStart(link.botUsername, link.startParam, unblock = true)
+            }
+            awaitingBotBlocked = false
+            chooseProfile(profile)
+        }
+    }
+
+    fun toggleDeviceProfileLock() {
+        val currentToken = token ?: return
+        val profile = activeProfileId?.let { id -> (screen as? ScreenState.ProfilePicker)?.profiles?.firstOrNull { it.id == id } } ?: return
+        viewModelScope.launch {
+            val me = runCatching { api.meOverview(currentToken) }.getOrNull() ?: return@launch
+            if (me.profileLockDisabled) {
+                runCatching { api.setDeviceProfileLock(currentToken, on = true) }
+            } else {
+                val sw = runCatching { api.requestProfileSwitch(profile.id, deviceName(), currentToken) }.getOrNull() ?: return@launch
+                if (sw.status == "approved") {
+                    runCatching { api.setDeviceProfileLock(currentToken, on = false, switchRequestId = sw.requestId) }
+                } else {
+                    repeat(60) {
+                        delay(2000)
+                        val st = runCatching { api.getProfileSwitchRequest(sw.requestId, currentToken).status }.getOrNull()
+                        if (st == "approved") {
+                            runCatching { api.setDeviceProfileLock(currentToken, on = false, switchRequestId = sw.requestId) }
+                            return@launch
+                        }
+                        if (st == "denied" || st == "expired") return@launch
+                    }
+                }
+            }
+        }
+    }
+
+    fun deleteTelegramOnlyAccount() {
+        val currentToken = token ?: return
+        val acc = sessionId ?: return
+        viewModelScope.launch {
+            val del = runCatching { api.deleteAccountTelegramStart(currentToken) }.getOrNull() ?: return@launch
+            runCatching { telegram.sendBotStart(del.botUsername, del.startParam) }
+            repeat(30) {
+                delay(2000)
+                val st = runCatching { api.deleteAccountTelegramStatus(del.id, del.pollToken) }.getOrNull()
+                if (st == "deleted") {
+                    telegram.wipeDiscovery(acc)
+                    unpairFromHere()
+                    return@launch
+                }
+                if (st == "expired") return@launch
+            }
+        }
+    }
 
     /** Null when the code was accepted (polling then finishes the pairing), otherwise what to tell the reviewer. */
     suspend fun reviewerSignIn(code: String): String? {
@@ -1221,7 +1500,11 @@ class CablegramViewModel @JvmOverloads constructor(
             try {
                 val request = api.requestProfileSwitch(profile.id, deviceName(), currentToken)
                 if (request.status == "approved") return@launch open()
-                // Profile lock: a phone in the household has to allow it.
+                // Profile lock: Telegram bot (or phone when linked) has to allow it.
+                val me = runCatching { api.meOverview(currentToken) }.getOrNull()
+                awaitingBotBlocked = request.botBlocked || (me?.telegramBotBlocked == true)
+                awaitingTelegramOnly = me?.email == null
+                awaitingBotLinked = me?.telegramBotLinked == true
                 waitingSwitch = request.requestId to currentToken
                 screen = ScreenState.ProfilePicker(profiles, awaitingPhoneFor = profile)
                 while (true) {
@@ -1302,7 +1585,10 @@ class CablegramViewModel @JvmOverloads constructor(
             if (isDemoMode) return
             PairLog.i("TV session ok ${PairLog.pinTail(session.pin)} session=${session.sessionId} tvIp=$tvLanIp")
             screen = ScreenState.Pairing(session)
-            viewModelScope.launch { tvReviewerEmail = if (authStore.usesDefaultServer) api.tvReviewerEmail() else null }
+            viewModelScope.launch {
+                tvReviewerEmail = if (authStore.usesDefaultServer) api.tvReviewerEmail() else null
+                telegramBotUsername = if (authStore.usesDefaultServer) api.telegramBotMethod() else null
+            }
             // Another call may have started a poll while this one waited for the server: only one PIN is polled.
             pairingJob?.takeIf { it !== currentJob }?.cancel()
             pairingJob = viewModelScope.launch { pollPairing(session) }

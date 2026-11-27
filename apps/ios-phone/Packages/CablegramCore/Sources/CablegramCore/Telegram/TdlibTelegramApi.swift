@@ -480,6 +480,22 @@ public final class TdlibTelegramApi: TelegramApi, @unchecked Sendable {
 
     public func terminateSession(_ sessionId: Int64) async throws { try await call("terminateSession", ["session_id": sessionId]) }
 
+    public func sendBotStartMessage(botUsername: String, startParam: String) async throws {
+        let (chatId, userId) = try await botChat(botUsername)
+        try await call("sendBotStartMessage", ["bot_user_id": userId, "chat_id": chatId, "parameter": startParam])
+    }
+
+    public func unblockBot(botUsername: String) async throws {
+        let (_, userId) = try await botChat(botUsername)
+        try await call("setMessageSenderBlockList", ["sender_id": ["@type": "messageSenderUser", "user_id": userId]])
+    }
+
+    private func botChat(_ username: String) async throws -> (chatId: Int64, userId: Int64) {
+        let chat = try await call("searchPublicChat", ["username": username])
+        guard let type = chat.object("type"), type.type == "chatTypePrivate" else { throw TgError(code: 400, name: "BOT_NOT_FOUND") }
+        return (chat.int64("id"), type.int64("user_id"))
+    }
+
     // MARK: Mapping
 
     static let downloadPriority = 32

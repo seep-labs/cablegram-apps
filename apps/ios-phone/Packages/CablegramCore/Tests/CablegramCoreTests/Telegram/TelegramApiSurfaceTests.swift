@@ -23,6 +23,8 @@ import Testing
         "file", "download", "readPart", "cancelDownload", "deleteLocalFile",
         // Ending Cablegram's own TV sessions (spec 004 US8).
         "passwordState", "activeSessions", "terminateSession",
+        // The Cablegram bot only: /start for TV sign-in and the profile lock, and unblocking it first.
+        "sendBotStartMessage", "unblockBot",
         // Updates (Kotlin getters `getAuthStates`, ... are properties here).
         "authStates", "fileUpdates", "newMessages", "deletedMessages", "editedMessages",
     ]

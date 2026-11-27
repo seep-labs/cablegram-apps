@@ -154,6 +154,40 @@ data class ProfileSwitchRequest(
     @SerialName("requestId") val requestId: String,
     val status: String,
     @SerialName("profileName") val profileName: String? = null,
+    @SerialName("bot_blocked") val botBlocked: Boolean = false,
+)
+
+data class TelegramStartResult(
+    val id: String,
+    val apiId: Int,
+    val apiHash: String,
+    val botUsername: String,
+    val startParam: String,
+    val expiresAt: String,
+)
+
+data class BotLinkStartResult(
+    val id: String,
+    val botUsername: String,
+    val startParam: String,
+    val expiresAt: String,
+)
+
+data class DeleteTelegramStartResult(
+    val id: String,
+    val botUsername: String,
+    val startParam: String,
+    val pollToken: String,
+    val expiresAt: String,
+)
+
+data class MeOverview(
+    val email: String?,
+    val telegramUserId: String?,
+    val telegramBotLinked: Boolean,
+    val telegramBotBlocked: Boolean,
+    val telegramSection: Boolean,
+    val profileLockDisabled: Boolean,
 )
 
 @Serializable
