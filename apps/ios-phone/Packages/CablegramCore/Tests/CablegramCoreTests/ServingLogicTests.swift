@@ -175,6 +175,13 @@ final class Counter: @unchecked Sendable {
         life.tvRequest(); #expect(life.shouldStop() == false)
         #expect(life.shouldStop(castActive: true) == false)
     }
+
+    @Test func theServingNoticeShowsOnlyWhileATvPlaysFromThisPhone() {
+        #expect(servingNoticeVisible(running: true, activeStreams: 0, relayStreaming: false) == false, "a paired TV alone is no reason")
+        #expect(servingNoticeVisible(running: true, activeStreams: 1, relayStreaming: false))
+        #expect(servingNoticeVisible(running: true, activeStreams: 0, relayStreaming: true))
+        #expect(servingNoticeVisible(running: false, activeStreams: 1, relayStreaming: true) == false)
+    }
 }
 
 @Suite struct CertificateTests {

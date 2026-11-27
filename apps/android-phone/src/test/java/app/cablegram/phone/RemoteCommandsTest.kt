@@ -6,6 +6,17 @@ import org.junit.Test
 
 class RemoteCommandsTest {
     @Test
+    fun `a TV open without phone commands says to choose the film on the TV`() {
+        val browser = Json { ignoreUnknownKeys = true }
+            .decodeFromString<MeDevice>("""{"id":"tv-1","kind":"tv","online":false,"remote_control":false}""")
+        assertEquals(false, browser.remoteControl)
+        assertEquals("Chrome can't be controlled from your phone yet. Choose the film on the TV.", titleStartRefusal("Chrome", browser))
+        // A closed TV, or a server that doesn't send the flag.
+        assertTrue(titleStartRefusal("Living room", MeDevice(id = "tv-1", online = false)).startsWith("Living room isn't on."))
+        assertTrue(titleStartRefusal("Living room", null).startsWith("Living room isn't on."))
+    }
+
+    @Test
     fun `seek sends a numeric relative offset to one TV`() {
         val body = remoteCommandBody("seek", "living-room", arguments = buildJsonObject { put("seconds", -15) })
         assertEquals("living-room", body["target_device_id"]?.jsonPrimitive?.content)

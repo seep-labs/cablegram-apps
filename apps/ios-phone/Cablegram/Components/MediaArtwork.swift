@@ -26,15 +26,17 @@ struct MediaArtwork: View {
     @State private var image: UIImage?
 
     var body: some View {
-        ZStack {
-            LinearGradient(colors: [Color(hex: 0x343A47), Color(hex: 0x22252D), Color(hex: 0x3E342D)], startPoint: .topLeading, endPoint: .bottomTrailing)
-            if let image {
-                Image(uiImage: image).resizable().scaledToFill()
-            } else {
-                Image(systemName: "film").font(.system(.title)).foregroundStyle(Color.phoneMuted.opacity(0.65))
+        // The gradient takes the card's size; the cover is an overlay, so a wide picture (a film still) fills and is cropped
+        // instead of widening the card past its grid column.
+        LinearGradient(colors: [Color(hex: 0x343A47), Color(hex: 0x22252D), Color(hex: 0x3E342D)], startPoint: .topLeading, endPoint: .bottomTrailing)
+            .overlay {
+                if let image {
+                    Image(uiImage: image).resizable().scaledToFill()
+                } else {
+                    Image(systemName: "film").font(.system(.title)).foregroundStyle(Color.phoneMuted.opacity(0.65))
+                }
             }
-        }
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+            .clipShape(RoundedRectangle(cornerRadius: 16))
         .task(id: "\(item.posterPath ?? "")#\(item.posterVersion)") {
             guard let url = store.posterFile(item) else { image = nil; return }
             let version = item.posterVersion

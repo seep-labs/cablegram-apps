@@ -132,6 +132,15 @@ private func at(_ iso: String) -> Date { parseISO8601(iso)! }
         #expect(resolveTarget(selected: living, household: [device("tv-1", "Living"), device("tv-2", "Bedroom")]) == .target(deviceId: "tv-1", name: "Living room"))
     }
 
+    @Test func aTVOpenWithoutPhoneCommandsSaysToChooseTheFilmOnTheTV() throws {
+        let json = #"{"id":"tv-1","kind":"tv","online":false,"remote_control":false}"#
+        let browser = try JSONDecoder().decode(MeDevice.self, from: Data(json.utf8))
+        #expect(browser.remoteControl == false)
+        #expect(titleStartRefusal(tvName: "Chrome", device: browser) == "Chrome can't be controlled from your phone yet. Choose the film on the TV.")
+        #expect(titleStartRefusal(tvName: "Living room", device: device("tv-1", online: false)).hasPrefix("Living room isn't on."), "a closed TV, or an older server")
+        #expect(titleStartRefusal(tvName: "Living room", device: nil).hasPrefix("Living room isn't on."))
+    }
+
     @Test func aSelectedTVThatIsOffGivesWayToTheOnlyTVThatIsOnAndSaysSo() {
         #expect(resolveTarget(selected: living, household: [device("tv-1", "Living", online: false), device("tv-2", "Bedroom", online: true)])
                 == .target(deviceId: "tv-2", name: "Bedroom", switchedFrom: "Living room"))
@@ -292,5 +301,39 @@ private final class VirtualTime: @unchecked Sendable {
 
     @Test func anotherTitleStartedOnTheTVIsReportedAsSuch() {
         #expect(followTv(report("playing", videoId: "v2", originId: "o2"), nowPlayingId: "v1", sinceOwnCommandMs: longAgo) == .other(videoId: "v2", originId: "o2", paused: false))
+    }
+
+    @Test func feedbackPromptSeenDefaultsToFalseAndPersists() {
+        let suite = "cablegram.test.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suite)!
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let store = PairingStore(defaults: defaults, secrets: InMemorySecretStore())
+        #expect(store.feedbackPromptSeen == false)
+        store.feedbackPromptSeen = true
+        #expect(PairingStore(defaults: defaults, secrets: InMemorySecretStore()).feedbackPromptSeen == true)
+    }
+
+    @Test func feedbackPromptShowsOnceAfterFiveMinutesOrAtEnd() {
+        #expect(shouldAskForFeedback(seen: false, confirmedStart: true, playedSeconds: 300, reachedEnd: false) == true)
+        #expect(shouldAskForFeedback(seen: false, confirmedStart: true, playedSeconds: 20, reachedEnd: true) == true)
+        #expect(reachedPlaybackEnd(positionMs: 5_975_000, durationSeconds: 6000) == true)
+        #expect(reachedPlaybackEnd(positionMs: 5_000, durationSeconds: 6000) == false)
+    }
+
+    @Test func feedbackPromptSkipsShortStopsFailedStartsAndSeen() {
+        #expect(shouldAskForFeedback(seen: false, confirmedStart: true, playedSeconds: 5, reachedEnd: false) == false)
+        #expect(shouldAskForFeedback(seen: false, confirmedStart: true, playedSeconds: 299, reachedEnd: false) == false)
+        #expect(shouldAskForFeedback(seen: false, confirmedStart: false, playedSeconds: 600, reachedEnd: true) == false)
+        #expect(shouldAskForFeedback(seen: true, confirmedStart: true, playedSeconds: 600, reachedEnd: true) == false)
+    }
+
+    @Test func aFilmWatchedWithThePhoneLockedCountsByTheTimeSinceTheConfirmedStart() {
+        let start = Date(timeIntervalSince1970: 1_000)
+        // Last position read 10 s in (the phone was then locked); stopped 6 minutes after the confirmed start.
+        let played = playedSecondsForFeedback(startPositionMs: 0, maxPositionMs: 10_000, confirmedAt: start, now: start.addingTimeInterval(360))
+        #expect(played == 360)
+        #expect(shouldAskForFeedback(seen: false, confirmedStart: true, playedSeconds: played, reachedEnd: false))
+        #expect(playedSecondsForFeedback(startPositionMs: 100_000, maxPositionMs: 500_000, confirmedAt: start, now: start.addingTimeInterval(60)) == 400)
+        #expect(playedSecondsForFeedback(startPositionMs: nil, maxPositionMs: 0, confirmedAt: nil, now: start) == 0, "no confirmed start")
     }
 }

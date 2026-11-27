@@ -105,8 +105,11 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
                 }
                 sender.onPlayback = { isPaused, terminal ->
                     if (castPlaybackOwned) {
-                        if (terminal) { nowPlaying = null; paused = false; castPlaybackOwned = false }
-                        else isPaused?.let { paused = it }
+                        if (terminal) {
+                            val wasPlaying = nowPlaying != null
+                            nowPlaying = null; paused = false; castPlaybackOwned = false
+                            if (wasPlaying) finishPlaybackTracking()
+                        } else isPaused?.let { paused = it }
                     }
                 }
                 castRoutesJob = viewModelScope.launch { sender.routes.collect { castRoutes = it } }
@@ -137,6 +140,51 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
 
     /** Settings' "Subtitle accounts" page; hoisted so the welcome tour can open it. */
     var subtitleAccountsOpen by mutableStateOf(false)
+
+    /** One-time prompt shown after the first film finishes or stops playing. */
+    var feedbackPromptOpen by mutableStateOf(false)
+        private set
+
+    private var playbackConfirmedStart = false
+    private var playbackStartPositionMs: Long? = null
+    private var playbackMaxPositionMs = 0L
+    private var playbackDurationSeconds: Int? = null
+    /** When the TV confirmed the start ([SystemClock.elapsedRealtime], which keeps counting while the phone sleeps). */
+    private var playbackConfirmedAtMs: Long? = null
+
+    private fun beginPlaybackTracking(item: LibraryItem?, confirmedStart: Boolean) {
+        playbackConfirmedStart = confirmedStart && item != null
+        playbackConfirmedAtMs = if (playbackConfirmedStart) SystemClock.elapsedRealtime() else null
+        playbackStartPositionMs = null
+        playbackMaxPositionMs = 0L
+        playbackDurationSeconds = item?.durationSeconds
+    }
+
+    private fun recordTvPosition(report: TvPlayback) {
+        if (report.state == "playing" || report.state == "paused") {
+            playbackConfirmedStart = true
+            if (playbackConfirmedAtMs == null) playbackConfirmedAtMs = SystemClock.elapsedRealtime()
+            report.positionMs?.let { pos ->
+                if (playbackStartPositionMs == null) playbackStartPositionMs = pos
+                if (pos > playbackMaxPositionMs) playbackMaxPositionMs = pos
+            }
+        }
+    }
+
+    private fun finishPlaybackTracking() {
+        val playedSeconds = playedSecondsForFeedback(playbackStartPositionMs, playbackMaxPositionMs, playbackConfirmedAtMs, SystemClock.elapsedRealtime())
+        val reachedEnd = reachedPlaybackEnd(playbackMaxPositionMs, playbackDurationSeconds)
+        val confirmed = playbackConfirmedStart
+        beginPlaybackTracking(null, confirmedStart = false)
+        if (shouldAskForFeedback(pairing.feedbackPromptSeen, confirmed, playedSeconds, reachedEnd)) {
+            feedbackPromptOpen = true
+        }
+    }
+
+    fun dismissFeedbackPrompt() {
+        pairing.feedbackPromptSeen = true
+        feedbackPromptOpen = false
+    }
 
     fun closeWelcomeTour() {
         pairing.welcomeTourSeen = true
@@ -3082,6 +3130,7 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
             if (effectiveRoute != null && castSender?.playbackTerminated != false) return@launch
             castPlaybackOwned = effectiveRoute != null
             playingTvDeviceId = sent.deviceId
+            beginPlaybackTracking(ready, confirmedStart = sent.outcome == Outcome.Confirmed)
             nowPlaying = ready
             paused = effectiveRoute != null && castSender?.playbackPaused == true
             store.setWatchProgress(ready.id, ready.positionSeconds.coerceAtLeast(1))
@@ -3134,8 +3183,10 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
             val outcome = sendCommand("stop")?.outcome ?: return@launch
             // "not_applicable": the TV had nothing to stop (the title already ended there), so nothing plays either way.
             if (!outcome.applies() && (outcome as? Outcome.Rejected)?.reason != "not_applicable") return@launch
+            val wasPlaying = nowPlaying != null
             nowPlaying = null
             paused = false
+            if (wasPlaying) finishPlaybackTracking()
         }
     }
 
@@ -3516,10 +3567,15 @@ class PhoneViewModel(application: Application, private val savedState: SavedStat
                 }
                 when (val follow = followTv(report, current.id, SystemClock.elapsedRealtime() - ownCommandAt)) {
                     TvFollow.Keep -> Unit
-                    TvFollow.Stopped -> { nowPlaying = null; paused = false }
-                    is TvFollow.Playing -> if (paused != follow.paused) paused = follow.paused
+                    TvFollow.Stopped -> { nowPlaying = null; paused = false; finishPlaybackTracking() }
+                    is TvFollow.Playing -> {
+                        recordTvPosition(report)
+                        if (paused != follow.paused) paused = follow.paused
+                    }
                     is TvFollow.Other -> {
                         val other = items.firstOrNull { it.id == follow.videoId || it.id == follow.originId }
+                        beginPlaybackTracking(other, confirmedStart = other != null)
+                        if (other != null) recordTvPosition(report)
                         nowPlaying = other
                         paused = other != null && follow.paused
                     }

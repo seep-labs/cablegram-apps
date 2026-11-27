@@ -215,8 +215,12 @@ public struct LibrarySync: Sendable {
                     c.transferStatus = hasCloudObject ? transferIdle : local.transferStatus
                     return mergeManualMetadata(c, remote: remote)
                 }
+            } else if let web = remote.sources.first(where: { $0.kind == "web" && !($0.canonicalUrl ?? "").isEmpty }), let url = web.canonicalUrl {
+                // Web titles the server already holds (the sample films) are listed; adding new links stays off (CAB-80).
+                let added = store.registerWeb(remote, canonicalUrl: url)
+                store.mergeRemoteMetadata(added.id, remote: remote)
+                if hasCloudObject { store.updateItem(added.id) { var c = $0; c.cloudObjectPresent = true; c.storageState = storageCloud; return c } }
             } else if let phoneSource = remote.sources.first(where: { live($0, "phone_local") }), !dismissed.contains(remote.id) {
-                // Web titles (kind "web") are not imported in this release (CAB-80).
                 var restored = store.restoreFromHousehold(remote, source: phoneSource)
                 if hasCloudObject { restored.cloudObjectPresent = true; store.update(restored) }
                 if let print = phoneSource.sourceFingerprint, let video = deviceVideos[print], var linked = store.relink(restored.id, video: video) {

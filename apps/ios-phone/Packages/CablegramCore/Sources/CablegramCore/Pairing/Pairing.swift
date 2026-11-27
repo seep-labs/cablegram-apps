@@ -116,17 +116,20 @@ public struct MeDevice: Codable, Sendable, Equatable {
     public var telegramDirectAllowed: Bool
     /// A TV with Cablegram open that takes remote commands now; nil from a control plane that doesn't say.
     public var online: Bool?
+    /// false: Cablegram is open on the TV, but that TV app (browser, LG, Samsung) takes no commands from the phone yet.
+    public var remoteControl: Bool?
 
     public init(id: String, kind: String? = nil, displayName: String? = nil, revokedAt: String? = nil, trustLevel: String = "home",
-                trustExpiresAt: String? = nil, telegramDirectAllowed: Bool = false, online: Bool? = nil) {
+                trustExpiresAt: String? = nil, telegramDirectAllowed: Bool = false, online: Bool? = nil, remoteControl: Bool? = nil) {
         self.id = id; self.kind = kind; self.displayName = displayName; self.revokedAt = revokedAt; self.trustLevel = trustLevel
         self.trustExpiresAt = trustExpiresAt; self.telegramDirectAllowed = telegramDirectAllowed; self.online = online
+        self.remoteControl = remoteControl
     }
 
     enum CodingKeys: String, CodingKey {
         case id, kind, online
         case displayName = "display_name", revokedAt = "revoked_at", trustLevel = "trust_level", trustExpiresAt = "trust_expires_at"
-        case telegramDirectAllowed = "telegram_direct_allowed"
+        case telegramDirectAllowed = "telegram_direct_allowed", remoteControl = "remote_control"
     }
 
     public init(from decoder: Decoder) throws {
@@ -139,6 +142,7 @@ public struct MeDevice: Codable, Sendable, Equatable {
         trustExpiresAt = try c.decodeIfPresent(String.self, forKey: .trustExpiresAt)
         telegramDirectAllowed = try c.decodeIfPresent(Bool.self, forKey: .telegramDirectAllowed) ?? false
         online = try c.decodeIfPresent(Bool.self, forKey: .online)
+        remoteControl = try c.decodeIfPresent(Bool.self, forKey: .remoteControl)
     }
 
     public var trust: TvTrust {

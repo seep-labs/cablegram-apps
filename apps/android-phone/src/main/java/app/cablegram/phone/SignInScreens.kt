@@ -156,6 +156,28 @@ private fun SignInPage(content: @Composable ColumnScope.() -> Unit) {
 }
 
 @Composable
+private fun CompanionTvCard() {
+    val ui = androidx.compose.ui.platform.LocalContext.current.resources
+    val uriHandler = LocalUriHandler.current
+    androidx.compose.material3.Surface(
+        color = VlcPanel,
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+        modifier = Modifier.fillMaxWidth().maestro("sign_in_companion_tv"),
+    ) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(ui.getString(R.string.companion_tv_title), color = Color.White, style = MaterialTheme.typography.titleSmall)
+            Text(ui.getString(R.string.companion_tv_body), color = VlcMuted, style = MaterialTheme.typography.bodySmall)
+            Text(
+                ui.getString(R.string.companion_tv_link),
+                color = VlcOrange,
+                style = MaterialTheme.typography.labelLarge,
+                modifier = Modifier.clickable(role = Role.Button) { uriHandler.openUri("https://cablegram.app/#downloads") },
+            )
+        }
+    }
+}
+
+@Composable
 private fun StartForm(viewModel: PhoneViewModel) {
     val ui = androidx.compose.ui.platform.LocalContext.current.resources
     val signIn = viewModel.signIn
@@ -166,6 +188,7 @@ private fun StartForm(viewModel: PhoneViewModel) {
         BrandMark()
         Spacer(Modifier.height(12.dp))
         ScreenHeading(ui.getString(R.string.ui_your_library_your_big_screen_1ff86b), ui.getString(R.string.ui_sign_in_or_create_an_account_to_bring_your_own_videos__e9e560))
+        CompanionTvCard()
         if (signIn.methods?.google != null) {
             OutlinedButton(
                 onClick = { viewModel.signInWithGoogle(context) },

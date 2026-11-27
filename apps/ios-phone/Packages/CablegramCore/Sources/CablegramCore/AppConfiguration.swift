@@ -15,6 +15,7 @@ public struct AppConfiguration: Sendable, Equatable {
 
     public static let defaultApiBase = URL(string: "https://api.cablegram.app/")!
     public static let defaultWebAppBase = URL(string: "https://app.cablegram.app")!
+    public static let feedbackURL = URL(string: "https://cablegram.app/feedback.html")!
 
     public init(
         apiBase: URL = defaultApiBase,

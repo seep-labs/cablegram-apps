@@ -366,7 +366,7 @@
     <string name="ui_in_your_household_library_file_not_on_this_phone_698618" formatted="false">"In your library · File not on this phone"</string>
     <string name="ui_in_your_own_storage_e2575f" formatted="false">"In your own storage"</string>
     <string name="ui_include_forced_subtitles_5c1992" formatted="false">"Include forced subtitles"</string>
-    <string name="ui_install_cablegram_on_your_android_tv_or_google_tv_and__d27b55" formatted="false">"Install Cablegram TV on your Android TV or Google TV and open it. Then enter the six-digit code it shows."</string>
+    <string name="ui_install_cablegram_on_your_android_tv_or_google_tv_and__d27b55" formatted="false">"Install Cablegram on your TV (Android TV or Google TV; LG and Samsung where available) and open it. Then enter the six-digit code it shows."</string>
     <string name="ui_is_already_in_your_library_5f2bdf">"%1$s is already in your library"</string>
     <string name="ui_is_already_on_this_phone_417a80">"%1$s is already on this phone."</string>
     <string name="ui_is_signing_in_to_your_telegram_type_your_two_step_veri_999fde">"%1$s is signing in to your Telegram. Type your two-step verification password. It\'s encrypted for that TV only; Cablegram can\'t read it."</string>
@@ -1077,4 +1077,13 @@
     <string name="library_bulk_result">"%1$d removed, %2$d couldn't be removed. Check your connection."</string>
     <string name="library_select_season">"Select season"</string>
     <string name="library_collection_name_taken">"You already have a collection with that name."</string>
+    <string name="companion_tv_title" formatted="false">"Companion app for your TV"</string>
+    <string name="companion_tv_body" formatted="false">"This phone app holds your library; your TV plays it. Install Cablegram on your TV (Android TV or Google TV; LG and Samsung where available) and pair it after signing in. On Android TV and Google TV, your phone is also the remote."</string>
+    <string name="companion_tv_link" formatted="false">"How to get the TV app"</string>
+    <string name="settings_feedback_note" formatted="false">"Cablegram is new and still growing — tell us what you think."</string>
+    <string name="settings_feedback_button" formatted="false">"Send feedback"</string>
+    <string name="feedback_prompt_title" formatted="false">"How did that go?"</string>
+    <string name="feedback_prompt_body" formatted="false">"Cablegram is new and still growing. Tell us what worked, what felt rough, or what you\'d like next."</string>
+    <string name="feedback_prompt_send" formatted="false">"Send feedback"</string>
+    <string name="feedback_prompt_later" formatted="false">"Not now"</string>
 </resources>
